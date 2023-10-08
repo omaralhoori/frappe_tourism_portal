@@ -1,0 +1,58 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-10-07 14:55:47.075279",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "duration_type",
+  "duration",
+  "refund_type",
+  "refund"
+ ],
+ "fields": [
+  {
+   "fieldname": "duration_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Duration Type",
+   "options": "Day\nHour",
+   "reqd": 1
+  },
+  {
+   "fieldname": "duration",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Duration",
+   "reqd": 1
+  },
+  {
+   "fieldname": "refund_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Refund type",
+   "options": "Percentage\nDay\nAmount",
+   "reqd": 1
+  },
+  {
+   "fieldname": "refund",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Refund",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-10-07 14:55:47.075279",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Cancellation Policy Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

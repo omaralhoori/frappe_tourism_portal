@@ -1,0 +1,97 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-10-08 15:32:02.989376",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "room_type",
+  "min_adults",
+  "max_adults",
+  "min_childs",
+  "max_childs",
+  "max_child_age",
+  "max_pax",
+  "min_pax"
+ ],
+ "fields": [
+  {
+   "columns": 1,
+   "fieldname": "room_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Room Type",
+   "options": "Room Accommodation Type",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "min_adults",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Min Adults",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "max_adults",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Max Adults",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "min_childs",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Min Childs",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "max_childs",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Max Childs",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "description": "Any child who exceeds the maximum age will be considered an adult",
+   "fieldname": "max_child_age",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Max Child Age"
+  },
+  {
+   "columns": 1,
+   "fieldname": "max_pax",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Max Pax",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "min_pax",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Min Pax",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-10-08 15:49:14.900008",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Room Accommodation Type Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

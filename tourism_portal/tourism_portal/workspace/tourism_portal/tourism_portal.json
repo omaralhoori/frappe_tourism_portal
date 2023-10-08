@@ -1,0 +1,47 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"cU5nyM-87u\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Tourism Portal</span>\",\"col\":12}},{\"id\":\"-Ep-WXD95D\",\"type\":\"card\",\"data\":{\"card_name\":\"Portal Definitions\",\"col\":4}}]",
+ "creation": "2023-10-08 15:51:11.800152",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "organization",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Tourism Portal",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Portal Definitions",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Room Accommodation Type",
+   "link_count": 0,
+   "link_to": "Room Accommodation Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2023-10-08 15:53:13.358482",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Tourism Portal",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 1.0,
+ "shortcuts": [],
+ "title": "Tourism Portal"
+}
