@@ -13,11 +13,20 @@
   "hotel_name",
   "column_break_froge",
   "star_rating",
+  "hotel_class",
   "address_and_location_section",
   "area",
   "location",
   "column_break_yga8q",
-  "address"
+  "address",
+  "rules_and_policies_section",
+  "hotel_cancellation_policy",
+  "hotel_accommodation_type_rule",
+  "hotel_profit_margin",
+  "contacts_section",
+  "contact",
+  "column_break_iknnp",
+  "inquiry_link"
  ],
  "fields": [
   {
@@ -39,6 +48,7 @@
    "fieldname": "area",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Area",
    "options": "Area",
    "reqd": 1
@@ -77,11 +87,63 @@
   {
    "fieldname": "column_break_yga8q",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rules_and_policies_section",
+   "fieldtype": "Section Break",
+   "label": "Rules and Policies"
+  },
+  {
+   "fieldname": "hotel_cancellation_policy",
+   "fieldtype": "Link",
+   "label": "Cancellation Policy",
+   "options": "Cancellation Policy"
+  },
+  {
+   "fieldname": "hotel_accommodation_type_rule",
+   "fieldtype": "Link",
+   "label": "Hotel Accommodation Type Rule",
+   "options": "Room Accommodation Type Rule"
+  },
+  {
+   "fieldname": "hotel_profit_margin",
+   "fieldtype": "Link",
+   "label": "Hotel Profit Margin",
+   "options": "Profit Margin"
+  },
+  {
+   "fieldname": "hotel_class",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Hotel Class",
+   "options": "Hotel Class",
+   "reqd": 1
+  },
+  {
+   "fieldname": "contacts_section",
+   "fieldtype": "Section Break",
+   "label": "Contacts"
+  },
+  {
+   "fieldname": "contact",
+   "fieldtype": "Link",
+   "label": "Contact",
+   "options": "Contact"
+  },
+  {
+   "fieldname": "column_break_iknnp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "This link is used to inquire about prices and availability",
+   "fieldname": "inquiry_link",
+   "fieldtype": "Data",
+   "label": "Inquiry Link"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-07 10:48:26.182813",
+ "modified": "2023-10-09 11:37:55.645357",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel",
@@ -101,7 +163,9 @@
    "write": 1
   }
  ],
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "hotel_name"
 }

@@ -1,31 +1,31 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:postal_code",
- "creation": "2023-10-06 18:41:00.349388",
+ "autoname": "field:hotel_class",
+ "creation": "2023-10-09 11:17:04.812786",
  "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "postal_code"
+  "hotel_class"
  ],
  "fields": [
   {
-   "fieldname": "postal_code",
+   "fieldname": "hotel_class",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Postal Code",
+   "label": "Hotel Class",
    "reqd": 1,
    "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-09 11:22:15.565696",
+ "modified": "2023-10-09 11:17:04.812786",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
- "name": "Postal Code",
+ "name": "Hotel Class",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

@@ -1,0 +1,88 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-10-08 16:08:48.577369",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "portal_settings_tab",
+  "max_hotel_rooms_selected",
+  "rules_and_policies_tab",
+  "hotel_rules_section",
+  "default_hotel_cancellation_policy",
+  "default_hotel_accommodation_type_rule",
+  "default_hotel_profit_margin"
+ ],
+ "fields": [
+  {
+   "fieldname": "rules_and_policies_tab",
+   "fieldtype": "Tab Break",
+   "label": "Rules and Policies"
+  },
+  {
+   "fieldname": "hotel_rules_section",
+   "fieldtype": "Section Break",
+   "label": "Hotel Rules"
+  },
+  {
+   "fieldname": "default_hotel_cancellation_policy",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Default Hotel Cancellation Policy",
+   "options": "Cancellation Policy",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_hotel_accommodation_type_rule",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Default Hotel Accommodation Type Rule",
+   "options": "Room Accommodation Type Rule",
+   "reqd": 1
+  },
+  {
+   "fieldname": "default_hotel_profit_margin",
+   "fieldtype": "Link",
+   "label": "Default Hotel Profit Margin",
+   "options": "Profit Margin",
+   "reqd": 1
+  },
+  {
+   "fieldname": "portal_settings_tab",
+   "fieldtype": "Tab Break",
+   "label": "Portal Settings"
+  },
+  {
+   "fieldname": "max_hotel_rooms_selected",
+   "fieldtype": "Int",
+   "label": "Max Hotel Rooms Selected",
+   "reqd": 1
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2023-10-09 11:19:48.725145",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Tourism Portal Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

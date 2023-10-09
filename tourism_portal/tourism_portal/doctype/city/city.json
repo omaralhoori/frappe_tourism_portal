@@ -38,7 +38,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-07 10:27:59.088298",
+ "modified": "2023-10-09 11:28:46.270523",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "City",
@@ -58,7 +58,10 @@
    "write": 1
   }
  ],
+ "quick_entry": 1,
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "city_name"
 }

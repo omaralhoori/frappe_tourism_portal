@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"cU5nyM-87u\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Tourism Portal</span>\",\"col\":12}},{\"id\":\"-Ep-WXD95D\",\"type\":\"card\",\"data\":{\"card_name\":\"Portal Definitions\",\"col\":4}}]",
+ "content": "[{\"id\":\"cU5nyM-87u\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Tourism Portal</span>\",\"col\":12}},{\"id\":\"dfTal9rL8y\",\"type\":\"card\",\"data\":{\"card_name\":\"Hotels\",\"col\":4}},{\"id\":\"-Ep-WXD95D\",\"type\":\"card\",\"data\":{\"card_name\":\"Portal Definitions\",\"col\":4}},{\"id\":\"RsCZTj1rQu\",\"type\":\"card\",\"data\":{\"card_name\":\"Location\",\"col\":4}}]",
  "creation": "2023-10-08 15:51:11.800152",
  "custom_blocks": [],
  "docstatus": 0,
@@ -15,8 +15,84 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Hotels",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hotels",
+   "link_count": 0,
+   "link_to": "Hotel",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hotel Rooms",
+   "link_count": 0,
+   "link_to": "Hotel Room",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Location",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Countries",
+   "link_count": 0,
+   "link_to": "Country",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Cities",
+   "link_count": 0,
+   "link_to": "City",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Areas",
+   "link_count": 0,
+   "link_to": "Area",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Postal Codes",
+   "link_count": 0,
+   "link_to": "Postal Code",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Portal Definitions",
-   "link_count": 1,
+   "link_count": 3,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -29,9 +105,29 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Cancellation Policy",
+   "link_count": 0,
+   "link_to": "Cancellation Policy",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Profit Margin",
+   "link_count": 0,
+   "link_to": "Profit Margin",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-10-08 15:53:13.358482",
+ "modified": "2023-10-09 11:14:56.288455",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal",
