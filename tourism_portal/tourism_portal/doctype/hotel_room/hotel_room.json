@@ -1,13 +1,19 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:{hotel}-{room_type}-{room_accommodation_type}",
  "creation": "2023-10-07 14:48:39.197105",
  "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "hotel"
+  "hotel",
+  "room_type",
+  "room_accommodation_type",
+  "disabled",
+  "section_break_8yk4a",
+  "images"
  ],
  "fields": [
   {
@@ -17,14 +23,45 @@
    "label": "Hotel",
    "options": "Hotel",
    "reqd": 1
+  },
+  {
+   "fieldname": "room_type",
+   "fieldtype": "Link",
+   "label": "Room Type",
+   "options": "Room Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "room_accommodation_type",
+   "fieldtype": "Link",
+   "label": "Room Accommodation Type",
+   "options": "Room Accommodation Type",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
+  },
+  {
+   "fieldname": "section_break_8yk4a",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "images",
+   "fieldtype": "HTML",
+   "label": "Images"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-07 14:51:02.842857",
+ "make_attachments_public": 1,
+ "modified": "2023-10-10 14:03:53.207738",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Room",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

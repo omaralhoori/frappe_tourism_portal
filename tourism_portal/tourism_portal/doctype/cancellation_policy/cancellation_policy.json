@@ -24,13 +24,12 @@
    "fieldname": "refunds",
    "fieldtype": "Table",
    "label": "Refunds",
-   "options": "Cancellation Policy Item",
-   "reqd": 1
+   "options": "Cancellation Policy Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-07 14:56:49.152439",
+ "modified": "2023-10-09 11:50:20.588673",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Cancellation Policy",

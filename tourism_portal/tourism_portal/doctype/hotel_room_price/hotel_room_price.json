@@ -1,0 +1,139 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-10-09 17:57:03.839417",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "room_contract",
+  "column_break_csdnd",
+  "hotel",
+  "section_break_sgxpg",
+  "company_class",
+  "column_break_qj79r",
+  "selling_type",
+  "section_break_d9xxc",
+  "buying_currency",
+  "selling_currency",
+  "column_break_zevts",
+  "buying_price",
+  "selling_price",
+  "company_classes_extra_profit_section",
+  "company_classes"
+ ],
+ "fields": [
+  {
+   "fieldname": "room_contract",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Room Contract",
+   "options": "Hotel Room Contract",
+   "reqd": 1
+  },
+  {
+   "default": "USD",
+   "fieldname": "selling_currency",
+   "fieldtype": "Link",
+   "label": "Selling Currency",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "selling_price",
+   "fieldtype": "Currency",
+   "label": "Selling Price",
+   "options": "selling_currency"
+  },
+  {
+   "fieldname": "column_break_csdnd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "room_contract.hotel",
+   "fieldname": "hotel",
+   "fieldtype": "Link",
+   "label": "Hotel",
+   "options": "Hotel",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_sgxpg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "buying_currency",
+   "fieldtype": "Link",
+   "label": "Buying Currency",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_zevts",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "buying_price",
+   "fieldtype": "Currency",
+   "label": "Buying Price",
+   "options": "buying_currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company_classes_extra_profit_section",
+   "fieldtype": "Section Break",
+   "label": "Company Classes Extra Profit"
+  },
+  {
+   "fieldname": "company_classes",
+   "fieldtype": "Table",
+   "label": "Company Classes",
+   "options": "Hotel Room Price Company"
+  },
+  {
+   "fieldname": "selling_type",
+   "fieldtype": "Select",
+   "label": "Selling Type",
+   "options": "Per Room\nPer Individual",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_d9xxc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "company_class",
+   "fieldtype": "Link",
+   "label": "Company Class",
+   "options": "Company Class"
+  },
+  {
+   "fieldname": "column_break_qj79r",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-10-10 13:18:14.635749",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Hotel Room Price",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

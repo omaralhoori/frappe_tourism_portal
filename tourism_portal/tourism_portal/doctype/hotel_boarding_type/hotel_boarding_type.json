@@ -1,38 +1,39 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:accommodation_type_code",
- "creation": "2023-10-08 15:39:39.404151",
+ "autoname": "field:boarding_type_code",
+ "creation": "2023-10-10 14:16:58.350882",
  "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "accommodation_type_code",
-  "accommodation_type_name"
+  "boarding_type_code",
+  "boarding_type_name"
  ],
  "fields": [
   {
-   "fieldname": "accommodation_type_name",
+   "fieldname": "boarding_type_code",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Accommodation Type Name ",
-   "reqd": 1
-  },
-  {
-   "fieldname": "accommodation_type_code",
-   "fieldtype": "Data",
-   "label": "Accommodation Type Code ",
+   "label": "Boarding Type Code",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "boarding_type_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Boarding Type Name",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-09 16:30:25.196629",
+ "modified": "2023-10-10 14:16:58.350882",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
- "name": "Room Accommodation Type",
+ "name": "Hotel Boarding Type",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
@@ -50,9 +51,7 @@
   }
  ],
  "quick_entry": 1,
- "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
- "title_field": "accommodation_type_name"
+ "states": []
 }

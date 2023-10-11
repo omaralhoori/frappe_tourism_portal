@@ -8,17 +8,20 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "disabled",
   "hotel_info_section",
   "hotel_code",
   "hotel_name",
   "column_break_froge",
   "star_rating",
-  "hotel_class",
+  "boarding_type",
   "address_and_location_section",
   "area",
   "location",
   "column_break_yga8q",
   "address",
+  "section_break_aj8g5",
+  "extras",
   "rules_and_policies_section",
   "hotel_cancellation_policy",
   "hotel_accommodation_type_rule",
@@ -112,14 +115,6 @@
    "options": "Profit Margin"
   },
   {
-   "fieldname": "hotel_class",
-   "fieldtype": "Link",
-   "in_standard_filter": 1,
-   "label": "Hotel Class",
-   "options": "Hotel Class",
-   "reqd": 1
-  },
-  {
    "fieldname": "contacts_section",
    "fieldtype": "Section Break",
    "label": "Contacts"
@@ -139,11 +134,34 @@
    "fieldname": "inquiry_link",
    "fieldtype": "Data",
    "label": "Inquiry Link"
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "DIsabled"
+  },
+  {
+   "fieldname": "section_break_aj8g5",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "extras",
+   "fieldtype": "Table",
+   "label": "Extras",
+   "options": "Hotel Extra Service Item"
+  },
+  {
+   "fieldname": "boarding_type",
+   "fieldtype": "Link",
+   "label": "Boarding Type",
+   "options": "Hotel Boarding Type",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-09 11:37:55.645357",
+ "modified": "2023-10-10 14:17:31.295215",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel",

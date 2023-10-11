@@ -1,0 +1,27 @@
+div[data-fieldtype="HTML" ][data-fieldname="images"]{
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+.image-card{
+    display: inline-block;
+    width: 270px;
+    height: 270px;
+    margin: 10px;
+    padding: 10px;
+    background-color: white;
+    box-shadow: 0px 0px 4px rgb(0 0 0 / 20%);
+    border-radius: 3px;
+}
+.image-card .card-body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 250px;
+    width: 250px;
+}
+.image-card img{
+    max-width: 250px;
+    max-height: 250px;
+}

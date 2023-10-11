@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"cU5nyM-87u\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Tourism Portal</span>\",\"col\":12}},{\"id\":\"dfTal9rL8y\",\"type\":\"card\",\"data\":{\"card_name\":\"Hotels\",\"col\":4}},{\"id\":\"-Ep-WXD95D\",\"type\":\"card\",\"data\":{\"card_name\":\"Portal Definitions\",\"col\":4}},{\"id\":\"RsCZTj1rQu\",\"type\":\"card\",\"data\":{\"card_name\":\"Location\",\"col\":4}}]",
+ "content": "[{\"id\":\"cU5nyM-87u\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Tourism Portal</span>\",\"col\":12}},{\"id\":\"dfTal9rL8y\",\"type\":\"card\",\"data\":{\"card_name\":\"Hotels\",\"col\":4}},{\"id\":\"NTRd1C7AyM\",\"type\":\"card\",\"data\":{\"card_name\":\"Hotel Definitions\",\"col\":4}},{\"id\":\"-Ep-WXD95D\",\"type\":\"card\",\"data\":{\"card_name\":\"Portal Definitions\",\"col\":4}},{\"id\":\"RsCZTj1rQu\",\"type\":\"card\",\"data\":{\"card_name\":\"Location\",\"col\":4}},{\"id\":\"uQnMW1Q8R0\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}}]",
  "creation": "2023-10-08 15:51:11.800152",
  "custom_blocks": [],
  "docstatus": 0,
@@ -15,8 +15,64 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Settings",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tourism Portal Settings",
+   "link_count": 0,
+   "link_to": "Tourism Portal Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Portal Definitions",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Cancellation Policy",
+   "link_count": 0,
+   "link_to": "Cancellation Policy",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Profit Margin",
+   "link_count": 0,
+   "link_to": "Profit Margin",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Company Classes",
+   "link_count": 0,
+   "link_to": "Company Class",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Hotels",
-   "link_count": 2,
+   "link_count": 4,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -43,8 +99,28 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Hotel Room Contract",
+   "link_count": 0,
+   "link_to": "Hotel Room Contract",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hotel Room Price",
+   "link_count": 0,
+   "link_to": "Hotel Room Price",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Location",
-   "link_count": 4,
+   "link_count": 5,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -91,10 +167,30 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Portal Definitions",
-   "link_count": 3,
+   "label": "Airports",
+   "link_count": 0,
+   "link_to": "Airport",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hotel Definitions",
+   "link_count": 5,
    "onboard": 0,
    "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Room Type",
+   "link_count": 0,
+   "link_to": "Room Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   },
   {
    "hidden": 0,
@@ -109,9 +205,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Cancellation Policy",
+   "label": "Room Accommodation Type Rule",
    "link_count": 0,
-   "link_to": "Cancellation Policy",
+   "link_to": "Room Accommodation Type Rule",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -119,15 +215,25 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Profit Margin",
+   "label": "Hotel Extra Services",
    "link_count": 0,
-   "link_to": "Profit Margin",
+   "link_to": "Hotel Extra Service",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Boarding Types",
+   "link_count": 0,
+   "link_to": "Hotel Boarding Type",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
   }
  ],
- "modified": "2023-10-09 11:14:56.288455",
+ "modified": "2023-10-10 14:19:16.191621",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal",

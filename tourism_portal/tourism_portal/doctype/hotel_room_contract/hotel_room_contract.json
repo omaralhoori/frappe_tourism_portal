@@ -1,0 +1,205 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "RMCNT-.YY.-.#####",
+ "creation": "2023-10-09 16:36:52.941958",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "hotel",
+  "room",
+  "boarding_type",
+  "column_break_webcn",
+  "contract_type",
+  "qty",
+  "release_days",
+  "section_break_mp3sx",
+  "buying_currency",
+  "column_break_t16ns",
+  "buying_price",
+  "section_break_jjjom",
+  "selling_from_date",
+  "check_in_from_date",
+  "column_break_2me4j",
+  "selling_to_date",
+  "check_in_to_date",
+  "custom_extra_services_section",
+  "ignore_hotel_extra_services",
+  "extra_services",
+  "rules_and_policies_section",
+  "cancellation_policy",
+  "accommodation_type_rule",
+  "profit_margin"
+ ],
+ "fields": [
+  {
+   "fieldname": "hotel",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Hotel",
+   "options": "Hotel",
+   "reqd": 1
+  },
+  {
+   "fieldname": "room",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Room",
+   "options": "Hotel Room",
+   "reqd": 1
+  },
+  {
+   "fieldname": "buying_currency",
+   "fieldtype": "Link",
+   "label": "Buying Currency",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "buying_price",
+   "fieldtype": "Currency",
+   "label": "Buying Price",
+   "options": "buying_currency"
+  },
+  {
+   "fieldname": "contract_type",
+   "fieldtype": "Select",
+   "label": "Contract Type",
+   "options": "\nGuarantee\nAllotment\nNo Contract",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_webcn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "release_days",
+   "fieldtype": "Int",
+   "label": "Release Days"
+  },
+  {
+   "fieldname": "section_break_mp3sx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_t16ns",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_jjjom",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "selling_from_date",
+   "fieldtype": "Date",
+   "label": "Selling From Date"
+  },
+  {
+   "fieldname": "check_in_from_date",
+   "fieldtype": "Date",
+   "label": "Check In From Date"
+  },
+  {
+   "fieldname": "column_break_2me4j",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "selling_to_date",
+   "fieldtype": "Date",
+   "label": "Selling To Date"
+  },
+  {
+   "fieldname": "check_in_to_date",
+   "fieldtype": "Data",
+   "label": "Check In To Date"
+  },
+  {
+   "fieldname": "rules_and_policies_section",
+   "fieldtype": "Section Break",
+   "label": "Rules and Policies"
+  },
+  {
+   "fetch_from": "hotel.hotel_cancellation_policy",
+   "fetch_if_empty": 1,
+   "fieldname": "cancellation_policy",
+   "fieldtype": "Link",
+   "label": "Cancellation Policy",
+   "options": "Cancellation Policy"
+  },
+  {
+   "fetch_from": "hotel.hotel_accommodation_type_rule",
+   "fetch_if_empty": 1,
+   "fieldname": "accommodation_type_rule",
+   "fieldtype": "Link",
+   "label": "Hotel Accommodation Type Rule",
+   "options": "Room Accommodation Type Rule"
+  },
+  {
+   "fetch_from": "hotel.hotel_profit_margin",
+   "fetch_if_empty": 1,
+   "fieldname": "profit_margin",
+   "fieldtype": "Link",
+   "label": "Hotel Profit Margin",
+   "options": "Profit Margin"
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Int",
+   "label": "Quantity",
+   "reqd": 1
+  },
+  {
+   "fieldname": "custom_extra_services_section",
+   "fieldtype": "Section Break",
+   "label": "Custom Extra Services"
+  },
+  {
+   "default": "0",
+   "description": "If checked extra services for this room will be fetched only from next table.",
+   "fieldname": "ignore_hotel_extra_services",
+   "fieldtype": "Check",
+   "label": "Ignore Hotel Extra Services"
+  },
+  {
+   "fieldname": "extra_services",
+   "fieldtype": "Table",
+   "label": "Extra Services",
+   "options": "Hotel Extra Service Item"
+  },
+  {
+   "fetch_from": "hotel.boarding_type",
+   "fetch_if_empty": 1,
+   "fieldname": "boarding_type",
+   "fieldtype": "Link",
+   "label": "Boarding Type",
+   "options": "Hotel Boarding Type"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-10-10 14:18:18.700868",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Hotel Room Contract",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

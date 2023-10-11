@@ -1,31 +1,39 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:hotel_class",
- "creation": "2023-10-09 11:17:04.812786",
+ "autoname": "field:room_type_code",
+ "creation": "2023-10-09 16:27:27.473263",
  "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "hotel_class"
+  "room_type_code",
+  "room_type"
  ],
  "fields": [
   {
-   "fieldname": "hotel_class",
+   "fieldname": "room_type",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Hotel Class",
+   "label": "Room Type",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "room_type_code",
+   "fieldtype": "Data",
+   "label": "Room Type Code",
    "reqd": 1,
    "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-09 11:17:04.812786",
+ "modified": "2023-10-09 16:29:41.694132",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
- "name": "Hotel Class",
+ "name": "Room Type",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
@@ -43,7 +51,9 @@
   }
  ],
  "quick_entry": 1,
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "room_type"
 }
