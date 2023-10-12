@@ -1,0 +1,33 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-10-12 19:12:01.985922",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "postal_code"
+ ],
+ "fields": [
+  {
+   "fieldname": "postal_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Postal Code",
+   "options": "Postal Code",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-10-12 19:12:01.985922",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Postal Code Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -10,21 +10,19 @@
  "field_order": [
   "hotel",
   "room",
-  "boarding_type",
   "column_break_webcn",
   "contract_type",
   "qty",
   "release_days",
-  "section_break_mp3sx",
-  "buying_currency",
-  "column_break_t16ns",
-  "buying_price",
   "section_break_jjjom",
   "selling_from_date",
   "check_in_from_date",
   "column_break_2me4j",
   "selling_to_date",
   "check_in_to_date",
+  "custom_boardings_section",
+  "ignore_hotel_boarding",
+  "boardings",
   "custom_extra_services_section",
   "ignore_hotel_extra_services",
   "extra_services",
@@ -51,18 +49,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "buying_currency",
-   "fieldtype": "Link",
-   "label": "Buying Currency",
-   "options": "Currency"
-  },
-  {
-   "fieldname": "buying_price",
-   "fieldtype": "Currency",
-   "label": "Buying Price",
-   "options": "buying_currency"
-  },
-  {
    "fieldname": "contract_type",
    "fieldtype": "Select",
    "label": "Contract Type",
@@ -78,14 +64,6 @@
    "fieldname": "release_days",
    "fieldtype": "Int",
    "label": "Release Days"
-  },
-  {
-   "fieldname": "section_break_mp3sx",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "column_break_t16ns",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "section_break_jjjom",
@@ -112,7 +90,7 @@
   },
   {
    "fieldname": "check_in_to_date",
-   "fieldtype": "Data",
+   "fieldtype": "Date",
    "label": "Check In To Date"
   },
   {
@@ -151,6 +129,7 @@
    "reqd": 1
   },
   {
+   "collapsible": 1,
    "fieldname": "custom_extra_services_section",
    "fieldtype": "Section Break",
    "label": "Custom Extra Services"
@@ -169,17 +148,30 @@
    "options": "Hotel Extra Service Item"
   },
   {
+   "collapsible": 1,
+   "fieldname": "custom_boardings_section",
+   "fieldtype": "Section Break",
+   "label": "Custom Boardings"
+  },
+  {
    "fetch_from": "hotel.boarding_type",
    "fetch_if_empty": 1,
-   "fieldname": "boarding_type",
-   "fieldtype": "Link",
-   "label": "Boarding Type",
-   "options": "Hotel Boarding Type"
+   "fieldname": "boardings",
+   "fieldtype": "Table",
+   "label": "Boardings",
+   "options": "Hotel Boarding Table"
+  },
+  {
+   "default": "0",
+   "description": "If checked hotel boardings for this room will be fetched only from next table.",
+   "fieldname": "ignore_hotel_boarding",
+   "fieldtype": "Check",
+   "label": "Ignore Hotel Boarding"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-10 14:18:18.700868",
+ "modified": "2023-10-12 19:40:59.745480",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Room Contract",

@@ -10,6 +10,7 @@
  "field_order": [
   "area_code",
   "area_name",
+  "area_type",
   "city",
   "postal_code"
  ],
@@ -39,16 +40,22 @@
   },
   {
    "fieldname": "postal_code",
-   "fieldtype": "Link",
-   "in_list_view": 1,
+   "fieldtype": "Table MultiSelect",
    "label": "Postal Code",
-   "options": "Postal Code",
+   "options": "Postal Code Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "area_type",
+   "fieldtype": "Select",
+   "label": "Area Type",
+   "options": "Neighborhood\nTown",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-09 11:28:32.325144",
+ "modified": "2023-10-12 19:20:20.897564",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Area",

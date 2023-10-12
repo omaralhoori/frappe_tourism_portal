@@ -8,7 +8,8 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "postal_code"
+  "postal_code",
+  "districts"
  ],
  "fields": [
   {
@@ -18,11 +19,16 @@
    "label": "Postal Code",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "districts",
+   "fieldtype": "Small Text",
+   "label": "Districts"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-09 11:22:15.565696",
+ "modified": "2023-10-12 19:22:35.675117",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Postal Code",
