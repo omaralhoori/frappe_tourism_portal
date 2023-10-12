@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:nationality_name",
  "creation": "2023-10-12 16:04:10.084881",
@@ -22,7 +23,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-12 16:04:10.084881",
+ "modified": "2023-10-12 16:06:04.431009",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Nationality",
