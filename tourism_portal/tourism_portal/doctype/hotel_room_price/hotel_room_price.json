@@ -12,6 +12,7 @@
   "hotel",
   "section_break_sgxpg",
   "company_class",
+  "nationality",
   "column_break_qj79r",
   "selling_type",
   "section_break_d9xxc",
@@ -110,11 +111,17 @@
   {
    "fieldname": "column_break_qj79r",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "nationality",
+   "fieldtype": "Link",
+   "label": "Nationality",
+   "options": "Nationality"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-10 13:18:14.635749",
+ "modified": "2023-10-12 16:10:42.439881",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Room Price",

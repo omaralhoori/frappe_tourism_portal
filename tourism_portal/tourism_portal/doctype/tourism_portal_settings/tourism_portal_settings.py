@@ -11,6 +11,7 @@ portal_keydict = {
 	# "key in defaults": "key in Global Defaults"
 	"hotel_cancellation_policy": "default_hotel_cancellation_policy",
 	"hotel_accommodation_type_rule": "default_hotel_accommodation_type_rule",
+	"hotel_child_rate_policy": "default_hotel_child_rate_policy",
 	"hotel_profit_margin": "default_hotel_profit_margin",
 }
 

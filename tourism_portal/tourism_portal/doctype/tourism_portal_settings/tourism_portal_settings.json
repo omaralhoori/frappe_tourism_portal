@@ -13,6 +13,8 @@
   "hotel_rules_section",
   "default_hotel_cancellation_policy",
   "default_hotel_accommodation_type_rule",
+  "column_break_tiaee",
+  "default_hotel_child_rate_policy",
   "default_hotel_profit_margin"
  ],
  "fields": [
@@ -59,13 +61,24 @@
    "fieldtype": "Int",
    "label": "Max Hotel Rooms Selected",
    "reqd": 1
+  },
+  {
+   "fieldname": "default_hotel_child_rate_policy",
+   "fieldtype": "Link",
+   "label": "Default Hotel Child Rate Policy",
+   "options": "Child Rate Policy",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_tiaee",
+   "fieldtype": "Column Break"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-10-09 11:19:48.725145",
+ "modified": "2023-10-12 16:25:33.203743",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal Settings",

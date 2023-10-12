@@ -1,0 +1,66 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-10-12 16:18:58.530730",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "from_age",
+  "to_age",
+  "room_child_order",
+  "adult_price_percentage",
+  "consider_adult"
+ ],
+ "fields": [
+  {
+   "fieldname": "from_age",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "From Age",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_age",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "To Age",
+   "reqd": 1
+  },
+  {
+   "fieldname": "room_child_order",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Room Child Order",
+   "options": "First Child\nSecond Child\nThird Child\nAll Children",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "adult_price_percentage",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Adult Price Percentage",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "consider_adult",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Consider Adult"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-10-12 16:20:06.188748",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Child Rate Policy Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

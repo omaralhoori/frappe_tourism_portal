@@ -17,7 +17,7 @@
   "boarding_type",
   "address_and_location_section",
   "area",
-  "location",
+  "gps_location",
   "column_break_yga8q",
   "address",
   "section_break_aj8g5",
@@ -25,6 +25,8 @@
   "rules_and_policies_section",
   "hotel_cancellation_policy",
   "hotel_accommodation_type_rule",
+  "column_break_zx4sv",
+  "hotel_child_rate_policy",
   "hotel_profit_margin",
   "contacts_section",
   "contact",
@@ -66,12 +68,6 @@
    "fieldtype": "Select",
    "label": "Star Rating",
    "options": "\nOne Star\nTwo-Star\nThree-Star\nFour-Star\nFive-Star"
-  },
-  {
-   "description": "Location should be in this form: Latitude,Longitude",
-   "fieldname": "location",
-   "fieldtype": "Data",
-   "label": "Location"
   },
   {
    "fieldname": "hotel_info_section",
@@ -157,11 +153,27 @@
    "label": "Boarding Type",
    "options": "Hotel Boarding Type",
    "reqd": 1
+  },
+  {
+   "fieldname": "hotel_child_rate_policy",
+   "fieldtype": "Link",
+   "label": "Hotel Child Rate Policy",
+   "options": "Child Rate Policy"
+  },
+  {
+   "fieldname": "column_break_zx4sv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Location should be in this form: Latitude,Longitude",
+   "fieldname": "gps_location",
+   "fieldtype": "Data",
+   "label": "GPS Location"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-10 14:17:31.295215",
+ "modified": "2023-10-12 16:26:54.140511",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel",
