@@ -28,9 +28,10 @@
    "reqd": 1
   }
  ],
+ "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-08 15:39:02.288287",
+ "modified": "2023-10-14 02:47:47.750143",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Room Accommodation Type Rule",
