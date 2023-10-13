@@ -21,11 +21,22 @@
     <link rel="stylesheet" href="/assets/tourism_portal/css/bootstrap.select2.theme.css"> <!-- Templatemo style -->
 
     <style>
-        .pax-template-container{
+        .pax-template-container {
             display: none;
         }
-        .children-template-container{
+
+        .children-template-container {
             display: none;
+        }
+
+        .search-card-container {
+            position: relative;
+        }
+
+        .collapse-btn {
+            position: absolute;
+            right: -160px;
+            bottom: 0;
         }
     </style>
 </head>
@@ -68,74 +79,91 @@
             </div>
         </div>
         <div class="tm-section tm-bg-img" id="tm-section-1">
-            <button data-toggle="collapse" data-target="#demo" class="btn btn-primary"><i class="fa fa-chevron-up" aria-hidden="true"></i></button>
-            <div id="demo" class=" tm-bg-white ie-container-width-fix-2">
-                <div class="container ie-h-align-center-fix">
-                    <div class="row">
-                        <div class="col-xs-12 ml-auto mr-auto ie-container-width-fix search-card">
-                            <form class="tm-search-form tm-section-pad-2">
-                                <div class="form-row tm-search-form-row">
-                                    <div class="form-group tm-form-element tm-form-element-2">
-                                        <i class="fa fa-map-marker fa-2x tm-color-primary"></i>
-                                        <label class="">&nbsp;&nbsp; Location</label>
-                                        <!-- <input name="city" type="text" class="form-control" id="inputCity" placeholder="Type your destination..."> -->
-                                        <select name="location" type="text" class="form-control select2-select">
-                                            <option value=""></option>
-                                            <option value="1">1</option>
 
-                                        </select>
-                                    </div>
-                                    <div class="form-group tm-form-element tm-form-element-2">
-                                        <i class="fa fa-flag fa-2x tm-color-primary"></i>
-                                        <label class="">&nbsp;&nbsp; Nationality</label>
-                                        <!-- <input name="city" type="text" class="form-control" id="inputCity" placeholder="Type your destination..."> -->
-                                        <select name="nationality" type="text" class="form-control select2-select">
+            <div class=" tm-bg-white ie-container-width-fix-2  tm-search-form-row search-card-container">
+                <button onclick="collapseBtnPressed(this)"
+                    class="btn btn-primary collapse-btn">
+                    <i class="fa fa-chevron-up" aria-hidden="true"></i>
+                </button>
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a>Hotel</a>
+                            </h4>
+                        </div>
+                        <div class="panel-collapse collapse show container ie-h-align-center-fix">
+                            <div class="row">
+                                <div class="col-xs-12 ml-auto mr-auto ie-container-width-fix search-card">
 
-                                        </select>
-                                    </div>
-                                    <div class="form-group tm-form-element tm-form-element-2">
-                                        <i class="fa fa-calendar fa-2x tm-form-element-icon"></i>
-                                        <input name="check-in" type="text" class="form-control date-picker"
-                                            onfocus="(this.type='date')" onblur="(this.type='text')"
-                                            placeholder="Check In">
-                                    </div>
-                                    <div class="form-group tm-form-element tm-form-element-2">
-                                        <i class="fa fa-calendar fa-2x tm-form-element-icon"></i>
-                                        <input name="check-out" type="text" class="form-control date-picker"
-                                            onfocus="(this.type='date')" onblur="(this.type='text')"
-                                            placeholder="Check Out">
-                                    </div>
-                                </div>
-                                <div class="form-row tm-search-form-row">
-                                    <div class="form-group tm-form-element tm-form-element-2">
-                                        <select name="room" onchange="romCountChanged(this)" class="form-control tm-select room-select">
-                                            <option value="">Room</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                        </select>
-                                        <i class="fa fa-2x fa-bed tm-form-element-icon"></i>
-                                    </div>
-                                    <div class="pax-container">
+                                    <form class="tm-search-form tm-section-pad-2">
+                                        <div class="form-row tm-search-form-row">
+                                            <div class="form-group tm-form-element tm-form-element-2">
+                                                <i class="fa fa-map-marker fa-2x tm-color-primary"></i>
+                                                <label class="">&nbsp;&nbsp; Location</label>
+                                                <!-- <input name="city" type="text" class="form-control" id="inputCity" placeholder="Type your destination..."> -->
+                                                <select name="location" type="text" class="form-control select2-select">
+                                                    <option value=""></option>
+                                                    <option value="1">1</option>
 
-                                    </div>
+                                                </select>
+                                            </div>
+                                            <div class="form-group tm-form-element tm-form-element-2">
+                                                <i class="fa fa-flag fa-2x tm-color-primary"></i>
+                                                <label class="">&nbsp;&nbsp; Nationality</label>
+                                                <!-- <input name="city" type="text" class="form-control" id="inputCity" placeholder="Type your destination..."> -->
+                                                <select name="nationality" type="text"
+                                                    class="form-control select2-select">
+
+                                                </select>
+                                            </div>
+                                            <div class="form-group tm-form-element tm-form-element-2">
+                                                <i class="fa fa-calendar fa-2x tm-form-element-icon"></i>
+                                                <input name="check-in" type="text" class="form-control date-picker"
+                                                    onfocus="(this.type='date')" onblur="(this.type='text')"
+                                                    placeholder="Check In">
+                                            </div>
+                                            <div class="form-group tm-form-element tm-form-element-2">
+                                                <i class="fa fa-calendar fa-2x tm-form-element-icon"></i>
+                                                <input name="check-out" type="text" class="form-control date-picker"
+                                                    onfocus="(this.type='date')" onblur="(this.type='text')"
+                                                    placeholder="Check Out">
+                                            </div>
+                                        </div>
+                                        <div class="form-row tm-search-form-row">
+                                            <div class="form-group tm-form-element tm-form-element-2">
+                                                <select name="room" onchange="romCountChanged(this)"
+                                                    class="form-control tm-select room-select">
+                                                    <option value="">Room</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                    <option value="6">6</option>
+                                                    <option value="7">7</option>
+                                                    <option value="8">8</option>
+                                                    <option value="9">9</option>
+                                                    <option value="10">10</option>
+                                                </select>
+                                                <i class="fa fa-2x fa-bed tm-form-element-icon"></i>
+                                            </div>
+                                            <div class="pax-container">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-row tm-search-form-row d-flex flex-row-reverse">
+                                            <div class="form-group tm-form-element tm-form-element-2">
+                                                <button class="btn btn-primary tm-btn-search">Add Transfer</button>
+                                            </div>
+                                            <div class="form-group tm-form-element tm-form-element-2">
+                                                <button class="btn btn-primary tm-btn-search">Add Tour</button>
+                                            </div>
+                                        </div>
+                                    </form>
+
                                 </div>
-                                <div class="form-row tm-search-form-row d-flex flex-row-reverse">
-                                    <div class="form-group tm-form-element tm-form-element-2">
-                                        <button class="btn btn-primary tm-btn-search">Add Transfer</button>
-                                    </div>
-                                    <div class="form-group tm-form-element tm-form-element-2">
-                                        <button class="btn btn-primary tm-btn-search">Add Tour</button>
-                                    </div>
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -189,7 +217,7 @@
                 <div class="form-group tm-form-element tm-form-element-2">
                     <select name="child-age" class="form-control tm-select">
                         <option value="">Child Age</option>
-                        <option value="1">1</option>
+                        <option value="1">1</option>collapse
                         <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4">4</option>
@@ -265,24 +293,32 @@
             })
 
             function romCountChanged(e) {
-                if(!e.value) e.value = 0;
+                if (!e.value) e.value = 0;
                 var paxContainer = e.parentNode.parentNode.querySelector('.pax-container');
                 var html = '';
-                for( var i=0;i < e.value; i++){
-                    document.querySelector('.pax-template-container .room-label').innerText = `Room ${i+1}`
+                for (var i = 0; i < e.value; i++) {
+                    document.querySelector('.pax-template-container .room-label').innerText = `Room ${i + 1}`
                     html += document.querySelector('.pax-template-container').innerHTML;
                 }
                 paxContainer.innerHTML = html;
             }
             function childCountChanged(e) {
-                if(!e.value) e.value = 0;
+                if (!e.value) e.value = 0;
                 var childrenContainer = e.parentNode.parentNode.querySelector('.children-container');
                 var html = '';
-                for( var i=0;i < e.value; i++){
-                    document.querySelector('.children-template-container .child-label').innerText = `Child ${i+1}`
+                for (var i = 0; i < e.value; i++) {
+                    document.querySelector('.children-template-container .child-label').innerText = `Child ${i + 1}`
                     html += document.querySelector('.children-template-container').innerHTML;
                 }
                 childrenContainer.innerHTML = html;
+            }
+            function collapseBtnPressed(e) {
+                if (e.parentNode.querySelector('.panel-collapse').classList.toggle('show')){
+                    e.innerHTML = `<i class="fa fa-chevron-down" aria-hidden="true"></i>`
+                }else{
+                    e.innerHTML = `<i class="fa fa-chevron-up" aria-hidden="true"></i>`
+                }
+                
             }
 
         </script>
