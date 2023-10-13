@@ -1,47 +1,40 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:profit_margin_name",
- "creation": "2023-10-09 11:14:20.012093",
+ "autoname": "field:town_name",
+ "creation": "2023-10-14 02:43:35.522496",
  "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "profit_margin_name",
-  "margin_type",
-  "profit_margin"
+  "town_name",
+  "city"
  ],
  "fields": [
   {
-   "fieldname": "profit_margin_name",
+   "fieldname": "town_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Profit Margin Name",
+   "label": "Town Name",
    "reqd": 1,
    "unique": 1
   },
   {
-   "fieldname": "profit_margin",
-   "fieldtype": "Float",
+   "fieldname": "city",
+   "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Profit Margin",
-   "reqd": 1
-  },
-  {
-   "fieldname": "margin_type",
-   "fieldtype": "Select",
-   "label": "Margin Type",
-   "options": "Percentage\nAmount",
+   "label": "City",
+   "options": "City",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-14 02:42:25.493478",
+ "modified": "2023-10-14 02:45:50.880158",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
- "name": "Profit Margin",
+ "name": "Town",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
