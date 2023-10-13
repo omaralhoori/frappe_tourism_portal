@@ -11,7 +11,13 @@ frappe.ui.form.on('Hotel Room Contract', {
 				frm.events.view_all_prices(frm);
 			});
 		}
-		
+		frm.set_query("room_type", function() {
+			return {
+				query: "tourism_portal.controllers.queries.hotel_room_type",
+				filters:
+					{"hotel": frm.doc.hotel}
+			};
+		});
 	},
 	add_price(frm) {
 		frappe.new_doc('Hotel Room Price', {

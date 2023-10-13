@@ -9,7 +9,7 @@
  "engine": "InnoDB",
  "field_order": [
   "hotel",
-  "room",
+  "room_type",
   "column_break_webcn",
   "contract_type",
   "qty",
@@ -38,14 +38,6 @@
    "in_list_view": 1,
    "label": "Hotel",
    "options": "Hotel",
-   "reqd": 1
-  },
-  {
-   "fieldname": "room",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Room",
-   "options": "Hotel Room",
    "reqd": 1
   },
   {
@@ -167,11 +159,19 @@
    "fieldname": "ignore_hotel_boarding",
    "fieldtype": "Check",
    "label": "Ignore Hotel Boarding"
+  },
+  {
+   "fieldname": "room_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Room Type",
+   "options": "Room Type",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-12 19:40:59.745480",
+ "modified": "2023-10-13 13:22:17.611739",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Room Contract",
