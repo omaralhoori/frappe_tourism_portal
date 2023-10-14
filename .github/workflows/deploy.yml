@@ -10,4 +10,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - run: ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "cd "
+      with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - run: ssh -o StrictHostKeyChecking=no yahyaelrasit@34.22.250.82 "cd "
