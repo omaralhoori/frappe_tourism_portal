@@ -9,7 +9,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - run: ssh -o StrictHostKeyChecking=no yahyaelrasit@34.22.250.82 "cd "
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH key
+      run: |
+        echo "$SSH_PRIVATE_KEY" > deploy_key.pem
+        chmod 600 deploy_key.pem
+        eval "$(ssh-agent -s)"
+        ssh-add deploy_key.pem
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: SSH into server
+      run: |
+        ssh yahyaelrasit@34.22.250.82 -i deploy_key.pem 'cd'
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
