@@ -10,4 +10,4 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - run: ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "cd $WORK_DIR && git pull origin main"
+      - run: ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "cd home"
