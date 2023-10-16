@@ -107,7 +107,7 @@ p {
 	background: var(--primary-color);	
 }
 
-.tm-top-bar .navbar-expand-lg .navbar-nav .nav-link { padding: 50px 35px; }
+.tm-top-bar .navbar-expand-lg .navbar-nav .nav-link { padding: 39px 35px; }
 
 .tm-top-bar {
     position: fixed;
@@ -117,7 +117,7 @@ p {
     padding: 0;
     z-index: 10000;
     transition: all 0.2s ease-in-out;
-    height: 119px;
+    height: 100px;
     background: white;
 }
 

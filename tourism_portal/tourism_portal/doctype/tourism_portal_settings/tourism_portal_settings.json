@@ -8,7 +8,10 @@
  "engine": "InnoDB",
  "field_order": [
   "portal_settings_tab",
+  "hotel_search_settings_section",
   "max_hotel_rooms_selected",
+  "max_adults_per_room",
+  "max_children_per_room",
   "rules_and_policies_tab",
   "hotel_rules_section",
   "default_hotel_cancellation_policy",
@@ -72,13 +75,30 @@
   {
    "fieldname": "column_break_tiaee",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hotel_search_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Hotel Search Settings"
+  },
+  {
+   "fieldname": "max_adults_per_room",
+   "fieldtype": "Int",
+   "label": "Max Adults Per Room",
+   "reqd": 1
+  },
+  {
+   "fieldname": "max_children_per_room",
+   "fieldtype": "Int",
+   "label": "Max Children Per Room",
+   "reqd": 1
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-10-12 16:25:33.203743",
+ "modified": "2023-10-16 13:29:30.260457",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal Settings",

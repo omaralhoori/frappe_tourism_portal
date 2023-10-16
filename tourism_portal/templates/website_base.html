@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>
+        {% block title %}
+        {{ title | striptags }}
+        {% endblock %}
+    </title>
+
+    <!-- load stylesheets -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+    <!-- Google web font "Open Sans" -->
+    <link rel="stylesheet" href="/assets/tourism_portal/css/font-awesome.min.css"> <!-- Font Awesome -->
+    <link rel="stylesheet" href="/assets/tourism_portal/css/bootstrap.min.css"> <!-- Bootstrap style -->
+    <link rel="stylesheet" type="text/css" href="/assets/tourism_portal/css/slick.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/tourism_portal/css/slick-theme.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/tourism_portal/css/datepicker.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/tourism_portal/css/select2.min.css" />
+    <link rel="stylesheet" href="/assets/tourism_portal/css/tooplate-style.css"> <!-- Templatemo style -->
+    <link rel="stylesheet" href="/assets/tourism_portal/css/bootstrap.select2.theme.css"> <!-- Templatemo style -->
+    {%- block style %}
+		{% if colocated_css -%}
+			<style>{{ colocated_css }}</style>
+		{%- endif %}
+	{%- endblock -%}
+</head>
+
+<body>
+    <div class="tm-main-content" id="top">
+    {% include "templates/includes/navbar.html" %}
+
+    {% block page_content %}
+
+    {% endblock %}
+</div>
+
+            <!-- load JS files -->
+            <script src="/assets/tourism_portal/js/jquery-1.11.3.min.js"></script>
+            <!-- jQuery (https://jquery.com/download/) -->
+            <script src="/assets/tourism_portal/js/popper.min.js"></script> <!-- https://popper.js.org/ -->
+            <script src="/assets/tourism_portal/js/bootstrap.min.js"></script> <!-- https://getbootstrap.com/ -->
+            <script src="/assets/tourism_portal/js/datepicker.min.js"></script>
+            <!-- https://github.com/qodesmith/datepicker -->
+            <script src="/assets/tourism_portal/js/jquery.singlePageNav.min.js"></script>
+            <!-- Single Page Nav (https://github.com/ChrisWojcik/single-page-nav) -->
+            <script src="/assets/tourism_portal/js/slick.min.js"></script> <!-- http://kenwheeler.github.io/slick/ -->
+            <script src="/assets/tourism_portal/js/bootstrap-select2-theme.js"></script>
+            <!-- http://kenwheeler.github.io/slick/ -->
+            <script src="/assets/tourism_portal/js/select2.min.js"></script>
+            {%- block script %}
+            {% if colocated_js -%}
+                <script>{{ colocated_js }}</script>
+            {%- endif %}
+        {%- endblock %}
+</body>
+
+</html>

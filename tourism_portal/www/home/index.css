@@ -1,0 +1,27 @@
+body{
+    background-image: url('/assets/tourism_portal/images/bg-img-1.jpg');
+}
+
+.html-template{
+    display: none;
+}
+
+.search-card-container {
+    position: relative;
+}
+
+.collapse-btn {
+    position: absolute;
+    right: -100px;
+    bottom: 0;
+}
+
+.select2-container {
+    width: 100% !important;
+    padding: 0;
+    }
+
+.tm-section{
+    flex-direction: column;
+    margin-top: 100px;
+}
