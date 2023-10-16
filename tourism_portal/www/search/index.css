@@ -1,0 +1,25 @@
+.filters-container{
+    height: 300px;
+}
+
+.search-results{
+    height: 800px;
+}
+
+.room-image{
+  padding: 5px;
+}
+.room-image img {
+    object-fit: cover;
+    height: 200px;
+    width: 100%;
+    border-radius: 5px;
+}
+.room-title{
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.hotel-title{
+    font-size: 1.1em;
+    font-weight: bold;
+}

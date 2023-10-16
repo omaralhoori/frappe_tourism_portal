@@ -410,7 +410,12 @@ select.tm-select::-ms-expand { display: none; }
 	position: relative; 
 	padding-top: 515px;
 }
-
+.page-content{
+	margin-top: 100px;
+}
+.card{
+	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
 video {
     position: absolute;
     top: 50%;
