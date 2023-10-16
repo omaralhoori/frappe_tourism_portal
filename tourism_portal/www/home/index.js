@@ -76,3 +76,44 @@ function addTransferClicked(e) {
     e.style.display = 'none';
     
 }
+
+function searchBtnClicked(e){
+    var hotelParams = getHotelParams();
+    console.log(hotelParams);
+}
+
+function getHotelParams(){
+    var hotelCards = document.querySelectorAll('.hotel-search-card');
+    var hotelParams = []
+    hotelCards.forEach(hotel => {
+        hotelParams.push( getHotelSearchInfo(hotel))
+    })
+    return hotelParams;
+}
+
+function getHotelSearchInfo(hotel){
+    var params = {};
+    // ToDo: Validate All inputs inserted 
+    params['location'] = hotel.querySelector('select[name="location"]').value
+    params['nationality'] = hotel.querySelector('select[name="nationality"]').value
+    params['checkin'] = hotel.querySelector('input[name="check-in"]').value
+    params['checkout'] = hotel.querySelector('input[name="check-out"]').value
+    params['room'] = hotel.querySelector('select[name="room"]').value
+    var pax = hotel.querySelectorAll(".pax-search-card")
+    // ToDo: Validate Same pax count selected as rooms count
+    var paxInfo = []
+    pax.forEach(room => {
+        var adults = room.querySelector("select[name='adult']").value
+        var children = room.querySelector("select[name='children']").value
+        var childrenAges = room.querySelectorAll(".children-search-card")
+        var childrenInfo = []
+        
+        childrenAges.forEach(child => {
+            childrenInfo.push(child.querySelector('select[name="child-age"]').value)
+        })
+        paxInfo.push({"adults": adults, "children": children, "childrenInfo": childrenInfo})
+
+    })
+    params['paxInfo'] = paxInfo
+    return params
+}
