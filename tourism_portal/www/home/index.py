@@ -28,7 +28,12 @@ def get_locations():
 		INNER JOIN `tabArea` as tbl2 ON tbl1.area=tbl2.name
 		WHERE tbl1.disabled=0
 	""", as_dict=True)
-	areas = [{"location_id": hotel.get('area_id'), "location_name": hotel.get('area_name')} for hotel in hotels]
-	locations['hotels']['hotels'] = hotels
-	locations['hotels']['areas'] = areas
+	# areas = [{"location_id": hotel.get('area_id'), "location_name": hotel.get('area_name')} for hotel in hotels]
+	for hotel in hotels:
+		if not locations['hotels'].get(hotel.get('area_id')):
+			locations['hotels'][hotel.get('area_id')] = []
+		locations['hotels'][hotel.get('area_id')].append(hotel)
+	# locations['hotels']['hotels'] = hotels
+	# locations['hotels']['areas'] = areas
+	print(locations)
 	return locations

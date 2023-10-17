@@ -23,9 +23,12 @@
                                     <select name="location" type="text" class="form-control select2-select">
                                         <option value=""></option>
                                         {% for location_type in locations.get('hotels') %}
-                                            <optgroup label="{{location_type|capitalize}}">
+                                            <optgroup label="{{locations['hotels'][location_type][0].get('area_name')}}">
+                                            <option doc-type="area" value="{{locations['hotels'][location_type][0].get('area_id')}}">
+                                                {{locations['hotels'][location_type][0].get('area_name')}}</option>
+
                                                 {% for location in locations['hotels'].get(location_type) %}
-                                                    <option locaiton-type="{{locaiton_type}}" value="{{location.get('location_id')}}">{{location.get('location_name')}}</option>
+                                                    <option doc-type="hotel" value="{{location.get('location_id')}}">{{location.get('location_name')}}</option>
                                                 {% endfor %}
                                             </optgroup>
                                         {% endfor %}

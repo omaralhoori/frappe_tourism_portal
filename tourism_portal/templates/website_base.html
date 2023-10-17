@@ -23,6 +23,34 @@
     <link rel="stylesheet" type="text/css" href="/assets/tourism_portal/css/select2.min.css" />
     <link rel="stylesheet" href="/assets/tourism_portal/css/tooplate-style.css"> <!-- Templatemo style -->
     <link rel="stylesheet" href="/assets/tourism_portal/css/bootstrap.select2.theme.css"> <!-- Templatemo style -->
+    <style>
+        .loading-progress{
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            background-color: rgba(50, 50, 50, 0.5);
+            z-index: 99999;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            display: none;
+        }
+        .loader {
+        border: 16px solid #f3f3f3; /* Light grey */
+        border-top: 16px solid var(--primary-color); /* Blue */
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        animation: spin 2s linear infinite;
+        }
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+    </style>
     {%- block style %}
 		{% if colocated_css -%}
 			<style>{{ colocated_css }}</style>
@@ -40,6 +68,9 @@
     {% endblock %}
 </div>
 </div>
+</div>
+<div class="loading-progress">
+    <div class="loader"></div>
 </div>
 
             <!-- load JS files -->

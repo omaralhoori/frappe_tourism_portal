@@ -16,9 +16,29 @@ $(document).ready(function () {
             placeholder: placeholder,
             escapeMarkup: function (markup) {
                 return markup;
-            }
+            },
+            templateResult: formatState
         });
     })
+
+    function formatState (state) {
+        if (!state.id) { return state.text; }
+        var doctype = state.element.getAttribute('doc-type')
+        var icon = "";
+        if (doctype == 'area'){
+            icon = '<i class="fa fa-map tm-color-primary"></i>'
+        }else if (doctype == 'hotel'){
+            icon = '<i class="fa fa-hotel tm-color-primary"></i>'
+        }else{
+            
+        }
+        var $state = $(
+          '<span> ' + icon +  
+      state.text +     '</span>'
+       );
+       return $state;
+      };
+  
 });
 // Date Picker
 $('.date-picker').each(function (i, select) {
@@ -79,7 +99,11 @@ function addTransferClicked(e) {
 
 function searchBtnClicked(e){
     var hotelParams = getHotelParams();
-    console.log(hotelParams);
+    const paramsJSON = JSON.stringify(hotelParams);
+
+    window.open(`search?params=${encodeURIComponent(paramsJSON)}`, '_self');
+
+    // console.log(new URLSearchParams().toString());
 }
 
 function getHotelParams(){
