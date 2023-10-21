@@ -10,6 +10,7 @@
   "room_contract",
   "column_break_csdnd",
   "hotel",
+  "room_accommodation_type",
   "section_break_sgxpg",
   "company_class",
   "nationality",
@@ -117,11 +118,17 @@
    "fieldtype": "Link",
    "label": "Nationality",
    "options": "Nationality"
+  },
+  {
+   "fieldname": "room_accommodation_type",
+   "fieldtype": "Link",
+   "label": "Room Accommodation Type",
+   "options": "Room Accommodation Type"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-12 16:10:42.439881",
+ "modified": "2023-10-21 12:31:03.018266",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Room Price",

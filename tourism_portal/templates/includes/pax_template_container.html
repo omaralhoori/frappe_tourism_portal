@@ -12,7 +12,7 @@
     </div>
     <div class="form-group tm-form-element tm-form-element-2">
         <select onchange="childCountChanged(this)" name="children" class="form-control tm-select">
-            <option value="">Children</option>
+            <option value="0">Children</option>
             {% for opt in range(max_room_children)%}
                 <option value="{{opt + 1}}">{{opt + 1}}</option>
             {% endfor %}

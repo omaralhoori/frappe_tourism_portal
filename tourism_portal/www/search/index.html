@@ -1,30 +1,72 @@
 {% extends "templates/website_base.html" %}
 
+{% macro hotel_search_result(room, roomName, loopIndex) %}
+<div class="result-item mt-3 card">
+    <div class="row">
+    <div class="col-md-3">
+        <div class="room-image">
+            {% if room.get('room_image')%}
+            <img src="{{room.get('room_image')}}" alt="">
+            {%else%}
+            <img src="/assets/tourism_portal/images/no-image.jpg" alt="">
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-6 room-detail-container">
+        <div class="">
+            <div class="room-title mt-2">{{room.get('hotel_name')}}</div>
+        <div class="hotel-title">{{room.get('room_type')}}</div>
+        <div class="room-details">
+            <div class="room-details-item"><div class="badge badge-primary">Non Refundable</div></div>
+            <div class="room-details-item">Full Board</div>
+            <div class="room-details-item">Sea View</div>
+        </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="d-flex justify-content-center align-items-center flex-column h-100" onclick="roomSelected(this)">
+            <div class="room-total"><span class="room-total-nights">3 Nights</span><span class="room-total-price">1500 USD</span></div>
+            <div class="room-price mt-1">(Per Room 500USD)</div>
+            <!-- <div class="room-count mt-2">3 Rooms</div> -->
+            <input class="form-control mt-2" {% if loopIndex==1 %} checked="checked" {% endif %} type="radio" data-value="{{room.get('room_id')}}" name="{{roomName}}"/>
+        </div>
+    </div>
+</div>
+</div>
+{% endmacro %}
+
 {% block page_content %}
 <div class="content pt-4">
   <div class="row hotels-results">
-    <div class="col-lg-3">
-        <div class="filters-container card">
-
-        </div>
-    </div>
+    
     <div class="col-lg-9">
         <div class="search-results">
-            <div class="result-item card">
-                <div class="row">
-                <div class="col-md-3">
-                    <div class="room-image">
-                        <img src="/assets/tourism_portal/images/no-image.jpg" alt="">
-                    </div>
+            {% for search in rooms %}
+                {% for hotel in search %}
+                    {% for roomName in search[hotel] %}
+                    {{ roomName }}
+                        {% for room in search[hotel][roomName]%}
+                            {{hotel_search_result(room, roomName, loop.index)}}
+                        {% endfor %}
+                    {%endfor %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="filters-container mt-3 card">
+            <div class="price-summary">
+                <div class="price-total-calculator">
+                    <table>
+                        <tr><td>Hotels:</td><td>1500 USD</td></tr>
+                        <tr><td>Transfers:</td><td>0 USD</td></tr>
+                        <tr><td>Tours:</td><td>0 USD</td></tr>
+                        <tr><td>Total:</td><td>1500 USD</td></tr>
+                    </table>
                 </div>
-                <div class="col-md-6">
-                    <div class="room-title mt-2">Deluex Super</div>
-                    <div class="hotel-title">Taxim Express</div>
+                <div class="confirm-button-continer">
+                    <button onclick="confirmButtonClicked(this)" class="btn btn-primary tm-btn-search">Confirm</button>
                 </div>
-                <div class="col-md-3">
-
-                </div>
-            </div>
             </div>
         </div>
     </div>
@@ -36,4 +78,6 @@
 
   </div>
 </div>
+
+
 {% endblock %}

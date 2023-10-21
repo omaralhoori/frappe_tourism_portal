@@ -118,7 +118,10 @@ function getHotelParams(){
 function getHotelSearchInfo(hotel){
     var params = {};
     // ToDo: Validate All inputs inserted 
-    params['location'] = hotel.querySelector('select[name="location"]').value
+    var selectInput =hotel.querySelector('select[name="location"]');
+    params['location'] = selectInput.value
+
+    params['location-type'] = selectInput.options[selectInput.selectedIndex].getAttribute('doc-type');
     params['nationality'] = hotel.querySelector('select[name="nationality"]').value
     params['checkin'] = hotel.querySelector('input[name="check-in"]').value
     params['checkout'] = hotel.querySelector('input[name="check-out"]').value
@@ -127,6 +130,7 @@ function getHotelSearchInfo(hotel){
     // ToDo: Validate Same pax count selected as rooms count
     var paxInfo = []
     pax.forEach(room => {
+        var roomName = room.querySelector(".room-label").innerText
         var adults = room.querySelector("select[name='adult']").value
         var children = room.querySelector("select[name='children']").value
         var childrenAges = room.querySelectorAll(".children-search-card")
@@ -135,7 +139,7 @@ function getHotelSearchInfo(hotel){
         childrenAges.forEach(child => {
             childrenInfo.push(child.querySelector('select[name="child-age"]').value)
         })
-        paxInfo.push({"adults": adults, "children": children, "childrenInfo": childrenInfo})
+        paxInfo.push({"roomName": roomName, "adults": adults, "children": children, "childrenInfo": childrenInfo})
 
     })
     params['paxInfo'] = paxInfo

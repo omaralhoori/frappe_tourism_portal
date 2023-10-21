@@ -1,9 +1,7 @@
 .filters-container{
-    height: 300px;
 }
 
 .search-results{
-    height: 800px;
 }
 
 .room-image{
@@ -22,4 +20,56 @@
 .hotel-title{
     font-size: 1.1em;
     font-weight: bold;
+}
+.checked{
+    color: rgb(255, 208, 0);
+}
+
+.room-total-nights{
+    font-weight: bold;
+    margin-right: 5px;
+    color: rgb(112, 111, 111);
+}
+.room-total-price{
+    font-size: 1.4em;
+    color: rgb(192, 24, 24);
+    font-weight: bold;
+}
+
+.room-detail-container{
+    border-right: 1px solid #6666663b;
+}
+
+.room-price{
+    color: rgb(80, 80, 80);
+}
+
+.room-count{
+    border: 1px solid #555;
+    color: #555;
+    padding: 3px;
+}
+.room-details{
+    margin-top: 10px;
+    display: flex;
+    position: relative;
+    flex-wrap: wrap;
+}
+
+.room-details-item{
+    width: 50%;
+    padding: 10px;
+}
+
+.price-summary{
+    padding: 20px;
+}
+
+.price-total-calculator{
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.price-total-calculator td{
+    padding: 5px;
 }
