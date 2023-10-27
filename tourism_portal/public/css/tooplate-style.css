@@ -243,7 +243,8 @@ select.tm-select::-ms-expand { display: none; }
 .tm-search-form .tm-form-element { width: 33.3333%; }
 .tm-search-form .tm-form-element-2 { width: 25%; }
 .tm-search-form-row { width: 900px; }
-.tm-btn-search { width: 100%; }
+.tm-btn-search { width: 100%;    text-overflow: ellipsis;
+    overflow: hidden; }
 
 /* https://css-tricks.com/creating-non-rectangular-headers/ */
 .tm-section-down-arrow {

@@ -1,0 +1,123 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "CMP-.####",
+ "creation": "2023-10-26 11:17:15.411322",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "company_blance",
+  "section_break_1bpbc",
+  "company_name",
+  "country",
+  "column_break_ajuyi",
+  "company_class",
+  "is_child_company",
+  "parent_company"
+ ],
+ "fields": [
+  {
+   "fieldname": "company_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Company Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Country",
+   "options": "Country",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company_class",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Company Class",
+   "options": "Company Class",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ajuyi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_child_company",
+   "fieldtype": "Check",
+   "label": "Is Child Company"
+  },
+  {
+   "depends_on": "eval:doc.is_child_company",
+   "fieldname": "parent_company",
+   "fieldtype": "Link",
+   "label": "Parent Company",
+   "mandatory_depends_on": "eval:doc.is_child_company",
+   "options": "Company"
+  },
+  {
+   "depends_on": "eval:doc.is_child_company",
+   "fieldname": "parent_company",
+   "fieldtype": "Link",
+   "label": "Parent Company",
+   "mandatory_depends_on": "eval:doc.is_child_company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "company_blance",
+   "fieldtype": "HTML",
+   "label": "Company Blance"
+  },
+  {
+   "fieldname": "section_break_1bpbc",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "User",
+   "link_fieldname": "company"
+  },
+  {
+   "link_doctype": "Company Payment",
+   "link_fieldname": "company"
+  },
+  {
+   "link_doctype": "Company",
+   "link_fieldname": "parent_company"
+  }
+ ],
+ "modified": "2023-10-27 18:35:59.276518",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Company",
+ "naming_rule": "Expression (old style)",
+ "nsm_parent_field": "parent_company",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "company_name"
+}

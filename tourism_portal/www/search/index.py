@@ -46,7 +46,7 @@ def search_for_available_hotel(hotel_params):
 	condation = "AND tbl1.area=%(location)s"
 	if hotel_params.get('location-type') == 'hotel':
 		condation = 'AND tbl1.name=%(location)s'
-	all_hotels = hotels = frappe.db.sql("""
+	all_hotels  = frappe.db.sql("""
 		select 
 		tbl1.name as hotel_id, tbl1.hotel_name, 
 		tbl2.room_type, tbl2.room_accommodation_type, 
@@ -60,8 +60,9 @@ def search_for_available_hotel(hotel_params):
 			(cntrct.check_in_from_date is null or %(checkin)s BETWEEN cntrct.check_in_from_date and cntrct.check_in_to_date) AND
 			( %(checkout)s BETWEEN cntrct.check_in_from_date and cntrct.check_in_to_date) AND
 			(cntrct.selling_from_date  is null or now() BETWEEN cntrct.selling_from_date and cntrct.selling_to_date)
+			AND (cntrct.release_days =0 or DATEDIFF(%(checkin)s, now()) > cntrct.release_days )
 		LEFT JOIN `tabFile` as file on file.attached_to_name=tbl2.name AND file.attached_to_doctype='Hotel Room'
-		WHERE	tbl2.disabled=0 AND tbl1.disabled=0 {condation}
+		WHERE	tbl2.disabled=0 AND tbl1.disabled=0 AND cntrct.docstatus=1 {condation}
 		;
 	""".format(condation=condation), {"location": hotel_params.get('location'), 
 				   'checkin': hotel_params.get('checkin'), 'checkout': hotel_params.get('checkout')}, as_dict=True)
@@ -77,8 +78,24 @@ def search_for_available_hotel(hotel_params):
 	# for pax_info in hotel_params.get('paxInfo'):
 	# 	availables = search_for_available_room(pax_info, all_hotels)
 	# 	hotels.append(availables)
-
+	for hotel in availables:
+		for roomName in availables[hotel]:
+			for room in availables[hotel][roomName]:
+				# Get Room Price
+				room['price'] = get_room_price(room, hotel_params)
+				# Get Room Availabilities
+				room['qty'] = get_room_qty(room, hotel_params)
 	return availables
+
+def get_room_qty(room, hotel_params):
+	room_qty = frappe.db.sql("""
+		SELECT min(available_qty) as qty FROM `tabRoom Availability`
+		WHERE contract_no=%(contract_no)s AND date between %(checkin)s AND %(checkout)s
+	""", {"contract_no": room.get('contract_id'), 
+       "checkin": hotel_params.get('checkin'), "checkout": hotel_params.get('checkout')}, as_dict=True)
+	if len(room_qty) > 0:
+		return room_qty[0]['qty']
+	return 0
 
 def search_for_available_room(pax_info, hotel_rooms):
 	suitable_rooms = {}
@@ -90,10 +107,34 @@ def search_for_available_room(pax_info, hotel_rooms):
 				all_found = True
 				if not suitable_rooms.get(pax.get('roomName')):
 					suitable_rooms[pax.get('roomName')] = []
+				room['pax'] = pax
 				suitable_rooms[pax.get('roomName')].append(room)
+				
 		if not all_found: break
 	return suitable_rooms if all_found else []
+
+from datetime import datetime
+
+def get_room_price(room, search_params):
+	if not room.get('contract_id'): return
+	room_price = frappe.db.sql("""
+		SELECT prc.company_class, prc.selling_type, 
+		prc.buying_currency, prc.buying_price,
+		 prc.selling_currency, prc.selling_price FROM  `tabHotel Room Price` prc
+		WHERE prc.room_contract=%(contract_id)s 
+		AND (prc.nationality=%(nationality)s OR prc.nationality IS NULL)
+		AND (prc.room_accommodation_type=%(room_accommodation_type)s OR prc.room_accommodation_type IS NULL)
+	""", {"contract_id": room.get('contract_id'), 
+       "room_accommodation_type": room.get('room_accommodation_type'),
+       	"nationality": search_params.get('nationality')},as_dict=True)
 	
+	if len(room_price) == 0:return
+	room_price = room_price[0]
+	date_format = "%Y-%m-%d"
+	delta = datetime.strptime(search_params.get('checkout'), date_format) - datetime.strptime(search_params.get('checkin'), date_format)
+	days = delta.days
+	if room_price.get('selling_price') :
+		return (room_price.get('selling_price') * days, days)
 def is_hotel_suitable(pax_info, hotel):
 	hotel_acmnd = frappe.db.sql("""
 	SELECT

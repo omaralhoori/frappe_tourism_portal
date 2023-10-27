@@ -29,7 +29,8 @@
   "rules_and_policies_section",
   "cancellation_policy",
   "accommodation_type_rule",
-  "profit_margin"
+  "profit_margin",
+  "amended_from"
  ],
  "fields": [
   {
@@ -167,11 +168,21 @@
    "label": "Room Type",
    "options": "Room Type",
    "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Hotel Room Contract",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2023-10-13 13:22:17.611739",
+ "modified": "2023-10-23 11:47:20.175882",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Room Contract",

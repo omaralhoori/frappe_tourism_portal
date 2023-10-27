@@ -1,7 +1,7 @@
 {% extends "templates/website_base.html" %}
 
 {% macro hotel_search_result(room, roomName, loopIndex) %}
-<div class="result-item mt-3 card">
+<div class="result-item room-result-item mt-3 card" >
     <div class="row">
     <div class="col-md-3">
         <div class="room-image">
@@ -25,10 +25,19 @@
     </div>
     <div class="col-md-3">
         <div class="d-flex justify-content-center align-items-center flex-column h-100" onclick="roomSelected(this)">
-            <div class="room-total"><span class="room-total-nights">3 Nights</span><span class="room-total-price">1500 USD</span></div>
+            {% if room.get('price')%}
+            <div class="room-total"><span class="room-total-nights">{{room.get('price')[1]}} Nights</span><span class="room-total-price">{{room.get('price')[0]}} USD</span></div>
             <div class="room-price mt-1">(Per Room 500USD)</div>
+            {% else %}
+            
+            {% endif %}
+            <div class="container ask-button-container" {%if room.get('price') or room.get('qty') %} style="display: none;" {%endif%}>
+                <button onclick="confirmButtonClicked(this)" style="font-size: .8em;" class="btn btn-primary tm-btn-search p-2">Ask for availability</button>
+            </div>
             <!-- <div class="room-count mt-2">3 Rooms</div> -->
-            <input class="form-control mt-2" {% if loopIndex==1 %} checked="checked" {% endif %} type="radio" data-value="{{room.get('room_id')}}" name="{{roomName}}"/>
+            <label class="room-available-label">Available 0</label>
+            <input class="form-control mt-2" {% if loopIndex==1 %} checked="checked" {% endif %} type="radio" 
+            data-value="{{room.get('room_id')}}" name="{{roomName}}" contract-id="{{room.contract_id}}" room-qty="{{room.qty}}"/>
         </div>
     </div>
 </div>
@@ -45,9 +54,11 @@
                 {% for hotel in search %}
                     {% for roomName in search[hotel] %}
                     {{ roomName }}
+                        <div class="available-rooms">
                         {% for room in search[hotel][roomName]%}
                             {{hotel_search_result(room, roomName, loop.index)}}
                         {% endfor %}
+                    </div>
                     {%endfor %}
                 {% endfor %}
             {% endfor %}

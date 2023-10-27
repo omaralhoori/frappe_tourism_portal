@@ -1,0 +1,64 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-10-23 11:49:55.064193",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "contract_no",
+  "date",
+  "available_qty"
+ ],
+ "fields": [
+  {
+   "fieldname": "contract_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Contract No",
+   "options": "Hotel Room Contract",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "available_qty",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Available Qty",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-10-23 13:39:18.229933",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Room Availability",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
