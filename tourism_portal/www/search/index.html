@@ -45,11 +45,16 @@
 {% endmacro %}
 
 {% block page_content %}
+<script>
+    var searchResults = `{{rooms}}`
+    searchResults = JSON.parse(searchResults);
+</script>
 <div class="content pt-4">
   <div class="row hotels-results">
     
     <div class="col-lg-9">
         <div class="search-results">
+            {# 
             {% for search in rooms %}
                 {% for hotel in search %}
                     {% for roomName in search[hotel] %}
@@ -62,6 +67,7 @@
                     {%endfor %}
                 {% endfor %}
             {% endfor %}
+            #}
         </div>
     </div>
     <div class="col-lg-3">
@@ -69,10 +75,10 @@
             <div class="price-summary">
                 <div class="price-total-calculator">
                     <table>
-                        <tr><td>Hotels:</td><td>1500 USD</td></tr>
-                        <tr><td>Transfers:</td><td>0 USD</td></tr>
-                        <tr><td>Tours:</td><td>0 USD</td></tr>
-                        <tr><td>Total:</td><td>1500 USD</td></tr>
+                        <tr><td>Hotels:</td><td><span class="hotels-total">0 USD</span></td></tr>
+                        <tr><td>Transfers:</td><td><span class="transfers-total">0 USD</span></td></tr>
+                        <tr><td>Tours:</td><td><span class="tours-total">0 USD</span></td></tr>
+                        <tr><td>Total:</td><td><span class="grand-total-container">0 USD</span></td></tr>
                     </table>
                 </div>
                 <div class="confirm-button-continer">
@@ -89,6 +95,62 @@
 
   </div>
 </div>
-
+<script type="text/template" id="hotel-room-results-template">
+    <div class="card">
+        <div class="card-header" id="{Hotel ID}-header">
+          <h5 class="mb-0">
+            <button class="btn btn-link" data-toggle="collapse" data-target="#{Hotel ID}" 
+            aria-expanded="true" aria-controls="{Hotel ID}">
+                {Hotel ID}
+            </button>
+          </h5>
+        </div>
+    
+        <div id="{Hotel ID}" class="collapse" aria-labelledby="{Hotel ID}-header" data-parent="#accordion">
+          <div class="card-body">
+            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+          </div>
+        </div>
+      </div>
+      
+</script>
+<script type="text/template" id="room-result-item-template">
+    <div class="result-item room-result-item mt-3 card" >
+        <div class="row">
+        <div class="col-md-3">
+            <div class="room-image">
+                <img src="{Room Image}" alt="">
+            </div>
+        </div>
+        <div class="col-md-6 room-detail-container">
+            <div class="">
+                <div class="hotel-title mt-2">{Hotel Name}</div>
+            <div class="room-title">{Room Type} <span class="pax-image"><img src="{PAX IMAGE}"/></span></div>
+            <div class="room-details">
+                <div class="room-details-item"><div class="badge badge-primary">Non Refundable</div></div>
+                <div class="room-details-item">Full Board</div>
+                <div class="room-details-item">Sea View</div>
+            </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="d-flex justify-content-center align-items-center flex-column h-100" >
+                <!-- if room.get('price') -->
+                <div class="room-price-container">
+                <div class="room-total"><span class="room-total-nights">{Nights} Nights</span><span class="room-total-price">{Room Price}</span></div>
+                <!-- <div class="room-price mt-1">(Per Room 500USD)</div> -->
+                </div>
+               <!--  -->
+               <!-- {#if room.get('price') or room.get('qty') %} style="display: none;" {%endif #} -->
+                <div class="container ask-button-container" >
+                    <button onclick="askButtonClicked(this)" style="font-size: .8em;" class="btn btn-primary tm-btn-search p-2">Ask for availability</button>
+                </div>
+                <!-- <div class="room-count mt-2">3 Rooms</div> -->
+                <label class="room-available-label">{Available QTY}</label>
+            </div>
+        </div>
+    </div>
+    </div>
+</script>
 
 {% endblock %}

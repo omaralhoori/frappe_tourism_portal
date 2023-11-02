@@ -1,0 +1,108 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "INV-.YY.-.MM.-.#####",
+ "creation": "2023-11-01 12:18:19.405217",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_1wfwx",
+  "company",
+  "customer",
+  "column_break_v9ehp",
+  "post_date",
+  "post_time",
+  "section_break_09xmx",
+  "items",
+  "section_break_np3bd",
+  "grand_total"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_1wfwx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_v9ehp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "post_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Post Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "post_time",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "Post Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_09xmx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Invoice Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_np3bd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "grand_total",
+   "fieldtype": "Currency",
+   "label": "Grand Total",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-11-01 12:25:35.792177",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Sales Invoice",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

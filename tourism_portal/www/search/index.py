@@ -7,9 +7,9 @@ def get_context(context):
 		frappe.throw(_("Log in to access this page."), frappe.PermissionError)
 	params = frappe.form_dict.params
 	params = json.loads(params)
-	
+
 	context.rooms = get_available_hotel_rooms(params)
-	
+	context.rooms = json.dumps(context.rooms)
 	return context
 
 """
@@ -56,13 +56,14 @@ def search_for_available_hotel(hotel_params):
 		IFNULL(cntrct.accommodation_type_rule, tbl1.hotel_accommodation_type_rule) as hotel_accommodation_type_rule
 		FROM `tabHotel Room` tbl2 
 		INNER JOIN `tabHotel` tbl1 ON tbl1.name=tbl2.hotel
-		LEFT JOIN `tabHotel Room Contract` cntrct ON cntrct.hotel=tbl2.hotel AND cntrct.room_type=tbl2.room_type AND 
-			(cntrct.check_in_from_date is null or %(checkin)s BETWEEN cntrct.check_in_from_date and cntrct.check_in_to_date) AND
-			( %(checkout)s BETWEEN cntrct.check_in_from_date and cntrct.check_in_to_date) AND
-			(cntrct.selling_from_date  is null or now() BETWEEN cntrct.selling_from_date and cntrct.selling_to_date)
+		LEFT JOIN `tabHotel Room Contract` cntrct ON cntrct.hotel=tbl2.hotel AND cntrct.room_type=tbl2.room_type 
+			AND (cntrct.check_in_from_date is null or %(checkin)s BETWEEN cntrct.check_in_from_date and cntrct.check_in_to_date)
+			AND ( %(checkout)s BETWEEN cntrct.check_in_from_date and cntrct.check_in_to_date)
+			AND (cntrct.selling_from_date  is null or now() BETWEEN cntrct.selling_from_date and cntrct.selling_to_date)
 			AND (cntrct.release_days =0 or DATEDIFF(%(checkin)s, now()) > cntrct.release_days )
+			AND cntrct.docstatus=1
 		LEFT JOIN `tabFile` as file on file.attached_to_name=tbl2.name AND file.attached_to_doctype='Hotel Room'
-		WHERE	tbl2.disabled=0 AND tbl1.disabled=0 AND cntrct.docstatus=1 {condation}
+		WHERE	tbl2.disabled=0 AND tbl1.disabled=0  {condation}
 		;
 	""".format(condation=condation), {"location": hotel_params.get('location'), 
 				   'checkin': hotel_params.get('checkin'), 'checkout': hotel_params.get('checkout')}, as_dict=True)
@@ -107,8 +108,9 @@ def search_for_available_room(pax_info, hotel_rooms):
 				all_found = True
 				if not suitable_rooms.get(pax.get('roomName')):
 					suitable_rooms[pax.get('roomName')] = []
-				room['pax'] = pax
-				suitable_rooms[pax.get('roomName')].append(room)
+				copy_room = {**room}
+				copy_room['pax'] = pax
+				suitable_rooms[pax.get('roomName')].append(copy_room)
 				
 		if not all_found: break
 	return suitable_rooms if all_found else []
@@ -122,12 +124,11 @@ def get_room_price(room, search_params):
 		prc.buying_currency, prc.buying_price,
 		 prc.selling_currency, prc.selling_price FROM  `tabHotel Room Price` prc
 		WHERE prc.room_contract=%(contract_id)s 
-		AND (prc.nationality=%(nationality)s OR prc.nationality IS NULL)
-		AND (prc.room_accommodation_type=%(room_accommodation_type)s OR prc.room_accommodation_type IS NULL)
+		AND (prc.nationality=%(nationality)s OR prc.nationality IS NULL OR prc.nationality='')
+		AND (prc.room_accommodation_type=%(room_accommodation_type)s OR prc.room_accommodation_type IS NULL  OR prc.room_accommodation_type='')
 	""", {"contract_id": room.get('contract_id'), 
        "room_accommodation_type": room.get('room_accommodation_type'),
        	"nationality": search_params.get('nationality')},as_dict=True)
-	
 	if len(room_price) == 0:return
 	room_price = room_price[0]
 	date_format = "%Y-%m-%d"
@@ -159,3 +160,26 @@ def is_hotel_suitable(pax_info, hotel):
 	if adults < hotel_acmnd[0].get('min_adults') or adults > hotel_acmnd[0].get('max_adults'): return False
 	if children < hotel_acmnd[0].get('min_childs') or children > hotel_acmnd[0].get('max_childs'): return False
 	return True
+
+@frappe.whitelist()
+def ask_for_availability(room_id):
+	now_datetime = frappe.utils.now()
+	inquiries = frappe.db.sql("""
+		select name from `tabHotel Inquiry Request`
+		WHERE customer=%(customer)s AND room=%(room)s AND 
+		(docstatus=0 OR valid_datetime > %(now_datetime)s)
+	""", {"customer": frappe.session.user, "room": room_id, "now_datetime": now_datetime})
+	if len(inquiries) > 0:
+		return {
+			"success_key": 0,
+			"error": _("You have asked for this room before.")
+		}
+	frappe.get_doc({
+		"doctype": "Hotel Inquiry Request", 
+		"customer": frappe.session.user,
+		"room": room_id,
+	}).insert(ignore_permissions=True)
+	return {
+		"success_key": 1,
+		"msg": _("The request has been submitted successfully")
+	}

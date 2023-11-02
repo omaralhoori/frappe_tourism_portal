@@ -32,10 +32,8 @@
             z-index: 99999;
             top: 0;
             left: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             display: none;
+            background-color: white;
         }
         .loader {
         border: 16px solid #f3f3f3; /* Light grey */
@@ -44,6 +42,22 @@
         width: 120px;
         height: 120px;
         animation: spin 2s linear infinite;
+        }
+        .loader-container{
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        button.close{
+            display: none;
+        }
+        .modal.fade{
+            z-index: 20000 !important;
+        }
+        .hidden{
+            display: none;
         }
 
 @keyframes spin {
@@ -56,9 +70,20 @@
 			<style>{{ colocated_css }}</style>
 		{%- endif %}
 	{%- endblock -%}
+
+    <script>
+		window.frappe = {};
+		frappe.ready_events = [];
+		frappe.ready = function(fn) {
+			frappe.ready_events.push(fn);
+		}
+		window.dev_server = {{ dev_server }};
+		window.socketio_port = {{ (frappe.socketio_port or 'null') }};
+		window.show_language_picker = {{ show_language_picker or 'false' }};
+	</script>
 </head>
 
-<body>
+<body frappe-session-status="{{ 'logged-in' if frappe.session.user != 'Guest' else 'logged-out'}}" data-path="{{ path | e }}" {%- if template and template.endswith('.md') %} frappe-content-type="markdown" {%- endif %} class="{{ body_class or ''}}">
     <div class="tm-main-content" id="top">
     {% include "templates/includes/navbar.html" %}
     <div class="container">
@@ -70,7 +95,9 @@
 </div>
 </div>
 <div class="loading-progress">
+    <div class="loader-container">
     <div class="loader"></div>
+</div>
 </div>
 
             <!-- load JS files -->
@@ -86,11 +113,48 @@
             <script src="/assets/tourism_portal/js/bootstrap-select2-theme.js"></script>
             <!-- http://kenwheeler.github.io/slick/ -->
             <script src="/assets/tourism_portal/js/select2.min.js"></script>
+            <script>
+                function toggleLoadingIndicator(value){
+                    if (value){
+                        $('.loading-progress').show()
+                    }else{
+                        $('.loading-progress').hide()
+                    }
+                   
+                }
+            </script>
+
+            {% block base_scripts %}
+            <!-- js should be loaded in body! -->
+            <script>
+                frappe.boot = {{ boot }}
+                // for backward compatibility of some libs
+                frappe.sys_defaults = frappe.boot.sysdefaults;
+            </script>
+            {{ include_script('frappe-web.bundle.js') }}
+            {% endblock %}
+
+            {%- for link in web_include_js %}
+            {{ include_script(link) }}
+            {%- endfor -%}
+            <script>
+                function msgprint(msg, title="Message", primary_action=null, secondary_action=null){
+                    var dd = frappe.msgprint({
+                        message: msg,
+                        title: title, 
+                        secondary_action: secondary_action,
+                        primary_action: primary_action == null ? {
+                            label: "Close", 
+                            action: ()=> dd.hide()}: primary_action})
+                }
+            </script>
             {%- block script %}
             {% if colocated_js -%}
                 <script>{{ colocated_js }}</script>
             {%- endif %}
         {%- endblock %}
+        <!-- csrf_token -->
+	{%- block body_include %}{{ body_include or "" }}{% endblock -%}
 </body>
 
 </html>

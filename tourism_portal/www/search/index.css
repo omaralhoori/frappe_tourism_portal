@@ -73,3 +73,13 @@
 .price-total-calculator td{
     padding: 5px;
 }
+
+
+.html-template{
+    display: none;
+}
+
+
+.pax-image img{
+    height: 20px;
+}

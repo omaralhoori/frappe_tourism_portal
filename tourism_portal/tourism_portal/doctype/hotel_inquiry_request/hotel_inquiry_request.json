@@ -1,0 +1,185 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "HINQ-.YY.-.MM.-.#####",
+ "creation": "2023-11-01 12:55:04.141936",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "customer",
+  "column_break_sun0r",
+  "company",
+  "amended_from",
+  "section_break_ilhhw",
+  "hotel",
+  "column_break_4ke16",
+  "room",
+  "inquiry_results_section",
+  "selling_price_based_on",
+  "valid_until",
+  "column_break_qsrev",
+  "qty",
+  "valid_datetime",
+  "section_break_aiy84",
+  "buying_currency",
+  "selling_currency",
+  "column_break_xv2nl",
+  "buying_price",
+  "selling_price"
+ ],
+ "fields": [
+  {
+   "fetch_from": "invoice.customer",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "invoice.company",
+   "fieldname": "column_break_sun0r",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "customer.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Hotel Inquiry Request",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_ilhhw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "room.hotel",
+   "fieldname": "hotel",
+   "fieldtype": "Link",
+   "label": "Hotel",
+   "options": "Hotel",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "room",
+   "fieldtype": "Link",
+   "label": "Room",
+   "options": "Hotel Room",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_4ke16",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "inquiry_results_section",
+   "fieldtype": "Section Break",
+   "label": "Inquiry Results"
+  },
+  {
+   "fieldname": "selling_price_based_on",
+   "fieldtype": "Select",
+   "label": "Selling Price Based On",
+   "options": "Profit Margin\nSelling Price",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_aiy84",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "buying_currency",
+   "fieldtype": "Link",
+   "label": "Buying Currency",
+   "options": "Currency"
+  },
+  {
+   "depends_on": "eval:doc.selling_price_based_on==\"Selling Price\"",
+   "fieldname": "selling_currency",
+   "fieldtype": "Link",
+   "label": "Selling Currency",
+   "mandatory_depends_on": "eval:doc.selling_price_based_on==\"Selling Price\"",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "column_break_xv2nl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "buying_price",
+   "fieldtype": "Currency",
+   "label": "Buying Price",
+   "options": "buying_currency"
+  },
+  {
+   "depends_on": "eval:doc.selling_price_based_on==\"Selling Price\"",
+   "fieldname": "selling_price",
+   "fieldtype": "Currency",
+   "label": "Selling Price",
+   "mandatory_depends_on": "eval:doc.selling_price_based_on==\"Selling Price\"",
+   "options": "selling_currency"
+  },
+  {
+   "fieldname": "column_break_qsrev",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "5",
+   "fieldname": "qty",
+   "fieldtype": "Int",
+   "label": "Quantity",
+   "reqd": 1
+  },
+  {
+   "fieldname": "valid_until",
+   "fieldtype": "Duration",
+   "label": "Valid Until"
+  },
+  {
+   "fieldname": "valid_datetime",
+   "fieldtype": "Datetime",
+   "label": "Valid Datetime",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2023-11-01 15:20:56.941051",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Hotel Inquiry Request",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
