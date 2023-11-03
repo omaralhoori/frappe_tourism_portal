@@ -11,6 +11,7 @@
   "hotel",
   "room_type",
   "room_accommodation_type",
+  "features",
   "disabled",
   "section_break_8yk4a",
   "images"
@@ -52,12 +53,18 @@
    "fieldname": "images",
    "fieldtype": "HTML",
    "label": "Images"
+  },
+  {
+   "fieldname": "features",
+   "fieldtype": "Table MultiSelect",
+   "label": "Features",
+   "options": "Feature Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
  "make_attachments_public": 1,
- "modified": "2023-10-10 14:03:53.207738",
+ "modified": "2023-11-03 11:17:51.818292",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Room",

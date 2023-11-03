@@ -86,7 +86,50 @@ def search_for_available_hotel(hotel_params):
 				room['price'] = get_room_price(room, hotel_params)
 				# Get Room Availabilities
 				room['qty'] = get_room_qty(room, hotel_params)
+				if not room['price'] or not room['qty']:
+					room = get_enquery_result(room, hotel_params)
 	return availables
+
+def get_enquery_result(room, hotel_params):
+	if result := frappe.db.exists("Hotel Inquiry Request", {
+		"customer": frappe.session.user,
+		"room": room.get('room_id'),
+		"valid_datetime": [">", frappe.utils.now()],
+		"docstatus": 1
+	}):
+		result_doc = frappe.get_doc("Hotel Inquiry Request", result)
+		selling_price, selling_currency = result_doc.selling_price, result_doc.selling_currency
+		if result_doc.selling_price_based_on == 'Profit Margin':
+			selling_price, selling_currency = get_profit_margin_based_price(
+				room.get('hotel_id'),
+				room.get('room_accommodation_type'),
+				result_doc.buying_price,
+				result_doc.buying_currency,
+				  )
+		date_format = "%Y-%m-%d"
+		delta = datetime.strptime(hotel_params.get('checkout'), date_format) - datetime.strptime(hotel_params.get('checkin'), date_format)
+		days = delta.days
+		room['price'] = (selling_price * days, days, selling_currency)
+		room['qty'] = result_doc.qty
+	ff = ['name', 'qty', 'selling_price_based_on', 'valid_datetime', 
+  'buying_currency', 'buying_price', 'selling_currency', 'selling_price']
+	
+	return room
+
+def get_profit_margin_based_price(hotel, room_type, buying_price,buying_currency):
+	profit_policy = frappe.db.get_value("Hotel", hotel, "hotel_profit_margin") or frappe.db.get_single_value("Tourism Portal Settings", "default_hotel_profit_margin")
+	results = frappe.db.sql("""
+		SELECT margin_type, profit_margin FROM `tabProfit Margin Item` 
+		WHERE parent=%(profit_policy)s
+		AND (room_type=%(room_type)s OR room_type IS NULL OR room_type="")
+	""", {"profit_policy": profit_policy, "room_type": room_type}, as_dict=True)
+	if len(results) < 1: return None, None
+	selling_price = buying_price
+	if results[0].get('margin_type') == 'Amount':
+		selling_price += results[0].get('profit_margin')
+	else:
+		selling_price = selling_price + ((selling_price *  results[0].get('profit_margin')) / 100)
+	return selling_price, buying_currency
 
 def get_room_qty(room, hotel_params):
 	room_qty = frappe.db.sql("""
@@ -135,7 +178,7 @@ def get_room_price(room, search_params):
 	delta = datetime.strptime(search_params.get('checkout'), date_format) - datetime.strptime(search_params.get('checkin'), date_format)
 	days = delta.days
 	if room_price.get('selling_price') :
-		return (room_price.get('selling_price') * days, days)
+		return (room_price.get('selling_price') * days, days, room_price.get('selling_currency'))
 def is_hotel_suitable(pax_info, hotel):
 	hotel_acmnd = frappe.db.sql("""
 	SELECT

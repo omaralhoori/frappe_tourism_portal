@@ -1,0 +1,51 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-11-03 11:22:12.359925",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "room_type",
+  "margin_type",
+  "profit_margin"
+ ],
+ "fields": [
+  {
+   "fieldname": "room_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Room Type",
+   "options": "Room Accommodation Type"
+  },
+  {
+   "fieldname": "margin_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Margin Type",
+   "options": "Percentage\nAmount",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "profit_margin",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Profit Margin",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-11-03 11:23:32.055945",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Profit Margin Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

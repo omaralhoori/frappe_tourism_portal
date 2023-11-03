@@ -3,6 +3,9 @@ var totals = {
     "transfers": 0,
     "tours": 0
 }
+var reservation_details = {
+    hotel: null
+}
 var availabeRooms = {}
 
 $(document).ready(function(){
@@ -143,8 +146,22 @@ function roomSelectChanged(e){
             }
         }
     }
+    reservation_details['hotel']= hotel;
+
+    disable_other_hotel_selects(hotel)
 
     calculate_total_hotel(hotel)
+}
+
+function disable_other_hotel_selects(hotel){
+    var selects = document.querySelectorAll('.room-select-input');
+    for (var select of selects){
+        if (select.getAttribute('hotel') == hotel){
+            continue;
+        }else{
+            select.value = "0";
+        }
+    }
 }
 
 function checkCommonRooms(searchResults){
@@ -177,7 +194,6 @@ function checkCommonRooms(searchResults){
         }
         
     }
-    console.log(results)
     return results
 }
 
@@ -332,4 +348,28 @@ function update_totals(){
     }
 
     $('.grand-total-container').text(`${total} USD`)
+}
+
+function confirmButtonClicked(e){
+    var all_rooms_selected = false;
+    var selected_rooms = {};
+    // check if all rooms are selected
+    var all_selects= document.querySelectorAll(`select.room-select-input[hotel="${reservation_details['hotel']}"]`)
+    for (var ss of all_selects){
+        var rooms = ss.getAttribute("rooms");
+        var roomId = ss.closest('.room-result-container').getAttribute('room-id')
+        var value = 0;
+        if (ss.value && ss.value > 0){
+            value = ss.value;
+        }
+        if (!selected_rooms[rooms]){
+            selected_rooms[rooms] = {}  
+        }
+        if (!selected_rooms[rooms][roomId]){
+            selected_rooms[rooms][roomId] = 0 
+        }
+
+        selected_rooms[rooms][roomId] += Number(value);
+    }
+    console.log(selected_rooms)
 }

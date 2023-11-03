@@ -1,39 +1,31 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:profit_margin_name",
- "creation": "2023-10-09 11:14:20.012093",
+ "autoname": "field:feature_name",
+ "creation": "2023-11-03 11:15:30.036163",
  "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "profit_margin_name",
-  "profit_margins"
+  "feature_name"
  ],
  "fields": [
   {
-   "fieldname": "profit_margin_name",
+   "fieldname": "feature_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Profit Margin Name",
+   "label": "Feature Name",
    "reqd": 1,
    "unique": 1
-  },
-  {
-   "fieldname": "profit_margins",
-   "fieldtype": "Table",
-   "label": "Profit Margins",
-   "options": "Profit Margin Item",
-   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-03 11:22:59.564369",
+ "modified": "2023-11-03 11:15:38.354714",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
- "name": "Profit Margin",
+ "name": "Feature",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
