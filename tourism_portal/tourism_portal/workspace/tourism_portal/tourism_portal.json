@@ -139,54 +139,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Portal Definitions",
-   "link_count": 4,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Cancellation Policy",
-   "link_count": 0,
-   "link_to": "Cancellation Policy",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Profit Margin",
-   "link_count": 0,
-   "link_to": "Profit Margin",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Company Classes",
-   "link_count": 0,
-   "link_to": "Company Class",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Child Rate Policies",
-   "link_count": 0,
-   "link_to": "Child Rate Policy",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Location",
    "link_count": 7,
    "onboard": 0,
@@ -284,7 +236,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Companies",
-   "link_count": 3,
+   "link_count": 4,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -317,9 +269,77 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hotel Inquiry Requests",
+   "link_count": 0,
+   "link_to": "Hotel Inquiry Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Portal Definitions",
+   "link_count": 5,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Cancellation Policy",
+   "link_count": 0,
+   "link_to": "Cancellation Policy",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Profit Margin",
+   "link_count": 0,
+   "link_to": "Profit Margin",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Company Classes",
+   "link_count": 0,
+   "link_to": "Company Class",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Child Rate Policies",
+   "link_count": 0,
+   "link_to": "Child Rate Policy",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Features",
+   "link_count": 0,
+   "link_to": "Feature",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-10-27 18:38:25.748705",
+ "modified": "2023-11-03 15:10:06.037734",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal",
