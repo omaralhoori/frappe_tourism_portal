@@ -72,6 +72,22 @@ function formatRoomResult(roomResult){
         .replace('{Room Price}', roomResult['results'][0]['price'][0])
         .replace('{Nights}', roomResult['results'][0]['price'][1])
     }
+
+    var roomDetails = ''
+    if (roomResult['results'][0]['hotel_cancellation_policy']){
+        roomDetails = `<div class="room-details-item"><div class="badge badge-primary">${roomResult['results'][0]['hotel_cancellation_policy']}</div></div>`
+    }
+    if (roomResult['results'][0]['features']){
+        for (var dd of roomResult['results'][0]['features'])
+            roomDetails += `<div class="room-details-item">${dd}</div>`
+    }
+
+    resultItem = $(resultItem)
+            .find('.room-details')
+            .html(roomDetails)
+            .end()
+            .prop('outerHTML');
+    
     if (roomResult['results'][0]['room_image']){
         resultItem= resultItem
         .replace('{Room Image}', roomResult['results'][0]['room_image']) 
@@ -372,4 +388,29 @@ function confirmButtonClicked(e){
         selected_rooms[rooms][roomId] += Number(value);
     }
     console.log(selected_rooms)
+
+    if (Object.keys(selected_rooms).length == 0){
+        all_rooms_selected = false;
+    }else{
+        all_rooms_selected = true;
+        for (var room in selected_rooms){
+            var roomCnt = room.split('-').length
+            var selected = 0;
+            for (var ss in selected_rooms[room]){
+                var cc = selected_rooms[room][ss]
+                selected += cc
+            }
+            if (selected != roomCnt){
+                all_rooms_selected = false
+            }
+        }
+    }
+     if (!all_rooms_selected){
+        msgprint("Please select all rooms")
+     }else{
+        var hotelParams = JSON.stringify(selected_rooms)
+
+        window.open(`reserve${window.location.search}&rooms=${encodeURIComponent(hotelParams)}`, '_self');
+     }
+
 }

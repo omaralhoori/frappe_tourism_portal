@@ -112,7 +112,6 @@
             <script src="/assets/tourism_portal/js/slick.min.js"></script> <!-- http://kenwheeler.github.io/slick/ -->
             <script src="/assets/tourism_portal/js/bootstrap-select2-theme.js"></script>
             <!-- http://kenwheeler.github.io/slick/ -->
-            <script src="/assets/tourism_portal/js/select2.min.js"></script>
             <script>
                 function toggleLoadingIndicator(value){
                     if (value){
@@ -148,6 +147,8 @@
                             action: ()=> dd.hide()}: primary_action})
                 }
             </script>
+            <script src="/assets/tourism_portal/js/select2.min.js"></script>
+
             {%- block script %}
             {% if colocated_js -%}
                 <script>{{ colocated_js }}</script>

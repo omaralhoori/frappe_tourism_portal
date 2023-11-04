@@ -53,7 +53,8 @@ def search_for_available_hotel(hotel_params):
 		tbl2.name as room_id,
 		cntrct.name as contract_id,
 		file.file_url as room_image,
-		IFNULL(cntrct.accommodation_type_rule, tbl1.hotel_accommodation_type_rule) as hotel_accommodation_type_rule
+		IFNULL(cntrct.accommodation_type_rule, tbl1.hotel_accommodation_type_rule) as hotel_accommodation_type_rule,
+		IFNULL(cntrct.cancellation_policy, tbl1.hotel_cancellation_policy) as hotel_cancellation_policy
 		FROM `tabHotel Room` tbl2 
 		INNER JOIN `tabHotel` tbl1 ON tbl1.name=tbl2.hotel
 		LEFT JOIN `tabHotel Room Contract` cntrct ON cntrct.hotel=tbl2.hotel AND cntrct.room_type=tbl2.room_type 
@@ -86,10 +87,16 @@ def search_for_available_hotel(hotel_params):
 				room['price'] = get_room_price(room, hotel_params)
 				# Get Room Availabilities
 				room['qty'] = get_room_qty(room, hotel_params)
+				# Get Room Features
+				room['features'] = get_room_features(room)
 				if not room['price'] or not room['qty']:
 					room = get_enquery_result(room, hotel_params)
 	return availables
 
+def  get_room_features(room):
+	features = frappe.db.get_all("Feature Item", {"parent": room.get('room_id'), "parenttype": "Hotel Room"}, ["feature"])
+	features = [ ff.get('feature') for ff in features]
+	return features
 def get_enquery_result(room, hotel_params):
 	if result := frappe.db.exists("Hotel Inquiry Request", {
 		"customer": frappe.session.user,

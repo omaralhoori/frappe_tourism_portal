@@ -60,6 +60,13 @@ app_license = "EULA"
 #	"filters": "tourism_portal.utils.jinja_filters"
 # }
 
+jinja = {
+	"methods": [
+        "tourism_portal.utils.get_site_logo",
+        "tourism_portal.utils.get_site_name",
+    ]
+}
+
 # Installation
 # ------------
 
