@@ -1,0 +1,50 @@
+{% extends "templates/website_base.html" %}
+
+{% block page_content %}
+
+{% for hotel_rsv in reservation_details %}
+<div class="reservation_details mt-4">
+    <div class="row">
+        <div class="col-lg-4">Location: {{hotel_rsv.get('location')}}</div>
+        <div class="col-lg-4">Check In: {{hotel_rsv.get('checkin')}}</div>
+        <div class="col-lg-4">Check Out: {{hotel_rsv.get('checkout')}}</div>
+    </div>
+</div>
+{% for rsrv_room in hotel_rsv.get('paxInfo')%}
+<div class="card p-3 tm-search-form tm-section-pad-2 mt-3">
+    <div class="room-name mb-3">
+        {{rsrv_room.get('roomName')}}
+    </div>
+    {% for x in range(rsrv_room.get('adults') | int) %}
+    <div class="form-row tm-search-form-row">
+            <div class="form-group tm-form-element tm-form-element-2">
+                <select class="form-control  tm-select ">
+                    <option value="">Salutation</option>
+                    <option value="mr">Mr</option>
+                    <option value="ms">Ms</option>
+                </select>
+                <i class="fa fa-2x fa-check tm-form-element-icon"></i>
+            </div>
+
+            <div class="form-group tm-form-element tm-form-element-50">
+                <input class="form-control" placeholder="Guest Name" />
+                <i class="fa fa-2x fa-user tm-form-element-icon"></i>
+            </div>
+    </div>
+    {% endfor %}
+    {% for child in rsrv_room.get('childrenInfo') %}
+    <div class="form-row tm-search-form-row">
+            <div class="form-group tm-form-element tm-form-element-2">
+                <label for="">Child Age {{child}}</label>
+            </div>
+
+            <div class="form-group tm-form-element tm-form-element-50">
+                <input class="form-control" placeholder="Child Name" />
+                <i class="fa fa-x fa-user tm-form-element-icon"></i>
+            </div>
+    </div>
+    {% endfor %}
+</div>
+{%endfor%}
+{% endfor %}
+{% endblock %}

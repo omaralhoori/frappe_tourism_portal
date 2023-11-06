@@ -71,6 +71,7 @@ def search_for_available_hotel(hotel_params):
 	""".format(condation=condation), {"location": hotel_params.get('location'), 
 				   'checkin': hotel_params.get('checkin'), 'checkout': hotel_params.get('checkout')}, as_dict=True)
 	hotels = {}
+	print(all_hotels, hotel_params)
 	for hotel in all_hotels:
 		if not hotels.get(hotel.get('hotel_id')):
 			hotels[hotel.get('hotel_id')] = []
