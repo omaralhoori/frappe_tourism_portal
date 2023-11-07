@@ -6,7 +6,8 @@ from frappe.model.document import Document
 from frappe.utils.password import update_password
 
 class Company(Document):
-	
+	def before_save(self):
+		self.credit_current_limit = self.credit_limit - self.credit
 	@frappe.whitelist()
 	def get_company_balance(self):
 		payments = frappe.db.get_all("Company Payment", {"company": self.name, "docstatus": 1}, ['amount', 'payment_type'])

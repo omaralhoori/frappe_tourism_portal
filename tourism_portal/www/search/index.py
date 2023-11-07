@@ -71,7 +71,6 @@ def search_for_available_hotel(hotel_params):
 	""".format(condation=condation), {"location": hotel_params.get('location'), 
 				   'checkin': hotel_params.get('checkin'), 'checkout': hotel_params.get('checkout')}, as_dict=True)
 	hotels = {}
-	print(all_hotels, hotel_params)
 	for hotel in all_hotels:
 		if not hotels.get(hotel.get('hotel_id')):
 			hotels[hotel.get('hotel_id')] = []
@@ -79,6 +78,7 @@ def search_for_available_hotel(hotel_params):
 	availables = {}
 	for name, hotel in hotels.items():
 		if rooms := search_for_available_room(hotel_params.get('paxInfo'), hotel):
+			print("room avilable", rooms)
 			availables[name] = rooms
 	# for pax_info in hotel_params.get('paxInfo'):
 	# 	availables = search_for_available_room(pax_info, all_hotels)
@@ -152,6 +152,7 @@ def get_room_qty(room, hotel_params):
 	return 0
 
 def search_for_available_room(pax_info, hotel_rooms):
+	print(pax_info)
 	suitable_rooms = {}
 	all_found = True
 	for pax in pax_info:

@@ -22,6 +22,12 @@
   "column_break_zevts",
   "buying_price",
   "selling_price",
+  "selling_dates_section",
+  "selling_from_date",
+  "check_in_from_date",
+  "column_break_gws2v",
+  "selling_to_date",
+  "check_in_to_date",
   "company_classes_extra_profit_section",
   "company_classes"
  ],
@@ -55,6 +61,8 @@
    "fetch_from": "room_contract.hotel",
    "fieldname": "hotel",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Hotel",
    "options": "Hotel",
    "reqd": 1
@@ -106,6 +114,8 @@
   {
    "fieldname": "company_class",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Company Class",
    "options": "Company Class"
   },
@@ -122,13 +132,44 @@
   {
    "fieldname": "room_accommodation_type",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Room Accommodation Type",
    "options": "Room Accommodation Type"
+  },
+  {
+   "fieldname": "selling_dates_section",
+   "fieldtype": "Section Break",
+   "label": "Selling Dates"
+  },
+  {
+   "fieldname": "selling_from_date",
+   "fieldtype": "Date",
+   "label": "Selling From Date"
+  },
+  {
+   "fieldname": "check_in_from_date",
+   "fieldtype": "Date",
+   "label": "Check In From Date"
+  },
+  {
+   "fieldname": "column_break_gws2v",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "selling_to_date",
+   "fieldtype": "Date",
+   "label": "Selling To Date"
+  },
+  {
+   "fieldname": "check_in_to_date",
+   "fieldtype": "Date",
+   "label": "Check In To Date"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-21 12:31:03.018266",
+ "modified": "2023-11-07 08:44:14.509165",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Room Price",
@@ -149,5 +190,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "hotel"
 }

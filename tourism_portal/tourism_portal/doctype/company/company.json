@@ -1,21 +1,28 @@
 {
  "actions": [],
- "allow_rename": 1,
- "autoname": "CMP-.####",
+ "autoname": "field:company_code",
  "creation": "2023-10-26 11:17:15.411322",
  "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "company_blance",
-  "section_break_1bpbc",
+  "company_code",
   "company_name",
   "country",
   "column_break_ajuyi",
-  "company_class",
   "is_child_company",
-  "parent_company"
+  "parent_company",
+  "balance_and_payments_section",
+  "company_blance",
+  "section_break_u7zry",
+  "account_type",
+  "section_break_arl9i",
+  "credit_limit",
+  "column_break_crlya",
+  "credit_current_limit",
+  "column_break_vdmgu",
+  "credit"
  ],
  "fields": [
   {
@@ -32,15 +39,6 @@
    "in_standard_filter": 1,
    "label": "Country",
    "options": "Country",
-   "reqd": 1
-  },
-  {
-   "fieldname": "company_class",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Company Class",
-   "options": "Company Class",
    "reqd": 1
   },
   {
@@ -75,8 +73,59 @@
    "label": "Company Blance"
   },
   {
-   "fieldname": "section_break_1bpbc",
+   "fieldname": "company_code",
+   "fieldtype": "Data",
+   "label": "Company Code",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "balance_and_payments_section",
+   "fieldtype": "Section Break",
+   "label": "Balance And Payments"
+  },
+  {
+   "fieldname": "section_break_u7zry",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "account_type",
+   "fieldtype": "Select",
+   "label": "Account Type",
+   "options": "\nCredit\nDebit",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.account_type=='Credit'",
+   "fieldname": "section_break_arl9i",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "credit_limit",
+   "fieldtype": "Currency",
+   "label": "Credit Limit"
+  },
+  {
+   "fieldname": "column_break_crlya",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "credit_current_limit",
+   "fieldtype": "Currency",
+   "label": "Credit Current Limit",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_vdmgu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "credit",
+   "fieldtype": "Currency",
+   "label": "Credit"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -92,13 +141,17 @@
   {
    "link_doctype": "Company",
    "link_fieldname": "parent_company"
+  },
+  {
+   "link_doctype": "Company Assigned Class",
+   "link_fieldname": "company"
   }
  ],
- "modified": "2023-10-27 18:35:59.276518",
+ "modified": "2023-11-07 08:35:07.796130",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Company",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "By fieldname",
  "nsm_parent_field": "parent_company",
  "owner": "Administrator",
  "permissions": [
