@@ -56,6 +56,7 @@ def search_for_available_hotel(hotel_params):
 		cntrct.name as contract_id,
 		file.file_url as room_image,
 		IFNULL(cntrct.accommodation_type_rule, tbl1.hotel_accommodation_type_rule) as hotel_accommodation_type_rule,
+		tbl1.hotel_child_rate_policy as hotel_child_rate_policy,
 		IFNULL(cntrct.cancellation_policy, tbl1.hotel_cancellation_policy) as hotel_cancellation_policy
 		FROM `tabHotel Room` tbl2 
 		INNER JOIN `tabHotel` tbl1 ON tbl1.name=tbl2.hotel
@@ -189,7 +190,33 @@ def get_room_price(room, search_params):
 	delta = datetime.strptime(search_params.get('checkout'), date_format) - datetime.strptime(search_params.get('checkin'), date_format)
 	days = delta.days
 	if room_price.get('selling_price') :
-		return (room_price.get('selling_price') * days, days, room_price.get('selling_currency'))
+		# calculate extra child price
+		room_price_with_children = get_room_price_with_children(room, room_price.get('selling_price'))
+		return (room_price_with_children * days, days, room_price.get('selling_currency'))
+	
+def get_room_price_with_children(room, selling_price):
+	room_price = selling_price
+	child_policies = frappe.db.sql("""
+		SELECT from_age, to_age, room_child_order, adult_price_percentage
+			FROM `tabChild Rate Policy Item`
+		WHERE parent=%(child_rate_policy)s 
+		order BY room_child_order, from_age
+	""", {"child_rate_policy": room.get('hotel_child_rate_policy')},as_dict=True)
+	pax = room.get('pax')
+	if pax:
+		adult_price = selling_price / float(pax.get('adults'))
+		child_ages = [int(child) for  child in pax.get('childrenInfo')]
+		child_ages.sort()
+		child_order = 0
+		for child in child_ages:
+			child_order += 1
+			
+			for plc in child_policies:
+				if int(plc.get('room_child_order')) == child_order:
+					if child >= plc.get('from_age') and child <= plc.get('to_age'):
+						room_price += ((adult_price * plc.get('adult_price_percentage')) / 100)
+						break
+	return room_price
 def is_hotel_suitable(pax_info, hotel):
 	hotel_acmnd = frappe.db.sql("""
 	SELECT

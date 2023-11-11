@@ -3,7 +3,7 @@
 {% block page_content %}
 
 {% for hotel_rsv in reservation_details %}
-<div class="reservation_details mt-4">
+<div class="reservation_details mt-4 card p-3">
     <div class="row">
         <div class="col-lg-4">Location: {{hotel_rsv.get('location')}}</div>
         <div class="col-lg-4">Check In: {{hotel_rsv.get('checkin')}}</div>
