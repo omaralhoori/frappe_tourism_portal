@@ -15,13 +15,8 @@ def get_locations(search="", start=0, page_len=20):
         limit {page_len} offset {start}
 	""".format(page_len=page_len, start=start),{"txt": "%%%s%%" % search}, as_dict=True)
 	areas = [{"location_id": hotel.get('area_id'), "location_name": hotel.get('area_name')} for hotel in hotels]
-	# for hotel in hotels:
-	# 	if not locations['hotels'].get(hotel.get('area_id')):
-	# 		locations['hotels'][hotel.get('area_id')] = []
-	# 	locations['hotels'][hotel.get('area_id')].append(hotel)
 	locations['hotels']['hotels'] = hotels
 	locations['hotels']['areas'] = areas
-	print(locations)
 	return locations
 
 
@@ -33,3 +28,17 @@ def get_nationalities(search="", start=0, page_len=20):
 		WHERE name like %(txt)s
         limit {page_len} offset {start}
 	""".format(page_len=page_len, start=start),{"txt": "%%%s%%" % search}, as_dict=True)
+
+@frappe.whitelist(allow_guest=True)
+def get_home_settings():
+	max_room = frappe.db.get_single_value("Tourism Portal Settings", "max_hotel_rooms_selected")
+	max_adults = frappe.db.get_single_value("Tourism Portal Settings", "max_adults_per_room")
+	max_children = frappe.db.get_single_value("Tourism Portal Settings", "max_children_per_room")
+
+	return {
+			"hotel_settings": {
+				"max_room": max_room,
+				"max_adults": max_adults,
+				"max_children": max_children
+			}
+	}
