@@ -174,7 +174,7 @@ def get_room_price(room, search_params):
 	if not room.get('contract_id'): return
 	company_class = get_company_class(search_params)
 	room_price = frappe.db.sql("""
-		SELECT prc.company_class, prc.selling_type, 
+		SELECT prc.name as item_price_name ,prc.company_class, prc.selling_type, prc.hotel, 
 		prc.buying_currency, prc.buying_price,
 		 prc.selling_currency, prc.selling_price FROM  `tabHotel Room Price` prc
 		WHERE prc.room_contract=%(contract_id)s 
@@ -189,18 +189,57 @@ def get_room_price(room, search_params):
 	date_format = "%Y-%m-%d"
 	delta = datetime.strptime(search_params.get('checkout'), date_format) - datetime.strptime(search_params.get('checkin'), date_format)
 	days = delta.days
-	if room_price.get('selling_price') :
-		selling_price =room_price.get('selling_price')
-		# calculate company class extraprice
-		if company_class.get('company_class') and room_price.get('company_class') == company_class.get('company_class'):
-			if company_class.get('extra_price_type') == 'Amount':
-				selling_price += company_class.get('extra_price')
-			else:
-				selling_price += (selling_price * company_class.get('extra_price')) / 100
+	selling_price, selling_currency = get_room_selling_price(room, room_price, company_class)
+	# calculate company class extraprice
+	if selling_price:
 		# calculate extra child price
 		room_price_with_children = get_room_price_with_children(room, selling_price)
-		return (room_price_with_children * days, days, room_price.get('selling_currency'))
+		return (room_price_with_children * days, days, selling_currency)
+
+def get_room_selling_price(room, room_price, company_class):
+	if room_price.get('selling_price') :
+		selling_price, selling_currency = room_price.get('selling_price'), room_price.get('selling_currency')
+	else:
+		selling_price, selling_currency = get_selling_price_profit_margin_based(room, room_price)
+	if not selling_price:
+		return None, None
+	selling_price = get_room_selling_price_based_on_class(selling_price, room_price.get('item_price_name'), company_class.get('company_class'))
+	if company_class.get('company_class') and room_price.get('company_class') == company_class.get('company_class'):
+		selling_price = calculate_extra_price(selling_price, company_class.get('extra_price_type'), company_class.get('extra_price'))
 	
+	return selling_price, selling_currency
+
+def get_room_selling_price_based_on_class(selling_price, item_price_name, company_class):
+	class_extra_price = frappe.db.get_value("Hotel Room Price Company", {"parent": item_price_name, "company_class": company_class}, ['extra_type', 'extra_profit'])
+	if not class_extra_price: return selling_price
+	extra_type, extra_price = class_extra_price
+	return calculate_extra_price(selling_price, extra_type, extra_price)
+
+def calculate_extra_price(selling_price, extra_type, extra_price):
+	if extra_type == 'Amount':
+			selling_price += extra_price
+	else:
+		selling_price += (selling_price * extra_price) / 100
+	return selling_price 
+
+def get_selling_price_profit_margin_based(room, room_price):
+	hotel_profit_margin = frappe.db.get_value("Hotel", room_price.get('hotel'), ['hotel_profit_margin']) or frappe.db.get_single_value("Tourism Portal Settings", "default_hotel_profit_margin")
+	selling_price = None
+	selling_currency = None
+	profit_margin = frappe.db.sql("""
+		SELECT margin_type,profit_margin
+		FROM `tabProfit Margin Item`
+		WHERE parent=%(profit_margin)s AND 
+		(room_type=%(room_type)s OR room_type IS NULL OR room_type='')
+		ORDER BY room_type DESC
+	""", {"room_type":room.get('room_accommodation_type') , "profit_margin": hotel_profit_margin},as_dict=True)
+	if len(profit_margin) > 0:
+		profit_margin = profit_margin[0]
+		# ToDo convert currencies
+		selling_price = calculate_extra_price(room_price.get('buying_price'), profit_margin.get('margin_type'), profit_margin.get('profit_margin'))
+		selling_currency= room_price.get('buying_currency')
+	return selling_price, selling_currency
+
 def get_company_class(search_params):
 	location_type = search_params.get('location-type')
 	location = search_params.get('location')
