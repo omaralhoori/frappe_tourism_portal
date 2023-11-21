@@ -8,7 +8,7 @@ def get_context(context):
     params = frappe.form_dict.params
     params = json.loads(params)
     rooms = json.loads(frappe.form_dict.rooms)
-
+    print(rooms)
     all_reserved_rooms = {}
     
     for room in rooms:

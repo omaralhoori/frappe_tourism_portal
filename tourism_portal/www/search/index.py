@@ -79,7 +79,6 @@ def search_for_available_hotel(hotel_params):
 	availables = {}
 	for name, hotel in hotels.items():
 		if rooms := search_for_available_room(hotel_params.get('paxInfo'), hotel):
-			print("room avilable", rooms)
 			availables[name] = rooms
 	# for pax_info in hotel_params.get('paxInfo'):
 	# 	availables = search_for_available_room(pax_info, all_hotels)
@@ -153,7 +152,6 @@ def get_room_qty(room, hotel_params):
 	return 0
 
 def search_for_available_room(pax_info, hotel_rooms):
-	print(pax_info)
 	suitable_rooms = {}
 	all_found = True
 	for pax in pax_info:
@@ -174,6 +172,7 @@ from datetime import datetime
 
 def get_room_price(room, search_params):
 	if not room.get('contract_id'): return
+	company_class = get_company_class(search_params)
 	room_price = frappe.db.sql("""
 		SELECT prc.company_class, prc.selling_type, 
 		prc.buying_currency, prc.buying_price,
@@ -181,7 +180,8 @@ def get_room_price(room, search_params):
 		WHERE prc.room_contract=%(contract_id)s 
 		AND (prc.nationality=%(nationality)s OR prc.nationality IS NULL OR prc.nationality='')
 		AND (prc.room_accommodation_type=%(room_accommodation_type)s OR prc.room_accommodation_type IS NULL  OR prc.room_accommodation_type='')
-	""", {"contract_id": room.get('contract_id'), 
+	""", {"contract_id": room.get('contract_id'),
+       "company_class": company_class.get('company_class'),
        "room_accommodation_type": room.get('room_accommodation_type'),
        	"nationality": search_params.get('nationality')},as_dict=True)
 	if len(room_price) == 0:return
@@ -190,10 +190,41 @@ def get_room_price(room, search_params):
 	delta = datetime.strptime(search_params.get('checkout'), date_format) - datetime.strptime(search_params.get('checkin'), date_format)
 	days = delta.days
 	if room_price.get('selling_price') :
+		selling_price =room_price.get('selling_price')
+		# calculate company class extraprice
+		if company_class.get('company_class') and room_price.get('company_class') == company_class.get('company_class'):
+			if company_class.get('extra_price_type') == 'Amount':
+				selling_price += company_class.get('extra_price')
+			else:
+				selling_price += (selling_price * company_class.get('extra_price')) / 100
 		# calculate extra child price
-		room_price_with_children = get_room_price_with_children(room, room_price.get('selling_price'))
+		room_price_with_children = get_room_price_with_children(room, selling_price)
 		return (room_price_with_children * days, days, room_price.get('selling_currency'))
 	
+def get_company_class(search_params):
+	location_type = search_params.get('location-type')
+	location = search_params.get('location')
+	city = get_location_city(location_type, location)
+	company = frappe.db.get_value("User", frappe.session.user, "company", cache=True)
+	return frappe.db.get_value("Company Assigned Class", {
+		"company": company, "city": city, 
+		"from_date": ["<=", frappe.utils.nowdate()], 
+		"to_date": [">=", frappe.utils.nowdate()]},
+		["company_class", "extra_price_type", "extra_price"], as_dict=True
+		) or {}
+	
+	
+def get_location_city(location_type, location):
+	city = None
+	area = None
+	if location_type == 'hotel':
+		area = frappe.db.get_value("Hotel", location, "area")
+	elif location_type == 'area':
+		area = location
+	if area:	
+		town = frappe.db.get_value('Area', area, "town", cache=True)
+		city = frappe.db.get_value("Town", town, "city", cache=True)
+	return city
 def get_room_price_with_children(room, selling_price):
 	room_price = selling_price
 	child_policies = frappe.db.sql("""
