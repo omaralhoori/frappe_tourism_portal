@@ -235,10 +235,58 @@ def get_selling_price_profit_margin_based(room, room_price):
 	""", {"room_type":room.get('room_accommodation_type') , "profit_margin": hotel_profit_margin},as_dict=True)
 	if len(profit_margin) > 0:
 		profit_margin = profit_margin[0]
-		# ToDo convert currencies
-		selling_price = calculate_extra_price(room_price.get('buying_price'), profit_margin.get('margin_type'), profit_margin.get('profit_margin'))
-		selling_currency= room_price.get('buying_currency')
+		# convert currencies
+		selling_price, selling_currency = get_currency_based_price(room_price.get('buying_price'), room_price.get('buying_currency'))
+		if selling_price:
+			selling_price = calculate_extra_price(selling_price, profit_margin.get('margin_type'), profit_margin.get('profit_margin'))
+
 	return selling_price, selling_currency
+
+def get_currency_based_price(from_price, from_currency):
+	selling_currency = frappe.db.get_single_value("Tourism Portal Settings", "selling_currency")
+	if selling_currency == from_currency:
+		selling_price = from_price
+	else:
+		selling_price = convert_currency(from_price, from_currency, selling_currency)
+	return selling_price,selling_currency
+
+
+def convert_currency(from_price, from_currency, to_currency):
+	to_price = 0
+	currency_rates = get_currencies()
+	if not currency_rates  or currency_rates.get('success') == False:
+		return to_price
+	if not currency_rates.get('quotes'):
+		return to_price
+	rate = currency_rates['quotes'].get(to_currency + from_currency)
+	to_price = from_price / rate
+	return to_price
+
+
+import requests
+def get_external_currencies():
+	"""
+		return: 
+			{
+			"success": true,
+			"source": "USD",
+			"quotes": {
+				"USDAED": 3.67279,
+				"USDAFN": 69.028845,
+	"""
+	res = requests.get("http://api.exchangerate.host/live?access_key=227c4880c3db5de4aca693c565636e1e")
+	return res.content.decode()
+
+def get_currencies():
+	last_update = frappe.db.get_single_value("Tourism Currency", "last_fetch", cache=True)
+	if last_update and (frappe.utils.datetime.datetime.now() - last_update).total_seconds() < 3600:
+		return json.loads(frappe.db.get_single_value("Tourism Currency", "rates", cache=True))
+	else:
+		rates = get_external_currencies()
+		frappe.db.set_single_value("Tourism Currency", "last_fetch", frappe.utils.now())
+		frappe.db.set_single_value("Tourism Currency", "rates", str(rates))
+		frappe.db.commit()
+		return json.loads(rates)
 
 def get_company_class(search_params):
 	location_type = search_params.get('location-type')

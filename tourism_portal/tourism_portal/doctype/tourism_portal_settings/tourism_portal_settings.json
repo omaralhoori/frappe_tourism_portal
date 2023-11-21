@@ -12,6 +12,7 @@
   "max_hotel_rooms_selected",
   "max_adults_per_room",
   "max_children_per_room",
+  "selling_currency",
   "rules_and_policies_tab",
   "hotel_rules_section",
   "default_hotel_cancellation_policy",
@@ -92,13 +93,20 @@
    "fieldtype": "Int",
    "label": "Max Children Per Room",
    "reqd": 1
+  },
+  {
+   "fieldname": "selling_currency",
+   "fieldtype": "Link",
+   "label": "Selling Currency",
+   "options": "Currency",
+   "reqd": 1
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-10-16 13:29:30.260457",
+ "modified": "2023-11-21 16:59:44.660389",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal Settings",
