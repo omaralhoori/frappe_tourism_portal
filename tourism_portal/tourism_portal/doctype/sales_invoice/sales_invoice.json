@@ -15,7 +15,7 @@
   "post_date",
   "post_time",
   "section_break_09xmx",
-  "items",
+  "rooms",
   "section_break_np3bd",
   "grand_total"
  ],
@@ -63,13 +63,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "items",
-   "fieldtype": "Table",
-   "label": "Items",
-   "options": "Invoice Item",
-   "reqd": 1
-  },
-  {
    "fieldname": "section_break_np3bd",
    "fieldtype": "Section Break"
   },
@@ -78,11 +71,18 @@
    "fieldtype": "Currency",
    "label": "Grand Total",
    "read_only": 1
+  },
+  {
+   "fieldname": "rooms",
+   "fieldtype": "Table",
+   "label": "Rooms",
+   "options": "Sales Invoice Room Item",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-01 12:25:35.792177",
+ "modified": "2023-11-23 12:00:54.758860",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice",
