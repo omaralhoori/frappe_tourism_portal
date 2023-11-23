@@ -408,6 +408,7 @@ function confirmButtonClicked(e){
      if (!all_rooms_selected){
         msgprint("Please select all rooms")
      }else{
+        selected_rooms['hotel'] = reservation_details['hotel'];
         var hotelParams = JSON.stringify(selected_rooms)
 
         window.open(`reserve${window.location.search}&rooms=${encodeURIComponent(hotelParams)}`, '_self');

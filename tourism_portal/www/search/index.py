@@ -9,9 +9,8 @@ def get_context(context):
 		frappe.throw(_("Log in to access this page."), frappe.PermissionError)
 	params = frappe.form_dict.params
 	params = json.loads(params)
-
 	context.rooms = get_available_hotel_rooms(params)
-	context.rooms = json.dumps(context.rooms)
+	context.rooms = json.dumps(context.rooms, default=str)
 	return context
 
 """
@@ -53,19 +52,12 @@ def search_for_available_hotel(hotel_params):
 		tbl1.name as hotel_id, tbl1.hotel_name, 
 		tbl2.room_type, tbl2.room_accommodation_type, 
 		tbl2.name as room_id,
-		cntrct.name as contract_id,
 		file.file_url as room_image,
-		IFNULL(cntrct.accommodation_type_rule, tbl1.hotel_accommodation_type_rule) as hotel_accommodation_type_rule,
-		tbl1.hotel_child_rate_policy as hotel_child_rate_policy,
-		IFNULL(cntrct.cancellation_policy, tbl1.hotel_cancellation_policy) as hotel_cancellation_policy
+		tbl1.hotel_child_rate_policy,
+		tbl1.hotel_accommodation_type_rule,
+		tbl1.hotel_cancellation_policy
 		FROM `tabHotel Room` tbl2 
 		INNER JOIN `tabHotel` tbl1 ON tbl1.name=tbl2.hotel
-		LEFT JOIN `tabHotel Room Contract` cntrct ON cntrct.hotel=tbl2.hotel AND cntrct.room_type=tbl2.room_type 
-			AND (cntrct.check_in_from_date is null or %(checkin)s BETWEEN cntrct.check_in_from_date and cntrct.check_in_to_date)
-			AND ( %(checkout)s BETWEEN cntrct.check_in_from_date and cntrct.check_in_to_date)
-			AND (cntrct.selling_from_date  is null or now() BETWEEN cntrct.selling_from_date and cntrct.selling_to_date)
-			AND (cntrct.release_days =0 or DATEDIFF(%(checkin)s, now()) > cntrct.release_days )
-			AND cntrct.docstatus=1
 		LEFT JOIN `tabFile` as file on file.attached_to_name=tbl2.name AND file.attached_to_doctype='Hotel Room'
 		WHERE	tbl2.disabled=0 AND tbl1.disabled=0  {condation}
 		;
@@ -73,6 +65,8 @@ def search_for_available_hotel(hotel_params):
 				   'checkin': hotel_params.get('checkin'), 'checkout': hotel_params.get('checkout')}, as_dict=True)
 	hotels = {}
 	for hotel in all_hotels:
+		hotel['contracts'] = get_hotel_room_contracts(hotel, hotel_params)
+		if len(hotel['contracts']) > 0: hotel['contract_id'] = hotel['contracts'][0]['contract_id'] 
 		if not hotels.get(hotel.get('hotel_id')):
 			hotels[hotel.get('hotel_id')] = []
 		hotels[hotel.get('hotel_id')].append(hotel)
@@ -94,8 +88,36 @@ def search_for_available_hotel(hotel_params):
 				room['features'] = get_room_features(room)
 				if not room['price'] or not room['qty']:
 					room = get_enquery_result(room, hotel_params)
+	print("tes--------------------")
 	return availables
+"""
+	cntrct.name as contract_id,
 
+	IFNULL(cntrct.accommodation_type_rule, tbl1.hotel_accommodation_type_rule) as hotel_accommodation_type_rule,
+	IFNULL(cntrct.cancellation_policy, tbl1.hotel_cancellation_policy) as hotel_cancellation_policy
+
+LEFT JOIN `tabHotel Room Contract` cntrct ON cntrct.hotel=tbl2.hotel AND cntrct.room_type=tbl2.room_type 
+			AND (cntrct.check_in_from_date is null or %(checkin)s BETWEEN cntrct.check_in_from_date and cntrct.check_in_to_date)
+			AND ( %(checkout)s BETWEEN cntrct.check_in_from_date and cntrct.check_in_to_date)
+
+"""
+def get_hotel_room_contracts(hotel_room, search_params):
+	contracts = frappe.db.sql("""
+		SELECT cntrct.name as contract_id, contract_type, check_in_from_date, check_in_to_date,
+		accommodation_type_rule as hotel_accommodation_type_rule, 
+		cancellation_policy as hotel_cancellation_policy
+			FROM `tabHotel Room Contract` as cntrct
+		WHERE hotel=%(hotel)s AND room_type=%(room_type)s
+		AND (cntrct.selling_from_date  is null or now() BETWEEN cntrct.selling_from_date and cntrct.selling_to_date)
+		AND (cntrct.release_days =0 or DATEDIFF(%(checkin)s, now()) > cntrct.release_days )
+		AND ((%(checkin)s BETWEEN cntrct.check_in_from_date and cntrct.check_in_to_date)
+			OR ( %(checkout)s BETWEEN cntrct.check_in_from_date and cntrct.check_in_to_date))
+		AND cntrct.docstatus=1
+	""", {"hotel": hotel_room.get('hotel_id'), 'room_type': hotel_room.get('room_type'),
+       'checkin': search_params.get('checkin'), 'checkout': search_params.get('checkout')
+	   }, as_dict=True)
+
+	return contracts
 def  get_room_features(room):
 	features = frappe.db.get_all("Feature Item", {"parent": room.get('room_id'), "parenttype": "Hotel Room"}, ["feature"])
 	features = [ ff.get('feature') for ff in features]

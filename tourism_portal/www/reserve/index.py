@@ -9,6 +9,8 @@ def get_context(context):
     params = json.loads(params)
     rooms = json.loads(frappe.form_dict.rooms)
     print(rooms)
+    if not rooms.get('hotel'): frappe.throw(_('Please Select Hotel'))
+    hotel_id = rooms.pop('hotel')
     all_reserved_rooms = {}
     
     for room in rooms:
@@ -30,5 +32,5 @@ def get_context(context):
             if not all_reserved_rooms.get(pax.get('roomName')):
                 frappe.throw(_('You did not select all rooms'))
             pax['reserved_room'] = all_reserved_rooms.get(pax.get('roomName'))
-
+        hotel['hotel_name'] = frappe.db.get_value("Hotel", hotel_id, "hotel_name")
     context.reservation_details = params
