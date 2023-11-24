@@ -37,6 +37,7 @@
    "fieldname": "hotel",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Hotel",
    "options": "Hotel",
    "reqd": 1
@@ -165,6 +166,7 @@
    "fieldname": "room_type",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Room Type",
    "options": "Room Type",
    "reqd": 1
@@ -182,7 +184,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-10-23 11:47:20.175882",
+ "modified": "2023-11-24 11:57:50.737484",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Room Contract",

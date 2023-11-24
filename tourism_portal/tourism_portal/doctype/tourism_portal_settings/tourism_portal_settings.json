@@ -12,7 +12,9 @@
   "max_hotel_rooms_selected",
   "max_adults_per_room",
   "max_children_per_room",
+  "column_break_bf7pn",
   "selling_currency",
+  "session_expires_in",
   "rules_and_policies_tab",
   "hotel_rules_section",
   "default_hotel_cancellation_policy",
@@ -100,13 +102,23 @@
    "label": "Selling Currency",
    "options": "Currency",
    "reqd": 1
+  },
+  {
+   "fieldname": "column_break_bf7pn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "session_expires_in",
+   "fieldtype": "Duration",
+   "label": "Session Expires In",
+   "reqd": 1
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-11-21 16:59:44.660389",
+ "modified": "2023-11-23 16:39:18.241985",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal Settings",

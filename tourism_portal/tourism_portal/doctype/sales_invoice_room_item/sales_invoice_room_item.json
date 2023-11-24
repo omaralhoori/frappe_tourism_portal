@@ -12,10 +12,9 @@
   "total_price",
   "buying_currency",
   "buying_price",
-  "pax",
+  "paxes_section",
+  "guests",
   "section_break_fmvkn",
-  "pax_names",
-  "column_break_6nrlm",
   "extras"
  ],
  "fields": [
@@ -61,11 +60,6 @@
    "options": "buying_currency"
   },
   {
-   "fieldname": "pax",
-   "fieldtype": "Int",
-   "label": "Pax"
-  },
-  {
    "fieldname": "extras",
    "fieldtype": "Text",
    "label": "Extras"
@@ -75,19 +69,21 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "pax_names",
-   "fieldtype": "Data",
-   "label": "Pax Names"
+   "fieldname": "guests",
+   "fieldtype": "Table",
+   "label": "Guests",
+   "options": "Sales Invoice Room Pax"
   },
   {
-   "fieldname": "column_break_6nrlm",
-   "fieldtype": "Column Break"
+   "fieldname": "paxes_section",
+   "fieldtype": "Section Break",
+   "label": "Paxes"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-11-23 12:02:29.244456",
+ "modified": "2023-11-24 12:19:02.262060",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice Room Item",

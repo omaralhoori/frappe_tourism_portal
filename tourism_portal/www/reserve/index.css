@@ -1,0 +1,10 @@
+.room-extra-list{
+    max-height: 200px;
+    margin-bottom: 10px;
+    overflow-y:scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.room-extra-list .list-group-item{
+    padding-left: 35px;
+}

@@ -14,6 +14,7 @@
   "column_break_v9ehp",
   "post_date",
   "post_time",
+  "session_expires",
   "section_break_09xmx",
   "rooms",
   "section_break_np3bd",
@@ -78,11 +79,16 @@
    "label": "Rooms",
    "options": "Sales Invoice Room Item",
    "reqd": 1
+  },
+  {
+   "fieldname": "session_expires",
+   "fieldtype": "Datetime",
+   "label": "Session Expires"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-23 12:00:54.758860",
+ "modified": "2023-11-23 16:44:04.731824",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice",
