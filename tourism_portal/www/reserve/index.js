@@ -1,6 +1,12 @@
 // Set the countdown time in seconds
-const countdownTime = 100; // 5 minutes
+var dateObject = new Date(document.getElementById('session-timer').getAttribute("datetime"));
+var currentDate = new Date();
 
+// Calculate the difference in milliseconds
+var timeDifference = dateObject.getTime() - currentDate.getTime();
+
+const countdownTime = Math.round(Math.max(timeDifference / 1000, 0)); // 5 minutes
+console.log(countdownTime)
 let timeRemaining = countdownTime;
 let timerInterval;
 
@@ -30,3 +36,7 @@ function formatTime(time) {
 
 // Start the timer when the page loads
 startTimer();
+
+function confirmReservationButtonClicked(e){
+  
+}

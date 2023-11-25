@@ -15,8 +15,16 @@
   "post_date",
   "post_time",
   "session_expires",
+  "contact_info_section",
+  "customer_name",
+  "column_break_qukqj",
+  "customer_email",
+  "column_break_1tgnb",
+  "customer_mobile_no",
   "section_break_09xmx",
   "rooms",
+  "room_pax_info",
+  "room_extras",
   "section_break_np3bd",
   "grand_total"
  ],
@@ -60,6 +68,7 @@
    "reqd": 1
   },
   {
+   "collapsible": 1,
    "fieldname": "section_break_09xmx",
    "fieldtype": "Section Break"
   },
@@ -77,18 +86,57 @@
    "fieldname": "rooms",
    "fieldtype": "Table",
    "label": "Rooms",
-   "options": "Sales Invoice Room Item",
-   "reqd": 1
+   "options": "Sales Invoice Room Item"
   },
   {
    "fieldname": "session_expires",
    "fieldtype": "Datetime",
    "label": "Session Expires"
+  },
+  {
+   "fieldname": "room_pax_info",
+   "fieldtype": "Table",
+   "label": "Room Pax Info",
+   "options": "Sales Invoice Room Pax"
+  },
+  {
+   "fieldname": "room_extras",
+   "fieldtype": "Table",
+   "label": "Room Extras",
+   "options": "Sales Invoice Room Extra"
+  },
+  {
+   "fieldname": "contact_info_section",
+   "fieldtype": "Section Break",
+   "label": "Contact Info"
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name"
+  },
+  {
+   "fieldname": "column_break_qukqj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "customer_email",
+   "fieldtype": "Data",
+   "label": "Customer Email"
+  },
+  {
+   "fieldname": "column_break_1tgnb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "customer_mobile_no",
+   "fieldtype": "Data",
+   "label": "Customer Mobile No"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-23 16:44:04.731824",
+ "modified": "2023-11-24 17:43:54.417729",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice",

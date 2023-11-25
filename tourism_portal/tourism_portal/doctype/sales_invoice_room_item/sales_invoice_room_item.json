@@ -10,10 +10,15 @@
   "qty",
   "price_per_item",
   "total_price",
+  "room_name",
+  "hotel",
+  "section_break_ygydi",
+  "contract_id",
+  "contract_price_id",
+  "inquiry_id",
+  "column_break_otkfo",
   "buying_currency",
   "buying_price",
-  "paxes_section",
-  "guests",
   "section_break_fmvkn",
   "extras"
  ],
@@ -69,21 +74,50 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "guests",
-   "fieldtype": "Table",
-   "label": "Guests",
-   "options": "Sales Invoice Room Pax"
+   "fieldname": "room_name",
+   "fieldtype": "Data",
+   "label": "Room Name",
+   "reqd": 1
   },
   {
-   "fieldname": "paxes_section",
-   "fieldtype": "Section Break",
-   "label": "Paxes"
+   "fieldname": "section_break_ygydi",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "contract_id",
+   "fieldtype": "Link",
+   "label": "Contract Id",
+   "options": "Hotel Room Contract"
+  },
+  {
+   "fieldname": "contract_price_id",
+   "fieldtype": "Link",
+   "label": "Contract Price Id",
+   "options": "Hotel Room Price"
+  },
+  {
+   "fieldname": "inquiry_id",
+   "fieldtype": "Link",
+   "label": "Inquiry Id",
+   "options": "Hotel Inquiry Request"
+  },
+  {
+   "fieldname": "column_break_otkfo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "room.hotel",
+   "fieldname": "hotel",
+   "fieldtype": "Link",
+   "label": "Hotel",
+   "options": "Hotel",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-11-24 12:19:02.262060",
+ "modified": "2023-11-24 17:08:26.365029",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice Room Item",
