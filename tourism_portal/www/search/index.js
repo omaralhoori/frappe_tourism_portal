@@ -58,6 +58,7 @@ function formatHotelResults(hotelResults){
 }
 
 function formatRoomResult(roomResult){
+    console.log(roomResult)
     var resultItem = $('#room-result-item-template').html()
     var showAskButton = false;
     if (!roomResult.details.price){
@@ -69,7 +70,7 @@ function formatRoomResult(roomResult){
         showAskButton = true;
     }else{
         resultItem= resultItem
-        .replace('{Room Price}', roomResult['results'][0]['price'][0])
+        .replace('{Room Price}', parseFloat(roomResult['results'][0]['price'][0]).toFixed(2))
         .replace('{Nights}', roomResult['results'][0]['price'][1])
     }
 
@@ -119,6 +120,7 @@ function formatRoomResult(roomResult){
         selectRoom = `<select 
         room-price="${roomResult['results'][0]['price'][0]}"
         onchange="roomSelectChanged(this)"  class="room-select-input"
+        contract-id="${roomResult['results'][0]['contract_id']}"
         hotel=${roomResult['results'][0]['hotel_id']} rooms="${rooms}">
         <option>0</option>
             ${selectRoom}
@@ -352,7 +354,7 @@ function calculate_total_hotel(hotel){
     for (var selectInput of all_selects){
         total += Number( selectInput.value || 0) * Number(selectInput.getAttribute("room-price"))
     }
-    $('.hotels-total').text(`${total} USD`)
+    $('.hotels-total').text(`${total.toFixed(2)} USD`)
     totals['hotels'] = total;
     update_totals();
 }
@@ -363,7 +365,7 @@ function update_totals(){
         total += totals[tt]
     }
 
-    $('.grand-total-container').text(`${total} USD`)
+    $('.grand-total-container').text(`${total.toFixed(2)} USD`)
 }
 
 function confirmButtonClicked(e){
@@ -373,6 +375,8 @@ function confirmButtonClicked(e){
     var all_selects= document.querySelectorAll(`select.room-select-input[hotel="${reservation_details['hotel']}"]`)
     for (var ss of all_selects){
         var rooms = ss.getAttribute("rooms");
+        var price = ss.getAttribute("room-price");
+        var contractId = ss.getAttribute("contract-id");
         var roomId = ss.closest('.room-result-container').getAttribute('room-id')
         var value = 0;
         if (ss.value && ss.value > 0){
@@ -382,10 +386,14 @@ function confirmButtonClicked(e){
             selected_rooms[rooms] = {}  
         }
         if (!selected_rooms[rooms][roomId]){
-            selected_rooms[rooms][roomId] = 0 
+            selected_rooms[rooms][roomId] = {
+                "price": price,
+                "qty": 0,
+                "contractId": contractId
+            } 
         }
 
-        selected_rooms[rooms][roomId] += Number(value);
+        selected_rooms[rooms][roomId]['qty'] += Number(value);
     }
     console.log(selected_rooms)
 
@@ -397,7 +405,7 @@ function confirmButtonClicked(e){
             var roomCnt = room.split('-').length
             var selected = 0;
             for (var ss in selected_rooms[room]){
-                var cc = selected_rooms[room][ss]
+                var cc = selected_rooms[room][ss]['qty']
                 selected += cc
             }
             if (selected != roomCnt){
@@ -408,10 +416,53 @@ function confirmButtonClicked(e){
      if (!all_rooms_selected){
         msgprint("Please select all rooms")
      }else{
+        
         selected_rooms['hotel'] = reservation_details['hotel'];
         var hotelParams = JSON.stringify(selected_rooms)
+        var data = encodeParamsJson(selected_rooms)
+        var url = "tourism_portal.api.reserve.create_reservation"
+        toggleLoadingIndicator(true);
+        frappe.call({
+            "method": url,
+            args: data,
+            callback: res => {
+                if (res.message){
+                    window.location.href = `/reserve?invoice=${res.message}`
+                }else{
+                    toggleLoadingIndicator(false);
+                    // ToDo show Error message
+                }
+            }
+        })
+    }
 
-        window.open(`reserve${window.location.search}&rooms=${encodeURIComponent(hotelParams)}`, '_self');
-     }
+}
 
+function encodeParamsJson(selected_rooms){
+    // ToDo Make encode for multiple hotels
+    var searchParams = new URLSearchParams(window.location.search)
+    var params = JSON.parse(searchParams.get("params"))
+    var rooms = [];
+    for (var room in selected_rooms){
+        var roomNames = room.split('-')
+        for (var ss in selected_rooms[room]){
+            var selectedIndexes = 0;
+            for (var i=0; i<selected_rooms[room][ss]['qty']; i++){
+                var paxInfo = params[0]['paxInfo'].find(obj => obj.roomName == roomNames[selectedIndexes])
+                var encodedRoom = {
+                    "room_name": roomNames[selectedIndexes],
+                    "room_id": ss,
+                    "price": selected_rooms[room][ss]['price'],
+                    "contract_id": selected_rooms[room][ss]['contractId'],
+                    "pax_info": paxInfo,
+                    "check_in": params[0]['checkin'],
+                    "check_out": params[0]['checkout'],
+                    "nationality": params[0]['nationality'],
+                }
+                rooms.push(encodedRoom)
+                selectedIndexes++;
+            }
+        }
+    }
+    return {"rooms": rooms};
 }

@@ -7,20 +7,24 @@
  "engine": "InnoDB",
  "field_order": [
   "room",
-  "qty",
-  "price_per_item",
-  "total_price",
   "room_name",
+  "total_price",
   "hotel",
+  "section_break_lmyyf",
+  "nationality",
+  "check_in",
+  "check_out",
   "section_break_ygydi",
   "contract_id",
   "contract_price_id",
   "inquiry_id",
+  "cancellation_policy",
   "column_break_otkfo",
   "buying_currency",
   "buying_price",
   "section_break_fmvkn",
-  "extras"
+  "refund",
+  "is_cancelled"
  ],
  "fields": [
   {
@@ -32,20 +36,7 @@
    "reqd": 1
   },
   {
-   "fieldname": "qty",
-   "fieldtype": "Int",
-   "in_list_view": 1,
-   "label": "Qty",
-   "reqd": 1
-  },
-  {
-   "fieldname": "price_per_item",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Price Per Item",
-   "reqd": 1
-  },
-  {
+   "allow_on_submit": 1,
    "fieldname": "total_price",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -65,17 +56,13 @@
    "options": "buying_currency"
   },
   {
-   "fieldname": "extras",
-   "fieldtype": "Text",
-   "label": "Extras"
-  },
-  {
    "fieldname": "section_break_fmvkn",
    "fieldtype": "Section Break"
   },
   {
    "fieldname": "room_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Room Name",
    "reqd": 1
   },
@@ -112,12 +99,56 @@
    "label": "Hotel",
    "options": "Hotel",
    "reqd": 1
+  },
+  {
+   "fieldname": "section_break_lmyyf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "nationality",
+   "fieldtype": "Link",
+   "label": "Nationality",
+   "options": "Nationality",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "check_in",
+   "fieldtype": "Date",
+   "label": "Check In",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "check_out",
+   "fieldtype": "Date",
+   "label": "Check Out",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cancellation_policy",
+   "fieldtype": "Link",
+   "label": "Cancellation Policy",
+   "options": "Cancellation Policy"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "refund",
+   "fieldtype": "Currency",
+   "label": "Refund"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "is_cancelled",
+   "fieldtype": "Check",
+   "label": "Is Cancelled"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-11-24 17:08:26.365029",
+ "modified": "2023-11-28 18:48:18.799888",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice Room Item",

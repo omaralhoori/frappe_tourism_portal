@@ -2,7 +2,7 @@ import frappe
 from frappe import _
 from tourism_portal.utils import get_portal_setting
 import json
-
+no_cache=1
 def get_context(context):
 	context.no_cache = 1
 	if frappe.session.user == "Guest":
@@ -88,7 +88,6 @@ def search_for_available_hotel(hotel_params):
 				room['features'] = get_room_features(room)
 				if not room['price'] or not room['qty']:
 					room = get_enquery_result(room, hotel_params)
-	print("tes--------------------")
 	return availables
 """
 	cntrct.name as contract_id,

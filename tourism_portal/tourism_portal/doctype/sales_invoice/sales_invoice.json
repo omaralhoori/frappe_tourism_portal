@@ -15,6 +15,7 @@
   "post_date",
   "post_time",
   "session_expires",
+  "status",
   "contact_info_section",
   "customer_name",
   "column_break_qukqj",
@@ -26,7 +27,9 @@
   "room_pax_info",
   "room_extras",
   "section_break_np3bd",
-  "grand_total"
+  "hotel_fees",
+  "grand_total",
+  "amended_from"
  ],
  "fields": [
   {
@@ -74,12 +77,15 @@
   },
   {
    "fieldname": "section_break_np3bd",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Fees"
   },
   {
    "fieldname": "grand_total",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Grand Total",
+   "precision": "2",
    "read_only": 1
   },
   {
@@ -132,11 +138,37 @@
    "fieldname": "customer_mobile_no",
    "fieldtype": "Data",
    "label": "Customer Mobile No"
+  },
+  {
+   "fieldname": "hotel_fees",
+   "fieldtype": "Currency",
+   "label": "Hotel Fees",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Sales Invoice",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Draft\nSubmitted\nCancelled",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2023-11-24 17:43:54.417729",
+ "modified": "2023-11-29 14:30:27.007254",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice",
@@ -153,6 +185,20 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Customer",
+   "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],

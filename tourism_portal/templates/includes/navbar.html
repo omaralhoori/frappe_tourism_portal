@@ -25,6 +25,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="">My Account</a>
                         </li>
+                        {% if frappe.session.user != 'Guest' %}
+                        <li class="nav-item">
+                            <span class="nav-link">Balance: <strong>{{frappe.utils.fmt_money(get_customer_balance())}}</strong></span>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
             </nav>

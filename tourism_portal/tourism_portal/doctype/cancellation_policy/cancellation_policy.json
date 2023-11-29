@@ -9,6 +9,7 @@
  "engine": "InnoDB",
  "field_order": [
   "policy_name",
+  "policy_description",
   "refunds"
  ],
  "fields": [
@@ -25,11 +26,16 @@
    "fieldtype": "Table",
    "label": "Refunds",
    "options": "Cancellation Policy Item"
+  },
+  {
+   "fieldname": "policy_description",
+   "fieldtype": "Text Editor",
+   "label": "Policy Description"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-09 11:50:20.588673",
+ "modified": "2023-11-25 15:29:10.496565",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Cancellation Policy",

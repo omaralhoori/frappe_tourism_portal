@@ -9,16 +9,16 @@
             </div>
             <div class="form-row tm-search-form-row">
                 <div class="form-group tm-form-element tm-form-element-2">
-                    <input class="form-control" placeholder="Customer Name" value="{{invoice_details.get('customer_name') or ''}}"/>
+                    <input class="form-control" placeholder="Customer Name" name="customer-name" value="{{invoice_details.get('customer_name') or ''}}"/>
                     <i class="fa fa-2x fa-user tm-form-element-icon"></i>
                 </div>
                 <div class="form-group tm-form-element tm-form-element-2">
-                    <input class="form-control" placeholder="Email" value="{{invoice_details.get('customer_email') or ''}}"/>
+                    <input class="form-control" placeholder="Email" name="email" value="{{invoice_details.get('customer_email') or ''}}"/>
                     <i class="fa fa-2x fa-envelope tm-form-element-icon"></i>
                 </div>
         
                 <div class="form-group tm-form-element tm-form-element-2">
-                    <input class="form-control" placeholder="Phone Number" value="{{invoice_details.get('mobile_no') or ''}}" />
+                    <input class="form-control" placeholder="Phone Number" name="phone-number" value="{{invoice_details.get('customer_mobile_no') or ''}}" />
                     <i class="fa fa-2x fa-phone tm-form-element-icon"></i>
                 </div>
         </div>
@@ -29,104 +29,112 @@
                 <div class="col-lg-4"><strong>{{invoice_details['rooms'][hotel_rsv]['details'].get('hotel_name')}}</strong></div>
             </div>
         {% for rsrv_room in invoice_details['rooms'][hotel_rsv]['rooms']%}
-        <div class="p-3 tm-search-form tm-section-pad-2 mt-3">
+        <div class="p-3 tm-search-form tm-section-pad-2 mt-3 hotel_room_container" row-id="{{rsrv_room.get('row_id')}}">
             <div class="room-name mb-3">
                 {{rsrv_room.get('room_name')}}
             </div>
             {% for adult in rsrv_room.get('adult_paxes') %}
-            <div class="form-row tm-search-form-row">
+            <div class="form-row tm-search-form-row pax-container" row-id="{{adult.row_id}}">
                     <div class="form-group tm-form-element tm-form-element-2">
-                        <select class="form-control  tm-select ">
+                        <select class="form-control  tm-select " name="pax-salut">
                             <option value="">Salutation</option>
-                            <option value="mr">Mr</option>
-                            <option value="ms">Ms</option>
+                            <option value="Mr" {%if adult.guest_salutation == 'Mr'%} selected{%endif %}>Mr</option>
+                            <option value="Ms" {%if adult.guest_salutation == 'Ms'%} selected{%endif %}>Ms</option>
                         </select>
                         <i class="fa fa-2x fa-check tm-form-element-icon"></i>
                     </div>
         
                     <div class="form-group tm-form-element tm-form-element-50">
-                        <input class="form-control" placeholder="Guest Name" value="{{adult.guest_name or ''}}" />
+                        <input class="form-control" placeholder="Guest Name" name="pax-name" value="{{adult.guest_name or ''}}" />
                         <i class="fa fa-2x fa-user tm-form-element-icon"></i>
                     </div>
             </div>
             {% endfor %}
             {% for child in rsrv_room.get('child_paxes') %}
-            <div class="form-row tm-search-form-row">
+            <div class="form-row tm-search-form-row pax-container" row-id="{{child.row_id}}">
                     <div class="form-group tm-form-element tm-form-element-2">
                         <label for="">Child Age {{child.guest_age}}</label>
                     </div>
         
                     <div class="form-group tm-form-element tm-form-element-50">
-                        <input class="form-control" placeholder="Child Name" value="{{child.guest_name or ''}}"/>
+                        <input class="form-control" placeholder="Child Name" name="pax-name" value="{{child.guest_name or ''}}"/>
                         <i class="fa fa-x fa-user tm-form-element-icon"></i>
                     </div>
             </div>
             {% endfor %}
-
+            {% if invoice_details.docstatus == 1 %}
+            {% set extras = rsrv_room['extras'] %}
+            {% else %}
+            {% set extras = get_room_extras(hotel_rsv) %}
+            {% endif %}
+            {% if extras | length > 0%}
             <div class="">
             Extras:
                <div class="list-group room-extra-list">
-                <label class="list-group-item" >
-                    <input class="form-check-input me-1" type="checkbox" value="">
-                    Late check Out +20$
-                    </label>
-                    <label class="list-group-item">
-                        <input class="form-check-input me-1" type="checkbox" value="">
-                        Early Check In +0$
-                    </label>
-                    <label class="list-group-item">
-                        <input class="form-check-input me-1" type="checkbox" value="">
-                        Honeymoon +50$
-                    </label>
+                {% for extra in extras %}
+                {{room_extra_item(rsrv_room.get('room_name'),extra.get('service'), extra.get('extra_price'), invoice_details.docstatus)}}
+                {% endfor %}
                 </div>
             </div>
+            {% endif %}
         </div>
         {%endfor%}
         </div>
         {% endfor %}
+        {% if invoice_details.docstatus == 0%}
         <div class="mt-4 " >
             <button onclick="confirmReservationButtonClicked(this)" style="font-size: .8em;" class="btn btn-primary tm-btn-search p-2">Continue</button>
         </div>
+        {% endif %}
     </div>
     <div class="col-lg-3">
+        {% if invoice_details.docstatus == 1%}
+        <a target="_blank" class="btn btn-primary w-100" href="/api/method/frappe.utils.print_format.download_pdf?doctype=Sales%20Invoice&name={{invoice_details.invoice_id}}&key=None">Print Voucher</a>
+        <button class="btn btn-secondary mt-2 w-100" invoice-id="{{invoice_details.invoice_id}}" onclick="cancelReservation(this)">Cancel Reservation</button>
+        {% else %}
         {{session_expires_card(invoice_details.session_expires) }}
-        {{ hotel_details_card() }}
-        {{total_card(invoice_details.grand_total)}}        
+        {% endif %}
+        {%for hotel_rsv in invoice_details.get('rooms') %}
+        {{ hotel_details_card(invoice_details['rooms'][hotel_rsv]['details'], invoice_details['rooms'][hotel_rsv]['booking_details'], invoice_details['rooms'][hotel_rsv]['rooms']) }}
+        {% endfor %}
+        {{total_card(invoice_details.hotel_fees,invoice_details.grand_total)}}        
     </div>
 </div>
 {% endblock %}
 
-{% macro hotel_details_card() %}
+{% macro hotel_details_card(hotel_details, booking_details, rooms) %}
 <div class="card mt-3" style="width: 18rem;">
-    <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/ed/95/07/limak-eurasia-luxury.jpg?w=700&h=-1&s=1" class="card-img-top" alt="...">
+    <img src="{{hotel_details.get('hotel_image')}}" class="card-img-top" alt="...">
     <div class="card-body">
-      <h5 class="card-title">Hotel Name</h5>
+      <h5 class="card-title">{{hotel_details.get('hotel_name')}}</h5>
       <p class="card-text">
-        <div>Check-in: Friday, 24 November 2023</div>
-        <div>Check-out: Tuesday, 28 November 2023</div>
+        <div>Check-in: {{booking_details.get('check_in')}}</div>
+        <div>Check-out: {{booking_details.get('check_out')}}</div>
       </p>
     </div>
     <ul class="list-group list-group-flush">
-      <li class="list-group-item">Room1: Standard Double</li>
-      <li class="list-group-item">Room2: Standard Single</li>
+    {%for room in rooms%}
+      <li class="list-group-item">{{room.get('room_name')}}: {{room.room_type}} {{room.accommodation_type}}</li>
+    {% endfor %}
     </ul>
     <div class="card-body">
-        Cancellation Policy: Cancellation after 2023-11-21 will be charged for 100% of booking amount.
+        Cancellation Policy: {{hotel_details.get('hotel_cancellation_policy')}} 
+        <br> {{hotel_details.get('policy_description') or ''}}
     </div>
   </div>
 {% endmacro %}
 
-{% macro total_card(total_fees) %}
+{% macro total_card(hotel_fees, total_fees) %}
 <div class="card text-dark bg-light mb-3 mt-3" style="max-width: 18rem; width: 100%;">
     <div class="card-header">Fees</div>
     <ul class="list-group list-group-flush">
         <li class="list-group-item"><div class="d-flex justify-content-between">
             <div><strong>Hotel fees</strong></div>
-            <div><strong>USD 384.85</strong></div>
+            <div><strong>USD <span id="hotel_fees" total="{{hotel_fees}}">{{frappe.utils.fmt_money(hotel_fees)}}</span></strong></div>
         </div></li>
         <li class="list-group-item"><div class="d-flex justify-content-between">
             <div><strong>Total fees</strong></div>
-            <div><strong>USD {{total_fees}}</strong></div>
+            <div><strong>USD <span id="total_fees" total="{{total_fees}}">{{frappe.utils.fmt_money(total_fees)}}</span></strong></div>
         </div></li>
       </ul>
   </div>
@@ -139,4 +147,11 @@
     </div>
     
   </div>
+{% endmacro %}
+
+{%macro room_extra_item(room_name, extra_name, extra_price, disable)%}
+<label class="list-group-item">
+    <input class="form-check-input me-1 extra-price-input" {% if disable == 1 %} checked disabled {% endif %} onchange="roomExtraChanged(this)" type="checkbox" room-name="{{room_name}}" extra-price="{{extra_price}}" value="{{extra_name}}">
+        {{extra_name}} +{{extra_price}}$
+    </label>
 {% endmacro %}

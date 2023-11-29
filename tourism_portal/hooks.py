@@ -64,6 +64,8 @@ jinja = {
 	"methods": [
         "tourism_portal.utils.get_site_logo",
         "tourism_portal.utils.get_site_name",
+        "tourism_portal.utils.get_room_extras",
+        "tourism_portal.api.company.get_customer_balance",
     ]
 }
 
@@ -136,10 +138,11 @@ jinja = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-#	"all": [
-#		"tourism_portal.tasks.all"
-#	],
+scheduler_events = {
+	"all": [
+		"tourism_portal.utils.delete_expired_invoices"
+	],
+}
 #	"daily": [
 #		"tourism_portal.tasks.daily"
 #	],
