@@ -46,7 +46,7 @@ function formatResults(allResults){
             hotelReuslts = `<div id="accordion"> ${hotelReuslts}</div>`
         }
         if (multipleResults){
-            hotelReuslts = `<div><label>${resultLabel}</label> ${hotelReuslts}</div>`
+            hotelReuslts = `<div><div class="card p-3 mt-3">${resultLabel}</div> ${hotelReuslts}</div>`
         }
         allHotelResults += hotelReuslts
     }
