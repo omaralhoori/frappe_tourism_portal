@@ -1,4 +1,9 @@
 $(document).ready(function () {
+    formatSelect2()
+    formatDataPicker()
+});
+
+function formatSelect2(){
     $('.select2-select').each(function (i, select) {
         var icons = $(this).siblings('i');
         var labels = $(this).siblings('label');
@@ -38,18 +43,22 @@ $(document).ready(function () {
        );
        return $state;
       };
-  
-});
-// Date Picker
-$('.date-picker').each(function (i, select) {
-    datepicker(this, {
-        formatter: (input, date, instance) => {
-            const value = date.toLocaleDateString("fr-CA")
-            input.value = value // => '1/1/2099'
-        }
-    });
+}
 
-})
+// Date Picker
+function formatDataPicker(template){
+    
+        $('.date-picker').each(function (i, select) {
+            datepicker(this, {
+                formatter: (input, date, instance) => {
+                    const value = date.toLocaleDateString("fr-CA")
+                    input.value = value // => '1/1/2099'
+                }
+            });
+        
+        })
+    
+}
 
 $('.room-select').change(function (e) {
     var roomCount = $(this).val();
@@ -94,6 +103,24 @@ function addTransferClicked(e) {
     html += document.querySelector('.transfer-search-template').innerHTML;
     childrenContainer.innerHTML = html;
     e.style.display = 'none';
+    
+}
+function addHotelClicked(e) {
+    var container = $('.hotel-search-container');
+
+     
+    var html = '';
+    var resultItem = $('#hotel-search-template').html()
+    html += resultItem//document.querySelector('.hotel_search_template').innerHTML;
+     // Add a new element next to the selected last element
+    
+     container.append(html);
+     formatSelect2()
+     
+    // var html = '';
+    // html += document.querySelector('.transfer-search-template').innerHTML;
+    // childrenContainer.innerHTML = html;
+    // e.style.display = 'none';
     
 }
 

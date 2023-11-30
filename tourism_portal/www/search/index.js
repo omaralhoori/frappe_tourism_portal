@@ -11,7 +11,6 @@ var availabeRooms = {}
 $(document).ready(function(){
     toggleLoadingIndicator(true);
     // check if there is common rooms
-    // console.log(searchResults)
     var results = checkCommonRooms(searchResults);
     formatResults(results);
     // updateAvailableRooms();
@@ -20,29 +19,39 @@ $(document).ready(function(){
     toggleLoadingIndicator(false);
 })
 
-function formatResults(results){
-    var hotelReuslts = "";
-    var accordion = Object.keys(results).length > 1;
-    for (var hotel in results){
-        
-        
-        var resultFormatted = formatHotelResults(results[hotel]);
-        if (accordion){
-            var resultItem = $('#hotel-room-results-template').html()
-            resultItem = resultItem.replaceAll("{Hotel ID}", hotel)
-            var $resultItem = $(resultItem);
-            $resultItem.find('.card-body').html(`<div class="hotel-cards" hotel-id="${hotel}">${resultFormatted}</div>`)
-            resultItem = $resultItem.prop('outerHTML');
-            hotelReuslts += resultItem
-        }else{
-            hotelReuslts += `<div class="hotel-cards" hotel-id="${hotel}">${resultFormatted}</div>`
+function formatResults(allResults){
+    var multipleResults = Object.keys(allResults).length > 1;
+    var allHotelResults = "";
+    for (var resultLabel in allResults){
+        var results = allResults[resultLabel]
+        var hotelReuslts = "";
+        var accordion = Object.keys(results).length > 1;
+        for (var hotel in results){
+            
+            
+            var resultFormatted = formatHotelResults(results[hotel]);
+            if (accordion){
+                var resultItem = $('#hotel-room-results-template').html()
+                resultItem = resultItem.replaceAll("{Hotel ID}", hotel)
+                var $resultItem = $(resultItem);
+                $resultItem.find('.card-body').html(`<div class="hotel-cards" hotel-id="${hotel}">${resultFormatted}</div>`)
+                resultItem = $resultItem.prop('outerHTML');
+                hotelReuslts += resultItem
+            }else{
+                hotelReuslts += `<div class="hotel-cards" hotel-id="${hotel}">${resultFormatted}</div>`
+            }
+           
         }
-       
+        if (accordion){
+            hotelReuslts = `<div id="accordion"> ${hotelReuslts}</div>`
+        }
+        if (multipleResults){
+            hotelReuslts = `<div><label>${resultLabel}</label> ${hotelReuslts}</div>`
+        }
+        allHotelResults += hotelReuslts
     }
-    if (accordion){
-        hotelReuslts = `<div id="accordion"> ${hotelReuslts}</div>`
-    }
-    $('.search-results').html(hotelReuslts);
+    $('.search-results').html(allHotelResults);
+
 }
 
 function formatHotelResults(hotelResults){
@@ -184,14 +193,18 @@ function disable_other_hotel_selects(hotel){
 
 function checkCommonRooms(searchResults){
     var results = {}
+    var searchCount = 0;
     for (var res of searchResults){
+        searchCount++;
+        var searchLabel = `Search ${searchCount} Results`
+        results[searchLabel] = {}
         for (var hotel in res){
-            results[hotel] = []
+            results[searchLabel][hotel] = []
             for (var roomResults in res[hotel]) {
                 for (var room of res[hotel][roomResults]){
                     var found = false;
                     var roomDetails = getRoomDetails(room)
-                    for (var commonRoom of results[hotel]){
+                    for (var commonRoom of results[searchLabel][hotel]){
                         if (compareRoomDetails(commonRoom.details,  roomDetails)){
                             found = true;
                             commonRoom.rooms.push(roomResults)
@@ -200,7 +213,7 @@ function checkCommonRooms(searchResults){
                         }
                     }
                     if (!found){
-                        results[hotel].push({
+                        results[searchLabel][hotel].push({
                             "rooms": [roomResults],
                             "details": roomDetails,
                             "results": [room]
