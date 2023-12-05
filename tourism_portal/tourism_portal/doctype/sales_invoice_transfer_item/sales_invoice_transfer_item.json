@@ -1,0 +1,150 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-05 13:16:53.511112",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "transfer_search",
+  "transfer_name",
+  "transfer_type",
+  "column_break_b3xp7",
+  "transfer",
+  "transfer_price",
+  "section_break_mjqx5",
+  "adults",
+  "pick_up",
+  "pick_up_type",
+  "pick_up_postal_code",
+  "transfer_date",
+  "column_break_qzk7q",
+  "children",
+  "drop_off",
+  "drop_off_type",
+  "drop_off_postal_code",
+  "flight_no"
+ ],
+ "fields": [
+  {
+   "fieldname": "transfer_search",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Transfer Search",
+   "reqd": 1
+  },
+  {
+   "fieldname": "transfer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Transfer",
+   "options": "Transfer Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "transfer_price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Transfer Price",
+   "reqd": 1
+  },
+  {
+   "fieldname": "transfer_date",
+   "fieldtype": "Date",
+   "label": "Transfer Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "transfer_type",
+   "fieldtype": "Select",
+   "label": "Transfer Type",
+   "options": "\nvip\ngroup",
+   "reqd": 1
+  },
+  {
+   "fieldname": "flight_no",
+   "fieldtype": "Data",
+   "label": "Flight No"
+  },
+  {
+   "fieldname": "adults",
+   "fieldtype": "Int",
+   "label": "Adults",
+   "reqd": 1
+  },
+  {
+   "fieldname": "children",
+   "fieldtype": "Int",
+   "label": "Children",
+   "reqd": 1
+  },
+  {
+   "fieldname": "transfer_name",
+   "fieldtype": "Data",
+   "label": "Transfer Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "pick_up",
+   "fieldtype": "Data",
+   "label": "Pick Up",
+   "reqd": 1
+  },
+  {
+   "fieldname": "drop_off",
+   "fieldtype": "Data",
+   "label": "Drop Off",
+   "reqd": 1
+  },
+  {
+   "fieldname": "pick_up_postal_code",
+   "fieldtype": "Link",
+   "label": "Pick Up Postal Code",
+   "options": "Postal Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "drop_off_postal_code",
+   "fieldtype": "Link",
+   "label": "Drop Off Postal Code",
+   "options": "Postal Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_b3xp7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_mjqx5",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_qzk7q",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "pick_up_type",
+   "fieldtype": "Data",
+   "label": "Pick Up Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "drop_off_type",
+   "fieldtype": "Data",
+   "label": "Drop Off Type",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-12-05 14:37:06.858772",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Sales Invoice Transfer Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

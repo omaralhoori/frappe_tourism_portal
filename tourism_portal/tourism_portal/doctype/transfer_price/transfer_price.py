@@ -42,6 +42,11 @@ def get_available_transfers(params):
 	 "transfer_date": params['transfer-date']}, as_dict=True)    
 	transfer_price = 0
 	trasfers = []
+	search_params = {
+		"params": params,
+		"from_postal_code": from_postal_code,
+		"to_postal_code": to_postal_code,
+	}
 	if params['transfer-type'] == "vip":
 		for available_transfer in available_transfers:
 			if check_available_vip_transfer(available_transfer, params['paxes']):
@@ -57,6 +62,7 @@ def get_available_transfers(params):
 		})
 	for transfer in trasfers:
 		transfer['transfer_details'] = get_transfer_details(transfer)
+		transfer['search_params'] = search_params
 	return trasfers
 
 def get_transfer_details(transfer):

@@ -6,6 +6,7 @@ from frappe.model.document import Document
 from frappe import _
 from tourism_portal.tourism_portal.doctype.company_payment.company_payment import add_company_refund, create_payment
 from tourism_portal.tourism_portal.doctype.room_availability.room_availability import free_room, reserve_room
+from tourism_portal.tourism_portal.doctype.sales_invoice.reserve import add_transfers_to_invoice
 class SalesInvoice(Document):
 	def after_insert(self):
 		session_expires_in = frappe.db.get_single_value("Tourism Portal Settings", "session_expires_in")
@@ -14,6 +15,7 @@ class SalesInvoice(Document):
 		self.reserve_rooms()
 	def on_update(self):
 		self.calculate_total_hotel_fees()
+		self.calculate_total_transfer_fees()
 		self.calculate_total_fees()
 
 	def reserve_rooms(self):
@@ -38,15 +40,30 @@ class SalesInvoice(Document):
 
 		self.hotel_fees = total
 		self.db_set('hotel_fees', total)
+	def calculate_total_transfer_fees(self):
+		total = 0
+		for transfer in self.transfers:
+			# for room_extra in self.room_extras:
+			# 	if room_extra.room_row_id == room.name:
+			# 		total  += room_extra.extra_price
+					# ToDo make for percentage too
+			total += transfer.transfer_price
+
+		self.transfer_fees = total
+		self.db_set('transfer_fees', total)
 	
 	def calculate_total_fees(self):
 		total = 0
 		total += self.hotel_fees
+		total += self.transfer_fees
 		self.grand_total = total
 		self.db_set('grand_total', total)
 	def on_trash(self):
 		print("On Trash")
 		self.free_rooms()
+
+	def add_transfer(self, transfer):
+		add_transfers_to_invoice(self, [transfer])
 	def add_nights(self, row_id, check_in=None, check_out=None):
 		if not check_out and not check_in:
 			frappe.throw("Please enter new checkin or checkout")
@@ -73,7 +90,6 @@ class SalesInvoice(Document):
 
 	def add_new_nights_before(self, room, new_check_in):
 		make_room_request(room, new_check_in, room.check_in)
-		find_room()
 	def add_new_nights_after(self, room, new_check_out):
 		pass
 	# def before_cancel(self):

@@ -1,0 +1,72 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-05 16:50:48.100125",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "tour_type",
+  "schedule_date",
+  "limit",
+  "city"
+ ],
+ "fields": [
+  {
+   "fieldname": "tour_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Tour Type",
+   "options": "Tour Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "schedule_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Schedule Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "limit",
+   "fieldtype": "Int",
+   "label": "Limit"
+  },
+  {
+   "fetch_from": "tour_type.tour_pickup_city",
+   "fieldname": "city",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "City",
+   "options": "City"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_calendar_and_gantt": 1,
+ "links": [],
+ "modified": "2023-12-05 17:13:19.901633",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Tour Schedule",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
