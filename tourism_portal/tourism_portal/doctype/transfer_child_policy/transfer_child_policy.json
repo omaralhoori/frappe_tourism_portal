@@ -1,45 +1,40 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:postal_code",
- "creation": "2023-10-06 18:41:00.349388",
+ "autoname": "field:policy_name",
+ "creation": "2023-12-02 18:02:55.096081",
  "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "postal_code",
-  "regular_transport",
-  "districts"
+  "policy_name",
+  "transfer_child_price"
  ],
  "fields": [
   {
-   "fieldname": "postal_code",
+   "fieldname": "policy_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Postal Code",
+   "label": "Policy Name",
    "reqd": 1,
    "unique": 1
   },
   {
-   "fieldname": "districts",
-   "fieldtype": "Small Text",
-   "label": "Districts"
-  },
-  {
-   "default": "0",
-   "fieldname": "regular_transport",
-   "fieldtype": "Check",
-   "label": "Regular Transport",
+   "description": "When child order is 0 it means the policy is applicable for all children not mentioned above",
+   "fieldname": "transfer_child_price",
+   "fieldtype": "Table",
+   "label": "Transfer Child Price",
+   "options": "Transfer Child Price",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-02 14:23:33.843146",
+ "modified": "2023-12-02 18:07:40.874987",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
- "name": "Postal Code",
+ "name": "Transfer Child Policy",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
@@ -56,7 +51,6 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

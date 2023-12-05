@@ -1,0 +1,122 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-01 13:36:49.768750",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "hotel_search",
+  "room_name",
+  "check_in",
+  "check_out",
+  "nights",
+  "selling_price",
+  "total_selling_price",
+  "contract_id",
+  "contract_price",
+  "inquiry_id",
+  "buying_currency",
+  "buying_price",
+  "cancellation_policy"
+ ],
+ "fields": [
+  {
+   "fieldname": "contract_id",
+   "fieldtype": "Link",
+   "label": "Contract Id",
+   "options": "Hotel Room Contract"
+  },
+  {
+   "fieldname": "contract_price",
+   "fieldtype": "Link",
+   "label": "Contract Price",
+   "options": "Hotel Room Price"
+  },
+  {
+   "fieldname": "inquiry_id",
+   "fieldtype": "Link",
+   "label": "Inquiry Id",
+   "options": "Hotel Inquiry Request"
+  },
+  {
+   "fieldname": "check_in",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Check In",
+   "reqd": 1
+  },
+  {
+   "fieldname": "check_out",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Check Out",
+   "reqd": 1
+  },
+  {
+   "fieldname": "buying_currency",
+   "fieldtype": "Link",
+   "label": "Buying Currency",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "buying_price",
+   "fieldtype": "Currency",
+   "label": "Buying Price",
+   "options": "Buying Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cancellation_policy",
+   "fieldtype": "Link",
+   "label": "Cancellation Policy",
+   "options": "Cancellation Policy"
+  },
+  {
+   "fieldname": "nights",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Nights"
+  },
+  {
+   "fieldname": "total_selling_price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total Selling Price"
+  },
+  {
+   "fieldname": "selling_price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Selling Price",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hotel_search",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hotel Search",
+   "reqd": 1
+  },
+  {
+   "fieldname": "room_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Room Name",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-12-01 13:54:29.247355",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Sales Invoice Room Contract",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

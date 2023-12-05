@@ -12,7 +12,7 @@ class RoomAvailability(Document):
 
 def reserve_room(contract_id, check_in, check_out):
 	room_qtys = frappe.db.sql("""
-	 SELECT date, available_qty, name FROM `tabRoom Availability` WHERE contract_no=%(contract_id)s AND date between %(check_in)s AND %(check_out)s
+	 SELECT date, available_qty, name FROM `tabRoom Availability` WHERE contract_no=%(contract_id)s AND date >= %(check_in)s AND date < %(check_out)s
      """, {"contract_id": contract_id, "check_in": check_in, "check_out": check_out}, as_dict=True)
 
 	for room_qty in room_qtys:
@@ -27,7 +27,7 @@ def reserve_room(contract_id, check_in, check_out):
 
 def free_room(contract_id, check_in, check_out):
 	room_qtys = frappe.db.sql("""
-	 SELECT date, available_qty, name FROM `tabRoom Availability` WHERE contract_no=%(contract_id)s AND date between %(check_in)s AND %(check_out)s
+	 SELECT date, available_qty, name FROM `tabRoom Availability` WHERE contract_no=%(contract_id)s AND date >= %(check_in)s AND date < %(check_out)s
      """, {"contract_id": contract_id, "check_in": check_in, "check_out": check_out}, as_dict=True)
 
 	# for room_qty in room_qtys:

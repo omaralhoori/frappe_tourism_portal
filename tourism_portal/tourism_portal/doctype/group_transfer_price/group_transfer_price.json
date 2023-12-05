@@ -1,0 +1,49 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-02 14:41:42.522775",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "pax_type",
+  "pax_price",
+  "max_child_age"
+ ],
+ "fields": [
+  {
+   "fieldname": "pax_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Pax Type",
+   "options": "Adult\nFirst Child\nSecond Child\nThird Child",
+   "reqd": 1
+  },
+  {
+   "fieldname": "pax_price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Pax Price",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "max_child_age",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Max Child Age"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-12-02 14:41:57.302342",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Group Transfer Price",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

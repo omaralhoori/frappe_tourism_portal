@@ -1,6 +1,7 @@
 import frappe
 from frappe import _
 from tourism_portal.www.search.index import get_available_hotel_rooms
+from tourism_portal.tourism_portal.doctype.transfer_price.transfer_price import get_available_transfers
 import json
 """
 	search_params: [
@@ -50,3 +51,28 @@ def ask_for_availability(room_id, room_qty):
 		"success_key": 1,
 		"message": _("The request has been submitted successfully")
 	}
+
+"""
+Params {
+	from-location-type: ["airport", "hotel","area"],
+	to-location-type: ["airport", "hotel","area"],
+	from-location: ,
+	to-location: ,
+	transfer-date: ,
+	note?: ,
+	transfer-type: ["vip", "group"],
+	flight-no?:,
+	paxes: {
+		adults: num,
+		children: num,
+		child-ages: [num]
+	}
+}
+return {
+
+}
+"""
+@frappe.whitelist()
+def search_for_transfer():
+	params = frappe.form_dict
+	return get_available_transfers(params)

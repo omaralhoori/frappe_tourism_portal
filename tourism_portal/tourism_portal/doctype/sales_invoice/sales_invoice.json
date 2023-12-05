@@ -26,6 +26,7 @@
   "rooms",
   "room_pax_info",
   "room_extras",
+  "room_price",
   "section_break_np3bd",
   "hotel_fees",
   "grand_total",
@@ -163,12 +164,18 @@
    "label": "Status",
    "options": "Draft\nSubmitted\nCancelled",
    "read_only": 1
+  },
+  {
+   "fieldname": "room_price",
+   "fieldtype": "Table",
+   "label": "Room Price",
+   "options": "Sales Invoice Room Contract"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-29 14:30:27.007254",
+ "modified": "2023-12-01 13:39:54.202124",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice",

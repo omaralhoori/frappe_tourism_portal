@@ -6,6 +6,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "hotel_search",
   "room_name",
   "extra",
   "extra_price",
@@ -39,12 +40,19 @@
    "fieldtype": "Link",
    "label": "Room Row Id",
    "options": "Sales Invoice Room Item"
+  },
+  {
+   "fieldname": "hotel_search",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hotel Search",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-11-26 14:17:19.133423",
+ "modified": "2023-11-30 15:55:13.697042",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice Room Extra",

@@ -4,7 +4,7 @@ var totals = {
     "tours": 0
 }
 var reservation_details = {
-    hotel: null
+    hotel: {}
 }
 var availabeRooms = {}
 
@@ -46,9 +46,11 @@ function formatResults(allResults){
             hotelReuslts = `<div id="accordion"> ${hotelReuslts}</div>`
         }
         if (multipleResults){
-            hotelReuslts = `<div><div class="card p-3 mt-3">${resultLabel}</div> ${hotelReuslts}</div>`
+            hotelReuslts = `<div class="card p-3 mt-3" >${resultLabel}</div> ${hotelReuslts}`
         }
+        hotelReuslts = `<div class='hotel-search-results' hotel-result="${resultLabel}"> ${hotelReuslts}</div>`
         allHotelResults += hotelReuslts
+        reservation_details['hotel'][resultLabel] = null;
     }
     $('.search-results').html(allHotelResults);
 
@@ -155,6 +157,8 @@ function formatRoomResult(roomResult){
 function roomSelectChanged(e){
     var rooms = e.getAttribute("rooms")
     var hotel = e.getAttribute("hotel")
+    var hotel_search =e.closest('.hotel-search-results').getAttribute('hotel-result')
+    console.log(hotel_search)
     var selectedRooms = 0;
     var requiredRoomsToSelect = rooms.split('-').length
     // get other selects with same rooms
@@ -173,7 +177,7 @@ function roomSelectChanged(e){
             }
         }
     }
-    reservation_details['hotel']= hotel;
+    reservation_details['hotel'][hotel_search]= hotel;
 
     disable_other_hotel_selects(hotel)
 
@@ -382,50 +386,57 @@ function update_totals(){
 }
 
 function confirmButtonClicked(e){
-    var all_rooms_selected = false;
-    var selected_rooms = {};
-    // check if all rooms are selected
-    var all_selects= document.querySelectorAll(`select.room-select-input[hotel="${reservation_details['hotel']}"]`)
-    for (var ss of all_selects){
-        var rooms = ss.getAttribute("rooms");
-        var price = ss.getAttribute("room-price");
-        var contractId = ss.getAttribute("contract-id");
-        var roomId = ss.closest('.room-result-container').getAttribute('room-id')
-        var value = 0;
-        if (ss.value && ss.value > 0){
-            value = ss.value;
+    for (var hotelSearch in reservation_details['hotel']){
+        var all_rooms_selected = false;
+        var selected_rooms = {};
+        // check if all rooms are selected
+        var all_selects= document.querySelectorAll(`div[hotel-result="${hotelSearch}"] select.room-select-input[hotel="${reservation_details['hotel'][hotelSearch]}"]`)
+        for (var ss of all_selects){
+            var rooms = ss.getAttribute("rooms");
+            var price = ss.getAttribute("room-price");
+            var contractId = ss.getAttribute("contract-id");
+            var roomId = ss.closest('.room-result-container').getAttribute('room-id')
+            var value = 0;
+            if (ss.value && ss.value > 0){
+                value = ss.value;
+            }
+            if (!selected_rooms[rooms]){
+                selected_rooms[rooms] = {}  
+            }
+            if (!selected_rooms[rooms][roomId]){
+                selected_rooms[rooms][roomId] = {
+                    "price": price,
+                    "qty": 0,
+                    "contractId": contractId
+                } 
+            }
+    
+            selected_rooms[rooms][roomId]['qty'] += Number(value);
         }
-        if (!selected_rooms[rooms]){
-            selected_rooms[rooms] = {}  
-        }
-        if (!selected_rooms[rooms][roomId]){
-            selected_rooms[rooms][roomId] = {
-                "price": price,
-                "qty": 0,
-                "contractId": contractId
-            } 
+        console.log(selected_rooms)
+    
+        if (Object.keys(selected_rooms).length == 0){
+            all_rooms_selected = false;
+        }else{
+            all_rooms_selected = true;
+            for (var room in selected_rooms){
+                var roomCnt = room.split('-').length
+                var selected = 0;
+                for (var ss in selected_rooms[room]){
+                    var cc = selected_rooms[room][ss]['qty']
+                    selected += cc
+                }
+                if (selected != roomCnt){
+                    all_rooms_selected = false
+                }
+            }
         }
 
-        selected_rooms[rooms][roomId]['qty'] += Number(value);
+        console.log(all_rooms_selected)
     }
-    console.log(selected_rooms)
-
-    if (Object.keys(selected_rooms).length == 0){
-        all_rooms_selected = false;
-    }else{
-        all_rooms_selected = true;
-        for (var room in selected_rooms){
-            var roomCnt = room.split('-').length
-            var selected = 0;
-            for (var ss in selected_rooms[room]){
-                var cc = selected_rooms[room][ss]['qty']
-                selected += cc
-            }
-            if (selected != roomCnt){
-                all_rooms_selected = false
-            }
-        }
-    }
+    
+    
+    return
      if (!all_rooms_selected){
         msgprint("Please select all rooms")
      }else{

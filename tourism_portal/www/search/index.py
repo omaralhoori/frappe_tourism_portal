@@ -109,8 +109,8 @@ def get_hotel_room_contracts(hotel_room, search_params):
 		WHERE hotel=%(hotel)s AND room_type=%(room_type)s
 		AND (cntrct.selling_from_date  is null or now() BETWEEN cntrct.selling_from_date and cntrct.selling_to_date)
 		AND (cntrct.release_days =0 or DATEDIFF(%(checkin)s, now()) > cntrct.release_days )
-		AND ((%(checkin)s BETWEEN cntrct.check_in_from_date and cntrct.check_in_to_date)
-			OR ( %(checkout)s BETWEEN cntrct.check_in_from_date and cntrct.check_in_to_date))
+		AND ((%(checkin)s >= cntrct.check_in_from_date and %(checkin)s < cntrct.check_in_to_date)
+			OR ( %(checkout)s >= cntrct.check_in_from_date and  %(checkout)s < cntrct.check_in_to_date))
 		AND cntrct.docstatus=1
 	""", {"hotel": hotel_room.get('hotel_id'), 'room_type': hotel_room.get('room_type'),
        'checkin': search_params.get('checkin'), 'checkout': search_params.get('checkout')
@@ -165,7 +165,7 @@ def get_profit_margin_based_price(hotel, room_type, buying_price,buying_currency
 def get_room_qty(room, hotel_params):
 	room_qty = frappe.db.sql("""
 		SELECT min(available_qty) as qty FROM `tabRoom Availability`
-		WHERE contract_no=%(contract_no)s AND date between %(checkin)s AND %(checkout)s
+		WHERE contract_no=%(contract_no)s AND date >= %(checkin)s AND date < %(checkout)s
 	""", {"contract_no": room.get('contract_id'), 
        "checkin": hotel_params.get('checkin'), "checkout": hotel_params.get('checkout')}, as_dict=True)
 	if len(room_qty) > 0:

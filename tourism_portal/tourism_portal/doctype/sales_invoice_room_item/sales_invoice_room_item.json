@@ -6,22 +6,17 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "hotel_search",
   "room",
   "room_name",
+  "column_break_l9cer",
   "total_price",
   "hotel",
   "section_break_lmyyf",
   "nationality",
+  "column_break_ztxm9",
   "check_in",
   "check_out",
-  "section_break_ygydi",
-  "contract_id",
-  "contract_price_id",
-  "inquiry_id",
-  "cancellation_policy",
-  "column_break_otkfo",
-  "buying_currency",
-  "buying_price",
   "section_break_fmvkn",
   "refund",
   "is_cancelled"
@@ -44,18 +39,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "buying_currency",
-   "fieldtype": "Link",
-   "label": "Buying Currency",
-   "options": "Currency"
-  },
-  {
-   "fieldname": "buying_price",
-   "fieldtype": "Currency",
-   "label": "Buying Price",
-   "options": "buying_currency"
-  },
-  {
    "fieldname": "section_break_fmvkn",
    "fieldtype": "Section Break"
   },
@@ -65,32 +48,6 @@
    "in_list_view": 1,
    "label": "Room Name",
    "reqd": 1
-  },
-  {
-   "fieldname": "section_break_ygydi",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "contract_id",
-   "fieldtype": "Link",
-   "label": "Contract Id",
-   "options": "Hotel Room Contract"
-  },
-  {
-   "fieldname": "contract_price_id",
-   "fieldtype": "Link",
-   "label": "Contract Price Id",
-   "options": "Hotel Room Price"
-  },
-  {
-   "fieldname": "inquiry_id",
-   "fieldtype": "Link",
-   "label": "Inquiry Id",
-   "options": "Hotel Inquiry Request"
-  },
-  {
-   "fieldname": "column_break_otkfo",
-   "fieldtype": "Column Break"
   },
   {
    "fetch_from": "room.hotel",
@@ -126,12 +83,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "cancellation_policy",
-   "fieldtype": "Link",
-   "label": "Cancellation Policy",
-   "options": "Cancellation Policy"
-  },
-  {
    "allow_on_submit": 1,
    "fieldname": "refund",
    "fieldtype": "Currency",
@@ -143,12 +94,27 @@
    "fieldname": "is_cancelled",
    "fieldtype": "Check",
    "label": "Is Cancelled"
+  },
+  {
+   "fieldname": "hotel_search",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hotel Search",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_l9cer",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ztxm9",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-11-28 18:48:18.799888",
+ "modified": "2023-12-01 13:41:37.980059",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice Room Item",

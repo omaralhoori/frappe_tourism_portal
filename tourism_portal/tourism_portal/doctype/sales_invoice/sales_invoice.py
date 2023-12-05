@@ -17,7 +17,7 @@ class SalesInvoice(Document):
 		self.calculate_total_fees()
 
 	def reserve_rooms(self):
-		for room in self.rooms:
+		for room in self.room_price:
 			if room.contract_id:
 				if not reserve_room(room.contract_id, room.check_in, room.check_out):
 					frappe.throw('Room is not avilable')
@@ -47,7 +47,35 @@ class SalesInvoice(Document):
 	def on_trash(self):
 		print("On Trash")
 		self.free_rooms()
+	def add_nights(self, row_id, check_in=None, check_out=None):
+		if not check_out and not check_in:
+			frappe.throw("Please enter new checkin or checkout")
+		selected_room = None
+		for room in self.rooms:
+			if room.name == row_id:
+				selected_room = room
 
+		if not selected_room:
+			frappe.throw("You have entered wrong room row id")
+
+		new_check_in = None
+		new_check_out= None
+		if room.check_in != check_in:
+			new_check_in = check_in
+		if room.check_out != check_out:
+			new_check_out = check_out
+		if not new_check_out and not new_check_in:
+			frappe.throw("Please enter new checkin or checkout")
+		if new_check_in:
+			self.add_new_nights_before(room, new_check_in)
+		if new_check_out:
+			self.add_new_nights_after(room, new_check_out)
+
+	def add_new_nights_before(self, room, new_check_in):
+		make_room_request(room, new_check_in, room.check_in)
+		find_room()
+	def add_new_nights_after(self, room, new_check_out):
+		pass
 	# def before_cancel(self):
 	# 	self.cancel_payment()
 	def cancel_payment(self):
@@ -81,6 +109,19 @@ class SalesInvoice(Document):
 def create_reservation():
 	pass
 import datetime
+
+def make_room_request(room, check_in, check_out):
+	return {
+		"location": room.hotel,
+		"location-type": "hotel",
+		"nationality": room.nationality,
+		"checkin": room.check_in,
+		"checkout": room.check_out,
+		"room": 1,
+		"paxInfo": [
+			""
+		]
+	}
 
 @frappe.whitelist()
 def refund_room(cancellation_policy, total_price, check_in, check_out):
