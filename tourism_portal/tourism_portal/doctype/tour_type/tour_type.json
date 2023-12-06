@@ -13,7 +13,9 @@
   "tour_name",
   "tour_pickup_city",
   "tour_description",
-  "premium_tour"
+  "premium_tour",
+  "economic_tour",
+  "group_tour"
  ],
  "fields": [
   {
@@ -55,11 +57,23 @@
    "fieldname": "premium_tour",
    "fieldtype": "Check",
    "label": "Premium Tour"
+  },
+  {
+   "default": "1",
+   "fieldname": "group_tour",
+   "fieldtype": "Check",
+   "label": "Group Tour"
+  },
+  {
+   "default": "1",
+   "fieldname": "economic_tour",
+   "fieldtype": "Check",
+   "label": "Economic Tour"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-05 16:52:22.866013",
+ "modified": "2023-12-06 13:55:43.656742",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour Type",

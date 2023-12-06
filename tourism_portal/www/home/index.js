@@ -1,3 +1,5 @@
+var selectedTours = {}
+
 $(document).ready(function () {
     formatSelect2()
     formatDataPicker()
@@ -105,6 +107,45 @@ function addTransferClicked(e) {
     e.style.display = 'none';
     
 }
+function addTourClicked(e) {
+    var childrenContainer = e.closest('.voucher-search').querySelector('.tour-search-container');
+    if (childrenContainer.innerHTML.trim()){
+        return;
+    }
+    var hotelCard = e.closest('.voucher-search').querySelector('.hotel-search-card');
+    var hotelData = getHotelSearchInfo(hotelCard);
+    var toursCard = document.querySelectorAll('.tour-search-card').length + 1;
+    var tourCardName = `Tour ${toursCard}`
+    var html = '';
+    var tourTemplate = document.querySelector('#tour-search-template');
+    html += tourTemplate.innerHTML;
+    childrenContainer.innerHTML = html;
+    childrenContainer.querySelector('select[name="location"]').value = hotelData.location  
+    childrenContainer.querySelector('input[name="check-in"]').value = hotelData.checkin;   
+    childrenContainer.querySelector('input[name="check-out"]').value = hotelData.checkout;
+    childrenContainer.querySelector('input[name="tour-card"]').value = tourCardName;
+    var adults = 0;
+    var children = 0;
+    var childrenAges = [];
+    for (var pax in hotelData.paxInfo){
+    
+        adults += parseInt(hotelData.paxInfo[pax].adults);
+        children += parseInt(hotelData.paxInfo[pax].children);
+        childrenAges = childrenAges.concat(hotelData.paxInfo[pax].childrenInfo);
+    }
+    childrenContainer.querySelector('select[name="adult"]').value = adults;
+    var childsInput = childrenContainer.querySelector('select[name="children"]');
+    childsInput.value = children ;
+    var event = new Event('change');
+    childsInput.dispatchEvent(event);
+    var agesInput = childrenContainer.querySelectorAll('select[name="child-age"]');
+    for (var i = 0; i < agesInput.length; i++) {
+        agesInput[i].value = childrenAges[i];
+    }
+    e.style.display = 'none';
+    formatSelect2()
+    selectedTours[tourCardName] = {}
+}
 function addHotelClicked(e) {
     var container = $('.hotel-search-container');
 
@@ -171,4 +212,174 @@ function getHotelSearchInfo(hotel){
     })
     params['paxInfo'] = paxInfo
     return params
+}
+
+function tourTypeChanged(e){
+    var tourData = getTourData(e.closest('form'));
+    if (! validateTourSearchData(tourData)){
+        return;
+    }
+    var tourCard = e.closest('.tour-search-card').querySelector('input[name="tour-card"]').value ;
+    selectedTours[tourCard] = {}
+    frappe.call({
+        method: "tourism_portal.api.home.get_available_tours",
+        args: {
+            "tourData": tourData
+        },
+        callback: function (r) {
+            var tourSelect = e.closest('form').querySelector('.tours-html-container');
+            var totalDays = getTotalDays(tourData.checkin, tourData.checkout);
+            tourSelect.innerHTML = '';
+            tourSelect.setAttribute('total-days', totalDays);
+            if (!r.message || Object.keys(r.message).length === 0){
+                tourSelect.innerHTML = '<li class="list-group-item">No Tours Found</li>'
+            }
+            for (var tourId in r.message){
+                var tour = r.message[tourId];
+                var listElement = document.createElement("li");
+                listElement.classList.add('list-group-item');
+                listElement.classList.add('tour-list-item');
+                var checkboxElement = document.createElement("input");
+                checkboxElement.setAttribute('type', 'checkbox');
+                checkboxElement.setAttribute('name', 'tours');
+                checkboxElement.setAttribute('value', tour.tour_id);
+                checkboxElement.setAttribute('onclick', 'onTourSelectChange(this)');
+                checkboxElement.setAttribute('tour-dates', JSON.stringify(tour.tour_dates));
+                var labelElement = document.createElement("label");
+                labelElement.innerText = tour.tour_name;
+                listElement.appendChild(checkboxElement);
+                listElement.appendChild(labelElement);
+                // listElement.innerHTML = `<input type="checkbox" onclick="onTourSelectChange(this)" name="tours" value="${tour.tour_id}"> <label>${tour.tour_name} </label>`;
+                
+                listElement.setAttribute('data-toggle', 'tooltip');
+                listElement.setAttribute('data-placement', 'top');
+                listElement.setAttribute('title', tour.tour_description);
+                listElement.addEventListener('click', function(e){ 
+                    var checkbox = e.currentTarget.querySelector('input[type="checkbox"]');
+                    checkbox.click();
+                    // checkbox.checked = !checkbox.checked;
+                    // onTourSelectChange(checkbox);
+                });
+                tourSelect.appendChild(listElement);
+            }
+            
+
+        }
+        
+    })
+}
+
+function getTotalDays(checkin, checkout){
+    var checkinDate = new Date(checkin);
+    var checkoutDate = new Date(checkout);
+    var timeDiff = Math.abs(checkoutDate.getTime() - checkinDate.getTime());
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+    return diffDays;
+
+}
+
+function onTourSelectChange(e){
+    var tourCard = e.closest('.tour-search-card').querySelector('input[name="tour-card"]').value ;
+    var selectedTourElements = e.closest('form').querySelectorAll('input[name="tours"]:checked');
+    var tourSelectContainer =  e.closest('form').querySelector('.tours-html-container');
+    var totalDays = tourSelectContainer.getAttribute('total-days');
+
+    if (selectedTourElements.length > totalDays){
+       var tours = tourSelectContainer.querySelectorAll('input[name="tours"]:not(:checked)')
+       for(var tour of tours) {
+            tour.disabled = true;
+        }
+    }else{
+        var tours = tourSelectContainer.querySelectorAll('input[name="tours"]:not(:checked)')
+        for(var tour of tours){
+            tour.disabled = false;
+        }
+    }
+    var tourDates = JSON.parse(e.getAttribute('tour-dates'))
+    if (e.checked){
+        for (var tourDate of tourDates){
+            if (!selectedTours[tourCard][tourDate]){
+                selectedTours[tourCard][tourDate] = e.value;
+                break;
+            }
+        }
+    }else{
+        for (var tourDate of tourDates){
+            if (selectedTours[tourCard][tourDate] == e.value){
+                delete selectedTours[tourCard][tourDate];
+                break;
+            }
+        }
+    }
+    if(e.closest('form').querySelector('select[name="tour-type"]').value != 'vip'){
+        checkOverlappingTours(selectedTours[tourCard], tourSelectContainer);
+    }
+}
+function checkOverlappingTours(selectedTours, tourSelectContainer){
+    var tourDates = Object.keys(selectedTours);
+    var tourElements = tourSelectContainer.querySelectorAll('input[name="tours"]');
+    for (var tourElement of tourElements){
+        var tourElementDates = JSON.parse(tourElement.getAttribute('tour-dates'));
+        var allIncluded = true;
+        for (var tourElementDate of tourElementDates){
+            if (!tourDates.includes(tourElementDate)){
+               allIncluded = false;
+            }
+        }
+        if (allIncluded && !tourElement.checked){
+            tourElement.disabled = true;}
+    }
+}
+function bindToolTipElement(element, toolTipElement){
+     // Event listener for the select element
+     var toolTip = toolTipElement
+     element.addEventListener('mouseover', function (event) {
+        var targetOption = event.target;
+        if (targetOption.dataset.tooltip) {
+            console.log(targetOption.dataset.tooltip);
+            toolTip.style.display = 'block';
+
+            // Position tooltip next to the option
+            // var optionRect = targetOption.getBoundingClientRect();
+            // tooltipElement.style.top = optionRect.bottom + 'px';
+            // tooltipElement.style.left = optionRect.left + 'px';
+        }
+    });
+
+    // Hide tooltip when mouse leaves the select element
+    element.addEventListener('mouseout', function () {
+        toolTip.style.display = 'none';
+    });
+}
+function validateTourSearchData(tourData){
+    if (!tourData['location']){
+        return false;
+    }
+    if (!tourData['checkin']){
+        return false;
+    }
+    if (!tourData['checkout']){
+        return false;
+    }
+    if (!tourData['tour-type']){
+        return false;
+    }
+    return true;
+}
+function getTourData(form){
+    var params = {};
+    params['location'] = form.querySelector('select[name="location"]').value
+    params['location-type'] = form.querySelector('select[name="location"]').options[form.querySelector('select[name="location"]').selectedIndex].getAttribute('doc-type');
+    params['checkin'] = form.querySelector('input[name="check-in"]').value
+    params['checkout'] = form.querySelector('input[name="check-out"]').value
+    params['adult'] = form.querySelector('select[name="adult"]').value
+    params['children'] = form.querySelector('select[name="children"]').value
+    params['child-age'] = []
+    var ages = form.querySelectorAll('select[name="child-age"]');
+    ages.forEach(age => {
+        params['child-age'].push(age.value)
+    })
+    params['tour-type'] = form.querySelector('select[name="tour-type"]').value
+    // params['tour-name'] = form.querySelector('select[name="tour-name"]').value
+    return params;
 }

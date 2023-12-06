@@ -29,3 +29,8 @@ body{
     margin-top: 20px;
     float: right;
 }
+
+.tours-html-container{
+    overflow-y: scroll;
+    max-height: 250px;
+}

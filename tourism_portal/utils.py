@@ -31,3 +31,17 @@ def get_location_postal_code(location_type, location):
     if not area:
         frappe.throw("Please enter valid location type")
     return frappe.db.get_value("Area", area, 'postal_code', cache=True)
+
+def get_location_city(location_type, location):
+    area = None
+    if location_type == 'area':
+        area = location
+    elif location_type == 'hotel':
+        area = frappe.db.get_value("Hotel", location, "area", cache=True)
+    elif location_type =='airport':
+        area = frappe.db.get_value("Airport", location, 'area', cache=True)
+    if not area:
+        frappe.throw("Please enter valid location type")
+    town = frappe.db.get_value("Area", area, 'town', cache=True)
+    city = frappe.db.get_value("Town", town, 'city', cache=True)
+    return city

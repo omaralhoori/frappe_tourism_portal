@@ -1,5 +1,6 @@
 import frappe
 from frappe import _
+from tourism_portal.tourism_portal.doctype.tour_price.tour_price import get_available_tours
 from tourism_portal.www.search.index import get_available_hotel_rooms
 from tourism_portal.tourism_portal.doctype.transfer_price.transfer_price import get_available_transfers
 import json
@@ -76,3 +77,35 @@ return {
 def search_for_transfer():
 	params = frappe.form_dict
 	return get_available_transfers(params)
+
+"""
+Params {
+	from-location-type: ["hotel","area"],
+	from-location: ,
+	tour-date: ,
+	tour-id: ,
+	tour-type: ["vip", "premium-group", "economic-group"],
+	paxes: {
+		adults: num,
+		children: num,
+		child-ages: [num]
+	}
+}
+return {
+	transfer_type: ,
+	transfer_price: ,
+	transfer_details: {
+		transfer_type: ,
+		transfer_image: ,
+	},
+	search_params: {
+		params: "",
+		from_postal_code: "",
+	}
+
+}
+"""
+@frappe.whitelist()
+def get_tour_price():
+	params = frappe.form_dict
+	return get_available_tours(params)

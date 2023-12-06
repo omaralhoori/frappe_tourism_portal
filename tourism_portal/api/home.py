@@ -1,5 +1,6 @@
 import frappe
-
+from tourism_portal.utils import get_location_city, get_location_postal_code
+import json
 
 @frappe.whitelist(allow_guest=True)
 def get_locations(search="", start=0, page_len=20):
@@ -42,3 +43,38 @@ def get_home_settings():
 				"max_children": max_children
 			}
 	}
+
+@frappe.whitelist()
+def get_available_tours():
+	params = frappe.form_dict.tourData
+	if type(params) == str:
+		params = json.loads(params)
+	where_stmt = ""
+	if params.get('tour-type') == 'vip':
+		where_stmt = ""
+	elif params.get('tour-type') == 'group-premium':
+		where_stmt = "AND tbl1.premium_tour=1 AND tbl1.group_tour=1"
+	elif params.get('tour-type') == 'group-economic':
+		where_stmt = "AND tbl1.economic_tour=1 AND tbl1.group_tour=1"
+	city = get_location_city(params['location-type'], params['location'])
+	postal_code = get_location_postal_code(params['location-type'], params['location'])
+	if params.get('tour-type') in ['group-premium', 'group-economic']:
+		if not frappe.db.get_value("Postal Code", postal_code, 'regular_transport'):
+			return {}
+	tours = frappe.db.sql("""
+			   SELECT tbl1.name as tour_id, tbl1.tour_name as tour_name, 
+			   tbl1.tour_description as tour_description, tbl2.schedule_date as tour_date
+			   FROM `tabTour Schedule` as tbl2
+			   INNER JOIN `tabTour Type` as tbl1 ON tbl2.tour_type=tbl1.name
+			   WHERE tbl1.disabled=0 AND tbl2.city=%(city)s AND tbl2.schedule_date between %(from_date)s AND %(to_date)s {where_stmt}
+			   """.format(where_stmt=where_stmt), {"city": city, "from_date": params['checkin'], "to_date": params['checkout']}, as_dict=True)
+	available_tours = {}
+	for tour in tours:
+		if not available_tours.get(tour.get('tour_id')):
+			available_tours[tour.get('tour_id')] = {}
+			available_tours[tour.get('tour_id')]['tour_id'] = tour.get('tour_id')
+			available_tours[tour.get('tour_id')]['tour_name'] = tour.get('tour_name')
+			available_tours[tour.get('tour_id')]['tour_description'] = tour.get('tour_description')
+			available_tours[tour.get('tour_id')]['tour_dates'] = []
+		available_tours[tour.get('tour_id')]['tour_dates'].append(tour.get('tour_date'))
+	return available_tours
