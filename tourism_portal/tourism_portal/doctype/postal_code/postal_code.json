@@ -24,7 +24,7 @@
   },
   {
    "fieldname": "districts",
-   "fieldtype": "Small Text",
+   "fieldtype": "Data",
    "label": "Districts"
   },
   {
@@ -37,7 +37,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-07 14:11:38.559668",
+ "modified": "2023-12-07 14:31:59.987850",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Postal Code",
@@ -58,6 +58,7 @@
   }
  ],
  "quick_entry": 1,
+ "search_fields": "districts",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
