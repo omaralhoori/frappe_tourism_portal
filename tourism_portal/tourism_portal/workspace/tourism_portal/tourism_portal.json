@@ -352,7 +352,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Transfers",
-   "link_count": 3,
+   "link_count": 4,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -389,8 +389,18 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Transfer Options",
+   "link_count": 0,
+   "link_to": "Transfer Options",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Tours",
-   "link_count": 5,
+   "link_count": 6,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -443,9 +453,19 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tour Discount",
+   "link_count": 0,
+   "link_to": "Tour Discount",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-12-06 17:27:26.437958",
+ "modified": "2023-12-07 13:20:55.416751",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal",

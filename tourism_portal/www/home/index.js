@@ -36,6 +36,8 @@ function formatSelect2(){
             icon = '<i class="fa fa-map tm-color-primary"></i>'
         }else if (doctype == 'hotel'){
             icon = '<i class="fa fa-hotel tm-color-primary"></i>'
+        }else if (doctype == 'airport'){
+            icon = '<i class="fa fa-plane tm-color-primary"></i>'
         }else{
             
         }
@@ -102,10 +104,50 @@ function addTransferClicked(e) {
         return;
     }
     var html = '';
-    html += document.querySelector('.transfer-search-template').innerHTML;
+    var hotelCard = e.closest('.voucher-search').querySelector('.hotel-search-card');
+    var hotelData = getHotelSearchInfo(hotelCard);
+    var transferCards = document.querySelectorAll('.transfer-search-card').length + 1;
+    var trnasferCardName = `Transfer Search ${transferCards}`
+    var transferTemplate = document.querySelector('#transfer-search-template');
+    html += transferTemplate.innerHTML;
     childrenContainer.innerHTML = html;
+    var transferRows = childrenContainer.querySelectorAll('.transfer-search-row');
+    var adults = 0;
+    var children = 0;
+    var childrenAges = [];
+    for (var pax in hotelData.paxInfo){
+        adults += parseInt(hotelData.paxInfo[pax].adults);
+        children += parseInt(hotelData.paxInfo[pax].children);
+        childrenAges = childrenAges.concat(hotelData.paxInfo[pax].childrenInfo);
+    }
+    childrenContainer.querySelector('input[name="transfer-card"]').value = trnasferCardName;
+
+    for (var i=0; i < transferRows.length; i++){
+        var transferRow = transferRows[i];
+
+        if (i == 0){
+            transferRow.querySelector('select[name="dropoff"]').value = hotelData.location  
+            transferRow.querySelector('input[name="check-in"]').value = hotelData.checkin;   
+        }else{
+            transferRow.querySelector('select[name="pickup"]').value = hotelData.location;
+            transferRow.querySelector('input[name="check-in"]').value = hotelData.checkout;
+        }
+       
+        transferRow.querySelector('select[name="adult"]').value = adults;
+        var childsInput = transferRow.querySelector('select[name="children"]');
+        childsInput.value = children ;
+        var event = new Event('change');
+        childsInput.dispatchEvent(event);
+        var agesInput = transferRow.querySelectorAll('select[name="child-age"]');
+        for (var j = 0; j < agesInput.length; j++) {
+            agesInput[j].value = childrenAges[j];
+        }
+        
+    }
+   
+   
     e.style.display = 'none';
-    
+    formatSelect2()
 }
 function addTourClicked(e) {
     var childrenContainer = e.closest('.voucher-search').querySelector('.tour-search-container');
@@ -121,8 +163,8 @@ function addTourClicked(e) {
     html += tourTemplate.innerHTML;
     childrenContainer.innerHTML = html;
     childrenContainer.querySelector('select[name="location"]').value = hotelData.location  
-    childrenContainer.querySelector('input[name="check-in"]').value = hotelData.checkin;   
-    childrenContainer.querySelector('input[name="check-out"]').value = hotelData.checkout;
+    childrenContainer.querySelector('input[name="check-in"]').value = addDays(hotelData.checkin, 1);   
+    childrenContainer.querySelector('input[name="check-out"]').value = addDays( hotelData.checkout, -1);
     childrenContainer.querySelector('input[name="tour-card"]').value = tourCardName;
     var adults = 0;
     var children = 0;
@@ -146,8 +188,13 @@ function addTourClicked(e) {
     formatSelect2()
     selectedTours[tourCardName] = {}
 }
+function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result.toLocaleDateString("fr-CA");
+}
 function addHotelClicked(e) {
-    var container = $('.hotel-search-container');
+    var container = $('.search-cards');
 
      
     var html = '';
@@ -156,6 +203,7 @@ function addHotelClicked(e) {
      // Add a new element next to the selected last element
     
      container.append(html);
+     container.find('.hotel-search-card:last').find('input[name="hotel-card"]').val(container.find('.hotel-search-card').length);
      formatSelect2()
      
     // var html = '';
@@ -167,24 +215,83 @@ function addHotelClicked(e) {
 
 function searchBtnClicked(e){
     var hotelParams = getHotelParams();
-    const paramsJSON = JSON.stringify(hotelParams);
-
+    var transferParams = getTransferParams();
+    var toursParams = getToursParams();
+    var searchParams = {
+        "hotelParams": hotelParams,
+        "transferParams": transferParams,
+        "toursparams": toursParams,
+    }
+    const paramsJSON = JSON.stringify(searchParams);
+    console.log(searchParams)
     window.open(`search?params=${encodeURIComponent(paramsJSON)}`, '_self');
 
     // console.log(new URLSearchParams().toString());
 }
 
+function getToursParams(){
+    var tourCards = document.querySelectorAll('.tour-search-card');
+    var tourParams = {}
+    tourCards.forEach(tour => {
+        var tourCardNumber = tour.querySelector('input[name="tour-card"]').value;
+        var params = getTourData(tour); 
+        validateAllToursSelected(params, tour)
+        params['tours'] = selectedTours[tourCardNumber];
+        tourParams[tourCardNumber] =  params;
+    })
+    return tourParams;
+}
+
 function getHotelParams(){
     var hotelCards = document.querySelectorAll('.hotel-search-card');
-    var hotelParams = []
+    var hotelParams = {}
     hotelCards.forEach(hotel => {
-        hotelParams.push( getHotelSearchInfo(hotel))
+        var hotelCardNumber = hotel.querySelector('input[name="hotel-card"]').value;
+        hotelParams[hotelCardNumber] =  getHotelSearchInfo(hotel);
     })
     return hotelParams;
 }
 
+function getTransferParams(){
+    var transferCards = document.querySelectorAll('.transfer-search-card');
+    var transferParams = {}
+    transferCards.forEach(transfer => {
+        var transferCardNumber = transfer.querySelector('input[name="transfer-card"]').value;
+        transferParams[transferCardNumber] =  getTransferSearchInfo(transfer);
+    })
+    return transferParams;
+}
+
+function getTransferSearchInfo(transferCard){
+    var params = {};
+    // ToDo: Validate All inputs inserted 
+    var transfers  = transferCard.querySelectorAll('.transfer-search-row');
+    for (var i = 0; i < transfers.length; i++){
+        var transfer = transfers[i];
+        var picupInput  = transfer.querySelector('select[name="pickup"]');
+        var dropoffInput  = transfer.querySelector('select[name="dropoff"]');
+        params[i] = {};
+        params[i]['from-location'] = picupInput.value;
+        params[i]['from-location-type'] = picupInput.options[picupInput.selectedIndex].getAttribute('doc-type');
+        params[i]['to-location'] = dropoffInput.value;
+        params[i]['to-location-type'] = dropoffInput.options[dropoffInput.selectedIndex].getAttribute('doc-type');
+        params[i]['transfer-date'] = transfer.querySelector('input[name="check-in"]').value;
+        params[i]['transfer-type'] = transfer.querySelector('select[name="transfer-type"]').value;
+        params[i]['paxes'] = {}
+        params[i]['paxes']['adults'] = Number(transfer.querySelector('select[name="adult"]').value);
+        params[i]['paxes']['children'] = Number( transfer.querySelector('select[name="children"]').value);
+        params[i]['paxes']['child-ages'] = []
+        var ages = transfer.querySelectorAll('select[name="child-age"]');
+        ages.forEach(age => {
+            params[i]['paxes']['child-ages'].push(Number(age.value))
+        })
+    }
+    return params
+}
+
 function getHotelSearchInfo(hotel){
     var params = {};
+    if (!hotel)return params
     // ToDo: Validate All inputs inserted 
     var selectInput =hotel.querySelector('select[name="location"]');
     params['location'] = selectInput.value
@@ -366,20 +473,65 @@ function validateTourSearchData(tourData){
     }
     return true;
 }
+function transferTypeChanged(e){
+    if (e.value == 'group'){
+        e.closest('form').querySelector('.allowed-flights').style.display = 'block';
+    }else{
+        e.closest('form').querySelector('.allowed-flights').style.display = 'none';
+    }
+}
 function getTourData(form){
     var params = {};
     params['location'] = form.querySelector('select[name="location"]').value
     params['location-type'] = form.querySelector('select[name="location"]').options[form.querySelector('select[name="location"]').selectedIndex].getAttribute('doc-type');
     params['checkin'] = form.querySelector('input[name="check-in"]').value
     params['checkout'] = form.querySelector('input[name="check-out"]').value
-    params['adult'] = form.querySelector('select[name="adult"]').value
-    params['children'] = form.querySelector('select[name="children"]').value
-    params['child-age'] = []
+    params['paxes'] = {}
+    params['paxes']['adults'] = form.querySelector('select[name="adult"]').value
+    params['paxes']['children'] = form.querySelector('select[name="children"]').value
+    params['paxes']['child-ages'] = []
     var ages = form.querySelectorAll('select[name="child-age"]');
     ages.forEach(age => {
-        params['child-age'].push(age.value)
+        params['paxes']['child-ages'].push(age.value)
     })
     params['tour-type'] = form.querySelector('select[name="tour-type"]').value
+    params['tours'] = []
+    form.querySelectorAll('input[name="tours"]:checked').forEach(tour => {
+        params['tours'].push(tour.value)
+    })
+    
     // params['tour-name'] = form.querySelector('select[name="tour-name"]').value
     return params;
+}
+
+function  validateAllToursSelected(params, form){
+    var totalDays = getTotalDays(params['checkin'], params['checkout']) + 1;
+    if (params['tours'].length > totalDays){
+        msgprint('You can select only one tour per day')
+        throw new Error('You can select only one tour per day');
+        return false;
+    }else if (params['tours'].length < totalDays && form.querySelectorAll('.tour-list-item').length > params['tours'].length){
+        msgprint('You must select a tour for each day')
+        throw new Error('You must select a tour for each day');
+        return false;
+    }
+}
+
+function onlyTransferClicked(e){
+    document.querySelectorAll('.hotel-search-container').forEach(hotel => {
+        hotel.innerHTML = '';
+    })
+    document.querySelectorAll('.tour-search-container').forEach(hotel => {
+        hotel.innerHTML = '';
+    })
+    addTransferClicked(document.querySelector('.hotel-search-container'));
+}
+function onlyTourClicked(e){
+    document.querySelectorAll('.hotel-search-container').forEach(hotel => {
+        hotel.innerHTML = '';
+    })
+    document.querySelectorAll('.transfer-search-container').forEach(hotel => {
+        hotel.innerHTML = '';
+    })
+    addTourClicked(document.querySelector('.hotel-search-container'));
 }

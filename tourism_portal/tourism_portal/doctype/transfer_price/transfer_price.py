@@ -63,7 +63,8 @@ def get_available_transfers(params):
 	for transfer in trasfers:
 		transfer['transfer_details'] = get_transfer_details(transfer)
 		transfer['search_params'] = search_params
-	return trasfers
+	trasfers = sorted(trasfers, key=lambda x: x['transfer_price'])
+	return trasfers[0] if len(trasfers) > 0 else None
 
 def get_transfer_details(transfer):
 	return frappe.db.get_value("Transfer Type", transfer['transfer_type'],

@@ -16,6 +16,8 @@ $(document).ready(function(){
     // updateAvailableRooms();
     // checkRightSelected()
     // lastCheckForButton();
+    calculate_total_transfers()
+    calculate_total_tours()
     toggleLoadingIndicator(false);
 })
 
@@ -373,6 +375,28 @@ function calculate_total_hotel(hotel){
     }
     $('.hotels-total').text(`${total.toFixed(2)} USD`)
     totals['hotels'] = total;
+    update_totals();
+}
+
+function calculate_total_transfers(){
+    var total = 0;
+    var all_selects = document.querySelectorAll(`.transfer-price`)
+    for (var selectInput of all_selects){
+        total += Number(selectInput.getAttribute("transfer-price"))
+    }
+    $('.transfers-total').text(`${total.toFixed(2)} USD`)
+    totals['transfers'] = total;
+    update_totals();
+}
+
+function calculate_total_tours(){
+    var total = 0;
+    var all_selects = document.querySelectorAll(`.tour-price`)
+    for (var selectInput of all_selects){
+        total += Number(selectInput.getAttribute("tour-price"))
+    }
+    $('.tours-total').text(`${total.toFixed(2)} USD`)
+    totals['tours'] = total;
     update_totals();
 }
 

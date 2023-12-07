@@ -27,7 +27,7 @@ def get_location_postal_code(location_type, location):
     elif location_type == 'hotel':
         area = frappe.db.get_value("Hotel", location, "area", cache=True)
     elif location_type =='airport':
-        area = frappe.db.get_value("Airport", location, 'area', cache=True)
+        area = frappe.db.get_value("Airport", location, 'airport_area', cache=True)
     if not area:
         frappe.throw("Please enter valid location type")
     return frappe.db.get_value("Area", area, 'postal_code', cache=True)
@@ -39,9 +39,24 @@ def get_location_city(location_type, location):
     elif location_type == 'hotel':
         area = frappe.db.get_value("Hotel", location, "area", cache=True)
     elif location_type =='airport':
-        area = frappe.db.get_value("Airport", location, 'area', cache=True)
+        area = frappe.db.get_value("Airport", location, 'airport_area', cache=True)
     if not area:
         frappe.throw("Please enter valid location type")
     town = frappe.db.get_value("Area", area, 'town', cache=True)
     city = frappe.db.get_value("Town", town, 'city', cache=True)
     return city
+
+
+def calculate_extra_price(selling_price, extra_type, extra_price):
+	if extra_type == 'Amount':
+			selling_price += extra_price
+	else:
+		selling_price += (selling_price * extra_price) / 100
+	return selling_price 
+
+def calculate_discount_price(selling_price, extra_type, extra_price):
+	if extra_type == 'Amount':
+			selling_price -= extra_price
+	else:
+		selling_price -= (selling_price * extra_price) / 100
+	return selling_price 

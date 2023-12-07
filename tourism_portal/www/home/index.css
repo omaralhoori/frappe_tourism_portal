@@ -34,3 +34,9 @@ body{
     overflow-y: scroll;
     max-height: 250px;
 }
+
+.allowed-flights {
+    display: none;
+    max-height: 100px;
+    overflow-y: scroll;
+}

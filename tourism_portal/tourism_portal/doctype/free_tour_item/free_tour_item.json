@@ -1,0 +1,49 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-07 13:17:15.964636",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "tour_type",
+  "min_nights",
+  "discount"
+ ],
+ "fields": [
+  {
+   "fieldname": "tour_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Tour Type",
+   "options": "Tour Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "min_nights",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Min Nights",
+   "reqd": 1
+  },
+  {
+   "fieldname": "discount",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Discount",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-12-07 13:17:15.964636",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Free Tour Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

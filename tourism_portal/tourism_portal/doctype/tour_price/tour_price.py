@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-from tourism_portal.utils import get_location_postal_code
+from tourism_portal.utils import calculate_discount_price, calculate_extra_price, get_location_postal_code
 
 class TourPrice(Document):
 	pass
@@ -23,7 +23,7 @@ def get_available_tours(params):
 
 	"""
 	check_tour_params(params)
-	from_postal_code = get_location_postal_code(params['from-location-type'], params['from-location'])
+	from_postal_code = get_location_postal_code(params['location-type'], params['location'])
 	tour_id = params['tour-id']
 	where_stmt = ""
 	if params['tour-type'] == "vip":
@@ -31,11 +31,11 @@ def get_available_tours(params):
 		join_table = "INNER JOIN `tabVIP Transfer Price` vip ON vip.parent=tp.name and vip.parenttype='Tour VIP Price'"
 		parenttype = "Tour VIP Price"
 		where_stmt = "AND tp.pickup_postal_code=%(from_postal_code)s"
-	elif params['tour-type'] == "premium-group":
+	elif params['tour-type'] == "group-premium":
 		search_columns = "tp.adult_premium_price as group_adult_price, tp.tour_child_policy"
 		join_table = ""
 		parenttype = "Tour Price"
-	elif params['tour-type'] == "economic-group":
+	elif params['tour-type'] == "group-economic":
 		search_columns = "tp.adult_economic_price as group_adult_price, tp.tour_child_policy"
 		join_table = ""
 		parenttype = "Tour Price"
@@ -48,19 +48,23 @@ def get_available_tours(params):
 	 "tour_date": params['tour-date']}, as_dict=True)    
 	transfer_price = 0
 	trasfers = []
+	tour_data = frappe.db.get_value("Tour Type", tour_id, ["tour_name", "tour_description" ])
 	search_params = {
 		"params": params,
 		"from_postal_code": from_postal_code,
-		"tour_id": tour_id
+		'tour_date': params['tour-date'],
+		"tour_id": tour_id,
+		"tour_name": tour_data[0],
+		"tour_description": tour_data[1],
 	}
 	if params['tour-type'] == "vip":
 		for available_transfer in available_transfers:
 			if check_available_vip_transfer(available_transfer, params['paxes']):
 				trasfers.append(available_transfer)
-	elif params['tour-type'] == "premium-group" or params['tour-type'] == "economic-group":
+	elif params['tour-type'] == "group-premium" or params['tour-type'] == "group-economic":
 		transfer_price = get_group_transfer_price(params['paxes'], available_transfers)
 		if not transfer_price:
-			return []
+			return None
 		transfer_type = "group_transfer"
 		trasfers.append({
 			"transfer_type": transfer_type,
@@ -70,7 +74,8 @@ def get_available_tours(params):
 	for transfer in trasfers:
 		transfer['transfer_details'] = get_transfer_details(transfer)
 		transfer['search_params'] = search_params
-	return trasfers
+	trasfers = sorted(trasfers, key=lambda x: x['transfer_price'])
+	return trasfers[0] if len(trasfers) > 0 else None
 
 def get_transfer_details(transfer):
 	return frappe.db.get_value("Transfer Type", transfer['transfer_type'],
@@ -96,8 +101,8 @@ def get_group_transfer_price(paxes, available_transfers):
 	policies = frappe.db.get_all("Transfer Child Price", {"parent": child_policy},
 	 ["child_order", "from_age", "to_age", "adult_price_percentage"], order_by="idx, child_order")
 	transfer_price = 0
-	adults = paxes['adults']
-	children = paxes['children']
+	adults = int(paxes['adults'])
+	children = int(paxes['children'])
 	child_ages = paxes['child-ages']
 	child_ages.sort()
 	child_prices = []
@@ -151,9 +156,9 @@ def check_available_vip_transfer(available_transfer, paxes):
 	return available
 	
 def check_tour_params(params):
-	if not params.get('from-location-type'):
+	if not params.get('location-type'):
 		frappe.throw("Please enter from location type")
-	if not params.get('from-location'):
+	if not params.get('location'):
 		frappe.throw("Please enter from location")
 	if not params.get('tour-date'):
 		frappe.throw("Please enter tour date")
@@ -161,3 +166,35 @@ def check_tour_params(params):
 		frappe.throw("Please enter tour id")
 	if not params.get('tour-type'):
 		frappe.throw("Please enter tour type")
+
+def apply_tour_discount(tours, total_nights=None):
+	tour_discount = frappe.get_single("Tour Discount")
+	tour_total_price = 0
+	new_tour_total_price = 0
+	if total_nights:
+		for free_tour in tour_discount.free_tour:
+			if free_tour.min_nights <= total_nights:
+				for tour in tours:
+					if tour == free_tour.tour_type:
+						tours[tour]['transfer_price'] = calculate_discount_price(tours[tour]['transfer_price'], "Percent", free_tour.discount)
+						break
+	for tour in tours:
+		tour_total_price += tours[tour]['transfer_price']
+	new_tour_total_price = tour_total_price
+	pacakge_discounts = tour_discount.package_discount
+	pacakge_discounts.sort(key=lambda x: x.min_tour_count, reverse=True)
+	for package_discount in pacakge_discounts:
+		if package_discount.min_tour_count <= len(tours):
+			new_tour_total_price = calculate_discount_price(tour_total_price, package_discount.discount_type, package_discount.discount)
+			break
+	total_discount = tour_total_price - new_tour_total_price
+	for tour in tours:
+		if tours[tour]['transfer_price'] - total_discount > 0:
+			tours[tour]['transfer_price'] = tours[tour]['transfer_price'] - total_discount
+			total_discount = 0
+		elif tours[tour]['transfer_price'] - total_discount <= 0:
+			total_discount -= tours[tour]['transfer_price']
+			tours[tour]['transfer_price'] = 0
+		if total_discount == 0:
+			break
+	return tours

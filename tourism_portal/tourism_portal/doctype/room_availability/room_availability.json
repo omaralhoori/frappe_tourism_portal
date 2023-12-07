@@ -8,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "contract_no",
+  "hotel",
   "date",
   "available_qty"
  ],
@@ -25,6 +26,7 @@
    "fieldname": "date",
    "fieldtype": "Date",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Date",
    "reqd": 1,
    "set_only_once": 1
@@ -33,13 +35,23 @@
    "fieldname": "available_qty",
    "fieldtype": "Int",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Available Qty",
    "reqd": 1
+  },
+  {
+   "fetch_from": "contract_no.hotel",
+   "fieldname": "hotel",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Hotel",
+   "options": "Hotel"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-23 13:39:18.229933",
+ "modified": "2023-12-07 12:42:19.427878",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Room Availability",

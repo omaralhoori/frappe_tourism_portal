@@ -49,10 +49,11 @@
     var searchResults = `{{rooms}}`
     searchResults = JSON.parse(searchResults);
 </script>
-<div class="content pt-4">
+<div class="row pt-4 ">
+<div class="content col-lg-9">
   <div class="row hotels-results">
     
-    <div class="col-lg-9">
+    <div class="col">
         <div class="search-results">
             {# 
             {% for search in rooms %}
@@ -70,7 +71,29 @@
             #}
         </div>
     </div>
-    <div class="col-lg-3">
+  </div>
+  <div class="row transfer-results">
+    {% if transfers %}
+        <div class="col-12"><strong>Transfers</strong></div>
+    {%endif%}
+    {% for search in transfers%}
+        {% for transfer in transfers[search] %}
+            {{transfer_card(transfers[search][transfer])}}
+        {%endfor%}
+    {% endfor %}
+  </div>
+  <div class="row tour-resutls">
+    {% if tours %}
+        <div class="col-12"><strong>Tours</strong></div>
+    {%endif%}
+    {% for search in tours%}
+        {% for tour in tours[search] %}
+            {{tour_card(tours[search][tour], tour)}}
+        {%endfor%}
+    {% endfor %}
+  </div>
+</div>
+ <div class="col-lg-3">
         <div class="filters-container mt-3 card">
             <div class="price-summary">
                 <div class="price-total-calculator">
@@ -87,14 +110,8 @@
             </div>
         </div>
     </div>
-  </div>
-  <div class="row transfer-results">
-
-  </div>
-  <div class="row tour-resutls">
-
-  </div>
 </div>
+
 <script type="text/template" id="hotel-room-results-template">
     <div class="card">
         <div class="card-header" id="{Hotel ID}-header">
@@ -154,3 +171,37 @@
 </script>
 
 {% endblock %}
+
+{%macro transfer_card(transfer)%}
+    <div class="card m-2" style="width: 18rem;">
+  <img class="card-img-top" src="{{transfer['transfer_details'].get('transfer_image')}}" alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">{{transfer['transfer_details'].get('transfer_type')}}</h5>
+    <p class="card-text">{{transfer['transfer_details'].get('transfer_description') or ''}}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Pickup: {{transfer['search_params']['params']['from-location']}}</li>
+    <li class="list-group-item">Dropoff: {{transfer['search_params']['params']['to-location']}}</li>
+    <li class="list-group-item">Transfer Date: {{transfer['search_params']['params']['transfer-date']}}</li>
+    <li class="list-group-item transfer-price" transfer-price="{{transfer['transfer_price']}}">Price: {{transfer['transfer_price']}}</li>
+  </ul>
+</div>
+{%endmacro%}
+
+{%macro tour_card(tour, tour_id)%}
+    <div class="card m-2" style="width: 18rem;">
+    {% if not tour %}
+        <div class="p-3">{{tour_id}} price is not available</div>
+    {%else%}
+  <div class="card-body">
+    <h5 class="card-title">{{tour['search_params'].get('tour_name')}}</h5>
+    <p class="card-text">{{tour['search_params'].get('search_params') or ''}}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Pickup: {{tour['search_params']['params']['location']}}</li>
+    <li class="list-group-item">Tour Date: {{tour['search_params']['tour_date']}}</li>
+    <li class="list-group-item tour-price" tour-price="{{tour['transfer_price']}}">Price: {{tour['transfer_price']}}</li>
+  </ul>
+  {%endif%}
+</div>
+{%endmacro%}

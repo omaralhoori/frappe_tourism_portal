@@ -1,6 +1,8 @@
 import frappe
 from frappe import _
-from tourism_portal.utils import get_portal_setting
+from tourism_portal.tourism_portal.doctype.tour_price.tour_price import apply_tour_discount, get_available_tours
+from tourism_portal.tourism_portal.doctype.transfer_price.transfer_price import get_available_transfers
+from tourism_portal.utils import calculate_extra_price, get_portal_setting
 import json
 no_cache=1
 def get_context(context):
@@ -9,10 +11,47 @@ def get_context(context):
 		frappe.throw(_("Log in to access this page."), frappe.PermissionError)
 	params = frappe.form_dict.params
 	params = json.loads(params)
-	context.rooms = get_available_hotel_rooms(params)
+	hotelParams = params.get('hotelParams')
+	transferParams = params.get('transferParams')
+	tourParams = params.get('toursparams')
+	transfers = search_for_transfers(transferParams)
+	total_days = get_hotel_total_days(hotelParams)
+	context.tours = search_for_tours(tourParams, total_days)
+	context.rooms = get_available_hotel_rooms(hotelParams)
 	context.rooms = json.dumps(context.rooms, default=str)
+	context.transfers = transfers
 	return context
+def get_hotel_total_days(hotelParams):
+	total_days = 0
+	if not hotelParams: return None
+	for search in hotelParams:
+		hotel = hotelParams[search]
+		date_format = "%Y-%m-%d"
+		delta = datetime.strptime(hotel.get('checkout'), date_format) - datetime.strptime(hotel.get('checkin'), date_format)
+		total_days += delta.days
+	return total_days
+def search_for_transfers(transferParams):
+	transfers = {}
+	for transferSearch in transferParams:
+		transfers[transferSearch] = {}
+		for transfer in transferParams[transferSearch]:
+			params = transferParams[transferSearch][transfer]
+			available_transfers = get_available_transfers(params)
+			transfers[transferSearch][transfer] = available_transfers
+	return transfers
 
+def search_for_tours(tourParams, total_days= None):
+	tours = {}
+	for tourSearch in tourParams:
+		tours[tourSearch] = {}
+		params = tourParams[tourSearch]
+		for tour in params.get('tours'):
+			params['tour-id'] = params['tours'][tour]
+			params['tour-date'] = tour
+			available_tours = get_available_tours(params)
+			tours[tourSearch][params['tours'][tour]] = available_tours
+		tours[tourSearch] = apply_tour_discount(tours[tourSearch],total_days)
+	return tours
 """
 	search_params: [
 		{
@@ -33,7 +72,8 @@ def get_context(context):
 def get_available_hotel_rooms(search_params):
 	
 	hotels = []
-	for hotel in search_params:
+	for search in search_params:
+		hotel = search_params[search]
 		avilables = search_for_available_hotel(hotel)
 		hotels.append(avilables)
 	return hotels
@@ -236,12 +276,6 @@ def get_room_selling_price_based_on_class(selling_price, item_price_name, compan
 	extra_type, extra_price = class_extra_price
 	return calculate_extra_price(selling_price, extra_type, extra_price)
 
-def calculate_extra_price(selling_price, extra_type, extra_price):
-	if extra_type == 'Amount':
-			selling_price += extra_price
-	else:
-		selling_price += (selling_price * extra_price) / 100
-	return selling_price 
 
 def get_selling_price_profit_margin_based(room, room_price):
 	hotel_profit_margin = frappe.db.get_value("Hotel", room_price.get('hotel'), ['hotel_profit_margin']) or frappe.db.get_single_value("Tourism Portal Settings", "default_hotel_profit_margin")
