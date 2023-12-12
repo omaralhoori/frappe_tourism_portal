@@ -8,6 +8,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "portal_disabled",
   "airport_code",
   "airport_name",
   "airport_area"
@@ -35,11 +36,17 @@
    "label": "Airport Area",
    "options": "Area",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "portal_disabled",
+   "fieldtype": "Check",
+   "label": "Portal Disabled"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-10 13:32:39.588478",
+ "modified": "2023-12-09 12:42:24.581642",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Airport",

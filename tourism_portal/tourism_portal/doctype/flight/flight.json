@@ -1,0 +1,85 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:flight_code",
+ "creation": "2023-12-09 12:19:25.436611",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "flight_code",
+  "is_regular",
+  "section_break_k9chk",
+  "departure",
+  "column_break_d8e7q",
+  "arrival"
+ ],
+ "fields": [
+  {
+   "fieldname": "flight_code",
+   "fieldtype": "Data",
+   "label": "Flight Code",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_regular",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Is Regular"
+  },
+  {
+   "fieldname": "section_break_k9chk",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "arrival",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Arrival",
+   "options": "Airport",
+   "reqd": 1
+  },
+  {
+   "fieldname": "departure",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Departure",
+   "options": "Airport",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_d8e7q",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-12-09 12:48:02.930144",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Flight",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

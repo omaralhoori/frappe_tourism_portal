@@ -39,6 +39,7 @@ def create_reservation():
         transfers = json.loads(params.transfers)
     else:
         transfers = params.transfers
+    print(rooms)
     add_rooms_to_invoice(invoice, rooms)
     add_transfers_to_invoice(invoice, transfers)
     
@@ -175,3 +176,7 @@ def add_nights_to_room(sales_invoice, row_id, check_in=None, check_out=None):
     company = frappe.db.get_value("User", frappe.session.user, "company")
     invoice = frappe.get_doc("Sales Invoice", {"name": sales_invoice, "company": company})
     invoice.add_nights(row_id, check_in, check_out)
+
+@frappe.whitelist()
+def delete_reservation():
+    print(frappe.form_dict)

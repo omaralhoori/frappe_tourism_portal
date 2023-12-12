@@ -78,3 +78,9 @@ def get_available_tours():
 			available_tours[tour.get('tour_id')]['tour_dates'] = []
 		available_tours[tour.get('tour_id')]['tour_dates'].append(tour.get('tour_date'))
 	return available_tours
+
+@frappe.whitelist()
+def get_regular_flights(location, route):
+	flights = frappe.db.get_all("Flight", {route: location, "is_regular": 1}, ['name'])
+	print(flights)
+	return flights

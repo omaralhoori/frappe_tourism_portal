@@ -1,6 +1,6 @@
 import frappe
 from frappe import _
-from tourism_portal.tourism_portal.doctype.tour_price.tour_price import apply_tour_discount, get_available_tours
+from tourism_portal.tourism_portal.doctype.tour_price.tour_price import apply_tour_discount, get_available_tours, get_available_tours_and_prices
 from tourism_portal.tourism_portal.doctype.transfer_price.transfer_price import get_available_transfers
 from tourism_portal.utils import calculate_extra_price, get_portal_setting
 import json
@@ -45,12 +45,11 @@ def search_for_tours(tourParams, total_days= None):
 	for tourSearch in tourParams:
 		tours[tourSearch] = {}
 		params = tourParams[tourSearch]
-		for tour in params.get('tours'):
-			params['tour-id'] = params['tours'][tour]
-			params['tour-date'] = tour
-			available_tours = get_available_tours(params)
-			tours[tourSearch][params['tours'][tour]] = available_tours
-		tours[tourSearch] = apply_tour_discount(tours[tourSearch],total_days)
+		
+		available_tours = get_available_tours_and_prices(params)
+		tours[tourSearch]= available_tours#[params['tours'][tour]] = available_tours
+		if params['tour-type'] != 'vip':
+			tours[tourSearch] = apply_tour_discount(tours[tourSearch],total_days)
 	return tours
 """
 	search_params: [
@@ -71,11 +70,12 @@ def search_for_tours(tourParams, total_days= None):
 """
 def get_available_hotel_rooms(search_params):
 	
-	hotels = []
+	hotels = {}
 	for search in search_params:
+		print(search)
 		hotel = search_params[search]
 		avilables = search_for_available_hotel(hotel)
-		hotels.append(avilables)
+		hotels[search] = avilables
 	return hotels
 
 """

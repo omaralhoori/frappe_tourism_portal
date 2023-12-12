@@ -31,8 +31,9 @@
                                     <i class="fa fa-2x fa-bus tm-form-element-icon"></i>
                                 </div>
                                 <div class="form-group tm-form-element tm-form-element-2">
-                                    <i class="fa fa-map-marker fa-2x tm-color-primary"></i>
-                                    <label class="">&nbsp;&nbsp; Location</label>
+                                     <i class="fa fa-map-marker fa-2x tm-form-element-icon tm-color-primary"></i>
+                                    <input name="location" type="text" class="form-control transfer-pickup" placeholder="Location"/>
+                                    {# <label class="">&nbsp;&nbsp; Location</label>
                                     <!-- <input name="city" type="text" class="form-control" id="inputCity" placeholder="Type your destination..."> -->
                                     <select name="location" onchange="tourTypeChanged(this)" type="text" class="form-control select2-select">
                                         <option value="">Location</option>
@@ -46,7 +47,7 @@
                                                 {% endfor %}
                                             </optgroup>
                                         {% endfor %}
-                                    </select>
+                                    </select> #}
                                 </div>
             
                                 <div class="form-group tm-form-element tm-form-element-2">

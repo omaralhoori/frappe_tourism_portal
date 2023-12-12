@@ -1,5 +1,5 @@
 <div class="mt-4 tm-bg-white ie-container-width-fix-2 search-card-container hotel-search-card">
-    <input type="hidden" name="hotel-card" value="1">
+    <input type="hidden" name="hotel-card" value="Hotel Search 1">
 
     <button onclick="collapseBtnPressed(this)"
         class="btn btn-primary collapse-btn">
@@ -19,10 +19,10 @@
                         <form class="tm-search-form tm-section-pad-2">
                             <div class="form-row tm-search-form-row">
                                 <div class="form-group tm-form-element tm-form-element-2">
-                                    <i class="fa fa-map-marker fa-2x tm-color-primary"></i>
-                                    <label class="">&nbsp;&nbsp; Location</label>
+                                    <i class="fa fa-map-marker fa-2x tm-form-element-icon tm-color-primary"></i>
                                     <!-- <input name="city" type="text" class="form-control" id="inputCity" placeholder="Type your destination..."> -->
-                                    <select name="location" type="text" class="form-control select2-select">
+                                    <input name="location" type="text" class="form-control hotel-location" placeholder="Location"/>
+                                    {# <select name="location" type="text" class="form-control select2-select">
                                         <option value=""></option>
                                         {% for location_type in locations.get('hotels') %}
                                             <optgroup label="{{locations['hotels'][location_type][0].get('area_name')}}">
@@ -34,7 +34,7 @@
                                                 {% endfor %}
                                             </optgroup>
                                         {% endfor %}
-                                    </select>
+                                    </select> #}
                                 </div>
                                 <div class="form-group tm-form-element tm-form-element-2">
                                     <i class="fa fa-flag fa-2x tm-color-primary"></i>

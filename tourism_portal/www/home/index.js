@@ -1,6 +1,9 @@
 var selectedTours = {}
 
 $(document).ready(function () {
+    
+    autocompleteLocations(document.querySelector('.hotel-location'), 'tourism_portal.api.query.get_locations');
+
     formatSelect2()
     formatDataPicker()
 });
@@ -51,7 +54,18 @@ function formatSelect2(){
 
 // Date Picker
 function formatDataPicker(template){
-    
+    if(template){
+        template.querySelectorAll('.date-picker').forEach(datePickerInput => {
+        datepicker(datePickerInput, {
+            formatter: (input, date, instance) => {
+                const value = date.toLocaleDateString("fr-CA")
+                input.value = value // => '1/1/2099'
+            }
+        });
+        
+    })
+    return;
+    }
         $('.date-picker').each(function (i, select) {
             datepicker(this, {
                 formatter: (input, date, instance) => {
@@ -121,18 +135,40 @@ function addTransferClicked(e) {
         childrenAges = childrenAges.concat(hotelData.paxInfo[pax].childrenInfo);
     }
     childrenContainer.querySelector('input[name="transfer-card"]').value = trnasferCardName;
-
+    var dropoffInput = null;
+    var pickupInput = null;
+ 
     for (var i=0; i < transferRows.length; i++){
         var transferRow = transferRows[i];
 
         if (i == 0){
-            transferRow.querySelector('select[name="dropoff"]').value = hotelData.location  
+            dropoffInput = transferRow.querySelector('input[name="dropoff"]')
+
+            if (hotelData['location-type'] != 'town'){
+                dropoffInput.value = hotelData['location-name']
+                dropoffInput.setAttribute('location-id', hotelData.location);
+                dropoffInput.setAttribute('location-type', hotelData['location-type']); 
+            }
+             
             transferRow.querySelector('input[name="check-in"]').value = hotelData.checkin;   
         }else{
-            transferRow.querySelector('select[name="pickup"]').value = hotelData.location;
+            pickupInput = transferRow.querySelector('input[name="pickup"]')
+            if (hotelData['location-type'] != 'town'){
+                pickupInput.value = hotelData['location-name'];//hotelData.location;
+                pickupInput.setAttribute('location-id', hotelData.location);
+                pickupInput.setAttribute('location-type', hotelData['location-type']);
+            }
+        
+           
             transferRow.querySelector('input[name="check-in"]').value = hotelData.checkout;
         }
-       
+        autocompleteLocations( transferRow.querySelector('input[name="dropoff"]'), 'tourism_portal.api.query.get_transfer_locations', (element) => {
+            checkRegularFlights(element.querySelector('input'), 'arrival')
+        });
+        autocompleteLocations(transferRow.querySelector('input[name="pickup"]'), 'tourism_portal.api.query.get_transfer_locations', (element) => {
+            checkRegularFlights(element.querySelector('input'), 'departure')
+        });
+        formatDataPicker(transferRow)
         transferRow.querySelector('select[name="adult"]').value = adults;
         var childsInput = transferRow.querySelector('select[name="children"]');
         childsInput.value = children ;
@@ -147,7 +183,7 @@ function addTransferClicked(e) {
    
    
     e.style.display = 'none';
-    formatSelect2()
+
 }
 function addTourClicked(e) {
     var childrenContainer = e.closest('.voucher-search').querySelector('.tour-search-container');
@@ -162,7 +198,13 @@ function addTourClicked(e) {
     var tourTemplate = document.querySelector('#tour-search-template');
     html += tourTemplate.innerHTML;
     childrenContainer.innerHTML = html;
-    childrenContainer.querySelector('select[name="location"]').value = hotelData.location  
+    var locationInput = childrenContainer.querySelector('input[name="location"]')
+    if(hotelData['location-type'] != 'town'){
+    locationInput.value = hotelData['location-name']
+    locationInput.setAttribute('location-id', hotelData.location);
+    locationInput.setAttribute('location-type', hotelData['location-type']);
+    }
+    autocompleteLocations(locationInput, 'tourism_portal.api.query.get_tour_locations');
     childrenContainer.querySelector('input[name="check-in"]').value = addDays(hotelData.checkin, 1);   
     childrenContainer.querySelector('input[name="check-out"]').value = addDays( hotelData.checkout, -1);
     childrenContainer.querySelector('input[name="tour-card"]').value = tourCardName;
@@ -184,6 +226,7 @@ function addTourClicked(e) {
     for (var i = 0; i < agesInput.length; i++) {
         agesInput[i].value = childrenAges[i];
     }
+    formatDataPicker(childrenContainer)
     e.style.display = 'none';
     formatSelect2()
     selectedTours[tourCardName] = {}
@@ -203,7 +246,10 @@ function addHotelClicked(e) {
      // Add a new element next to the selected last element
     
      container.append(html);
-     container.find('.hotel-search-card:last').find('input[name="hotel-card"]').val(container.find('.hotel-search-card').length);
+     var cardName = `Hotel Search ${container.find('.hotel-search-card').length}`
+     container.find('.hotel-search-card:last').find('input[name="hotel-card"]').val(cardName);
+     var allHotelSearchCards = document.querySelectorAll('.hotel-search-card')
+     formatDataPicker(allHotelSearchCards[allHotelSearchCards.length - 1])
      formatSelect2()
      
     // var html = '';
@@ -212,7 +258,36 @@ function addHotelClicked(e) {
     // e.style.display = 'none';
     
 }
-
+function pickupTransferChanged(e){
+    checkRegularFlights(e, 'departure')
+}
+function checkRegularFlights(e , type){
+    console.log(e)
+    var locationType = e.getAttribute('location-type')//options[e.selectedIndex].getAttribute('doc-type');
+    if (locationType == 'airport'){
+        //e.closest('.transfer-search-row').querySelector('.allowed-flights').style.display = 'block';
+        var location = e.getAttribute('location-id')//);
+        frappe.call({
+            "method": "tourism_portal.api.home.get_regular_flights",
+            "args": {
+                "location": location,
+                "route": type
+            },
+            "callback": function (r) {
+                var allowedFlights = e.closest('.transfer-search-row').querySelector('.allowed-flights-list');
+                var html = '';
+                console.log(r.message)
+                for (var flight of r.message){
+                    html += `<li value="${flight.name}">${flight.name}</li>`;
+                }
+                allowedFlights.innerHTML = html;
+            }
+        })
+    }
+}
+function dropoffTransferChanged(e){
+    checkRegularFlights(e, 'arrival');
+}
 function searchBtnClicked(e){
     var hotelParams = getHotelParams();
     var transferParams = getTransferParams();
@@ -268,13 +343,13 @@ function getTransferSearchInfo(transferCard){
     var transfers  = transferCard.querySelectorAll('.transfer-search-row');
     for (var i = 0; i < transfers.length; i++){
         var transfer = transfers[i];
-        var picupInput  = transfer.querySelector('select[name="pickup"]');
-        var dropoffInput  = transfer.querySelector('select[name="dropoff"]');
+        var picupInput  = transfer.querySelector('input[name="pickup"]');
+        var dropoffInput  = transfer.querySelector('input[name="dropoff"]');
         params[i] = {};
-        params[i]['from-location'] = picupInput.value;
-        params[i]['from-location-type'] = picupInput.options[picupInput.selectedIndex].getAttribute('doc-type');
-        params[i]['to-location'] = dropoffInput.value;
-        params[i]['to-location-type'] = dropoffInput.options[dropoffInput.selectedIndex].getAttribute('doc-type');
+        params[i]['from-location'] = picupInput.getAttribute('location-id');
+        params[i]['from-location-type'] = picupInput.getAttribute('location-type');
+        params[i]['to-location'] = dropoffInput.getAttribute('location-id');
+        params[i]['to-location-type'] = dropoffInput.getAttribute('location-type');
         params[i]['transfer-date'] = transfer.querySelector('input[name="check-in"]').value;
         params[i]['transfer-type'] = transfer.querySelector('select[name="transfer-type"]').value;
         params[i]['paxes'] = {}
@@ -293,10 +368,11 @@ function getHotelSearchInfo(hotel){
     var params = {};
     if (!hotel)return params
     // ToDo: Validate All inputs inserted 
-    var selectInput =hotel.querySelector('select[name="location"]');
-    params['location'] = selectInput.value
+    var selectInput =hotel.querySelector('input[name="location"]');
+    params['location'] = selectInput.getAttribute('location-id')
+    params['location-name'] = selectInput.value
 
-    params['location-type'] = selectInput.options[selectInput.selectedIndex].getAttribute('doc-type');
+    params['location-type'] = selectInput.getAttribute('location-type')//selectInput.options[selectInput.selectedIndex].getAttribute('doc-type');
     params['nationality'] = hotel.querySelector('select[name="nationality"]').value
     params['checkin'] = hotel.querySelector('input[name="check-in"]').value
     params['checkout'] = hotel.querySelector('input[name="check-out"]').value
@@ -418,9 +494,9 @@ function onTourSelectChange(e){
             }
         }
     }
-    if(e.closest('form').querySelector('select[name="tour-type"]').value != 'vip'){
-        checkOverlappingTours(selectedTours[tourCard], tourSelectContainer);
-    }
+    // if(e.closest('form').querySelector('select[name="tour-type"]').value != 'vip'){
+    //     checkOverlappingTours(selectedTours[tourCard], tourSelectContainer);
+    // }
 }
 function checkOverlappingTours(selectedTours, tourSelectContainer){
     var tourDates = Object.keys(selectedTours);

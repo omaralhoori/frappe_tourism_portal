@@ -77,9 +77,11 @@
         <div class="col-12"><strong>Transfers</strong></div>
     {%endif%}
     {% for search in transfers%}
+        <div class=" row transfer-search" transfer-search="{{search}}">
         {% for transfer in transfers[search] %}
             {{transfer_card(transfers[search][transfer])}}
         {%endfor%}
+        </div>
     {% endfor %}
   </div>
   <div class="row tour-resutls">
@@ -87,9 +89,15 @@
         <div class="col-12"><strong>Tours</strong></div>
     {%endif%}
     {% for search in tours%}
-        {% for tour in tours[search] %}
-            {{tour_card(tours[search][tour], tour)}}
-        {%endfor%}
+        <div class="row tour-search-card" tour-search="{{search}}">
+        {% for tour in tours[search]%}
+            {% if tour['tour_type'] == 'vip'%}
+                    {{vip_tour_card(tour, search)}}
+            {% else %}
+                    {{package_tour_card(tour) }}
+            {% endif %}
+       {% endfor %}
+       </div>
     {% endfor %}
   </div>
 </div>
@@ -173,7 +181,7 @@
 {% endblock %}
 
 {%macro transfer_card(transfer)%}
-    <div class="card m-2" style="width: 18rem;">
+    <div class="card m-2 transfer-card" style="width: 18rem;">
   <img class="card-img-top" src="{{transfer['transfer_details'].get('transfer_image')}}" alt="Card image cap">
   <div class="card-body">
     <h5 class="card-title">{{transfer['transfer_details'].get('transfer_type')}}</h5>
@@ -188,20 +196,40 @@
 </div>
 {%endmacro%}
 
-{%macro tour_card(tour, tour_id)%}
+{%macro vip_tour_card(tour, tour_id)%}
     <div class="card m-2" style="width: 18rem;">
     {% if not tour %}
         <div class="p-3">{{tour_id}} price is not available</div>
     {%else%}
   <div class="card-body">
-    <h5 class="card-title">{{tour['search_params'].get('tour_name')}}</h5>
-    <p class="card-text">{{tour['search_params'].get('search_params') or ''}}</p>
+    <h5 class="card-title">{{tour.get('tour_name')}}</h5>
+    <p class="card-text">{{tour.get('tour_description') or ''}}</p>
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item">Pickup: {{tour['search_params']['params']['location']}}</li>
-    <li class="list-group-item">Tour Date: {{tour['search_params']['tour_date']}}</li>
-    <li class="list-group-item tour-price" tour-price="{{tour['transfer_price']}}">Price: {{tour['transfer_price']}}</li>
+    <li class="list-group-item">Pickup: {{tour['pickup']}}</li>
+    <li class="list-group-item">Tour Date: {{tour['tour_date']}}</li>
+    <li class="list-group-item tour-price" tour-price="{{tour['tour_price']}}">Price: {{tour['tour_price']}}</li>
   </ul>
   {%endif%}
 </div>
+{%endmacro%}
+
+{%macro package_tour_card(tourPackage)%}
+    {% if not tourPackage['package_price'] or tourPackage['package_price'] <= 0 %}
+
+    {% else %}
+    <div class="card m-2" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">Tour Package</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Pickup: {{tourPackage['pickup']}}</li>
+        {% for tour in tourPackage['tours'] %}
+            <li class="list-group-item">{{tour['tour_id']}}: {{tour['tour_date']}}</li>
+        {% endfor %}
+        <li class="list-group-item tour-price" tour-price="{{tourPackage['package_price']}}">Price: {{tourPackage['package_price']}}</li>
+    </ul>
+    </div>
+  {%endif%}
+
 {%endmacro%}

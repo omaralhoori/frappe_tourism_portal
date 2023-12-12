@@ -14,10 +14,7 @@ def get_context(context):
 	context.max_rooms = get_portal_setting("max_hotel_rooms_selected")
 	context.max_room_adults = get_portal_setting("max_adults_per_room")
 	context.max_room_children = get_portal_setting("max_children_per_room")
-	context.flights = frappe.db.get_single_value("Transfer Options", "regular_flights") or ""
-	context.flights = context.flights.split("\n") if context.flights else []
 	return context
-
 
 def get_locations():
 	locations = {
@@ -37,6 +34,7 @@ def get_locations():
 						'airport' as location_type
 		FROM `tabAirport` as tbl1
 		INNER JOIN `tabArea` as tbl2 ON tbl1.airport_area=tbl2.name
+		WHERE tbl1.portal_disabled=0
 	""", as_dict=True)
 	# areas = [{"location_id": hotel.get('area_id'), "location_name": hotel.get('area_name')} for hotel in hotels]
 	for hotel in hotels:

@@ -1,0 +1,16 @@
+{% extends "templates/website_base.html" %}
+
+{% block page_content %}
+<!--Make sure the form has the autocomplete function switched off:-->
+<form autocomplete="off" action="/action_page.php">
+  <div class="autocomplete" style="width:300px;">
+    <input class="hotel-searcher" type="text" name="myCountry" placeholder="Country">
+    <input class="transfer-searcher" type="text" name="myCountry" placeholder="Country">
+  </div>
+  <input type="submit">
+</form>
+
+<script>
+
+</script>
+{% endblock %}

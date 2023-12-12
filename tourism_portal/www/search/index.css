@@ -83,3 +83,11 @@
 .pax-image img{
     height: 20px;
 }
+
+.transfer-search{
+    display: flex;
+}
+
+.tour-search-card{
+    display: flex;
+}

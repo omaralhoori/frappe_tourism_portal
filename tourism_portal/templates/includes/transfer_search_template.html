@@ -20,10 +20,11 @@
                         <form class="tm-search-form tm-section-pad-2">
                             <div class="form-row tm-search-form-row">
                                 <div class="form-group tm-form-element tm-form-element-2">
-                                    <i class="fa fa-map-marker fa-2x tm-color-primary"></i>
-                                    <label class="">&nbsp;&nbsp; Pick up</label>
+                                    <i class="fa fa-map-marker fa-2x tm-form-element-icon tm-color-primary"></i>
+                                    <input name="pickup" type="text" class="form-control transfer-pickup" onchange="pickupTransferChanged(this)" placeholder="Pick up"/>
+                                    {# <label class="">&nbsp;&nbsp; Pick up</label>
                                     <!-- <input name="city" type="text" class="form-control" id="inputCity" placeholder="Type your destination..."> -->
-                                    <select name="pickup" type="text" class="form-control select2-select">
+                                    <select name="pickup" type="text" class="form-control select2-select" onchange="pickupTransferChanged(this)">
                                         <option value=""></option>
                                          {% for location_type in locations.get('transfers') %}
                                             <optgroup label="{{locations['transfers'][location_type][0].get('area_name')}}">
@@ -37,13 +38,15 @@
                                         {% endfor %}
 
 
-                                    </select>
+                                    </select> #}
                                 </div>
                                 <div class="form-group tm-form-element tm-form-element-2">
-                                    <i class="fa fa-map-marker fa-2x tm-color-primary"></i>
-                                    <label class="">&nbsp;&nbsp; Drop off</label>
+                                    <i class="fa fa-map-marker fa-2x tm-form-element-icon  tm-color-primary"></i>
+                                    <input name="dropoff" type="text" class="form-control transfer-dropoff" onfocusout="dropoffTransferChanged(this)" placeholder="Drop off"/>
+
+                                    {# <label class="">&nbsp;&nbsp; Drop off</label>
                                     <!-- <input name="city" type="text" class="form-control" id="inputCity" placeholder="Type your destination..."> -->
-                                    <select name="dropoff" type="text" class="form-control select2-select">
+                                    <select name="dropoff" type="text" class="form-control select2-select" onchange="dropoffTransferChanged(this)">
                                         <option value=""></option>
                                         {% for location_type in locations.get('transfers') %}
                                             <optgroup label="{{locations['transfers'][location_type][0].get('area_name')}}">
@@ -56,7 +59,7 @@
                                             </optgroup>
                                         {% endfor %}
 
-                                    </select>
+                                    </select> #}
                                 </div>
                                 <div class="form-group tm-form-element tm-form-element-2">
                                     <i class="fa fa-calendar fa-2x tm-form-element-icon"></i>
@@ -115,10 +118,7 @@
                                     </div>
                                      <div class="form-group tm-form-element tm-form-element-2 allowed-flights">
                                      <strong>Allowed Flights</strong>
-                                       <ul>
-                                        {% for flightNo in flights%}
-                                            <li>{{flightNo}}</li>
-                                        {%endfor%}
+                                       <ul class="allowed-flights-list">
                                        </ul>
                                     </div>
                                     <div class="children-container">
@@ -133,10 +133,11 @@
                         <form class="tm-search-form tm-section-pad-2">
                             <div class="form-row tm-search-form-row">
                                 <div class="form-group tm-form-element tm-form-element-2">
-                                    <i class="fa fa-map-marker fa-2x tm-color-primary"></i>
-                                    <label class="">&nbsp;&nbsp; Pick up</label>
+                                     <i class="fa fa-map-marker fa-2x tm-form-element-icon tm-color-primary"></i>
+                                    <input name="pickup" type="text" class="form-control transfer-pickup" onfocusout="pickupTransferChanged(this)" placeholder="Pick up"/>
+                                    {# <label class="">&nbsp;&nbsp; Pick up</label>
                                     <!-- <input name="city" type="text" class="form-control" id="inputCity" placeholder="Type your destination..."> -->
-                                    <select name="pickup" type="text" class="form-control select2-select">
+                                    <select name="pickup" type="text" class="form-control select2-select" onchange="pickupTransferChanged(this)">
                                         <option value=""></option>
                                          {% for location_type in locations.get('transfers') %}
                                             <optgroup label="{{locations['transfers'][location_type][0].get('area_name')}}">
@@ -150,13 +151,15 @@
                                         {% endfor %}
 
 
-                                    </select>
+                                    </select> #}
                                 </div>
                                 <div class="form-group tm-form-element tm-form-element-2">
-                                    <i class="fa fa-map-marker fa-2x tm-color-primary"></i>
-                                    <label class="">&nbsp;&nbsp; Drop off</label>
+                                     <i class="fa fa-map-marker fa-2x tm-form-element-icon  tm-color-primary"></i>
+                                    <input name="dropoff" type="text" class="form-control transfer-dropoff" onfocusout="dropoffTransferChanged(this)" placeholder="Drop off"/>
+
+                                    {# <label class="">&nbsp;&nbsp; Drop off</label>
                                     <!-- <input name="city" type="text" class="form-control" id="inputCity" placeholder="Type your destination..."> -->
-                                    <select name="dropoff" type="text" class="form-control select2-select">
+                                    <select name="dropoff" type="text" class="form-control select2-select" onfocusout="dropoffTransferChanged(this)">
                                         <option value=""></option>
                                         {% for location_type in locations.get('transfers') %}
                                             <optgroup label="{{locations['transfers'][location_type][0].get('area_name')}}">
@@ -169,7 +172,7 @@
                                             </optgroup>
                                         {% endfor %}
 
-                                    </select>
+                                    </select> #}
                                 </div>
                                 <div class="form-group tm-form-element tm-form-element-2">
                                     <i class="fa fa-calendar fa-2x tm-form-element-icon"></i>
@@ -228,10 +231,7 @@
                                     </div>
                                      <div class="form-group tm-form-element tm-form-element-2 allowed-flights">
                                      <strong>Allowed Flights</strong>
-                                       <ul>
-                                        {% for flightNo in flights%}
-                                            <li>{{flightNo}}</li>
-                                        {%endfor%}
+                                        <ul class="allowed-flights-list">
                                        </ul>
                                     </div>
                                     <div class="children-container">

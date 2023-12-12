@@ -25,6 +25,8 @@ function formatResults(allResults){
     var multipleResults = Object.keys(allResults).length > 1;
     var allHotelResults = "";
     for (var resultLabel in allResults){
+        console.log("sssssssssssssssssss")
+        console.log(resultLabel)
         var results = allResults[resultLabel]
         var hotelReuslts = "";
         var accordion = Object.keys(results).length > 1;
@@ -134,6 +136,7 @@ function formatRoomResult(roomResult){
         room-price="${roomResult['results'][0]['price'][0]}"
         onchange="roomSelectChanged(this)"  class="room-select-input"
         contract-id="${roomResult['results'][0]['contract_id']}"
+        price-id="${roomResult['results'][0]['price_id']}"
         hotel=${roomResult['results'][0]['hotel_id']} rooms="${rooms}">
         <option>0</option>
             ${selectRoom}
@@ -181,13 +184,13 @@ function roomSelectChanged(e){
     }
     reservation_details['hotel'][hotel_search]= hotel;
 
-    disable_other_hotel_selects(hotel)
+    disable_other_hotel_selects(hotel, hotel_search)
 
-    calculate_total_hotel(hotel)
+    calculate_total_hotel(hotel, hotel_search)
 }
 
-function disable_other_hotel_selects(hotel){
-    var selects = document.querySelectorAll('.room-select-input');
+function disable_other_hotel_selects(hotel, hotel_search){
+    var selects = document.querySelectorAll(`.hotel-search-results[hotel-result="${hotel_search}"] .room-select-input`);
     for (var select of selects){
         if (select.getAttribute('hotel') == hotel){
             continue;
@@ -200,10 +203,11 @@ function disable_other_hotel_selects(hotel){
 function checkCommonRooms(searchResults){
     var results = {}
     var searchCount = 0;
-    for (var res of searchResults){
+    for (var resultName in searchResults){
         searchCount++;
-        var searchLabel = `Search ${searchCount} Results`
+        var searchLabel = resultName//`Search ${searchCount} Results`
         results[searchLabel] = {}
+        var res = searchResults[resultName];
         for (var hotel in res){
             results[searchLabel][hotel] = []
             for (var roomResults in res[hotel]) {
@@ -367,9 +371,9 @@ function askButtonClicked(e){
     console.log(e)
 }
 
-function calculate_total_hotel(hotel){
+function calculate_total_hotel(hotel, hotel_search){
     var total = 0;
-    var all_selects = document.querySelectorAll(`select.room-select-input[hotel="${hotel}"]`)
+    var all_selects = document.querySelectorAll(`.hotel-search-results[hotel-result="${hotel_search}"] select.room-select-input[hotel="${hotel}"]`)
     for (var selectInput of all_selects){
         total += Number( selectInput.value || 0) * Number(selectInput.getAttribute("room-price"))
     }
@@ -408,11 +412,12 @@ function update_totals(){
 
     $('.grand-total-container').text(`${total.toFixed(2)} USD`)
 }
-
-function confirmButtonClicked(e){
+function getSelectedRooms(){
+    var selected_rooms = {};
+    var all_rooms_selected = false;
     for (var hotelSearch in reservation_details['hotel']){
-        var all_rooms_selected = false;
-        var selected_rooms = {};
+       
+        selected_rooms[hotelSearch] = {};
         // check if all rooms are selected
         var all_selects= document.querySelectorAll(`div[hotel-result="${hotelSearch}"] select.room-select-input[hotel="${reservation_details['hotel'][hotelSearch]}"]`)
         for (var ss of all_selects){
@@ -424,65 +429,91 @@ function confirmButtonClicked(e){
             if (ss.value && ss.value > 0){
                 value = ss.value;
             }
-            if (!selected_rooms[rooms]){
-                selected_rooms[rooms] = {}  
+            if (!selected_rooms[hotelSearch][rooms]){
+                selected_rooms[hotelSearch][rooms] = {}  
             }
-            if (!selected_rooms[rooms][roomId]){
-                selected_rooms[rooms][roomId] = {
+            if (!selected_rooms[hotelSearch][rooms][roomId]){
+                selected_rooms[hotelSearch][rooms][roomId] = {
                     "price": price,
                     "qty": 0,
                     "contractId": contractId
                 } 
             }
     
-            selected_rooms[rooms][roomId]['qty'] += Number(value);
+            selected_rooms[hotelSearch][rooms][roomId]['qty'] += Number(value);
         }
-        console.log(selected_rooms)
     
-        if (Object.keys(selected_rooms).length == 0){
+        if (Object.keys(selected_rooms[hotelSearch]).length == 0){
             all_rooms_selected = false;
+            break;
         }else{
             all_rooms_selected = true;
-            for (var room in selected_rooms){
+            for (var room in selected_rooms[hotelSearch]){
                 var roomCnt = room.split('-').length
                 var selected = 0;
-                for (var ss in selected_rooms[room]){
-                    var cc = selected_rooms[room][ss]['qty']
+                for (var ss in selected_rooms[hotelSearch][room]){
+                    var cc = selected_rooms[hotelSearch][room][ss]['qty']
                     selected += cc
                 }
                 if (selected != roomCnt){
                     all_rooms_selected = false
+                    break
                 }
+            }
+            if (!all_rooms_selected){
+                break;
             }
         }
-
-        console.log(all_rooms_selected)
     }
-    
-    
-    return
-     if (!all_rooms_selected){
+    if (!all_rooms_selected){
         msgprint("Please select all rooms")
+        return false;
      }else{
-        
-        selected_rooms['hotel'] = reservation_details['hotel'];
-        var hotelParams = JSON.stringify(selected_rooms)
-        var data = encodeParamsJson(selected_rooms)
-        var url = "tourism_portal.api.reserve.create_reservation"
-        toggleLoadingIndicator(true);
-        frappe.call({
-            "method": url,
-            args: data,
-            callback: res => {
-                if (res.message){
-                    window.location.href = `/reserve?invoice=${res.message}`
-                }else{
-                    toggleLoadingIndicator(false);
-                    // ToDo show Error message
-                }
-            }
-        })
+        for(var hotelSearch in reservation_details['hotel']){
+            selected_rooms[hotelSearch]['hotel'] = reservation_details['hotel'][hotelSearch];
+        }
+        return selected_rooms;
+     }
+}
+
+function getSelectedTransfers(){   
+    var selectedTransfers = {};
+    var all_transfer_searchs = document.querySelectorAll('.transfer-search')
+    for (var transferSearch of all_transfer_searchs){
+        var transferSearchName = transferSearch.getAttribute('transfer-search')
+        selectedTransfers[transferSearchName] = [];
+        var transferResults = transferSearch.querySelectorAll('.transfer-card')
+        for (var transferResult of transferResults){
+            
+            // selectedTransfers[transferSearchName].push(transferId)
+        }
     }
+    return selectedTransfers
+}
+
+function confirmButtonClicked(e){
+    var selected_rooms = getSelectedRooms();
+   if (!selected_rooms){
+    return
+   }
+   var selected_transfers = getSelectedTransfers();
+    
+    var data = encodeParamsJson(selected_rooms)
+    var url = "tourism_portal.api.reserve.create_reservation"
+    toggleLoadingIndicator(true);
+    frappe.call({
+        "method": url,
+        args: data,
+        callback: res => {
+            if (res.message){
+                window.location.href = `/reserve?invoice=${res.message}`
+            }else{
+                toggleLoadingIndicator(false);
+                // ToDo show Error message
+            }
+        }
+    })
+    
 
 }
 
@@ -490,27 +521,57 @@ function encodeParamsJson(selected_rooms){
     // ToDo Make encode for multiple hotels
     var searchParams = new URLSearchParams(window.location.search)
     var params = JSON.parse(searchParams.get("params"))
-    var rooms = [];
-    for (var room in selected_rooms){
-        var roomNames = room.split('-')
-        for (var ss in selected_rooms[room]){
-            var selectedIndexes = 0;
-            for (var i=0; i<selected_rooms[room][ss]['qty']; i++){
-                var paxInfo = params[0]['paxInfo'].find(obj => obj.roomName == roomNames[selectedIndexes])
-                var encodedRoom = {
-                    "room_name": roomNames[selectedIndexes],
-                    "room_id": ss,
-                    "price": selected_rooms[room][ss]['price'],
-                    "contract_id": selected_rooms[room][ss]['contractId'],
-                    "pax_info": paxInfo,
-                    "check_in": params[0]['checkin'],
-                    "check_out": params[0]['checkout'],
-                    "nationality": params[0]['nationality'],
+    var all_searches = {}
+    var hotelParams = params['hotelParams']
+    for (search in selected_rooms){
+        var rooms = {};
+        for (var room in selected_rooms[search]){
+            var roomNames = room.split('-')
+            for (var ss in selected_rooms[search][room]){
+                var selectedIndexes = 0;
+                for (var i=0; i<selected_rooms[search][room][ss]['qty']; i++){
+                    var paxInfo = hotelParams[search]['paxInfo'].find(obj => obj.roomName == roomNames[selectedIndexes])
+                    var encodedRoom = {
+                        "search_name": search,
+                        "room_name": roomNames[selectedIndexes],
+                        "room_id": ss,
+                        "price": selected_rooms[search][room][ss]['price'],
+                        "contract_id": selected_rooms[search][room][ss]['contractId'],
+                        "pax_info": paxInfo,
+                        "check_in": hotelParams[search]['checkin'],
+                        "check_out": hotelParams[search]['checkout'],
+                        "nationality": hotelParams[search]['nationality'],
+                    }
+                    // ToDo Add multiple contracts
+                    // Add Price id
+                    if (selected_rooms[search][room][ss]['contractId']){
+                        encodedRoom['contracts'] = []
+                        encodedRoom['contracts'].push({
+                            "contract_id": selected_rooms[search][room][ss]['contractId'],
+                            "price": selected_rooms[search][room][ss]['price'],
+                            "check_in": hotelParams[search]['checkin'],
+                            "check_out": hotelParams[search]['checkout'],
+                        })
+                    }
+                    rooms[roomNames[selectedIndexes]] = encodedRoom
+                    selectedIndexes++;
                 }
-                rooms.push(encodedRoom)
-                selectedIndexes++;
             }
         }
+        all_searches[search] = rooms;
     }
-    return {"rooms": rooms};
+    
+    return {"rooms": all_searches, "transfers": [], "tours": []};
 }
+
+// window.addEventListener('beforeunload', function() {
+//    frappe.call({
+//     "method": "tourism_portal.api.reserve.delete_reservation",
+// args:{"invoice": "TX-----ss"},
+//     callback: res => {
+//         if (res.message){
+//             console.log(res.message)
+//         }
+//     }
+//    })
+//   });

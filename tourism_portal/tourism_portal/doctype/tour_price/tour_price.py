@@ -9,8 +9,81 @@ class TourPrice(Document):
 	pass
 
 
+def get_available_tours_and_prices(params):
+	available_tours = []
+	tour_packages = []
+	paxes = params['paxes']
+	for tour in params.get('tours'):
+		params['tour-id'] = params['tours'][tour]
+		params['tour-date'] = tour
+		# VIP Tours Return Price For Each Tour
+		if params['tour-type'] == 'vip':
+			tour_details = get_available_tours(params)
+			if tour_details:
+				available_tours.append({
+					"tour_id": params['tours'][tour],
+					"pickup": tour_details['search_params']['params']['location'],
+					"tour_price": tour_details['transfer_price'],
+					"tour_name": tour_details['search_params']['tour_name'],
+					"tour_description": tour_details['search_params']['tour_description'],
+					"tour_type": "vip",
+					"tour_date": tour
+				})
+		else:
+			tour_details = get_available_tours(params)
+			available_tours.append({
+				"tour_id": params['tours'][tour],
+				"pickup": tour_details['search_params']['params']['location'],
+				"adult_price": tour_details['adult_price'],
+				"children_prices": tour_details['children_prices'],
+				"tour_name": tour_details['search_params']['tour_name'],
+				"tour_description": tour_details['search_params']['tour_description'],
+				"tour_type": "package",
+				"tour_date": tour
+			})
+	available_tours = sorted(available_tours, key=lambda x: x['tour_date'])
+	if params['tour-type'] in ('group-premium', 'group-economic'):
+		for adultPax in range(int(paxes['adults'])):
+			tour_packages.append({
+				"tour_type": "package",
+				"pickup": available_tours[0]['pickup'],
+				"tours": [ {
+					"tour_date": avT['tour_date'], 
+					"tour_id": avT['tour_id'],
+					"pickup": avT['pickup'],
+						"tour_type": avT['tour_type'],
+						"tour_price": avT['adult_price'],
+						} for avT in available_tours],
+				"package_price": 0,
 
-
+			})
+			for tt in tour_packages[-1]['tours']:
+				tour_packages[-1]['package_price'] += tt['tour_price']
+		for childAge in range(int(paxes['children'])):
+			pp = []
+			for avT in available_tours:
+				childPkg = {
+					"tour_date": avT['tour_date'], 
+					"tour_id": avT['tour_id'],
+					"tour_type": avT['tour_type'],
+					"tour_price": avT['children_prices'][childAge],
+					}
+				pp.append(childPkg) 
+			tour_packages.append({
+				"tour_type": "package",
+				"pickup": available_tours[0]['pickup'],
+				"tours": pp,
+				"package_price": 0,
+			})
+			for tt in tour_packages[-1]['tours']:
+				tour_packages[-1]['package_price'] += tt['tour_price']
+		
+		# Group Tours Return Price For Each Package
+	if params['tour-type'] == 'vip':
+		return available_tours
+	else:
+		
+		return tour_packages
 def get_available_tours(params):
 	"""
 	Get available tours based on the given parameters.
@@ -69,12 +142,14 @@ def get_available_tours(params):
 		trasfers.append({
 			"transfer_type": transfer_type,
 			"tour_type": params['tour-type'],
-			"transfer_price": transfer_price
+			"adult_price": transfer_price[0],
+			"children_prices": transfer_price[1]
 		})
 	for transfer in trasfers:
 		transfer['transfer_details'] = get_transfer_details(transfer)
 		transfer['search_params'] = search_params
-	trasfers = sorted(trasfers, key=lambda x: x['transfer_price'])
+	if params['tour-type'] == "vip":
+		trasfers = sorted(trasfers, key=lambda x: x['transfer_price'])
 	return trasfers[0] if len(trasfers) > 0 else None
 
 def get_transfer_details(transfer):
@@ -93,10 +168,10 @@ def get_group_transfer_price(paxes, available_transfers):
 		float: The group transfer price.
 	"""                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
 	if len(available_transfers) == 0:
-		return 0
+		return None
 	child_policy = available_transfers[0]['tour_child_policy']
 	if not child_policy:
-		return 0
+		return None
 	adult_price = available_transfers[0]['group_adult_price']
 	policies = frappe.db.get_all("Transfer Child Price", {"parent": child_policy},
 	 ["child_order", "from_age", "to_age", "adult_price_percentage"], order_by="idx, child_order")
@@ -108,17 +183,17 @@ def get_group_transfer_price(paxes, available_transfers):
 	child_prices = []
 	for child_age in child_ages:
 		for policy in policies:
-			if policy['from_age'] <= child_age <= policy['to_age'] and policy['child_order'] == len(child_prices) + 1:
+			if policy['from_age'] <= int(child_age) <= policy['to_age'] and policy['child_order'] == len(child_prices) + 1:
 				child_prices.append(adult_price * policy['adult_price_percentage'] / 100)
 				break
-			elif policy['from_age'] <= child_age <= policy['to_age'] and policy['child_order'] == 0:
+			elif policy['from_age'] <= int(child_age) <= policy['to_age'] and policy['child_order'] == 0:
 				child_prices.append(adult_price * policy['adult_price_percentage'] / 100)
 				break
 	adults = adults + children - len(child_prices)
 	transfer_price = adult_price * adults
 	for child_price in child_prices:
 		transfer_price += child_price
-	return transfer_price
+	return adult_price, child_prices
 
 def check_available_vip_transfer(available_transfer, paxes):
 	"""
@@ -136,13 +211,13 @@ def check_available_vip_transfer(available_transfer, paxes):
 	available = False
 	
 	for capacity in capacities:
-		adults = paxes['adults']
-		children = paxes['children']
+		adults = int(paxes['adults'])
+		children = int(paxes['children'])
 		child_ages = paxes['child-ages']
 		child_ages.sort()
 		allowed_childs = 0
 		for child_age in child_ages:
-			if child_age <= capacity['max_child_age']:
+			if int(child_age) <= capacity['max_child_age']:
 				allowed_childs += 1
 		adult_childs = - (allowed_childs - children)
 		adults = adults + adult_childs
@@ -167,34 +242,32 @@ def check_tour_params(params):
 	if not params.get('tour-type'):
 		frappe.throw("Please enter tour type")
 
-def apply_tour_discount(tours, total_nights=None):
+def apply_tour_discount(tourPackages, total_nights=None):
 	tour_discount = frappe.get_single("Tour Discount")
 	tour_total_price = 0
 	new_tour_total_price = 0
 	if total_nights:
 		for free_tour in tour_discount.free_tour:
 			if free_tour.min_nights <= total_nights:
-				for tour in tours:
-					if tour == free_tour.tour_type:
-						tours[tour]['transfer_price'] = calculate_discount_price(tours[tour]['transfer_price'], "Percent", free_tour.discount)
-						break
-	for tour in tours:
-		tour_total_price += tours[tour]['transfer_price']
+				for package in tourPackages:
+					updatePackage = False
+					for tour in package['tours']:
+						if tour['tour_id'] == free_tour.tour_type:
+							tour['tour_price'] = calculate_discount_price(tour['tour_price'], "Percent", free_tour.discount)
+							updatePackage = True
+							break
+
+					if updatePackage:
+						package['package_price'] = 0
+						for tour in package['tours']:
+							package['package_price'] += tour['tour_price']
+							
 	new_tour_total_price = tour_total_price
 	pacakge_discounts = tour_discount.package_discount
 	pacakge_discounts.sort(key=lambda x: x.min_tour_count, reverse=True)
-	for package_discount in pacakge_discounts:
-		if package_discount.min_tour_count <= len(tours):
-			new_tour_total_price = calculate_discount_price(tour_total_price, package_discount.discount_type, package_discount.discount)
-			break
-	total_discount = tour_total_price - new_tour_total_price
-	for tour in tours:
-		if tours[tour]['transfer_price'] - total_discount > 0:
-			tours[tour]['transfer_price'] = tours[tour]['transfer_price'] - total_discount
-			total_discount = 0
-		elif tours[tour]['transfer_price'] - total_discount <= 0:
-			total_discount -= tours[tour]['transfer_price']
-			tours[tour]['transfer_price'] = 0
-		if total_discount == 0:
-			break
-	return tours
+	for package in tourPackages:
+		for package_discount in pacakge_discounts:
+			if package_discount.min_tour_count <= len(package.get('tours')):
+				package['package_price'] = calculate_discount_price(package.get('package_price'), package_discount.discount_type, package_discount.discount)
+				break
+	return tourPackages
