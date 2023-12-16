@@ -42,11 +42,61 @@ startTimer();
 
 
 function confirmReservationButtonClicked(e){
-  var rooms = document.querySelectorAll(".hotel_room_container")
   var customerName = document.querySelector('input[name="customer-name"]').value
   var customerEmail = document.querySelector('input[name="email"]').value
   var customerMobile = document.querySelector('input[name="phone-number"]').value
-  roomsInfo = {}
+  var roomsInfo = getRoomsInfo()
+  var toursInfo = getToursInfo()
+  var searchParams = new URLSearchParams(window.location.search)
+  var invoice = searchParams.get("invoice")
+
+  frappe.call({
+    method: "tourism_portal.api.reserve.complete_reservation",
+    args: {
+      sales_invoice: invoice,
+      rooms: roomsInfo,
+      tours: toursInfo,
+      customer_name: customerName,
+      customer_email: customerEmail,
+      customer_mobile_no: customerMobile
+    },
+    callback: (res) =>{
+      if(res.message && res.message.success_key){
+        window.location.reload()
+      }else{
+        msgprint(res.message.message)
+      }
+    }
+  })
+}
+
+function getToursInfo(){
+  var tours = document.querySelectorAll(".tour-search-container")
+  var toursInfo = {};
+  for (var tour of tours){
+    var paxes = tour.querySelectorAll(".pax-container")
+    toursInfo[tour.getAttribute('search-name')] = {}
+    for (var pax of paxes){
+      var salutInput = pax.querySelector('select[name="pax-salut"]');
+      var salut = ""
+      if (salutInput){
+        // ToDo show Error if empty
+        salut = salutInput.value
+      }
+      toursInfo[tour.getAttribute('search-name')][pax.getAttribute('row-id')] = {
+        "salut": salut,
+        "guest_name": pax.querySelector('input[name="pax-name"]').value,
+        "row_id": pax.getAttribute("row-id")
+      }
+    }
+  }
+  return toursInfo;
+}
+
+function getRoomsInfo(){
+  var rooms = document.querySelectorAll(".hotel_room_container")
+
+  var roomsInfo = {};
   for (var room of rooms){
     var paxes = room.querySelectorAll(".pax-container");
     roomsInfo[room.getAttribute('row-id')] = {}
@@ -74,26 +124,7 @@ function confirmReservationButtonClicked(e){
       })
     }
   }
-  var searchParams = new URLSearchParams(window.location.search)
-  var invoice = searchParams.get("invoice")
-  console.log(invoice)
-  frappe.call({
-    method: "tourism_portal.api.reserve.complete_reservation",
-    args: {
-      sales_invoice: invoice,
-      rooms: roomsInfo,
-      customer_name: customerName,
-      customer_email: customerEmail,
-      customer_mobile_no: customerMobile
-    },
-    callback: (res) =>{
-      if(res.message && res.message.success_key){
-        window.location.reload()
-      }else{
-        msgprint(res.message.message)
-      }
-    }
-  })
+  return roomsInfo;
 }
 
 function roomExtraChanged(e){

@@ -58,6 +58,7 @@ def get_invoice_data(sales_invoice):
     company = frappe.db.get_value("User", frappe.session.user, "company")
     invoice = frappe.get_doc("Sales Invoice", {"name": sales_invoice, "company": company})
     rooms = {}
+    tours = {}
     for room in invoice.rooms:
         if not rooms.get(room.get('hotel_search')):
             rooms[room.get('hotel_search')] = {}
@@ -114,14 +115,61 @@ def get_invoice_data(sales_invoice):
         hotel_room['child_paxes'] = child_paxes
         hotel_room['extras'] = extras
         rooms[room.get('hotel_search')][room.get('hotel')]['rooms'].append(hotel_room)
+    for tour in invoice.tours:
+        if not tours.get(tour.get('search_name')):
+            tours[tour.get('search_name')] = {}
+        tours[tour.get('search_name')]['search_name'] = tour.get('search_name')
+        tours[tour.get('search_name')]['check_in'] = tour.get('from_date')
+        tours[tour.get('search_name')]['check_out'] = tour.get('to_date')
+        tours[tour.get('search_name')]['pickup'] = tour.get('pick_up')
+        tours[tour.get('search_name')]['pickup_type'] = tour.get('pick_up_type')
+        tours[tour.get('search_name')]['tours'] = []
+        tours[tour.get('search_name')]['total_price'] = tour.get('tour_price')
+        tours[tour.get('search_name')]['adults'] = tour.get('adults')
+        tours[tour.get('search_name')]['children'] = tour.get('children')
+        tours[tour.get('search_name')]['tour_type'] = tour.get('tour_type')
+        for tour_type in invoice.tour_types:
+            if tour_type.search_name == tour.get('search_name'):
+                tour_details = {
+                    "tour_id": tour_type.tour_name,
+                    "tour_name": frappe.db.get_value("Tour Type", tour_type.tour_name, "tour_name", cache=True),
+                    "tour_type": tour_type.tour_type,
+                    "tour_date": tour_type.tour_date,
+                    "package": tour_type.package_id,
+                    "tour_price": tour_type.tour_price,
+                }
+                tours[tour_type.search_name]['tours'].append(tour_details)
+        adult_paxes = []
+        child_paxes = []
+        for tour_pax in invoice.tour_pax_info:
+            if tour_pax.search_name == tour.get('search_name'):
+                if tour_pax.guest_type == 'Adult':
+                    adult_paxes.append( {
+                        "row_id": tour_pax.name,
+                        "guest_salutation": tour_pax.guest_salutation,
+                        "guest_name": tour_pax.guest_name,
+                        "guest_type": tour_pax.guest_type,
+                        "guest_age": tour_pax.guest_age
+                    })
+                if tour_pax.guest_type == 'Child':
+                    child_paxes.append({
+                        "row_id": tour_pax.name,
+                        "guest_name": tour_pax.guest_name,
+                        "guest_type": tour_pax.guest_type,
+                        "guest_age": tour_pax.guest_age
+                    })
+        tours[tour.get('search_name')]['adult_paxes'] = adult_paxes
+        tours[tour.get('search_name')]['child_paxes'] = child_paxes
     return {
         "invoice_id": invoice.name,
         "session_expires": invoice.session_expires,
         "post_date": invoice.post_date,
         "post_time": invoice.post_time,
         "hotel_fees": invoice.hotel_fees,
+        "tour_fees": invoice.tour_fees,
         "grand_total": invoice.grand_total,
         "rooms": rooms,
+        "tours": tours,
         "docstatus": invoice.docstatus,
         "sales_invoice": sales_invoice, 
         "customer_name": invoice.customer_name,
@@ -142,6 +190,7 @@ def get_all_invoices(start=0, limit=20):
 def complete_reservation():
     invoice = frappe.get_doc("Sales Invoice", {"name": frappe.form_dict.sales_invoice, "customer": frappe.session.user})
     rooms = json.loads(frappe.form_dict.rooms)
+    tours = json.loads(frappe.form_dict.tours)
     invoice.room_extras = []
     for roomRowId in rooms:
         extras = rooms[roomRowId].pop('extras')
@@ -157,6 +206,14 @@ def complete_reservation():
             extra_row.extra_price = float(extra['extra_price'])
             extra_row.room_row_id = roomRowId
             # ToDo make extra for amount and percentage
+    for searchName in tours:
+        tourPax = tours[searchName]
+        for paxRowId in tourPax:
+            for pax in invoice.tour_pax_info:
+                if pax.name == paxRowId:
+                    pax.guest_salutation = tourPax[paxRowId]['salut']
+                    pax.guest_name = tourPax[paxRowId]['guest_name']
+                    break
     invoice.customer_name = frappe.form_dict.customer_name
     invoice.customer_email = frappe.form_dict.customer_email
     invoice.customer_mobile_no = frappe.form_dict.customer_mobile_no

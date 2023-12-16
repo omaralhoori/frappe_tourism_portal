@@ -18,6 +18,7 @@ class SalesInvoice(Document):
 	def on_update(self):
 		self.calculate_total_hotel_fees()
 		self.calculate_total_transfer_fees()
+		self.calculate_total_tour_fees()
 		self.calculate_total_fees()
 	def schedule_tours(self):
 		all_tours = {}
@@ -87,11 +88,23 @@ class SalesInvoice(Document):
 
 		self.transfer_fees = total
 		self.db_set('transfer_fees', total)
+	def calculate_total_tour_fees(self):
+		total = 0
+		for tour in self.tours:
+			# for room_extra in self.room_extras:
+			# 	if room_extra.room_row_id == room.name:
+			# 		total  += room_extra.extra_price
+					# ToDo make for percentage too
+			total += tour.tour_price
+
+		self.tour_fees = total
+		self.db_set('tour_fees', total)
 	
 	def calculate_total_fees(self):
 		total = 0
 		total += self.hotel_fees
 		total += self.transfer_fees
+		total += self.tour_fees
 		self.grand_total = total
 		self.db_set('grand_total', total)
 	def on_trash(self):

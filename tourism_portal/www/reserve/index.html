@@ -81,6 +81,20 @@
         {%endfor%}
         </div>
         {% endfor %}
+        {% for tour_rsv in invoice_details.get('tours') %}
+        {% set tourSearch = invoice_details['tours'][tour_rsv] %}
+        
+        <div class="reservation_details mt-4 card p-3 tour-search-container" search-name="{{tour_rsv}}">
+            {{render_tour_details(tourSearch)}}
+            <div class="row">
+                {% for tour in tourSearch['tours'] %}
+                    {{render_tour_card(tour)}}
+                {% endfor %}
+            </div>
+                
+            {{render_tour_pax(tourSearch['adult_paxes'], tourSearch['child_paxes'])}}
+        </div>
+        {% endfor %}
         {% if invoice_details.docstatus == 0%}
         <div class="mt-4 " >
             <button onclick="confirmReservationButtonClicked(this)" style="font-size: .8em;" class="btn btn-primary tm-btn-search p-2">Continue</button>
@@ -97,7 +111,7 @@
         {%for hotel_rsv in invoice_details.get('rooms') %}
         {{ hotel_details_card(invoice_details['rooms'][hotel_rsv]['details'], invoice_details['rooms'][hotel_rsv]['booking_details'], invoice_details['rooms'][hotel_rsv]['rooms']) }}
         {% endfor %}
-        {{total_card(invoice_details.hotel_fees,invoice_details.grand_total)}}        
+        {{total_card(invoice_details.hotel_fees,invoice_details.tour_fees,invoice_details.grand_total)}}        
     </div>
 </div>
 {% endblock %}
@@ -124,13 +138,17 @@
   </div>
 {% endmacro %}
 
-{% macro total_card(hotel_fees, total_fees) %}
+{% macro total_card(hotel_fees,tour_fees, total_fees) %}
 <div class="card text-dark bg-light mb-3 mt-3" style="max-width: 18rem; width: 100%;">
     <div class="card-header">Fees</div>
     <ul class="list-group list-group-flush">
         <li class="list-group-item"><div class="d-flex justify-content-between">
             <div><strong>Hotel fees</strong></div>
             <div><strong>USD <span id="hotel_fees" total="{{hotel_fees}}">{{frappe.utils.fmt_money(hotel_fees)}}</span></strong></div>
+        </div></li>
+        <li class="list-group-item"><div class="d-flex justify-content-between">
+            <div><strong>Tour fees</strong></div>
+            <div><strong>USD <span id="tour_fees" total="{{tour_fees}}">{{frappe.utils.fmt_money(tour_fees)}}</span></strong></div>
         </div></li>
         <li class="list-group-item"><div class="d-flex justify-content-between">
             <div><strong>Total fees</strong></div>
@@ -154,4 +172,61 @@
     <input class="form-check-input me-1 extra-price-input" {% if disable == 1 %} checked disabled {% endif %} onchange="roomExtraChanged(this)" type="checkbox" room-name="{{room_name}}" extra-price="{{extra_price}}" value="{{extra_name}}">
         {{extra_name}} +{{extra_price}}$
     </label>
+{% endmacro %}
+
+{% macro render_tour_details(tourSearch) %}
+<div class="row">
+    <div class="col-lg-4"><strong>{{tourSearch['search_name']}}</strong></div>
+    <div class="col-lg-4">Tour Date: {{tourSearch['check_in']}} - {{tourSearch['check_out']}}</div>
+    <div class="col-lg-4">PickUp: {{tourSearch['pickup']}}</div>
+    <div class="col-lg-4">Adults: {{tourSearch['adults']}}</div>
+    <div class="col-lg-4">Children: {{tourSearch['children']}}</div>
+</div>
+{% endmacro %}
+
+{% macro render_tour_card(tour) %}
+<div class="card text-dark bg-light m-2" style="min-width: 200px; width: 28%;">
+    <div class="card-header"><strong>{{tour['tour_name']}}</strong></div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><div class="d-flex justify-content-between">
+            <div><strong>Tour Date</strong></div>
+            <div><strong>{{tour['tour_date'] or ''}}</strong></div>
+        </div></li>
+      </ul>
+  </div>
+{% endmacro %}
+
+{% macro render_tour_pax(adult_paxes, child_paxes)%}
+<div class="tm-search-form row p-2">
+<div class="col-lg-4"><strong>Guests</strong></div>
+      {% for adult in adult_paxes %}
+            <div class="form-row tm-search-form-row pax-container" row-id="{{adult.row_id}}">
+                    <div class="form-group tm-form-element tm-form-element-2">
+                        <select class="form-control  tm-select " name="pax-salut">
+                            <option value="">Salutation</option>
+                            <option value="Mr" {%if adult.guest_salutation == 'Mr'%} selected{%endif %}>Mr</option>
+                            <option value="Ms" {%if adult.guest_salutation == 'Ms'%} selected{%endif %}>Ms</option>
+                        </select>
+                        <i class="fa fa-2x fa-check tm-form-element-icon"></i>
+                    </div>
+        
+                    <div class="form-group tm-form-element tm-form-element-50">
+                        <input class="form-control" placeholder="Guest Name" name="pax-name" value="{{adult.guest_name or ''}}" />
+                        <i class="fa fa-2x fa-user tm-form-element-icon"></i>
+                    </div>
+            </div>
+            {% endfor %}
+            {% for child in child_paxes %}
+            <div class="form-row tm-search-form-row pax-container" row-id="{{child.row_id}}">
+                    <div class="form-group tm-form-element tm-form-element-2">
+                        <label for="">Child Age {{child.guest_age}}</label>
+                    </div>
+        
+                    <div class="form-group tm-form-element tm-form-element-50">
+                        <input class="form-control" placeholder="Child Name" name="pax-name" value="{{child.guest_name or ''}}"/>
+                        <i class="fa fa-x fa-user tm-form-element-icon"></i>
+                    </div>
+            </div>
+            {% endfor %}
+            </div>
 {% endmacro %}
