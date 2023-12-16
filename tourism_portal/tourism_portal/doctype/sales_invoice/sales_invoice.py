@@ -7,17 +7,53 @@ from frappe import _
 from tourism_portal.tourism_portal.doctype.company_payment.company_payment import add_company_refund, create_payment
 from tourism_portal.tourism_portal.doctype.room_availability.room_availability import free_room, reserve_room
 from tourism_portal.tourism_portal.doctype.sales_invoice.reserve import add_transfers_to_invoice
+from tourism_portal.tourism_portal.doctype.tour_schedule_order.tour_schedule_order import schedule_tours_dates
 class SalesInvoice(Document):
 	def after_insert(self):
 		session_expires_in = frappe.db.get_single_value("Tourism Portal Settings", "session_expires_in")
 		session_expires = frappe.utils.now_datetime()+frappe.utils.datetime.timedelta(seconds=int(session_expires_in))
 		self.db_set('session_expires',session_expires)
 		self.reserve_rooms()
+		self.schedule_tours()
 	def on_update(self):
 		self.calculate_total_hotel_fees()
 		self.calculate_total_transfer_fees()
 		self.calculate_total_fees()
+	def schedule_tours(self):
+		all_tours = {}
+		for tour_search in self.tours:
+			search_name = tour_search.search_name
+			check_in = tour_search.from_date
+			check_out = tour_search.to_date
+			tour_type = tour_search.tour_type
+			if not all_tours.get(search_name):
+				all_tours[search_name] = {
+					"check_in": check_in,
+					"check_out": check_out,
+					"tours": [],
+					"tour_type": tour_type,
+					"pickup": tour_search.pick_up,
+					"pickup_type": tour_search.pick_up_type,
+				}
 
+		for tour in self.tour_types:
+			search_name = tour.search_name
+			all_tours[search_name]['tours'].append({
+				"tour_type": tour.tour_type,
+				"tour": tour.tour_name,
+				"tour_date": tour.tour_date,
+				"package": tour.package_id,
+			})
+		for search_name in all_tours:
+			tour_search = all_tours[search_name]
+			schedule_dates = schedule_tours_dates( tour_search)
+			for sDate in schedule_dates:
+				for tour in self.tour_types:
+					if tour.search_name == search_name and tour.tour_name == sDate['tour']:
+						print("Setting tour date")
+						tour.tour_date = sDate['date']
+						tour.db_set('tour_date', sDate['date'])
+						break
 	def reserve_rooms(self):
 		for room in self.room_price:
 			if room.contract_id:
@@ -179,3 +215,11 @@ def refund_room(cancellation_policy, total_price, check_in, check_out):
 			refund = total_price - refund
 	if not selected_cncl: selected_cncl = {}
 	return refund
+
+
+@frappe.whitelist()
+def test_schedule(invoice):
+	invoice = frappe.get_doc("Sales Invoice", invoice)
+	invoice.schedule_tours()
+	invoice.save(ignore_permissions=True)
+	frappe.db.commit()

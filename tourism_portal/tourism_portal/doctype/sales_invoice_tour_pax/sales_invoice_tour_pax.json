@@ -1,0 +1,62 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-14 13:49:46.996782",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "search_name",
+  "guest_salutation",
+  "guest_name",
+  "guest_type",
+  "guest_age"
+ ],
+ "fields": [
+  {
+   "fieldname": "search_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Search Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "guest_salutation",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Guest Salutation",
+   "options": "\nMr\nMs"
+  },
+  {
+   "fieldname": "guest_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Guest Name"
+  },
+  {
+   "fieldname": "guest_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Guest Type",
+   "options": "Adult\nChild",
+   "reqd": 1
+  },
+  {
+   "fieldname": "guest_age",
+   "fieldtype": "Int",
+   "label": "Guest Age"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-12-15 12:09:49.457725",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Sales Invoice Tour Pax",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

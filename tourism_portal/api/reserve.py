@@ -1,7 +1,7 @@
 import json
 import frappe
 from frappe import _
-from tourism_portal.tourism_portal.doctype.sales_invoice.reserve import add_rooms_to_invoice, add_transfers_to_invoice
+from tourism_portal.tourism_portal.doctype.sales_invoice.reserve import add_rooms_to_invoice, add_tours_to_invoice, add_transfers_to_invoice
 
 """
 rooms -> [{
@@ -39,9 +39,14 @@ def create_reservation():
         transfers = json.loads(params.transfers)
     else:
         transfers = params.transfers
+    if type(params.tours) == str:
+        tours = json.loads(params.tours)
+    else:
+        tours = params.tours
     print(rooms)
     add_rooms_to_invoice(invoice, rooms)
     add_transfers_to_invoice(invoice, transfers)
+    add_tours_to_invoice(invoice, tours)
     
     invoice.insert(ignore_permissions=True)
     return invoice.name

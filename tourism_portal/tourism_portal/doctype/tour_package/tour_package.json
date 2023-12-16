@@ -1,0 +1,135 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:package_code",
+ "creation": "2023-12-12 15:16:02.895410",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "disabled",
+  "is_premium",
+  "section_break_b2mzx",
+  "package_code",
+  "package_name",
+  "package_city",
+  "column_break_wmlf1",
+  "package_price",
+  "min_days",
+  "tour_child_policy",
+  "section_break_wer4l",
+  "description",
+  "section_break_zczoc",
+  "tours"
+ ],
+ "fields": [
+  {
+   "fieldname": "package_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Package Code",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "package_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Package Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "package_city",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Package City",
+   "options": "City",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tours",
+   "fieldtype": "Table",
+   "label": "Tours",
+   "options": "Tour Package Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "package_price",
+   "fieldtype": "Currency",
+   "label": "Package Price",
+   "reqd": 1
+  },
+  {
+   "fieldname": "min_days",
+   "fieldtype": "Int",
+   "label": "Min Days",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_wmlf1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_zczoc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_wer4l",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
+  },
+  {
+   "fieldname": "section_break_b2mzx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "tour_child_policy",
+   "fieldtype": "Link",
+   "label": "Tour Child Policy",
+   "options": "Transfer Child Policy",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_premium",
+   "fieldtype": "Check",
+   "label": "Premium Package"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-12-16 11:17:07.921959",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Tour Package",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

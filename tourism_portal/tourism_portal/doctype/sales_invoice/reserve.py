@@ -82,3 +82,58 @@ def add_transfers_to_invoice(invoice, transfers):
                 guest.transfer_search = searchName
                 guest.transfer_name = transferName
                 guest.guest_age = int(child_age)
+    
+
+def add_tours_to_invoice(invoice, tours):
+    for searchName in tours:
+        total_price = 0
+        search = tours[searchName]
+        tour_search = invoice.append("tours")
+        tour_search.search_name = searchName
+        tour_search.pick_up = search['pickup']
+        tour_search.pick_up_type = search['pickup_type']
+        tour_search.from_date = search['check_in']
+        tour_search.to_date = search['check_out']
+        tour_search.tour_type = search['tour_type']
+        tour_search.adults = int(search['paxes'].get('adults'))
+        tour_search.children = int(search['paxes'].get('children'))
+        for selected_tour in search['selected_tours']:
+            total_price += float(selected_tour['price'])
+            tour_type = get_tour_doctype(search['tour_type'])
+            if tour_type == "single":
+                for tour in selected_tour['tours']:
+                    invoice_tour = invoice.append("tour_types")
+                    invoice_tour.search_name = searchName
+                    invoice_tour.tour_type = tour_type
+                    invoice_tour.tour_name = tour
+                    if search['tour_type'] == 'vip':
+                        invoice_tour.tour_price = float(selected_tour['price'])
+            else:
+                for package in selected_tour['tours']:
+                    package_tours = get_package_tours(package)
+                    for package_tour in package_tours:
+                        invoice_tour = invoice.append("tour_types")
+                        invoice_tour.search_name = searchName
+                        invoice_tour.tour_type = tour_type
+                        invoice_tour.tour_name = package_tour['tour']
+                        invoice_tour.package_id = package
+        for i in range(int(search['paxes'].get('adults'))):
+                guest = invoice.append("tour_pax_info")
+                guest.search_name = searchName
+                guest.guest_type = 'Adult'
+        for child_age in search['paxes'].get('child-ages'):
+            guest = invoice.append("tour_pax_info")
+            guest.guest_type = 'Child'
+            guest.search_name = searchName
+            guest.guest_age = int(child_age)
+        tour_search.tour_price = total_price
+
+def get_tour_doctype(tour_type):
+    doctype = "single"
+    if tour_type == "package":
+        doctype = "package"
+
+    return doctype
+
+def get_package_tours(package):
+    return frappe.db.get_all("Tour Package Item", {"parent": package}, ["tour"])

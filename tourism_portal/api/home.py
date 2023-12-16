@@ -51,22 +51,36 @@ def get_available_tours():
 		params = json.loads(params)
 	where_stmt = ""
 	if params.get('tour-type') == 'vip':
-		where_stmt = ""
+		where_stmt = "AND tbl1.tour_type='VIP'"
 	elif params.get('tour-type') == 'group-premium':
-		where_stmt = "AND tbl1.premium_tour=1 AND tbl1.group_tour=1"
+		where_stmt = "AND tbl1.tour_type='Premium'"
 	elif params.get('tour-type') == 'group-economic':
-		where_stmt = "AND tbl1.economic_tour=1 AND tbl1.group_tour=1"
+		where_stmt = "AND tbl1.tour_type='Economic'"
 	city = get_location_city(params['location-type'], params['location'])
 	postal_code = get_location_postal_code(params['location-type'], params['location'])
-	if params.get('tour-type') in ['group-premium', 'group-economic']:
+	total_days = frappe.utils.date_diff( params['checkout'], params['checkin'],) + 1
+	if params.get('tour-type') in ['group-premium', 'group-economic', 'package']:
 		if not frappe.db.get_value("Postal Code", postal_code, 'regular_transport'):
 			return {}
-	tours = frappe.db.sql("""
-			   SELECT tbl1.name as tour_id, tbl1.tour_name as tour_name, 
-			   tbl1.tour_description as tour_description, tbl2.schedule_date as tour_date
-			   FROM `tabTour Schedule` as tbl2
-			   INNER JOIN `tabTour Type` as tbl1 ON tbl2.tour_type=tbl1.name
-			   WHERE tbl1.disabled=0 AND tbl2.city=%(city)s AND tbl2.schedule_date between %(from_date)s AND %(to_date)s {where_stmt}
+	# tours = frappe.db.sql("""
+	# 		   SELECT tbl1.name as tour_id, tbl1.tour_name as tour_name, 
+	# 		   tbl1.tour_description as tour_description, tbl2.schedule_date as tour_date
+	# 		   FROM `tabTour Schedule` as tbl2
+	# 		   INNER JOIN `tabTour Type` as tbl1 ON tbl2.tour_type=tbl1.name
+	# 		   WHERE tbl1.disabled=0 AND tbl2.city=%(city)s AND tbl2.schedule_date between %(from_date)s AND %(to_date)s {where_stmt}
+	# 		   """.format(where_stmt=where_stmt), {"city": city, "from_date": params['checkin'], "to_date": params['checkout']}, as_dict=True)
+	pacages, tours = [], []
+	if params.get('tour-type') == 'package':
+		pacages = frappe.db.sql("""
+	SELECT tbl1.name as tour_id, tbl1.package_name as tour_name, tbl1.description as tour_description, tbl1.min_days as tour_time
+						  FROM `tabTour Package` as tbl1
+	WHERE tbl1.disabled=0 AND tbl1.package_city=%(city)s AND tbl1.min_days<={total_days}
+	""".format(total_days=total_days), {"city": city}, as_dict=True)
+	else:
+		tours = frappe.db.sql("""
+			   SELECT tbl1.name as tour_id, tbl1.tour_name as tour_name, tbl1.tour_description as tour_description, tbl1.tour_time as tour_time
+			   FROM `tabTour Type` as tbl1
+			   WHERE tbl1.disabled=0 AND tbl1.tour_pickup_city=%(city)s {where_stmt}
 			   """.format(where_stmt=where_stmt), {"city": city, "from_date": params['checkin'], "to_date": params['checkout']}, as_dict=True)
 	available_tours = {}
 	for tour in tours:
@@ -75,12 +89,19 @@ def get_available_tours():
 			available_tours[tour.get('tour_id')]['tour_id'] = tour.get('tour_id')
 			available_tours[tour.get('tour_id')]['tour_name'] = tour.get('tour_name')
 			available_tours[tour.get('tour_id')]['tour_description'] = tour.get('tour_description')
+			available_tours[tour.get('tour_id')]['tour_time'] = tour.get('tour_time')
 			available_tours[tour.get('tour_id')]['tour_dates'] = []
-		available_tours[tour.get('tour_id')]['tour_dates'].append(tour.get('tour_date'))
+	for tour in pacages:
+		if not available_tours.get(tour.get('tour_id')):
+			available_tours[tour.get('tour_id')] = {}
+			available_tours[tour.get('tour_id')]['tour_id'] = tour.get('tour_id')
+			available_tours[tour.get('tour_id')]['tour_name'] = tour.get('tour_name')
+			available_tours[tour.get('tour_id')]['tour_description'] = tour.get('tour_description')
+			available_tours[tour.get('tour_id')]['tour_time'] = tour.get('tour_time')
+			available_tours[tour.get('tour_id')]['tour_dates'] = []
 	return available_tours
 
 @frappe.whitelist()
 def get_regular_flights(location, route):
 	flights = frappe.db.get_all("Flight", {route: location, "is_regular": 1}, ['name'])
-	print(flights)
 	return flights

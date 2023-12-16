@@ -14,35 +14,35 @@ def get_available_tours_and_prices(params):
 	tour_packages = []
 	paxes = params['paxes']
 	for tour in params.get('tours'):
-		params['tour-id'] = params['tours'][tour]
-		params['tour-date'] = tour
+		params['tour-id'] = tour#params['tours'][tour]
+		params['tour-date'] = params['checkin']
 		# VIP Tours Return Price For Each Tour
 		if params['tour-type'] == 'vip':
 			tour_details = get_available_tours(params)
 			if tour_details:
 				available_tours.append({
-					"tour_id": params['tours'][tour],
+					"tour_id": tour,#params['tours'][tour],
 					"pickup": tour_details['search_params']['params']['location'],
 					"tour_price": tour_details['transfer_price'],
 					"tour_name": tour_details['search_params']['tour_name'],
 					"tour_description": tour_details['search_params']['tour_description'],
 					"tour_type": "vip",
-					"tour_date": tour
+					"tour_date": params['tour-date']
 				})
 		else:
 			tour_details = get_available_tours(params)
 			available_tours.append({
-				"tour_id": params['tours'][tour],
+				"tour_id":tour,# params['tours'][tour],
 				"pickup": tour_details['search_params']['params']['location'],
 				"adult_price": tour_details['adult_price'],
 				"children_prices": tour_details['children_prices'],
 				"tour_name": tour_details['search_params']['tour_name'],
 				"tour_description": tour_details['search_params']['tour_description'],
 				"tour_type": "package",
-				"tour_date": tour
+				"tour_date": params['tour-date']
 			})
 	available_tours = sorted(available_tours, key=lambda x: x['tour_date'])
-	if params['tour-type'] in ('group-premium', 'group-economic'):
+	if params['tour-type'] in ('group-premium', 'group-economic', 'package'):
 		for adultPax in range(int(paxes['adults'])):
 			tour_packages.append({
 				"tour_type": "package",
@@ -51,6 +51,8 @@ def get_available_tours_and_prices(params):
 					"tour_date": avT['tour_date'], 
 					"tour_id": avT['tour_id'],
 					"pickup": avT['pickup'],
+					"tour_name": avT['tour_name'],
+					"tour_description": avT['tour_description'],
 						"tour_type": avT['tour_type'],
 						"tour_price": avT['adult_price'],
 						} for avT in available_tours],
@@ -67,6 +69,8 @@ def get_available_tours_and_prices(params):
 					"tour_id": avT['tour_id'],
 					"tour_type": avT['tour_type'],
 					"tour_price": avT['children_prices'][childAge],
+					"tour_name": avT['tour_name'],
+					"tour_description": avT['tour_description'],
 					}
 				pp.append(childPkg) 
 			tour_packages.append({
@@ -103,25 +107,35 @@ def get_available_tours(params):
 		search_columns = "vip.transfer_type, vip.transfer_price"
 		join_table = "INNER JOIN `tabVIP Transfer Price` vip ON vip.parent=tp.name and vip.parenttype='Tour VIP Price'"
 		parenttype = "Tour VIP Price"
-		where_stmt = "AND tp.pickup_postal_code=%(from_postal_code)s"
+		where_stmt = "WHERE tour_type=%(tour_id)s AND tp.pickup_postal_code=%(from_postal_code)s"
 	elif params['tour-type'] == "group-premium":
 		search_columns = "tp.adult_premium_price as group_adult_price, tp.tour_child_policy"
 		join_table = ""
 		parenttype = "Tour Price"
+		where_stmt = "WHERE tour_type=%(tour_id)s"
 	elif params['tour-type'] == "group-economic":
 		search_columns = "tp.adult_economic_price as group_adult_price, tp.tour_child_policy"
 		join_table = ""
 		parenttype = "Tour Price"
+		where_stmt = "WHERE tour_type=%(tour_id)s"
+	elif params['tour-type'] == "package":
+		search_columns = "tp.package_price as group_adult_price, tp.tour_child_policy"
+		join_table = ""
+		parenttype = "Tour Package"
+		where_stmt = "WHERE tp.name=%(tour_id)s"
 	available_transfers = frappe.db.sql("""
 	SELECT {search_columns} FROM `tab{parenttype}` tp
 	{join_table}
-	WHERE tour_type=%(tour_id)s {where_stmt}
+	{where_stmt}
 	""".format(where_stmt=where_stmt, search_columns=search_columns, join_table=join_table, parenttype=parenttype),
 	{"from_postal_code": from_postal_code, "tour_id": tour_id,
 	 "tour_date": params['tour-date']}, as_dict=True)    
 	transfer_price = 0
 	trasfers = []
-	tour_data = frappe.db.get_value("Tour Type", tour_id, ["tour_name", "tour_description" ])
+	if params['tour-type'] == "package":
+		tour_data = frappe.db.get_value("Tour Package", tour_id, ["package_name", "description" ])
+	else:
+		tour_data = frappe.db.get_value("Tour Type", tour_id, ["tour_name", "tour_description" ])
 	search_params = {
 		"params": params,
 		"from_postal_code": from_postal_code,
@@ -134,7 +148,7 @@ def get_available_tours(params):
 		for available_transfer in available_transfers:
 			if check_available_vip_transfer(available_transfer, params['paxes']):
 				trasfers.append(available_transfer)
-	elif params['tour-type'] == "group-premium" or params['tour-type'] == "group-economic":
+	elif params['tour-type'] == "group-premium" or params['tour-type'] == "group-economic" or params['tour-type'] == "package":
 		transfer_price = get_group_transfer_price(params['paxes'], available_transfers)
 		if not transfer_price:
 			return None

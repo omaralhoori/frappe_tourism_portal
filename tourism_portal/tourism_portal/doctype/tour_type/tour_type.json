@@ -9,13 +9,17 @@
  "engine": "InnoDB",
  "field_order": [
   "disabled",
+  "section_break_bal9s",
   "tour_code",
   "tour_name",
+  "column_break_qd96g",
+  "tour_type",
+  "section_break_d1lm8",
   "tour_pickup_city",
-  "tour_description",
-  "premium_tour",
-  "economic_tour",
-  "group_tour"
+  "column_break_wd4xy",
+  "tour_time",
+  "section_break_uknln",
+  "tour_description"
  ],
  "fields": [
   {
@@ -53,27 +57,43 @@
    "label": "Tour Description"
   },
   {
-   "default": "0",
-   "fieldname": "premium_tour",
-   "fieldtype": "Check",
-   "label": "Premium Tour"
+   "fieldname": "column_break_qd96g",
+   "fieldtype": "Column Break"
   },
   {
-   "default": "1",
-   "fieldname": "group_tour",
-   "fieldtype": "Check",
-   "label": "Group Tour"
+   "fieldname": "tour_type",
+   "fieldtype": "Select",
+   "label": "Tour Type",
+   "options": "\nVIP\nPremium\nEconomic",
+   "reqd": 1
   },
   {
-   "default": "1",
-   "fieldname": "economic_tour",
-   "fieldtype": "Check",
-   "label": "Economic Tour"
+   "fieldname": "section_break_d1lm8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_wd4xy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tour_time",
+   "fieldtype": "Select",
+   "label": "Tour Time",
+   "options": "Full Day\nHalf Day Evening\nHalf Day Morning",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_uknln",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_bal9s",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-06 13:55:43.656742",
+ "modified": "2023-12-12 15:14:29.479887",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour Type",

@@ -25,8 +25,6 @@ function formatResults(allResults){
     var multipleResults = Object.keys(allResults).length > 1;
     var allHotelResults = "";
     for (var resultLabel in allResults){
-        console.log("sssssssssssssssssss")
-        console.log(resultLabel)
         var results = allResults[resultLabel]
         var hotelReuslts = "";
         var accordion = Object.keys(results).length > 1;
@@ -64,7 +62,6 @@ function formatHotelResults(hotelResults){
     var roomResultsFormated = "";
     for(var roomResult of hotelResults){
         var resultFormatted = formatRoomResult(roomResult)
-        //console.log(resultFormatted)
         roomResultsFormated +=`<div class="room-result-container pax-${roomResult.details.pax}" room-id="${roomResult.details.room_id}" pax="${roomResult.details.pax}">
             ${resultFormatted}
         </div>`
@@ -73,7 +70,6 @@ function formatHotelResults(hotelResults){
 }
 
 function formatRoomResult(roomResult){
-    console.log(roomResult)
     var resultItem = $('#room-result-item-template').html()
     var showAskButton = false;
     if (!roomResult.details.price){
@@ -163,7 +159,6 @@ function roomSelectChanged(e){
     var rooms = e.getAttribute("rooms")
     var hotel = e.getAttribute("hotel")
     var hotel_search =e.closest('.hotel-search-results').getAttribute('hotel-result')
-    console.log(hotel_search)
     var selectedRooms = 0;
     var requiredRoomsToSelect = rooms.split('-').length
     // get other selects with same rooms
@@ -340,7 +335,6 @@ function checkAvailableNode(node){
 // }
 
 function checkSelectedRoomsCount(e){
-    console.log(e.parentNode.parentNode.parentNode)
 }
 
 function toggleUnselectedRoomAskButton(){
@@ -368,12 +362,11 @@ function askButtonClicked(e){
             }
         }
     })
-    console.log(e)
 }
 
 function calculate_total_hotel(hotel, hotel_search){
     var total = 0;
-    var all_selects = document.querySelectorAll(`.hotel-search-results[hotel-result="${hotel_search}"] select.room-select-input[hotel="${hotel}"]`)
+    var all_selects =document.querySelectorAll(`.hotel-search-results select.room-select-input`); //document.querySelectorAll(`.hotel-search-results[hotel-result="${hotel_search}"] select.room-select-input[hotel="${hotel}"]`)
     for (var selectInput of all_selects){
         total += Number( selectInput.value || 0) * Number(selectInput.getAttribute("room-price"))
     }
@@ -465,7 +458,7 @@ function getSelectedRooms(){
             }
         }
     }
-    if (!all_rooms_selected){
+    if (!all_rooms_selected && Object.keys(reservation_details['hotel']).length > 0){
         msgprint("Please select all rooms")
         return false;
      }else{
@@ -491,14 +484,40 @@ function getSelectedTransfers(){
     return selectedTransfers
 }
 
+function getSelectedTours(){
+    var selectedTours = {};
+    var all_tour_searchs = document.querySelectorAll('.tour-search-card')
+    for (var tourSearch of all_tour_searchs){
+        var tourSearchName = tourSearch.getAttribute('tour-search')
+        selectedTours[tourSearchName] = [];
+        var tourResults = tourSearch.querySelectorAll('.tour-card')
+        for (var tourResult of tourResults){
+            var tourPrice = tourResult.querySelector('.tour-price').getAttribute('tour-price')
+            var tourPickup = tourResult.querySelector('.tour-pickup').getAttribute('tour-pickup')
+            var tours = []
+            for (var tourItem of tourResult.querySelectorAll('.tour-item')){
+                tours.push(tourItem.getAttribute('tour-id'))
+            }
+            selectedTours[tourSearchName].push({
+                "tours": tours,
+                "price": tourPrice,
+                "pickup": tourPickup
+            })
+        }
+    }
+
+
+    return selectedTours;
+}
+
 function confirmButtonClicked(e){
     var selected_rooms = getSelectedRooms();
    if (!selected_rooms){
     return
    }
    var selected_transfers = getSelectedTransfers();
-    
-    var data = encodeParamsJson(selected_rooms)
+   var selected_tours = getSelectedTours();
+    var data = encodeParamsJson(selected_rooms, selected_transfers, selected_tours)
     var url = "tourism_portal.api.reserve.create_reservation"
     toggleLoadingIndicator(true);
     frappe.call({
@@ -517,12 +536,20 @@ function confirmButtonClicked(e){
 
 }
 
-function encodeParamsJson(selected_rooms){
+function encodeParamsJson(selected_rooms, selected_transfers, selected_tours){
     // ToDo Make encode for multiple hotels
     var searchParams = new URLSearchParams(window.location.search)
     var params = JSON.parse(searchParams.get("params"))
-    var all_searches = {}
+    
     var hotelParams = params['hotelParams']
+    var tourParams = params['toursparams']
+    var room_search = encodeHotelRoomSeearch(hotelParams, selected_rooms);
+    var tour_search = encodeTourSearch(tourParams, selected_tours);
+    return {"rooms": room_search, "transfers": [], "tours": tour_search};
+}
+
+function encodeHotelRoomSeearch(hotelParams, selected_rooms){
+    var all_searches = {}
     for (search in selected_rooms){
         var rooms = {};
         for (var room in selected_rooms[search]){
@@ -560,17 +587,31 @@ function encodeParamsJson(selected_rooms){
         }
         all_searches[search] = rooms;
     }
-    
-    return {"rooms": all_searches, "transfers": [], "tours": []};
+    return all_searches;
 }
+function encodeTourSearch(tourParams, selected_tours){
+    var all_selected = {}
+    for (var searchName in selected_tours){
+        var paxes = tourParams[searchName]['paxes']
+        all_selected[searchName] = {
+            "pickup": tourParams[searchName]['location'],
+            "pickup_type": tourParams[searchName]['location-type'],
+            "check_in": tourParams[searchName]['checkin'],
+            "check_out": tourParams[searchName]['checkout'],
+            "tour_type": tourParams[searchName]['tour-type'],
+            "paxes": paxes,
+            "selected_tours": selected_tours[searchName]
+        }
 
+    }
+    return all_selected
+}
 // window.addEventListener('beforeunload', function() {
 //    frappe.call({
 //     "method": "tourism_portal.api.reserve.delete_reservation",
 // args:{"invoice": "TX-----ss"},
 //     callback: res => {
 //         if (res.message){
-//             console.log(res.message)
 //         }
 //     }
 //    })

@@ -30,9 +30,14 @@
   "transfers_section",
   "transfers",
   "transfer_pax_info",
+  "tours_section",
+  "tours",
+  "tour_types",
+  "tour_pax_info",
   "section_break_np3bd",
   "hotel_fees",
   "transfer_fees",
+  "tour_fees",
   "grand_total",
   "amended_from"
  ],
@@ -200,12 +205,42 @@
    "fieldtype": "Currency",
    "label": "Transfer Fees",
    "read_only": 1
+  },
+  {
+   "fieldname": "tours_section",
+   "fieldtype": "Section Break",
+   "label": "Tours"
+  },
+  {
+   "fieldname": "tours",
+   "fieldtype": "Table",
+   "label": "Tours",
+   "options": "Sales Invoice Tour Item"
+  },
+  {
+   "fieldname": "tour_types",
+   "fieldtype": "Table",
+   "label": "Tour Types",
+   "options": "Sales Invoice Tour"
+  },
+  {
+   "fieldname": "tour_pax_info",
+   "fieldtype": "Table",
+   "label": "Tour Pax Info",
+   "options": "Sales Invoice Tour Pax"
+  },
+  {
+   "default": "0",
+   "fieldname": "tour_fees",
+   "fieldtype": "Currency",
+   "label": "Tour Fees",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-05 15:01:35.239729",
+ "modified": "2023-12-14 13:53:47.045282",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice",

@@ -341,74 +341,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Tours",
-   "link_count": 6,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Tour Type",
-   "link_count": 0,
-   "link_to": "Tour Type",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Tour Schedule",
-   "link_count": 0,
-   "link_to": "Tour Schedule",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Tour Scheduling Tool",
-   "link_count": 0,
-   "link_to": "Tour Scheduling Tool",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Tour Price",
-   "link_count": 0,
-   "link_to": "Tour Price",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Tour VIP Price",
-   "link_count": 0,
-   "link_to": "Tour VIP Price",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Tour Discount",
-   "link_count": 0,
-   "link_to": "Tour Discount",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Portal Definitions",
    "link_count": 6,
    "onboard": 0,
@@ -501,9 +433,87 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tours",
+   "link_count": 7,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tour Type",
+   "link_count": 0,
+   "link_to": "Tour Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tour Packages",
+   "link_count": 0,
+   "link_to": "Tour Package",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tour Schedule",
+   "link_count": 0,
+   "link_to": "Tour Schedule",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tour Scheduling Tool",
+   "link_count": 0,
+   "link_to": "Tour Scheduling Tool",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tour Price",
+   "link_count": 0,
+   "link_to": "Tour Price",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tour VIP Price",
+   "link_count": 0,
+   "link_to": "Tour VIP Price",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tour Discount",
+   "link_count": 0,
+   "link_to": "Tour Discount",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-12-09 12:20:38.091771",
+ "modified": "2023-12-12 15:18:39.899584",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal",

@@ -60,3 +60,11 @@ def calculate_discount_price(selling_price, extra_type, extra_price):
 	else:
 		selling_price -= (selling_price * extra_price) / 100
 	return selling_price 
+
+def get_date_weekday(date):
+    if type(date) == str:
+        date = frappe.utils.get_datetime(date)
+    #weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    weekday =  frappe.utils.get_weekday(date)
+    #print(weekday_number)
+    return weekday#weekdays[weekday_number]

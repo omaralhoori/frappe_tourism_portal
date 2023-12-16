@@ -48,8 +48,8 @@ def search_for_tours(tourParams, total_days= None):
 		
 		available_tours = get_available_tours_and_prices(params)
 		tours[tourSearch]= available_tours#[params['tours'][tour]] = available_tours
-		if params['tour-type'] != 'vip':
-			tours[tourSearch] = apply_tour_discount(tours[tourSearch],total_days)
+		# if params['tour-type'] != 'vip':
+		# 	tours[tourSearch] = apply_tour_discount(tours[tourSearch],total_days)
 	return tours
 """
 	search_params: [

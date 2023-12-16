@@ -1,0 +1,93 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-14 13:44:17.140390",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "search_name",
+  "pick_up",
+  "pick_up_type",
+  "tour_price",
+  "from_date",
+  "to_date",
+  "adults",
+  "children",
+  "tour_type"
+ ],
+ "fields": [
+  {
+   "fieldname": "search_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Search Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "pick_up",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Pick Up",
+   "reqd": 1
+  },
+  {
+   "fieldname": "pick_up_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Pick Up Type",
+   "options": "hotel\narea",
+   "reqd": 1
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "adults",
+   "fieldtype": "Int",
+   "label": "Adults",
+   "reqd": 1
+  },
+  {
+   "fieldname": "children",
+   "fieldtype": "Int",
+   "label": "Children",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tour_type",
+   "fieldtype": "Select",
+   "label": "Tour Type",
+   "options": "\npackage\nvip\ngroup-premium\ngroup-economic",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tour_price",
+   "fieldtype": "Currency",
+   "label": "Tour Price",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-12-14 13:54:33.382329",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Sales Invoice Tour Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
