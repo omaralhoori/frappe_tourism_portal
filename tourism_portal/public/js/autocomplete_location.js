@@ -34,13 +34,14 @@ function autocompleteLocations(inp, method, select_callback) {
                         //   b.innerHTML += arr[i]['locationId'].substr(val.length) ;
                           b.innerHTML += "<br>" + "<small>" + arr[i]['locationDetails'] + "</small>" ;
                           /*insert a input field that will hold the current array item's value:*/
-                          b.innerHTML += "<input type='hidden' location-type='" + arr[i]['locationType'] + "' location-id='" + arr[i]['locationId'] + "' value='" + arr[i]['locationName'] + "'>";
+                          b.innerHTML += "<input type='hidden' location-type='" + arr[i]['locationType'] + "' location-id='" + arr[i]['locationId'] + "' location-name='" + arr[i]['locationName'] + "' value='" + arr[i]['locationName'] + "'>";
                           /*execute a function when someone clicks on the item value (DIV element):*/
                               b.addEventListener("click", function(e) {
                               /*insert the value for the autocomplete text field:*/
                               inp.value = this.getElementsByTagName("input")[0].value;
                               inp.setAttribute("location-type",  this.getElementsByTagName("input")[0].getAttribute("location-type"));
                               inp.setAttribute("location-id",  this.getElementsByTagName("input")[0].getAttribute("location-id"));
+                              inp.setAttribute("location-name",  this.getElementsByTagName("input")[0].value);
                               /*close the list of autocompleted values,
                               (or any other open lists of autocompleted values:*/
                               if(select_callback  ){
@@ -80,6 +81,15 @@ function autocompleteLocations(inp, method, select_callback) {
             if (x) x[currentFocus].click();
           }
         }
+    });
+    inp.addEventListener("focusout", function(e) {
+      if (!this.getAttribute("location-id") || !this.getAttribute("location-type")){
+        
+        this.value = "";
+      }
+      if (this.value != this.getAttribute('location-name')){
+        this.value = "";
+      }
     });
     function addActive(x) {
       /*a function to classify an item as "active":*/
