@@ -167,7 +167,7 @@ def get_invoice_data(sales_invoice):
             transfers[transfer_search] = {}
         transfers[transfer_search][transfer_name] = {}
         transfers[transfer_search][transfer_name]['transfer_name'] = transfer_name
-        
+        transfers[transfer_search][transfer_name]['transfer_search'] = transfer_search
         transfers[transfer_search][transfer_name]['transfer_type'] = transfer.get('transfer_type')
         transfers[transfer_search][transfer_name]['transfer_id'] = transfer.get('transfer')
         transfers[transfer_search][transfer_name]['transfer_price'] = transfer.get('transfer_price')
@@ -239,6 +239,7 @@ def complete_reservation():
     invoice = frappe.get_doc("Sales Invoice", {"name": frappe.form_dict.sales_invoice, "customer": frappe.session.user})
     rooms = json.loads(frappe.form_dict.rooms)
     tours = json.loads(frappe.form_dict.tours)
+    transfers = json.loads(frappe.form_dict.transfers)
     invoice.room_extras = []
     for roomRowId in rooms:
         extras = rooms[roomRowId].pop('extras')
@@ -261,6 +262,14 @@ def complete_reservation():
                 if pax.name == paxRowId:
                     pax.guest_salutation = tourPax[paxRowId]['salut']
                     pax.guest_name = tourPax[paxRowId]['guest_name']
+                    break
+    for searchName in transfers:
+        transferPax = transfers[searchName]
+        for paxRowId in transferPax:
+            for pax in invoice.transfer_pax_info:
+                if pax.name == paxRowId:
+                    pax.guest_salutation = transferPax[paxRowId]['salut']
+                    pax.guest_name = transferPax[paxRowId]['guest_name']
                     break
     invoice.customer_name = frappe.form_dict.customer_name
     invoice.customer_email = frappe.form_dict.customer_email

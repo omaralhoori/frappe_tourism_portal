@@ -47,6 +47,7 @@ function confirmReservationButtonClicked(e){
   var customerMobile = document.querySelector('input[name="phone-number"]').value
   var roomsInfo = getRoomsInfo()
   var toursInfo = getToursInfo()
+  var transferInfo = getTransferInfo()
   var searchParams = new URLSearchParams(window.location.search)
   var invoice = searchParams.get("invoice")
 
@@ -56,6 +57,7 @@ function confirmReservationButtonClicked(e){
       sales_invoice: invoice,
       rooms: roomsInfo,
       tours: toursInfo,
+      transfers: transferInfo,
       customer_name: customerName,
       customer_email: customerEmail,
       customer_mobile_no: customerMobile
@@ -68,6 +70,34 @@ function confirmReservationButtonClicked(e){
       }
     }
   })
+}
+
+function getTransferInfo(){
+  var transfers = document.querySelectorAll(".transfer-search-container")
+  var transfersInfo = {};
+  for (var transfer of transfers){
+    var paxes = transfer.querySelectorAll(".pax-container")
+    var transferSearch = transfer.getAttribute("search-name")
+    var transferName = transfer.getAttribute("transfer-name")
+    if (! transfersInfo[transferSearch]){
+      transfersInfo[transferSearch] = {}
+    }
+    
+    for (var pax of paxes){
+      var salutInput = pax.querySelector('select[name="pax-salut"]');
+      var salut = ""
+      if (salutInput){
+        // ToDo show Error if empty
+        salut = salutInput.value
+      }
+      transfersInfo[transferSearch][pax.getAttribute('row-id')] = {
+        "salut": salut,
+        "guest_name": pax.querySelector('input[name="pax-name"]').value,
+        "row_id": pax.getAttribute("row-id")
+      }
+    }
+  }
+  return transfersInfo;
 }
 
 function getToursInfo(){
