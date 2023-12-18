@@ -24,11 +24,14 @@
         </div>
         </div>
         {% for hotel_rsv in invoice_details.get('rooms') %}
-        <div class="reservation_details mt-4 card p-3">
+        {% set hotelSearch = invoice_details['rooms'][hotel_rsv] %}
+        {% for hotelName in hotelSearch %}
+        {% set hotel = hotelSearch[hotelName] %}
+         <div class="reservation_details mt-4 card p-3">
             <div class="row">
-                <div class="col-lg-4"><strong>{{invoice_details['rooms'][hotel_rsv]['details'].get('hotel_name')}}</strong></div>
+                <div class="col-lg-4"><strong>{{hotel['details'].get('hotel_name')}}</strong></div>
             </div>
-        {% for rsrv_room in invoice_details['rooms'][hotel_rsv]['rooms']%}
+        {% for rsrv_room in hotel['rooms']%}
         <div class="p-3 tm-search-form tm-section-pad-2 mt-3 hotel_room_container" row-id="{{rsrv_room.get('row_id')}}">
             <div class="room-name mb-3">
                 {{rsrv_room.get('room_name')}}
@@ -80,6 +83,7 @@
         </div>
         {%endfor%}
         </div>
+       {% endfor%}
         {% endfor %}
         {% for tour_rsv in invoice_details.get('tours') %}
         {% set tourSearch = invoice_details['tours'][tour_rsv] %}
@@ -108,10 +112,14 @@
         {% else %}
         {{session_expires_card(invoice_details.session_expires) }}
         {% endif %}
-        {%for hotel_rsv in invoice_details.get('rooms') %}
-        {{ hotel_details_card(invoice_details['rooms'][hotel_rsv]['details'], invoice_details['rooms'][hotel_rsv]['booking_details'], invoice_details['rooms'][hotel_rsv]['rooms']) }}
+        {% for hotel_search in invoice_details.get('rooms')%}
+        {%for hotel_rsv in invoice_details['rooms'][hotel_search] %}
+        {{ hotel_details_card(invoice_details['rooms'][hotel_search][hotel_rsv]['details'], 
+        invoice_details['rooms'][hotel_search][hotel_rsv]['booking_details'],
+         invoice_details['rooms'][hotel_search][hotel_rsv]['rooms']) }}
         {% endfor %}
-        {{total_card(invoice_details.hotel_fees,invoice_details.tour_fees,invoice_details.grand_total)}}        
+        {% endfor %}
+        {{total_card(invoice_details.hotel_fees,invoice_details.transfer_fees,invoice_details.tour_fees,invoice_details.grand_total)}}        
     </div>
 </div>
 {% endblock %}
@@ -138,13 +146,17 @@
   </div>
 {% endmacro %}
 
-{% macro total_card(hotel_fees,tour_fees, total_fees) %}
+{% macro total_card(hotel_fees,transfer_fees, tour_fees, total_fees) %}
 <div class="card text-dark bg-light mb-3 mt-3" style="max-width: 18rem; width: 100%;">
     <div class="card-header">Fees</div>
     <ul class="list-group list-group-flush">
         <li class="list-group-item"><div class="d-flex justify-content-between">
             <div><strong>Hotel fees</strong></div>
             <div><strong>USD <span id="hotel_fees" total="{{hotel_fees}}">{{frappe.utils.fmt_money(hotel_fees)}}</span></strong></div>
+        </div></li>
+        <li class="list-group-item"><div class="d-flex justify-content-between">
+            <div><strong>Transfer fees</strong></div>
+            <div><strong>USD <span id="transfer_fees" total="{{transfer_fees}}">{{frappe.utils.fmt_money(transfer_fees)}}</span></strong></div>
         </div></li>
         <li class="list-group-item"><div class="d-flex justify-content-between">
             <div><strong>Tour fees</strong></div>
@@ -164,7 +176,7 @@
         <strong>Session Expires in <span id="session-timer" datetime="{{datetime}}">00:00</span> <i class="fa fa-clock-o" aria-hidden="true"></i></strong>
     </div>
     
-  </div>
+  </div>  
 {% endmacro %}
 
 {%macro room_extra_item(room_name, extra_name, extra_price, disable)%}
@@ -172,6 +184,16 @@
     <input class="form-check-input me-1 extra-price-input" {% if disable == 1 %} checked disabled {% endif %} onchange="roomExtraChanged(this)" type="checkbox" room-name="{{room_name}}" extra-price="{{extra_price}}" value="{{extra_name}}">
         {{extra_name}} +{{extra_price}}$
     </label>
+{% endmacro %}
+
+{% macro render_transfer_details(transfer_search) %}
+<div class="row">
+    <div class="col-lg-4"><strong>{{transfer_search['search_name']}}</strong></div>
+    <div class="col-lg-4">Transfer Date: {{tourSearch['check_in']}} - {{tourSearch['check_out']}}</div>
+    <div class="col-lg-4">PickUp: {{tourSearch['pickup']}}</div>
+    <div class="col-lg-4">Adults: {{tourSearch['adults']}}</div>
+    <div class="col-lg-4">Children: {{tourSearch['children']}}</div>
+</div>
 {% endmacro %}
 
 {% macro render_tour_details(tourSearch) %}

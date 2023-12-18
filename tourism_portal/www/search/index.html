@@ -79,7 +79,7 @@
     {% for search in transfers%}
         <div class=" row transfer-search" transfer-search="{{search}}">
         {% for transfer in transfers[search] %}
-            {{transfer_card(transfers[search][transfer])}}
+            {{transfer_card(transfers[search][transfer], transfer)}}
         {%endfor%}
         </div>
     {% endfor %}
@@ -185,8 +185,14 @@
 
 {% endblock %}
 
-{%macro transfer_card(transfer)%}
-    <div class="card m-2 transfer-card" style="width: 18rem;">
+{%macro transfer_card(transfer, transferName)%}
+    <div class="card m-2 transfer-card" style="width: 18rem;" 
+    transfer-type="{{transfer.transfer_type}}"
+     transfer-price="{{transfer.transfer_price}}"
+     from-postal-code="{{transfer.search_params['from_postal_code']}}"
+        to-postal-code="{{transfer.search_params['to_postal_code']}}"
+        transfer-name="{{transferName}}"
+     >
   <img class="card-img-top" src="{{transfer['transfer_details'].get('transfer_image')}}" alt="Card image cap">
   <div class="card-body">
     <h5 class="card-title">{{transfer['transfer_details'].get('transfer_type')}}</h5>

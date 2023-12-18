@@ -43,7 +43,6 @@ def create_reservation():
         tours = json.loads(params.tours)
     else:
         tours = params.tours
-    print(rooms)
     add_rooms_to_invoice(invoice, rooms)
     add_transfers_to_invoice(invoice, transfers)
     add_tours_to_invoice(invoice, tours)
@@ -59,6 +58,7 @@ def get_invoice_data(sales_invoice):
     invoice = frappe.get_doc("Sales Invoice", {"name": sales_invoice, "company": company})
     rooms = {}
     tours = {}
+    transfers = {}
     for room in invoice.rooms:
         if not rooms.get(room.get('hotel_search')):
             rooms[room.get('hotel_search')] = {}
@@ -160,16 +160,64 @@ def get_invoice_data(sales_invoice):
                     })
         tours[tour.get('search_name')]['adult_paxes'] = adult_paxes
         tours[tour.get('search_name')]['child_paxes'] = child_paxes
+    for transfer in invoice.transfers:
+        transfer_search = transfer.get('transfer_search')
+        transfer_name = transfer.get('transfer_name')
+        if not transfers.get(transfer_search):
+            transfers[transfer_search] = {}
+        transfers[transfer_search][transfer_name] = {}
+        transfers[transfer_search][transfer_name]['transfer_name'] = transfer_name
+        
+        transfers[transfer_search][transfer_name]['transfer_type'] = transfer.get('transfer_type')
+        transfers[transfer_search][transfer_name]['transfer_id'] = transfer.get('transfer')
+        transfers[transfer_search][transfer_name]['transfer_price'] = transfer.get('transfer_price')
+        transfers[transfer_search][transfer_name]['pax_info'] = {
+            "adults": transfer.get('adults'),
+            "children": transfer.get('children'),
+            "childrenInfo": []
+        }
+        transfers[transfer_search][transfer_name]['pickup'] = transfer.get('pick_up')
+        transfers[transfer_search][transfer_name]['pickup_type'] = transfer.get('pick_up_type')
+        transfers[transfer_search][transfer_name]['dropoff'] = transfer.get('drop_off')
+        transfers[transfer_search][transfer_name]['dropoff_type'] = transfer.get('drop_off_type')
+        transfers[transfer_search][transfer_name]['transfer_date'] = transfer.get('transfer_date')
+        transfers[transfer_search][transfer_name]['pick_up_postal_code'] = transfer.get('pick_up_postal_code')
+        transfers[transfer_search][transfer_name]['drop_off_postal_code'] = transfer.get('drop_off_postal_code')
+        transfers[transfer_search][transfer_name]['flight_no'] = transfer.get('flight_no')
+        adult_paxes = []
+        child_paxes = []
+        for transfer_pax in invoice.transfer_pax_info:
+            if transfer_pax.transfer_search == transfer_search and transfer_pax.transfer_name == transfer_name:
+                if transfer_pax.guest_type == 'Adult':
+                    adult_paxes.append( {
+                        "row_id": transfer_pax.name,
+                        "guest_salutation": transfer_pax.guest_salutation,
+                        "guest_name": transfer_pax.guest_name,
+                        "guest_type": transfer_pax.guest_type,
+                        "guest_age": transfer_pax.guest_age
+                    })
+                if transfer_pax.guest_type == 'Child':
+                    child_paxes.append({
+                        "row_id": tour_pax.name,
+                        "guest_name": tour_pax.guest_name,
+                        "guest_type": tour_pax.guest_type,
+                        "guest_age": tour_pax.guest_age
+                    })
+        transfers[transfer_search][transfer_name]['adult_paxes'] = adult_paxes
+        transfers[transfer_search][transfer_name]['child_paxes'] = child_paxes
+
     return {
         "invoice_id": invoice.name,
         "session_expires": invoice.session_expires,
         "post_date": invoice.post_date,
         "post_time": invoice.post_time,
         "hotel_fees": invoice.hotel_fees,
+        "transfer_fees": invoice.transfer_fees,
         "tour_fees": invoice.tour_fees,
         "grand_total": invoice.grand_total,
         "rooms": rooms,
         "tours": tours,
+        "transfers": transfers,
         "docstatus": invoice.docstatus,
         "sales_invoice": sales_invoice, 
         "customer_name": invoice.customer_name,

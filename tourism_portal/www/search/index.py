@@ -255,7 +255,7 @@ def get_room_price(room, search_params):
 	if selling_price:
 		# calculate extra child price
 		room_price_with_children = get_room_price_with_children(room, selling_price)
-		return (room_price_with_children * days, days, selling_currency)
+		return (room_price_with_children * days, days, selling_currency, room_price.get('item_price_name'))
 
 def get_room_selling_price(room, room_price, company_class):
 	if room_price.get('selling_price') :

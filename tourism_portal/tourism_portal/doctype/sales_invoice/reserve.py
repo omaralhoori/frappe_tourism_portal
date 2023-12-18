@@ -60,7 +60,7 @@ def add_transfers_to_invoice(invoice, transfers):
             invc_transfer.transfer_name = transferName
             invc_transfer.transfer_type = transfer['transfer_type']
             invc_transfer.transfer = transfer['transfer_id']
-            invc_transfer.transfer_price = transfer['transfer_price']
+            invc_transfer.transfer_price = float(transfer['transfer_price'])
             invc_transfer.adults = transfer['pax_info'].get('adults')
             invc_transfer.children = transfer['pax_info'].get('children')
             invc_transfer.pick_up = transfer['pick_up']

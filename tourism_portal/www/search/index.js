@@ -132,7 +132,7 @@ function formatRoomResult(roomResult){
         room-price="${roomResult['results'][0]['price'][0]}"
         onchange="roomSelectChanged(this)"  class="room-select-input"
         contract-id="${roomResult['results'][0]['contract_id']}"
-        price-id="${roomResult['results'][0]['price_id']}"
+        price-id="${roomResult['results'][0]['price'][3]}"
         hotel=${roomResult['results'][0]['hotel_id']} rooms="${rooms}">
         <option>0</option>
             ${selectRoom}
@@ -417,6 +417,7 @@ function getSelectedRooms(){
             var rooms = ss.getAttribute("rooms");
             var price = ss.getAttribute("room-price");
             var contractId = ss.getAttribute("contract-id");
+            var priceId = ss.getAttribute("price-id");
             var roomId = ss.closest('.room-result-container').getAttribute('room-id')
             var value = 0;
             if (ss.value && ss.value > 0){
@@ -429,7 +430,8 @@ function getSelectedRooms(){
                 selected_rooms[hotelSearch][rooms][roomId] = {
                     "price": price,
                     "qty": 0,
-                    "contractId": contractId
+                    "contractId": contractId,
+                    "priceId": priceId
                 } 
             }
     
@@ -474,10 +476,16 @@ function getSelectedTransfers(){
     var all_transfer_searchs = document.querySelectorAll('.transfer-search')
     for (var transferSearch of all_transfer_searchs){
         var transferSearchName = transferSearch.getAttribute('transfer-search')
-        selectedTransfers[transferSearchName] = [];
+        selectedTransfers[transferSearchName] = {};
         var transferResults = transferSearch.querySelectorAll('.transfer-card')
         for (var transferResult of transferResults){
-            
+            var transferName = transferResult.getAttribute('transfer-name')
+            selectedTransfers[transferSearchName][transferName] = {
+                "transfer_id": transferResult.getAttribute('transfer-type'),
+                "transfer_price": transferResult.getAttribute('transfer-price'),
+                "pick_up_postal_code": transferResult.getAttribute('from-postal-code'),
+                "drop_off_postal_code": transferResult.getAttribute('to-postal-code'),
+            }
             // selectedTransfers[transferSearchName].push(transferId)
         }
     }
@@ -542,10 +550,37 @@ function encodeParamsJson(selected_rooms, selected_transfers, selected_tours){
     var params = JSON.parse(searchParams.get("params"))
     
     var hotelParams = params['hotelParams']
+    var transferParams = params['transferParams']
     var tourParams = params['toursparams']
     var room_search = encodeHotelRoomSeearch(hotelParams, selected_rooms);
     var tour_search = encodeTourSearch(tourParams, selected_tours);
-    return {"rooms": room_search, "transfers": [], "tours": tour_search};
+    var transfer_search = encodeTransferSearch(transferParams, selected_transfers);
+    return {"rooms": room_search, "transfers": transfer_search, "tours": tour_search};
+}
+
+function encodeTransferSearch(transferParams, selected_transfers){
+    var all_selected = {}
+    for (var cardName in selected_transfers){
+        all_selected[cardName] = {}
+        for (var searchName in selected_transfers[cardName]){
+            all_selected[cardName][searchName] = {}
+            all_selected[cardName][searchName]['transfer_type'] = transferParams[cardName][searchName]['transfer-type'];
+            all_selected[cardName][searchName]['pick_up'] = transferParams[cardName][searchName]['from-location'];
+            all_selected[cardName][searchName]['drop_off'] = transferParams[cardName][searchName]['to-location'];
+            all_selected[cardName][searchName]['pick_up_type'] = transferParams[cardName][searchName]['from-location-type'];
+            all_selected[cardName][searchName]['drop_off_type'] = transferParams[cardName][searchName]['to-location-type'];
+            all_selected[cardName][searchName]['transfer_date'] = transferParams[cardName][searchName]['transfer-date'];
+            all_selected[cardName][searchName]['pax_info'] = {};
+            all_selected[cardName][searchName]['pax_info']['adults'] = transferParams[cardName][searchName]['paxes']['adults'];
+            all_selected[cardName][searchName]['pax_info']['children'] = transferParams[cardName][searchName]['paxes']['children'];
+            all_selected[cardName][searchName]['pax_info']['childrenInfo'] = transferParams[cardName][searchName]['paxes']['child-ages'];
+            all_selected[cardName][searchName]['transfer_id'] = selected_transfers[cardName][searchName]['transfer_id'];
+            all_selected[cardName][searchName]['transfer_price'] = selected_transfers[cardName][searchName]['transfer_price'];
+            all_selected[cardName][searchName]['pick_up_postal_code'] = selected_transfers[cardName][searchName]['pick_up_postal_code'];
+            all_selected[cardName][searchName]['drop_off_postal_code'] = selected_transfers[cardName][searchName]['drop_off_postal_code'];
+        }
+    }
+    return all_selected
 }
 
 function encodeHotelRoomSeearch(hotelParams, selected_rooms){
@@ -575,6 +610,7 @@ function encodeHotelRoomSeearch(hotelParams, selected_rooms){
                         encodedRoom['contracts'] = []
                         encodedRoom['contracts'].push({
                             "contract_id": selected_rooms[search][room][ss]['contractId'],
+                            "price_id": selected_rooms[search][room][ss]['priceId'],
                             "price": selected_rooms[search][room][ss]['price'],
                             "check_in": hotelParams[search]['checkin'],
                             "check_out": hotelParams[search]['checkout'],
