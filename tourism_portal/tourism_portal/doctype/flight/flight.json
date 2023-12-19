@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:flight_code",
  "creation": "2023-12-09 12:19:25.436611",
@@ -59,7 +60,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-09 12:48:02.930144",
+ "modified": "2023-12-19 11:26:24.831497",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Flight",

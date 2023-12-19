@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:policy_name",
  "creation": "2023-10-12 16:14:31.739248",
@@ -31,7 +32,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-14 02:49:46.290698",
+ "modified": "2023-12-19 11:26:28.428014",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Child Rate Policy",

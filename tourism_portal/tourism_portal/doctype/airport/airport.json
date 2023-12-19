@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:airport_code",
  "creation": "2023-10-10 13:32:39.588478",
@@ -46,7 +47,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-09 12:42:24.581642",
+ "modified": "2023-12-19 11:26:24.599601",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Airport",

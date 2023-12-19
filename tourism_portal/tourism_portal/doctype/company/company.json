@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "field:company_code",
  "creation": "2023-10-26 11:17:15.411322",
  "default_view": "List",
@@ -147,7 +148,7 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2023-11-07 08:35:07.796130",
+ "modified": "2023-12-19 11:27:57.477721",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Company",

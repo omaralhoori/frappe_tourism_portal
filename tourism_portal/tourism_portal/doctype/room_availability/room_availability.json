@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "creation": "2023-10-23 11:49:55.064193",
  "default_view": "List",
@@ -51,7 +52,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-07 12:42:19.427878",
+ "modified": "2023-12-19 11:26:20.877132",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Room Availability",

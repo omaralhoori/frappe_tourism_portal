@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:city_code",
  "creation": "2023-10-06 18:00:24.188963",
@@ -38,7 +39,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-09 11:28:46.270523",
+ "modified": "2023-12-19 11:26:31.178886",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "City",

@@ -59,8 +59,9 @@ function formatDataPicker(template) {
             datepicker(datePickerInput, {
                 formatter: (input, date, instance) => {
                     const value = date.toLocaleDateString("fr-CA")
-                    input.value = value // => '1/1/2099'
-                }
+                    input.value = value // => '1/1/2099',
+                },
+                minDate: new Date()
             });
 
         })
@@ -71,7 +72,8 @@ function formatDataPicker(template) {
             formatter: (input, date, instance) => {
                 const value = date.toLocaleDateString("fr-CA")
                 input.value = value // => '1/1/2099'
-            }
+            },
+            minDate: new Date()
         });
 
     })

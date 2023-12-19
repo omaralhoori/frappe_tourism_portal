@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:room_type_code",
  "creation": "2023-10-09 16:27:27.473263",
@@ -30,7 +31,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-09 16:29:41.694132",
+ "modified": "2023-12-19 11:26:30.995029",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Room Type",

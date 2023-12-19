@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:accommodation_rule_name",
  "creation": "2023-10-07 15:07:57.731290",
@@ -31,7 +32,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-14 02:47:47.750143",
+ "modified": "2023-12-19 11:26:28.882333",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Room Accommodation Type Rule",

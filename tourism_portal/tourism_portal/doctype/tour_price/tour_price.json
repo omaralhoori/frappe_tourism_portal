@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "creation": "2023-12-06 17:23:54.095618",
  "default_view": "List",
@@ -56,7 +57,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-07 12:34:37.465054",
+ "modified": "2023-12-19 11:26:23.812125",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour Price",

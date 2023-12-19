@@ -14,6 +14,12 @@ def get_context(context):
 	context.max_rooms = get_portal_setting("max_hotel_rooms_selected")
 	context.max_room_adults = get_portal_setting("max_adults_per_room")
 	context.max_room_children = get_portal_setting("max_children_per_room")
+
+	context.max_adults_per_transfer = get_portal_setting("max_adults_per_transfer")
+	context.max_children_per_transfer = get_portal_setting("max_children_per_transfer")
+	context.max_adults_per_tour = get_portal_setting("max_adults_per_tour")
+	context.max_children_per_tour = get_portal_setting("max_children_per_tour")
+	context.max_child_age = get_portal_setting("max_child_age")
 	return context
 
 def get_locations():

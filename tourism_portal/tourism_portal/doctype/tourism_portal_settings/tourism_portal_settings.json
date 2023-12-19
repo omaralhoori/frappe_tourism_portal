@@ -12,9 +12,16 @@
   "max_hotel_rooms_selected",
   "max_adults_per_room",
   "max_children_per_room",
+  "max_child_age",
   "column_break_bf7pn",
   "selling_currency",
   "session_expires_in",
+  "transfer_search_settings_section",
+  "max_adults_per_transfer",
+  "max_children_per_transfer",
+  "tour_search_settings_section",
+  "max_adults_per_tour",
+  "max_children_per_tour",
   "rules_and_policies_tab",
   "hotel_rules_section",
   "default_hotel_cancellation_policy",
@@ -112,13 +119,53 @@
    "fieldtype": "Duration",
    "label": "Session Expires In",
    "reqd": 1
+  },
+  {
+   "fieldname": "transfer_search_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Transfer Search Settings"
+  },
+  {
+   "fieldname": "max_adults_per_transfer",
+   "fieldtype": "Int",
+   "label": "Max Adults Per Transfer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "max_children_per_transfer",
+   "fieldtype": "Int",
+   "label": "Max Children Per Transfer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tour_search_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Tour Search Settings"
+  },
+  {
+   "fieldname": "max_adults_per_tour",
+   "fieldtype": "Int",
+   "label": "Max Adults Per Tour",
+   "reqd": 1
+  },
+  {
+   "fieldname": "max_children_per_tour",
+   "fieldtype": "Int",
+   "label": "Max Children Per Tour",
+   "reqd": 1
+  },
+  {
+   "fieldname": "max_child_age",
+   "fieldtype": "Int",
+   "label": "Max Child Age",
+   "reqd": 1
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-11-23 16:39:18.241985",
+ "modified": "2023-12-18 16:49:05.717432",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal Settings",

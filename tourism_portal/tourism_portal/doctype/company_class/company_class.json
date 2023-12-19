@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:company_class",
  "creation": "2023-10-09 11:17:04.812786",
@@ -22,7 +23,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-09 17:28:28.868066",
+ "modified": "2023-12-19 11:26:30.615652",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Company Class",

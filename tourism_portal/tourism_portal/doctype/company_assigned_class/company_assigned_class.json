@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "CMPCLS-.YY.-.#####",
  "creation": "2023-11-07 08:33:55.864278",
@@ -100,7 +101,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-07 08:40:52.413490",
+ "modified": "2023-12-19 11:26:26.759401",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Company Assigned Class",

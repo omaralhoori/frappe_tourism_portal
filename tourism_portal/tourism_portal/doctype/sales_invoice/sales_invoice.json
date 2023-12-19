@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "INV-.YY.-.MM.-.#####",
  "creation": "2023-11-01 12:18:19.405217",
@@ -240,7 +241,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-14 13:53:47.045282",
+ "modified": "2023-12-19 11:26:18.374488",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice",

@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "creation": "2023-12-05 16:50:48.100125",
  "default_view": "List",
@@ -47,7 +48,7 @@
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
  "links": [],
- "modified": "2023-12-05 17:13:19.901633",
+ "modified": "2023-12-19 11:26:21.613164",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour Schedule",

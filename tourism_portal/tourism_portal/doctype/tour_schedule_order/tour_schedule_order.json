@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "format:{pickup_city}-{advent_day}-{tour_type}",
  "creation": "2023-12-15 12:20:49.238229",
@@ -49,7 +50,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-15 15:20:03.052450",
+ "modified": "2023-12-19 11:26:18.176568",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour Schedule Order",

@@ -86,16 +86,9 @@
                                     <div class="form-group tm-form-element tm-form-element-2">
                                         <select name="adult" class="form-control tm-select">
                                             <option value="">Adult</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
+                                             {% for opt in range(max_adults_per_transfer)%}
+                                                <option value="{{opt + 1}}">{{opt + 1}}</option>
+                                            {% endfor %}
                                         </select>
                                         <i class="fa fa-2x fa-user tm-form-element-icon"></i>
                                     </div>
@@ -103,16 +96,9 @@
                                         <select onchange="childCountChanged(this)" name="children" class="form-control tm-select">
                                             <option value="">Children</option>
                                             <option value="0">0</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
+                                            {% for opt in range(max_children_per_transfer)%}
+                                                <option value="{{opt + 1}}">{{opt + 1}}</option>
+                                            {% endfor %}
                                         </select>
                                         <i class="fa fa-user tm-form-element-icon tm-form-element-icon-small"></i>
                                     </div>
@@ -242,11 +228,6 @@
                             </div>
                         </form>
                         </div>
-<div class="form-row tm-search-form-row d-flex flex-row-reverse">
-                                <div class="form-group tm-form-element tm-form-element-2">
-                                    <button class="btn btn-primary tm-btn-search">Add Tour</button>
-                                </div>
-                            </div>
                     </div>
                 </div>
             </div>

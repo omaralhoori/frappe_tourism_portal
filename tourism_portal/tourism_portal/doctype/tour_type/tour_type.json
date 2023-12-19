@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:tour_code",
  "creation": "2023-12-05 16:24:33.846414",
@@ -93,7 +94,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-12 15:14:29.479887",
+ "modified": "2023-12-19 11:26:19.988534",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour Type",
