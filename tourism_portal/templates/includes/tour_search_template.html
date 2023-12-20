@@ -1,8 +1,12 @@
 
 <script type="text/template" id="tour-search-template">
-
-<div class="mt-4 tm-bg-white ie-container-width-fix-2 tour-search-card search-card-container">
+<div class="tour-search-continer-with-more">
+<div class="mt-4 tm-bg-white ie-container-width-fix-2 tour-search-card search-card-container" card-type="tour">
     <input type="hidden" name="tour-card" value="">
+    <button onclick="deleteBtnPressed(this)"
+        class="btn btn-danger remove-card-btn">
+        <i class="fa fa-times"></i>
+    </button>
     <button onclick="collapseBtnPressed(this)"
         class="btn btn-primary collapse-btn">
         <i class="fa fa-chevron-up" aria-hidden="true"></i>
@@ -33,7 +37,7 @@
                                 </div>
                                 <div class="form-group tm-form-element tm-form-element-2">
                                      <i class="fa fa-map-marker fa-2x tm-form-element-icon tm-color-primary"></i>
-                                    <input name="location" type="text" onchange="tourTypeChanged(this)" class="form-control transfer-pickup" placeholder="Location"/>
+                                    <input name="location" autocomplete="off"   type="text" onchange="tourTypeChanged(this)" class="form-control transfer-pickup" placeholder="Location"/>
                                     {# <label class="">&nbsp;&nbsp; Location</label>
                                     <!-- <input name="city" type="text" class="form-control" id="inputCity" placeholder="Type your destination..."> -->
                                     <select name="location" onchange="tourTypeChanged(this)" type="text" class="form-control select2-select">
@@ -78,7 +82,7 @@
                                     </div>
                                     <div class="form-group tm-form-element tm-form-element-2">
                                         <select onchange="childCountChanged(this)" name="children" class="form-control tm-select">
-                                            <option value="">Children</option>
+                                            <option value="0">Children</option>
                                             <option value="0">0</option>
                                             {% for opt in range(max_children_per_tour)%}
                                                 <option value="{{opt + 1}}">{{opt + 1}}</option>
@@ -101,7 +105,7 @@
                             </div>
                             <div class="form-row tm-search-form-row d-flex flex-row-reverse">
                                 <div class="form-group tm-form-element tm-form-element-2">
-                                    <button class="btn btn-primary tm-btn-search" onclick="tourAddTourClicked(this)">Add Tour</button>
+                                    <button class="btn btn-primary tm-btn-search" type="button" onclick="tourAddTourClicked(this)">Add Tour</button>
                                 </div>
                             </div>
                         </form>
@@ -113,5 +117,7 @@
             </div>
         </div>
     </div>
+</div>
+<div class="more-tour"></div>
 </div>
 </script>

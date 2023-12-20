@@ -1,3 +1,5 @@
+var paxesNames = {}
+
 var sessionTimer = document.getElementById('session-timer')
 if (sessionTimer){
 // Set the countdown time in seconds
@@ -40,6 +42,72 @@ function formatTime(time) {
 startTimer();
 }
 
+document.querySelectorAll(".adult-pax").forEach((e) => {
+  var paxName = "adult-" + e.getAttribute("adult-pax")
+  paxesNames[paxName] = {
+    "name": "",
+    "salut": ""
+  }
+})
+document.querySelectorAll(".child-pax").forEach((e) => {
+  var paxName = "child-" + e.getAttribute("child-pax")
+  paxesNames[paxName] = {
+    "name": "",
+    "salut": ""
+  }
+})
+
+function adultSalutChanged(e){
+  var paxContainer = e.closest(".pax-container")
+  if (paxContainer.classList.contains("adult-pax-diff")){
+    return
+  }
+  var paxName = "adult-" + paxContainer.getAttribute("adult-pax")
+  paxesNames[paxName]["salut"] = e.value
+  notifiyPaxName(paxName)
+}
+function adultPaxChanged(e){
+  var paxContainer = e.closest(".pax-container")
+  if (paxContainer.classList.contains("adult-pax-diff")){
+    return
+  }
+
+  var paxName = "adult-" + paxContainer.getAttribute("adult-pax")
+  paxesNames[paxName]["name"] = e.value
+  notifiyPaxName(paxName)
+}
+
+function childPaxChanged(e){
+  var paxContainer = e.closest(".pax-container")
+  if (paxContainer.classList.contains("child-pax-diff")){
+    return
+  }
+  var paxName = "child-" + paxContainer.getAttribute("child-pax")
+  paxesNames[paxName]["name"] = e.value
+  notifiyPaxName(paxName)
+}
+
+function notifiyPaxName(paxName){
+  var paxType = paxName.split("-")[0]
+  if (paxType == "adult"){
+    var paxNumber = paxName.split("-")[1]
+    var paxNameElements = document.querySelectorAll(`.adult-pax[adult-pax="${paxNumber}"]`)
+    for (var paxNameElement of paxNameElements){
+      var nameInput = paxNameElement.querySelector("input[name='pax-name']")
+      var salutInput = paxNameElement.querySelector("select[name='pax-salut']")
+      nameInput.value = paxesNames[paxName].name
+      salutInput.value = paxesNames[paxName].salut
+    }
+  }else if (paxType == "child"){
+    var paxNumber = paxName.split("-")[1]
+    var paxNameElements = document.querySelectorAll(`.child-pax[child-pax="${paxNumber}"]`)
+    for (var paxNameElement of paxNameElements){
+      var nameInput = paxNameElement.querySelector("input[name='pax-name']")
+      nameInput.value = paxesNames[paxName].name
+    }
+  }
+  console.log(paxName + " Changed")
+}
 
 function confirmReservationButtonClicked(e){
   var customerName = document.querySelector('input[name="customer-name"]').value
@@ -50,7 +118,6 @@ function confirmReservationButtonClicked(e){
   var transferInfo = getTransferInfo()
   var searchParams = new URLSearchParams(window.location.search)
   var invoice = searchParams.get("invoice")
-
   frappe.call({
     method: "tourism_portal.api.reserve.complete_reservation",
     args: {
@@ -82,7 +149,13 @@ function getTransferInfo(){
     if (! transfersInfo[transferSearch]){
       transfersInfo[transferSearch] = {}
     }
-    
+    transfersInfo[transferSearch][transferName] = {
+      "transfer_name": transferName,
+      "transfer_search": transferSearch,
+      "paxes": {}
+    }
+    var flightNo = transfer.querySelector('input[name="flight-no"]').value
+    transfersInfo[transferSearch][transferName]['flight_no'] = flightNo
     for (var pax of paxes){
       var salutInput = pax.querySelector('select[name="pax-salut"]');
       var salut = ""
@@ -90,7 +163,7 @@ function getTransferInfo(){
         // ToDo show Error if empty
         salut = salutInput.value
       }
-      transfersInfo[transferSearch][pax.getAttribute('row-id')] = {
+      transfersInfo[transferSearch][transferName]['paxes'][pax.getAttribute('row-id')] = {
         "salut": salut,
         "guest_name": pax.querySelector('input[name="pax-name"]').value,
         "row_id": pax.getAttribute("row-id")
@@ -155,6 +228,34 @@ function getRoomsInfo(){
     }
   }
   return roomsInfo;
+}
+
+function different_names_clicked(e){
+  var card = e.closest(".card-details")
+  
+  if (e.checked){
+    var adult_paxes = card.querySelectorAll(".adult-pax")
+  var child_paxes = card.querySelectorAll(".child-pax")
+    for (var pax of adult_paxes){
+      pax.classList.remove("adult-pax")
+      pax.classList.add("adult-pax-diff")
+    }
+    for (var pax of child_paxes){
+      pax.classList.remove("child-pax")
+      pax.classList.add("child-pax-diff")
+    }
+  }else{
+    var adult_paxes = card.querySelectorAll(".adult-pax-diff")
+  var child_paxes = card.querySelectorAll(".child-pax-diff")
+    for (var pax of adult_paxes){
+      pax.classList.remove("adult-pax-diff")
+      pax.classList.add("adult-pax")
+    }
+    for (var pax of child_paxes){
+      pax.classList.remove("child-pax-diff")
+      pax.classList.add("child-pax")
+    }
+  }
 }
 
 function roomExtraChanged(e){

@@ -87,7 +87,7 @@ def get_invoice_data(sales_invoice):
         adult_paxes = []
         child_paxes = []
         for pax in invoice.room_pax_info:
-            if pax.room_name == room.room_name:
+            if pax.room_name == room.room_name and pax.hotel_search == room.hotel_search:
                 if pax.guest_type == 'Adult':
                     adult_paxes.append({
                         "row_id": pax.name,
@@ -198,10 +198,10 @@ def get_invoice_data(sales_invoice):
                     })
                 if transfer_pax.guest_type == 'Child':
                     child_paxes.append({
-                        "row_id": tour_pax.name,
-                        "guest_name": tour_pax.guest_name,
-                        "guest_type": tour_pax.guest_type,
-                        "guest_age": tour_pax.guest_age
+                        "row_id": transfer_pax.name,
+                        "guest_name": transfer_pax.guest_name,
+                        "guest_type": transfer_pax.guest_type,
+                        "guest_age": transfer_pax.guest_age
                     })
         transfers[transfer_search][transfer_name]['adult_paxes'] = adult_paxes
         transfers[transfer_search][transfer_name]['child_paxes'] = child_paxes
@@ -264,12 +264,18 @@ def complete_reservation():
                     pax.guest_name = tourPax[paxRowId]['guest_name']
                     break
     for searchName in transfers:
-        transferPax = transfers[searchName]
-        for paxRowId in transferPax:
-            for pax in invoice.transfer_pax_info:
-                if pax.name == paxRowId:
-                    pax.guest_salutation = transferPax[paxRowId]['salut']
-                    pax.guest_name = transferPax[paxRowId]['guest_name']
+        transferSearch = transfers[searchName]
+        for transferName in transferSearch:
+            transferPax = transferSearch[transferName]['paxes']
+            for paxRowId in transferPax:
+                for pax in invoice.transfer_pax_info:
+                    if pax.name == paxRowId:
+                        pax.guest_salutation = transferPax[paxRowId]['salut']
+                        pax.guest_name = transferPax[paxRowId]['guest_name']
+                        break
+            for transfer in invoice.transfers:
+                if str(transfer.transfer_name) == str(transferName) and transfer.transfer_search == searchName:
+                    transfer.flight_no = transferSearch[transferName]['flight_no']
                     break
     invoice.customer_name = frappe.form_dict.customer_name
     invoice.customer_email = frappe.form_dict.customer_email

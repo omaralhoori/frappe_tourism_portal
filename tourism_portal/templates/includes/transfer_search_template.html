@@ -1,17 +1,25 @@
 
 <script type="text/template" id="transfer-search-template">
-<div class="mt-4 tm-bg-white ie-container-width-fix-2 search-card-container transfer-search-card">
+<div class="transfer-search-continer-with-more"> 
+<div class="mt-4 tm-bg-white ie-container-width-fix-2 search-card-container transfer-search-card" card-type="transfer">
     <input type="hidden" name="transfer-card" value="1">
+    <button onclick="deleteBtnPressed(this)"
+        class="btn btn-danger remove-card-btn">
+        <i class="fa fa-times"></i>
+    </button>
     <button onclick="collapseBtnPressed(this)"
         class="btn btn-primary collapse-btn">
         <i class="fa fa-chevron-up" aria-hidden="true"></i>
     </button>
     <div class="panel-group">
         <div class="panel panel-default">
-            <div class="px-3 py-2 panel-heading tm-search-form-row ">
+            <div class="px-3 py-2 panel-heading tm-search-form-row d-flex justify-content-between">
                 <h4 class="panel-title">
                     <a >Transfer</a>
                 </h4>
+                <div>
+                    <button class="btn btn-primary" data-way="one-way" onclick="onWayTransfer(this)"><i class="fa fa-exchange" aria-hidden="true"></i> One Way</button>
+                </div>
             </div>
             <div class="panel-collapse collapse show container ie-h-align-center-fix">
                 <div class="row">
@@ -21,7 +29,7 @@
                             <div class="form-row tm-search-form-row">
                                 <div class="form-group tm-form-element tm-form-element-2">
                                     <i class="fa fa-map-marker fa-2x tm-form-element-icon tm-color-primary"></i>
-                                    <input name="pickup" type="text" class="form-control transfer-pickup" onchange="pickupTransferChanged(this)" placeholder="Pick up"/>
+                                    <input name="pickup" autocomplete="off"  type="text" class="form-control transfer-pickup" onchange="pickupTransferChanged(this)" placeholder="Pick up"/>
                                     {# <label class="">&nbsp;&nbsp; Pick up</label>
                                     <!-- <input name="city" type="text" class="form-control" id="inputCity" placeholder="Type your destination..."> -->
                                     <select name="pickup" type="text" class="form-control select2-select" onchange="pickupTransferChanged(this)">
@@ -42,7 +50,7 @@
                                 </div>
                                 <div class="form-group tm-form-element tm-form-element-2">
                                     <i class="fa fa-map-marker fa-2x tm-form-element-icon  tm-color-primary"></i>
-                                    <input name="dropoff" type="text" class="form-control transfer-dropoff" onfocusout="dropoffTransferChanged(this)" placeholder="Drop off"/>
+                                    <input name="dropoff" autocomplete="off"  type="text" class="form-control transfer-dropoff" onfocusout="dropoffTransferChanged(this)" placeholder="Drop off"/>
 
                                     {# <label class="">&nbsp;&nbsp; Drop off</label>
                                     <!-- <input name="city" type="text" class="form-control" id="inputCity" placeholder="Type your destination..."> -->
@@ -80,7 +88,7 @@
                             <div class="form-row tm-search-form-row">
                                 <div class="form-row tm-search-form-row align-items-center ml-1">
                                     <div class="form-group tm-form-element tm-form-element-2">
-                                       <input type="text" class="form-control" placeholder="Fligh No#">
+                                       <input type="text" class="form-control" name="flight-no" placeholder="Fligh No#">
                                         <i class="fa fa-2x fa-user tm-form-element-icon"></i>
                                     </div>
                                     <div class="form-group tm-form-element tm-form-element-2">
@@ -115,12 +123,12 @@
                             </div>
                         </form>
                         </div>
-                        <div class="transfer-search-row">
+                        <div class="transfer-search-row return-transfer">
                         <form class="tm-search-form tm-section-pad-2">
                             <div class="form-row tm-search-form-row">
                                 <div class="form-group tm-form-element tm-form-element-2">
                                      <i class="fa fa-map-marker fa-2x tm-form-element-icon tm-color-primary"></i>
-                                    <input name="pickup" type="text" class="form-control transfer-pickup" onfocusout="pickupTransferChanged(this)" placeholder="Pick up"/>
+                                    <input name="pickup" autocomplete="off"  type="text" class="form-control transfer-pickup" onfocusout="pickupTransferChanged(this)" placeholder="Pick up"/>
                                     {# <label class="">&nbsp;&nbsp; Pick up</label>
                                     <!-- <input name="city" type="text" class="form-control" id="inputCity" placeholder="Type your destination..."> -->
                                     <select name="pickup" type="text" class="form-control select2-select" onchange="pickupTransferChanged(this)">
@@ -141,7 +149,7 @@
                                 </div>
                                 <div class="form-group tm-form-element tm-form-element-2">
                                      <i class="fa fa-map-marker fa-2x tm-form-element-icon  tm-color-primary"></i>
-                                    <input name="dropoff" type="text" class="form-control transfer-dropoff" onfocusout="dropoffTransferChanged(this)" placeholder="Drop off"/>
+                                    <input name="dropoff" autocomplete="off"  type="text" class="form-control transfer-dropoff" onfocusout="dropoffTransferChanged(this)" placeholder="Drop off"/>
 
                                     {# <label class="">&nbsp;&nbsp; Drop off</label>
                                     <!-- <input name="city" type="text" class="form-control" id="inputCity" placeholder="Type your destination..."> -->
@@ -179,7 +187,7 @@
                             <div class="form-row tm-search-form-row">
                                 <div class="form-row tm-search-form-row align-items-center ml-1">
                                     <div class="form-group tm-form-element tm-form-element-2">
-                                       <input type="text" class="form-control" placeholder="Fligh No#">
+                                       <input type="text" class="form-control"  name="flight-no" placeholder="Fligh No#">
                                         <i class="fa fa-2x fa-user tm-form-element-icon"></i>
                                     </div>
                                     <div class="form-group tm-form-element tm-form-element-2">
@@ -228,11 +236,18 @@
                             </div>
                         </form>
                         </div>
+                         <div class="form-row tm-search-form-row d-flex flex-row-reverse">
+                                <div class="form-group tm-form-element tm-form-element-2">
+                                    <button class="btn btn-primary tm-btn-search" type="button" onclick="transferAddTransferClicked(this)">Add Transfer</button>
+                                </div>
+                            </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
-
+<div class="more-transfer"></div>
+</div>
 </script>

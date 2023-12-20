@@ -106,10 +106,13 @@ function childCountChanged(e) {
     childrenContainer.innerHTML = html;
 }
 function collapseBtnPressed(e) {
+    var deleteBtn = e.parentNode.querySelector('.remove-card-btn');
     if (e.parentNode.querySelector('.panel-collapse').classList.toggle('show')) {
         e.innerHTML = `<i class="fa fa-chevron-down" aria-hidden="true"></i>`
+        deleteBtn.style.display = 'block';
     } else {
         e.innerHTML = `<i class="fa fa-chevron-up" aria-hidden="true"></i>`
+        deleteBtn.style.display = 'none';
     }
 
 }
@@ -183,7 +186,7 @@ function addTransferClicked(e) {
 
     }
 
-
+    //childrenContainer.querySelector('.round-trip').bootstrapToggle()
     e.style.display = 'none';
 
 }
@@ -205,6 +208,7 @@ function addTourClicked(e) {
         if(hotelData.location){
             locationInput.value = hotelData['location-name']
             locationInput.setAttribute('location-id', hotelData.location);
+            locationInput.setAttribute('location-name', hotelData['location-name']);
             locationInput.setAttribute('location-type', hotelData['location-type']);
         }
        
@@ -318,7 +322,7 @@ function getToursParams() {
     var tourParams = {}
     tourCards.forEach(tour => {
         var tourCardNumber = tour.querySelector('input[name="tour-card"]').value;
-        var params = getTourData(tour);
+        var params = getTourData(tour, true);
         validateAllToursSelected(params, tour)
         //params['tours'] = selectedTours[tourCardNumber];
         tourParams[tourCardNumber] = params;
@@ -331,7 +335,7 @@ function getHotelParams() {
     var hotelParams = {}
     hotelCards.forEach(hotel => {
         var hotelCardNumber = hotel.querySelector('input[name="hotel-card"]').value;
-        hotelParams[hotelCardNumber] = getHotelSearchInfo(hotel);
+        hotelParams[hotelCardNumber] = getHotelSearchInfo(hotel, true);
     })
     return hotelParams;
 }
@@ -341,15 +345,15 @@ function getTransferParams() {
     var transferParams = {}
     transferCards.forEach(transfer => {
         var transferCardNumber = transfer.querySelector('input[name="transfer-card"]').value;
-        transferParams[transferCardNumber] = getTransferSearchInfo(transfer);
+        transferParams[transferCardNumber] = getTransferSearchInfo(transfer, true);
     })
     return transferParams;
 }
 
-function getTransferSearchInfo(transferCard) {
+function getTransferSearchInfo(transferCard, validate) {
     var params = {};
     // ToDo: Validate All inputs inserted 
-    var transfers = transferCard.querySelectorAll('.transfer-search-row');
+    var transfers = transferCard.querySelectorAll('.transfer-search-row:not(.d-none)');
     for (var i = 0; i < transfers.length; i++) {
         var transfer = transfers[i];
         var picupInput = transfer.querySelector('input[name="pickup"]');
@@ -361,6 +365,7 @@ function getTransferSearchInfo(transferCard) {
         params[i]['to-location-type'] = dropoffInput.getAttribute('location-type');
         params[i]['transfer-date'] = transfer.querySelector('input[name="check-in"]').value;
         params[i]['transfer-type'] = transfer.querySelector('select[name="transfer-type"]').value;
+        params[i]['flight-no'] = transfer.querySelector('input[name="flight-no"]').value;
         params[i]['paxes'] = {}
         params[i]['paxes']['adults'] = Number(transfer.querySelector('select[name="adult"]').value);
         params[i]['paxes']['children'] = Number(transfer.querySelector('select[name="children"]').value);
@@ -370,13 +375,40 @@ function getTransferSearchInfo(transferCard) {
             params[i]['paxes']['child-ages'].push(Number(age.value))
         })
     }
+    if (validate){
+        validateTransferSearchData(params)
+    }
     return params
 }
 
-function getHotelSearchInfo(hotel) {
+function validateTransferSearchData(params) {
+    for (var transferNo in params) {
+        var transfer = params[transferNo];
+        if (!transfer['from-location']) {
+            frappe.throw("Please select transfer pickup location")
+        }
+        if (!transfer['to-location']) {
+            frappe.throw("Please select transfer dropoff location")
+        }
+        if (!transfer['transfer-date']) {
+            frappe.throw("Please select transfer date")
+        }
+        if (!transfer['transfer-type']) {
+            frappe.throw("Please select transfer type")
+        }
+        if (!transfer['paxes']) {
+            frappe.throw("Please select transfer paxes")
+        }
+        if (!transfer['paxes']['adults']) {
+            frappe.throw("Please select transfer adults count")
+        }
+    }
+    return true;
+}
+
+function getHotelSearchInfo(hotel, validate) {
     var params = {};
     if (!hotel) return params
-    // ToDo: Validate All inputs inserted 
     var selectInput = hotel.querySelector('input[name="location"]');
     params['location'] = selectInput.getAttribute('location-id')
     params['location-name'] = selectInput.value
@@ -403,7 +435,39 @@ function getHotelSearchInfo(hotel) {
 
     })
     params['paxInfo'] = paxInfo
+    if (validate){
+        validateHotelSearchData(params)
+    }
+    
     return params
+}
+
+function validateHotelSearchData(params) {
+    if (!params['location']) {
+        frappe.throw("Please select hotel location")
+    }
+    if (!params['checkin']) {
+        frappe.throw("Please select hotel checkin date")
+    }
+    if (!params['checkout']) {
+        frappe.throw("Please select hotel checkout date")
+    }
+    if (!params['room']) {
+        frappe.throw("Please select hotel room count")
+    }
+    if (!params['paxInfo']) {
+        frappe.throw("Please select hotel pax info")
+    }
+    for(var pax of params['paxInfo']){
+    if (!pax['adults']) {
+        frappe.throw("Please select hotel adults count")
+    }
+}
+    if (!params['nationality']){
+        frappe.throw("Please select guests' nationality")
+    }
+
+    return true;
 }
 
 function tourTypeChanged(e) {
@@ -628,9 +692,10 @@ function transferTypeChanged(e) {
         e.closest('form').querySelector('.allowed-flights').style.display = 'none';
     }
 }
-function getTourData(form) {
+function getTourData(form, validate) {
     var params = {};
     var locationInput = form.querySelector('input[name="location"]');
+    params['location-name'] = locationInput.value
     params['location'] = locationInput.getAttribute('location-id')
     params['location-type'] = locationInput.getAttribute('location-type')//form.querySelector('select[name="location"]').options[form.querySelector('select[name="location"]').selectedIndex].getAttribute('doc-type');
     params['checkin'] = form.querySelector('input[name="check-in"]').value
@@ -648,9 +713,37 @@ function getTourData(form) {
     form.querySelectorAll('input[name="tours"]:checked').forEach(tour => {
         params['tours'].push(tour.value)
     })
+    if (validate){
+        validateCardTourSearchData(params)
+    }
 
     // params['tour-name'] = form.querySelector('select[name="tour-name"]').value
     return params;
+}
+
+function validateCardTourSearchData(params) {
+    if (!params['location']) {
+        frappe.throw("Please select tour location")
+    }
+    if (!params['checkin']) {
+        frappe.throw("Please select tour checkin date")
+    }
+    if (!params['checkout']) {
+        frappe.throw("Please select tour checkout date")
+    }
+    if (!params['paxes']) {
+        frappe.throw("Please select tour paxes")
+    }
+    if (!params['paxes']['adults']) {
+        frappe.throw("Please select tour adults count")
+    }
+    if (!params['tour-type']) {
+        frappe.throw("Please select tour type")
+    }
+    if (params['tours'].length == 0) {
+        frappe.throw("Please select tour")
+    }
+    return true;
 }
 
 function validateAllToursSelected(params, form) {
@@ -683,4 +776,168 @@ function onlyTourClicked(e) {
         hotel.innerHTML = '';
     })
     addTourClicked(document.querySelector('.hotel-search-container'));
+}
+
+function tourAddTourClicked(e) {
+   var previousCard = e.closest('.search-card-container')
+   var toursContainer = e.closest('.tour-search-continer-with-more')
+   var moreTourContainer = toursContainer.querySelector('.more-tour')
+   var params = getTourData(previousCard);
+   var toursCard = document.querySelectorAll('.tour-search-card').length + 1;
+   var tourCardName = `Tour ${toursCard}`
+   var html = '';
+   console.log(params)
+    var tourTemplate = document.querySelector('#tour-search-template');
+    html += tourTemplate.innerHTML;
+    moreTourContainer.innerHTML = html;
+    var locationInput = moreTourContainer.querySelector('input[name="location"]')
+    if(params.location){
+        locationInput.value = params['location-name']
+        locationInput.setAttribute('location-id', params.location);
+        locationInput.setAttribute('location-name', params['location-name']);
+        locationInput.setAttribute('location-type', params['location-type']);
+    }
+    autocompleteLocations(locationInput, 'tourism_portal.api.query.get_tour_locations');
+    if(params.checkout){
+        moreTourContainer.querySelector('input[name="check-in"]').value = addDays(params.checkout, 1);
+    }
+    moreTourContainer.querySelector('input[name="check-out"]').addEventListener('change', function(e){
+    console.log(e)
+    })
+    moreTourContainer.querySelector('input[name="tour-card"]').value = tourCardName;
+    var adults = params.paxes.adults;
+    var children = params.paxes.children;
+    var childrenAges = params.paxes['child-ages'];
+    moreTourContainer.querySelector('select[name="adult"]').value = adults;
+    var childsInput = moreTourContainer.querySelector('select[name="children"]');
+    childsInput.value = children;
+    var event = new Event('change');
+    childsInput.dispatchEvent(event);
+    var agesInput = moreTourContainer.querySelectorAll('select[name="child-age"]');
+    for (var i = 0; i < agesInput.length; i++) {
+        agesInput[i].value = childrenAges[i];
+    }
+
+    formatDataPicker(moreTourContainer)
+    e.style.display = 'none';
+}
+
+function onWayTransfer(e){
+    var transferCard = e.closest('.transfer-search-card')
+    var dataWay = e.getAttribute("data-way")
+    if (dataWay == 'one-way'){
+        // transferCard.querySelector('.return-transfer').style.display = 'none';
+        transferCard.querySelector('.return-transfer').classList.add('d-none');
+        e.setAttribute("data-way", "two-way")
+        e.innerHTML = `<i class="fa fa-exchange" aria-hidden="true"></i> Two Way`
+
+    }else{
+        // transferCard.querySelector('.return-transfer').style.display = 'block';
+        transferCard.querySelector('.return-transfer').classList.remove('d-none');
+        e.setAttribute("data-way", "one-way")
+        e.innerHTML = `<i class="fa fa-exchange" aria-hidden="true"></i> One Way`
+    }
+}
+
+function transferAddTransferClicked(e){
+    var previousCard = e.closest('.search-card-container')
+   var transfersContainer = e.closest('.transfer-search-continer-with-more')
+   var moreTransferContainer = transfersContainer.querySelector('.more-transfer')
+   var params = getTransferSearchInfo(previousCard);
+
+   var transferCards = document.querySelectorAll('.transfer-search-card').length + 1;
+
+   var trnasferCardName = `Transfer Search ${transferCards}`
+
+   var html = '';
+   console.log(params)
+    var transferTemplate = document.querySelector('#transfer-search-template');
+    html += transferTemplate.innerHTML;
+    moreTransferContainer.innerHTML = html;
+    var transferRows = moreTransferContainer.querySelectorAll('.transfer-search-row');
+    moreTransferContainer.querySelector('input[name="transfer-card"]').value = trnasferCardName;
+    var paxes = null;
+    if (Object.keys(params).length > 0){
+        paxes = params[Object.keys(params)[0]]['paxes'];
+    }
+    for (var i = 0; i < transferRows.length; i++) {
+        var transferRow = transferRows[i];
+        if (i == 0) {
+            dropoffInput = transferRow.querySelector('input[name="dropoff"]')
+
+        } else {
+            pickupInput = transferRow.querySelector('input[name="pickup"]')
+        }
+
+        autocompleteLocations(transferRow.querySelector('input[name="dropoff"]'), 'tourism_portal.api.query.get_transfer_locations', (element) => {
+            checkRegularFlights(element, 'arrival')
+        });
+        autocompleteLocations(transferRow.querySelector('input[name="pickup"]'), 'tourism_portal.api.query.get_transfer_locations', (element) => {
+            checkRegularFlights(element, 'departure')
+        });
+        formatDataPicker(transferRow)
+        if (paxes){
+            transferRow.querySelector('select[name="adult"]').value = paxes.adults;
+            var childsInput = transferRow.querySelector('select[name="children"]');
+            childsInput.value = paxes.children;
+            var event = new Event('change');
+            childsInput.dispatchEvent(event);
+            var agesInput = transferRow.querySelectorAll('select[name="child-age"]');
+            for (var j = 0; j < agesInput.length; j++) {
+                agesInput[j].value = paxes['child-ages'][j];
+            }
+        }
+        
+
+    }
+
+    e.style.display = 'none';
+}
+
+
+function deleteBtnPressed(e){
+    frappe.confirm(
+        'Are you sure you want to delete this card?',
+        function () {
+            deleteCard(e)
+        },
+        function () {
+            console.log('No')
+        }
+    )
+   
+}
+
+function deleteCard(e){
+    var card = e.closest('.search-card-container')
+    var cardType = card.getAttribute('card-type');
+    if (cardType == 'hotel'){
+        card.remove();
+    }else if (cardType == 'transfer'){
+        card.remove();
+    }else if (cardType == 'tour'){
+        card.remove();
+    }
+    renumberCards();
+}
+
+function renumberCards(){
+    var hotelCards = document.querySelectorAll('.hotel-search-card');
+    var transferCards = document.querySelectorAll('.transfer-search-card');
+    var tourCards = document.querySelectorAll('.tour-search-card');
+    var i = 1;
+    hotelCards.forEach(hotelCard => {
+        hotelCard.querySelector('input[name="hotel-card"]').value = `Hotel Search ${i}`
+        i++;
+    })
+    i = 1;
+    transferCards.forEach(transferCard => {
+        transferCard.querySelector('input[name="transfer-card"]').value = `Transfer Search ${i}`
+        i++;
+    })
+    i = 1;
+    tourCards.forEach(tourCard => {
+        tourCard.querySelector('input[name="tour-card"]').value = `Tour ${i}`
+        i++;
+    })
 }

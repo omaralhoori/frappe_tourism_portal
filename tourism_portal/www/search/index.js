@@ -485,6 +485,7 @@ function getSelectedTransfers(){
                 "transfer_price": transferResult.getAttribute('transfer-price'),
                 "pick_up_postal_code": transferResult.getAttribute('from-postal-code'),
                 "drop_off_postal_code": transferResult.getAttribute('to-postal-code'),
+                "flight_no": transferResult.getAttribute('flight-no'),
             }
             // selectedTransfers[transferSearchName].push(transferId)
         }
@@ -578,6 +579,7 @@ function encodeTransferSearch(transferParams, selected_transfers){
             all_selected[cardName][searchName]['transfer_price'] = selected_transfers[cardName][searchName]['transfer_price'];
             all_selected[cardName][searchName]['pick_up_postal_code'] = selected_transfers[cardName][searchName]['pick_up_postal_code'];
             all_selected[cardName][searchName]['drop_off_postal_code'] = selected_transfers[cardName][searchName]['drop_off_postal_code'];
+            all_selected[cardName][searchName]['flight_no'] = selected_transfers[cardName][searchName]['flight_no'];
         }
     }
     return all_selected

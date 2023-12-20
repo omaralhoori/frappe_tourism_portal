@@ -223,7 +223,7 @@ def check_available_vip_transfer(available_transfer, paxes):
 	capacities = frappe.db.get_all("Transfer Capacity", {"parent": available_transfer['transfer_type']}, 
 	["min_adults", "max_adults", "min_child", "max_child", "max_child_age"])
 	available = False
-	
+	print("paxes", paxes)
 	for capacity in capacities:
 		adults = int(paxes['adults'])
 		children = int(paxes['children'])

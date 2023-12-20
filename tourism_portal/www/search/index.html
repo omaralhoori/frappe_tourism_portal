@@ -192,6 +192,7 @@
      from-postal-code="{{transfer.search_params['from_postal_code']}}"
         to-postal-code="{{transfer.search_params['to_postal_code']}}"
         transfer-name="{{transferName}}"
+        flight-no="{{transfer.search_params['params']['flight-no']}}"
      >
   <img class="card-img-top" src="{{transfer['transfer_details'].get('transfer_image')}}" alt="Card image cap">
   <div class="card-body">
@@ -202,6 +203,9 @@
     <li class="list-group-item">Pickup: {{transfer['search_params']['params']['from-location']}}</li>
     <li class="list-group-item">Dropoff: {{transfer['search_params']['params']['to-location']}}</li>
     <li class="list-group-item">Transfer Date: {{transfer['search_params']['params']['transfer-date']}}</li>
+    {% if transfer['search_params']['params']['flight-no'] %}
+    <li class="list-group-item">Flight No: {{transfer['search_params']['params']['flight-no']}}</li>
+    {% endif %}
     <li class="list-group-item transfer-price" transfer-price="{{transfer['transfer_price']}}">Price: {{transfer['transfer_price']}}</li>
   </ul>
 </div>
