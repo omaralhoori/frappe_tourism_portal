@@ -53,7 +53,7 @@ function formatSelect2() {
 }
 
 // Date Picker
-function formatDataPicker(template) {
+function formatDataPicker(template, onchange) {
     if (template) {
         template.querySelectorAll('.date-picker').forEach(datePickerInput => {
             datepicker(datePickerInput, {
@@ -61,6 +61,8 @@ function formatDataPicker(template) {
                     const value = date.toLocaleDateString("fr-CA")
                     input.value = value // => '1/1/2099',
                 },
+                onSelect:  onchange,
+                
                 minDate: new Date()
             });
 
@@ -73,6 +75,7 @@ function formatDataPicker(template) {
                 const value = date.toLocaleDateString("fr-CA")
                 input.value = value // => '1/1/2099'
             },
+            onSelect:  onchange,
             minDate: new Date()
         });
 
@@ -213,7 +216,9 @@ function addTourClicked(e) {
         }
        
     }
-    autocompleteLocations(locationInput, 'tourism_portal.api.query.get_tour_locations');
+    autocompleteLocations(locationInput, 'tourism_portal.api.query.get_tour_locations', (element)=> {
+        tourTypeChanged(locationInput)
+    });
     if(hotelData.checkin){
         childrenContainer.querySelector('input[name="check-in"]').value = addDays(hotelData.checkin, 1);
     }
@@ -240,7 +245,9 @@ function addTourClicked(e) {
     for (var i = 0; i < agesInput.length; i++) {
         agesInput[i].value = childrenAges[i];
     }
-    formatDataPicker(childrenContainer)
+    formatDataPicker(childrenContainer, (instance, date)=>{
+        tourTypeChanged(locationInput)
+    })
     e.style.display = 'none';
     formatSelect2()
     selectedTours[tourCardName] = {}
@@ -797,7 +804,9 @@ function tourAddTourClicked(e) {
         locationInput.setAttribute('location-name', params['location-name']);
         locationInput.setAttribute('location-type', params['location-type']);
     }
-    autocompleteLocations(locationInput, 'tourism_portal.api.query.get_tour_locations');
+    autocompleteLocations(locationInput, 'tourism_portal.api.query.get_tour_locations',(element)=> {
+        tourTypeChanged(locationInput)
+    });
     if(params.checkout){
         moreTourContainer.querySelector('input[name="check-in"]').value = addDays(params.checkout, 1);
     }
@@ -818,7 +827,9 @@ function tourAddTourClicked(e) {
         agesInput[i].value = childrenAges[i];
     }
 
-    formatDataPicker(moreTourContainer)
+    formatDataPicker(moreTourContainer, (instance, date)=>{
+        tourTypeChanged(locationInput)
+    })
     e.style.display = 'none';
 }
 

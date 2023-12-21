@@ -72,7 +72,6 @@ def get_available_hotel_rooms(search_params):
 	
 	hotels = {}
 	for search in search_params:
-		print(search)
 		hotel = search_params[search]
 		avilables = search_for_available_hotel(hotel)
 		hotels[search] = avilables
@@ -87,6 +86,8 @@ def search_for_available_hotel(hotel_params):
 	condation = "AND tbl1.area=%(location)s"
 	if hotel_params.get('location-type') == 'hotel':
 		condation = 'AND tbl1.name=%(location)s'
+	elif hotel_params.get('location-type') == 'town':
+		condation = 'AND tbl1.town=%(location)s'
 	all_hotels  = frappe.db.sql("""
 		select 
 		tbl1.name as hotel_id, tbl1.hotel_name, 

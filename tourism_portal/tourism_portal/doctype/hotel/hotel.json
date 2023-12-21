@@ -17,6 +17,7 @@
   "star_rating",
   "address_and_location_section",
   "area",
+  "town",
   "gps_location",
   "column_break_yga8q",
   "address",
@@ -184,13 +185,20 @@
    "fieldname": "hotel_image",
    "fieldtype": "Attach Image",
    "label": "Hotel Image"
+  },
+  {
+   "fetch_from": "area.town",
+   "fieldname": "town",
+   "fieldtype": "Link",
+   "label": "Town",
+   "options": "Town"
   }
  ],
  "image_field": "hotel_image",
  "index_web_pages_for_search": 1,
  "links": [],
  "make_attachments_public": 1,
- "modified": "2023-12-07 14:12:08.428333",
+ "modified": "2023-12-20 18:07:00.463378",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel",
