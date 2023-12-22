@@ -114,3 +114,11 @@ def get_tour_price():
 def get_search_results(search):
 	room_results = frappe.db.get_value("Search Result", {"name": search, "user": frappe.session.user}, "room_results")
 	return room_results
+
+@frappe.whitelist()
+def set_new_search_results(search, params):
+	search_doc = frappe.get_doc("Search Result", 
+				{"name": search, "user": frappe.session.user})
+	search_doc.hotel_params = params
+	search_doc.save(ignore_permissions=True)
+	return search

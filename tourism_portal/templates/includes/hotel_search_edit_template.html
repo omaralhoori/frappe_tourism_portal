@@ -1,0 +1,57 @@
+<div class="hotel-new-search-card" card-type="hotel">
+    <input type="hidden" name="hotel-card" value="Hotel Search 1">
+                <div class="row">
+                    <div class="col-xs-12 ml-auto mr-auto ie-container-width-fix">
+
+                        <form class="tm-search-form px-2">
+                            <div class="form-row tm-search-form-row">
+                                <div class="form-group tm-form-element tm-form-element-2">
+                                    <i class="fa fa-map-marker fa-2x tm-form-element-icon tm-color-primary"></i>
+                                    <input name="location" autocomplete="off" type="text" class="form-control hotel-location" placeholder="Location"/>
+                                </div>
+                                <div class="form-group tm-form-element tm-form-element-2">
+                                    
+                                    <select name="nationality" type="text"
+                                        class="form-control tm-select">
+                                        <option value="">Nationality</option>
+                                        {% for nationality in nationalities %}
+                                            <option value="{{nationality.get('name')}}">{{nationality.get('name')}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <i class="fa fa-flag fa-2x tm-color-primary tm-form-element-icon"></i>
+                                </div>
+                            </div>
+                            <div class="form-row tm-search-form-row">
+                                <div class="form-group tm-form-element tm-form-element-2">
+                                    <i class="fa fa-calendar fa-2x tm-form-element-icon"></i>
+                                    <input name="check-in" type="text" class="form-control date-picker"
+                                        onfocus="(this.type='date')" onblur="(this.type='text')"
+                                        placeholder="Check In">
+                                </div>
+                                <div class="form-group tm-form-element tm-form-element-2">
+                                    <i class="fa fa-calendar fa-2x tm-form-element-icon"></i>
+                                    <input name="check-out" type="text" class="form-control date-picker"
+                                        onfocus="(this.type='date')" onblur="(this.type='text')"
+                                        placeholder="Check Out">
+                                </div>
+                            </div>
+                            <div class="form-row tm-search-form-row">
+                                <div class="form-group tm-form-element tm-form-element-2">
+                                    <select name="room" onchange="romCountChanged(this)"
+                                        class="form-control tm-select room-select">
+                                        <option value="">Room</option>
+                                        {% for opt in range(max_rooms)%}
+                                            <option value="{{opt + 1}}">{{opt + 1}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <i class="fa fa-2x fa-bed tm-form-element-icon"></i>
+                                </div>
+                                <div class="pax-container">
+
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+</div>

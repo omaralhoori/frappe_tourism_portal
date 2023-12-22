@@ -43,13 +43,12 @@
   {
    "fieldname": "room_results",
    "fieldtype": "Long Text",
-   "in_list_view": 1,
    "label": "Room Results"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-21 14:43:09.842755",
+ "modified": "2023-12-22 14:57:13.802066",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Search Result",

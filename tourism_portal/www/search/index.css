@@ -113,3 +113,32 @@
 .pop-container:hover .pop-details{
     display: block;
 }
+
+.select2-container--bootstrap-5 .select2-dropdown{
+    z-index: 1000000 !important;
+}
+
+.autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+}
+
+.autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    top: 100%;
+    left: 0;
+    right: 0;
+}
+
+@media (min-width: 576px){
+    .modal-dialog {
+        max-width: 600px;
+        margin: 30px auto;
+    }
+}

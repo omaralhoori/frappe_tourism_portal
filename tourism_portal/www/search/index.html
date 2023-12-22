@@ -79,16 +79,21 @@
     </div>
   </div>
   <div class="row transfer-results">
-    {% if transfers %}
+    {# {% if transfers %}
         <div class="col-12"><strong>Transfers</strong></div>
-    {%endif%}
+    {%endif%} #}
+    <div class="col-12">
     {% for search in transfers%}
-        <div class=" row transfer-search" transfer-search="{{search}}">
+        <div class="row">
+        {{render_transfer_search_header(search)}}
+        <div class="col-12 transfer-search" transfer-search="{{search}}">
         {% for transfer in transfers[search] %}
             {{transfer_card(transfers[search][transfer], transfer)}}
         {%endfor%}
         </div>
+        </div>
     {% endfor %}
+    </div>
   </div>
   <div class="row tour-resutls">
     {% if tours %}
@@ -130,7 +135,7 @@
         </div>
     </div>
 </div>
-
+<script src="/assets/tourism_portal/js/autocomplete_location.js" ></script>
 <script type="text/template" id="hotel-room-results-template">
     <div class="card hotel-card mt-3">
         <div class="card-header" id="{Hotel ID}-header">
@@ -215,7 +220,49 @@
     </div>
     </div>
 </script>
+<!-- Hotel Modal -->
+<div class="modal fade" id="hotelSearchModal" tabindex="-1" role="dialog" aria-labelledby="hotelSearchModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="hotelSearchModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         {% include "templates/includes/hotel_search_edit_template.html" %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="newHotelSearchClicked(this)">Search</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Transfer Modal -->
+<div class="modal fade" id="transferSearchModal" tabindex="-1" role="dialog" aria-labelledby="transferSearchModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="transferSearchModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         {% include "templates/includes/transfer_search_edit_template.html" %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="newTransferSearchClicked(this)">Search</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+{% include "templates/includes/pax_template_container.html" %}
+{% include "templates/includes/children_template_container.html" %}
 {% endblock %}
 
 {%macro transfer_card(transfer, transferName)%}
@@ -289,3 +336,18 @@
   {%endif%}
 {% endif %}
 {%endmacro%}
+
+{% macro render_transfer_search_header(search) %}
+<div class="col-12">
+        <div class="card p-3 mt-3" >
+        <div class="d-flex justify-content-between">
+            <div class="transfer-search-label">{{search}}</div>
+            <div class="transfer-search-buttons">
+                <button class="btn btn-sm" search-results="{{search}}"
+                 onclick="editTransferSearchResults(this)">Edit <i class="fa fa-pencil"></i></button>
+            </div>
+        </div>
+
+        </div>
+</div>
+{% endmacro %}

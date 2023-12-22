@@ -26,8 +26,99 @@ $(document).ready(async function(){
     // lastCheckForButton();
     calculate_total_transfers()
     calculate_total_tours()
+    autocompleteLocations(document.querySelector('.hotel-location'), 'tourism_portal.api.query.get_locations');
+    autocompleteLocations(document.querySelector('.transfer-pickup-1'), 'tourism_portal.api.query.get_transfer_locations', (element) => {
+        checkRegularFlights(element, 'departure')
+    });
+    autocompleteLocations(document.querySelector('.transfer-pickup-2'), 'tourism_portal.api.query.get_transfer_locations',(element) => {
+        checkRegularFlights(element, 'departure')
+    });
+    autocompleteLocations(document.querySelector('.transfer-dropoff-1'), 'tourism_portal.api.query.get_transfer_locations',(element) => {
+        checkRegularFlights(element, 'arrival')
+    });
+    autocompleteLocations(document.querySelector('.transfer-dropoff-2'), 'tourism_portal.api.query.get_transfer_locations',(element) => {
+        checkRegularFlights(element, 'arrival')
+    });
+
+    formatSelect2()
+    formatDataPicker()
     toggleLoadingIndicator(false);
 })
+
+function formatSelect2() {
+    $('.select2-select').each(function (i, select) {
+        var icons = $(this).siblings('i');
+        var labels = $(this).siblings('label');
+        var placeholder = '';
+        if (icons.length > 0) {
+            placeholder += $(this).siblings('i').prop('outerHTML');
+            $(this).siblings('i').hide();
+        }
+        if (labels.length > 0) {
+            placeholder += $(this).siblings('label').prop('outerHTML');
+            $(this).siblings('label').hide();
+        }
+        $(this).select2({
+            theme: 'bootstrap-5',
+            placeholder: placeholder,
+            escapeMarkup: function (markup) {
+                return markup;
+            },
+            templateResult: formatState
+        });
+    })
+
+    function formatState(state) {
+        if (!state.id) { return state.text; }
+        var doctype = state.element.getAttribute('doc-type')
+        var icon = "";
+        if (doctype == 'area') {
+            icon = '<i class="fa fa-map tm-color-primary"></i>'
+        } else if (doctype == 'hotel') {
+            icon = '<i class="fa fa-hotel tm-color-primary"></i>'
+        } else if (doctype == 'airport') {
+            icon = '<i class="fa fa-plane tm-color-primary"></i>'
+        } else {
+
+        }
+        var $state = $(
+            '<span> ' + icon +
+            state.text + '</span>'
+        );
+        return $state;
+    };
+}
+
+// Date Picker
+function formatDataPicker(template, onchange) {
+    if (template) {
+        template.querySelectorAll('.date-picker').forEach(datePickerInput => {
+            datepicker(datePickerInput, {
+                formatter: (input, date, instance) => {
+                    const value = date.toLocaleDateString("fr-CA")
+                    input.value = value // => '1/1/2099',
+                },
+                onSelect:  onchange,
+                
+                minDate: new Date()
+            });
+
+        })
+        return;
+    }
+    $('.date-picker').each(function (i, select) {
+        datepicker(this, {
+            formatter: (input, date, instance) => {
+                const value = date.toLocaleDateString("fr-CA")
+                input.value = value // => '1/1/2099'
+            },
+            onSelect:  onchange,
+            minDate: new Date()
+        });
+
+    })
+
+}
 
 function formatResults(allResults){
     var multipleResults = Object.keys(allResults).length > 1;
@@ -76,18 +167,98 @@ function formatResults(allResults){
             }
            
         }
-        if (accordion){
-            hotelReuslts = `<div id="accordion"> ${hotelReuslts}</div>`
-        }
-        if (multipleResults){
-            hotelReuslts = `<div class="card p-3 mt-3" >${resultLabel}</div> ${hotelReuslts}`
-        }
+        // if (accordion){
+        //     hotelReuslts = `<div id="accordion"> ${hotelReuslts}</div>`
+        // }
+        //if (multipleResults){
+            hotelReuslts = `<div class="card p-3 mt-3" >${renderHotelSearchBar(resultLabel)}</div> ${hotelReuslts}`
+        //}
         hotelReuslts = `<div class='hotel-search-results' hotel-result="${resultLabel}"> ${hotelReuslts}</div>`
         allHotelResults += hotelReuslts
         reservation_details['hotel'][resultLabel] = null;
     }
     $('.search-results').html(allHotelResults);
 
+}
+
+function renderHotelSearchBar(resultLabel){
+    var html = `
+        <div class="d-flex justify-content-between">
+            <div class="hotel-search-label">${resultLabel}</div>
+            <div class="hotel-search-buttons">
+                <button class="btn btn-sm" search-results="${resultLabel}"
+                 onclick="editHotelSearchResults(this)">Edit <i class="fa fa-pencil"></i></button>
+            </div>
+        </div>
+    `;
+
+    return html;
+}
+
+function editHotelSearchResults(e){
+    var searchResults = e.getAttribute('search-results');
+    var $modal = $('#hotelSearchModal');
+    var hotelParams = hotelSearchParams[searchResults];
+
+    $locationInput = $modal.find('input[name="location"]')
+    $locationInput.val(hotelParams['location-name'])
+    $locationInput.attr('location-id', hotelParams['location'])
+    $locationInput.attr('location-name', hotelParams['location-name'])
+    $locationInput.attr('location-type', hotelParams['location-type'])
+
+    $modal.find('input[name="check-in"]').val(hotelParams['checkin'])
+    $modal.find('input[name="check-out"]').val(hotelParams['checkout'])
+    $modal.find('select[name="nationality"]').val(hotelParams['nationality'])
+
+    $modal.find('select[name="room"]').val( hotelParams['room']).change();
+    $modal.find(`.pax-search-card`).each(function(i, card){
+        var pax = hotelParams['paxInfo'][i]
+        $(card).find(`select[name="adult"]`).val(pax['adults'] || "0").change()
+        $(card).find(`select[name="children"]`).val(pax['children'] || "0").change()
+        var ages = pax['childrenInfo'] || []
+        for (var j=0; j<ages.length; j++){
+
+            $(card).find(`select[name="child-age"]`).eq(j).val(ages[j])
+        }
+    })
+
+    $modal.find('.modal-title').text(`Edit ${searchResults} Search`);
+    $modal.find('input[name="hotel-card"]').val(searchResults);
+    $modal.modal('show');
+}
+function editTransferSearchResults(e){
+    var searchResults = e.getAttribute('search-results');
+    var $modal = $('#transferSearchModal');
+    var transferParams = transferSearchParams[searchResults];
+    var twoWay = Object.keys(transferParams).length > 1;
+    for (var transferRoute in transferParams){
+        
+    }
+    // $locationInput = $modal.find('input[name="location"]')
+    // $locationInput.val(hotelParams['location-name'])
+    // $locationInput.attr('location-id', hotelParams['location'])
+    // $locationInput.attr('location-name', hotelParams['location-name'])
+    // $locationInput.attr('location-type', hotelParams['location-type'])
+
+    // $modal.find('input[name="check-in"]').val(hotelParams['checkin'])
+    // $modal.find('input[name="check-out"]').val(hotelParams['checkout'])
+    // $modal.find('select[name="nationality"]').val(hotelParams['nationality'])
+
+    // $modal.find('select[name="room"]').val( hotelParams['room']).change();
+    // $modal.find(`.pax-search-card`).each(function(i, card){
+    //     var pax = hotelParams['paxInfo'][i]
+    //     $(card).find(`select[name="adult"]`).val(pax['adults'] || "0").change()
+    //     $(card).find(`select[name="children"]`).val(pax['children'] || "0").change()
+    //     var ages = pax['childrenInfo'] || []
+    //     for (var j=0; j<ages.length; j++){
+
+    //         $(card).find(`select[name="child-age"]`).eq(j).val(ages[j])
+    //     }
+    // })
+
+    $modal.find('.modal-title').text(`Edit ${searchResults}`);
+    $modal.find('input[name="hotel-card"]').val(searchResults);
+    $modal.modal('show');
 }
 
 function formatHotelResults(hotelResults){
@@ -278,7 +449,7 @@ function compareRoomDetails(room1, room2){
 }
 
 function getRoomDetails(room){
-    console.log(room)
+
     var details = {
         "price": room['price'] ? room['price'][0] : null,
         "room_id": room['room_id'],
@@ -699,4 +870,144 @@ function seeHotelMoreDetails(e){
     hotelCard.querySelector('.short-details').classList.toggle('d-none');
     hotelCard.querySelector('.hotel-rooms-details').style.maxHeight = 'none';
 
+}
+
+function romCountChanged(e) {
+    if (!e.value) e.value = 0;
+    var paxContainer = e.parentNode.parentNode.querySelector('.pax-container');
+    var html = '';
+    for (var i = 0; i < e.value; i++) {
+        document.querySelector('.pax-template-container .room-label').innerText = `Room ${i + 1}`
+        html += document.querySelector('.pax-template-container').innerHTML;
+    }
+    paxContainer.innerHTML = html;
+}
+function childCountChanged(e) {
+    if (!e.value) e.value = 0;
+    var childrenContainer = e.parentNode.parentNode.querySelector('.children-container');
+    var html = '';
+    for (var i = 0; i < e.value; i++) {
+        document.querySelector('.children-template-container .child-label').innerText = `Child ${i + 1}`
+        html += document.querySelector('.children-template-container').innerHTML;
+    }
+    childrenContainer.innerHTML = html;
+}
+
+
+function newHotelSearchClicked(e){
+    toggleLoadingIndicator(true);
+    var searchCard = e.closest('.modal-content').querySelector('.hotel-new-search-card')
+    var hotelSearch = searchCard.querySelector('input[name="hotel-card"]').value;
+    var newParams = getHotelSearchInfo(searchCard, true);
+    var searchParams = new URLSearchParams(window.location.search);
+    hotelSearchParams[hotelSearch] = newParams;
+    frappe.call({
+        method: "tourism_portal.api.search.set_new_search_results",
+        args: {
+            search: searchParams.get('search'),
+            params: hotelSearchParams,
+        },
+        callback: res => {
+            window.location.reload();
+        }
+    })
+
+}
+
+
+function getHotelSearchInfo(hotel, validate) {
+    var params = {};
+    if (!hotel) return params
+    var selectInput = hotel.querySelector('input[name="location"]');
+    params['location'] = selectInput.getAttribute('location-id')
+    params['location-name'] = selectInput.value
+
+    params['location-type'] = selectInput.getAttribute('location-type')//selectInput.options[selectInput.selectedIndex].getAttribute('doc-type');
+    params['nationality'] = hotel.querySelector('select[name="nationality"]').value
+    params['checkin'] = hotel.querySelector('input[name="check-in"]').value
+    params['checkout'] = hotel.querySelector('input[name="check-out"]').value
+    params['room'] = hotel.querySelector('select[name="room"]').value
+    var pax = hotel.querySelectorAll(".pax-search-card")
+    // ToDo: Validate Same pax count selected as rooms count
+    var paxInfo = []
+    pax.forEach(room => {
+        var roomName = room.querySelector(".room-label").innerText
+        var adults = room.querySelector("select[name='adult']").value
+        var children = room.querySelector("select[name='children']").value
+        var childrenAges = room.querySelectorAll(".children-search-card")
+        var childrenInfo = []
+
+        childrenAges.forEach(child => {
+            childrenInfo.push(child.querySelector('select[name="child-age"]').value)
+        })
+        paxInfo.push({ "roomName": roomName, "adults": adults, "children": children, "childrenInfo": childrenInfo })
+
+    })
+    params['paxInfo'] = paxInfo
+    if (validate){
+        validateHotelSearchData(params)
+    }
+    
+    return params
+}
+
+function validateHotelSearchData(params) {
+    if (!params['location']) {
+        frappe.throw("Please select hotel location")
+    }
+    if (!params['checkin']) {
+        frappe.throw("Please select hotel checkin date")
+    }
+    if (!params['checkout']) {
+        frappe.throw("Please select hotel checkout date")
+    }
+    if (!params['room']) {
+        frappe.throw("Please select hotel room count")
+    }
+    if (!params['paxInfo']) {
+        frappe.throw("Please select hotel pax info")
+    }
+    for(var pax of params['paxInfo']){
+    if (!pax['adults']) {
+        frappe.throw("Please select hotel adults count")
+    }
+}
+    if (!params['nationality']){
+        frappe.throw("Please select guests' nationality")
+    }
+
+    return true;
+}
+
+function checkRegularFlights(e, type) {
+    var locationType = e.querySelector('input').getAttribute('location-type')//options[e.selectedIndex].getAttribute('doc-type');
+    var location = e.querySelector('input').getAttribute('location-id')
+    var transferRow = e.closest('.transfer-search-row')
+    if (locationType == 'airport') {
+        //e.closest('.transfer-search-row').querySelector('.allowed-flights').style.display = 'block';
+        //);
+        frappe.call({
+            "method": "tourism_portal.api.home.get_regular_flights",
+            "args": {
+                "location": location,
+                "route": type
+            },
+            "callback": function (r) {
+                var allowedFlights = transferRow.querySelector('.allowed-flights-list');
+                var html = '';
+                for (var flight of r.message) {
+                    html += `<li value="${flight.name}">${flight.name}</li>`;
+                }
+                allowedFlights.innerHTML = html;
+            }
+        })
+    }
+}
+
+function transferTypeChanged(e) {
+    if (e.value == 'group') {
+        e.closest('form').querySelector('.allowed-flights').style.display = 'block';
+    } else {
+        e.closest('form').querySelector('.allowed-flights').style.display = 'none';
+    }
 }

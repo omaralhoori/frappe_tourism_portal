@@ -383,8 +383,10 @@ function getTransferSearchInfo(transferCard, validate) {
         params[i] = {};
         params[i]['from-location'] = picupInput.getAttribute('location-id');
         params[i]['from-location-type'] = picupInput.getAttribute('location-type');
+        params[i]['from-location-name'] = picupInput.getAttribute('location-name');
         params[i]['to-location'] = dropoffInput.getAttribute('location-id');
         params[i]['to-location-type'] = dropoffInput.getAttribute('location-type');
+        params[i]['to-location-name'] = dropoffInput.getAttribute('location-name');
         params[i]['transfer-date'] = transfer.querySelector('input[name="check-in"]').value;
         params[i]['transfer-type'] = transfer.querySelector('select[name="transfer-type"]').value;
         params[i]['flight-no'] = transfer.querySelector('input[name="flight-no"]').value;
