@@ -105,3 +105,18 @@ def get_available_tours():
 def get_regular_flights(location, route):
 	flights = frappe.db.get_all("Flight", {route: location, "is_regular": 1}, ['name'])
 	return flights
+
+@frappe.whitelist()
+def create_search(hotelParams, transferParams, tourParams):
+	search_doc = frappe.get_doc({
+		"doctype": "Search Result",
+		"hotel_params": hotelParams,
+		"transfer_params": transferParams,
+		"tour_params": tourParams,
+		"user": frappe.session.user
+	})
+	search_doc.insert(ignore_permissions=True)
+	return {
+		"is_success": True,
+		"search_name": search_doc.name
+	}

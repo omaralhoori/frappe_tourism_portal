@@ -318,8 +318,23 @@ function searchBtnClicked(e) {
         "transferParams": transferParams,
         "toursparams": toursParams,
     }
-    const paramsJSON = JSON.stringify(searchParams);
-    window.open(`search?params=${encodeURIComponent(paramsJSON)}`, '_self');
+    frappe.call({
+        "method": "tourism_portal.api.home.create_search",
+        "args": {
+            "hotelParams": hotelParams,
+            "transferParams": transferParams,
+            "tourParams": toursParams,
+        },
+        callback: function (r) {
+            if (r.message && r.message.is_success){
+                window.open(`search?search=${r.message.search_name}`, '_self');
+            }else{
+                frappe.throw(r.message.message)
+            }
+        }
+    })
+    // const paramsJSON = JSON.stringify(searchParams);
+    // window.open(`search?params=${encodeURIComponent(paramsJSON)}`, '_self');
 
     // console.log(new URLSearchParams().toString());
 }

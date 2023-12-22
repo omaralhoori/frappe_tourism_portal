@@ -91,3 +91,25 @@
 .tour-search-card{
     display: flex;
 }
+
+.hotel-rooms-details{
+    max-height: 0;
+    overflow: hidden;
+}
+
+.pop-details{
+    display: none;
+    position: absolute;
+    border: 1px solid #ccc  ;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 10px;
+    z-index: 10000;
+    box-shadow: 0px 0px 5px 0px #ccc;
+}
+.pop-container{
+    position: relative;
+}
+.pop-container:hover .pop-details{
+    display: block;
+}

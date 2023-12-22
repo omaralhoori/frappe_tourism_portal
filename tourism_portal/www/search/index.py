@@ -9,16 +9,27 @@ def get_context(context):
 	context.no_cache = 1
 	if frappe.session.user == "Guest":
 		frappe.throw(_("Log in to access this page."), frappe.PermissionError)
-	params = frappe.form_dict.params
-	params = json.loads(params)
-	hotelParams = params.get('hotelParams')
-	transferParams = params.get('transferParams')
-	tourParams = params.get('toursparams')
+	search = frappe.form_dict.search
+	#params = json.loads(params)
+	search_doc = frappe.get_doc("Search Result",
+					  {"name": search, "user": frappe.session.user},
+					    )
+	hotelParams = json.loads(search_doc.hotel_params)#params.get('hotelParams')
+	transferParams = json.loads(search_doc.transfer_params)#params.get('transferParams')
+	tourParams = json.loads(search_doc.tour_params)#params.get('toursparams')
 	transfers = search_for_transfers(transferParams)
 	total_days = get_hotel_total_days(hotelParams)
 	context.tours = search_for_tours(tourParams, total_days)
-	context.rooms = get_available_hotel_rooms(hotelParams)
-	context.rooms = json.dumps(context.rooms, default=str)
+	# context.rooms = get_available_hotel_rooms(hotelParams)
+	# context.rooms = json.dumps(context.rooms, default=str)
+	rooms = get_available_hotel_rooms(hotelParams)
+	# search_doc.room_results = context.rooms
+	# search_doc.save(ignore_permissions=True)
+	context.hotel_search_params = json.dumps(hotelParams, default=str)
+	context.transfer_search_params = json.dumps(transferParams, default=str)
+	context.tour_search_params = json.dumps(tourParams, default=str)
+	frappe.db.set_value("Search Result", search, "room_results", json.dumps(rooms, default=str))
+	frappe.db.commit()
 	context.transfers = transfers
 	return context
 def get_hotel_total_days(hotelParams):
@@ -88,9 +99,11 @@ def search_for_available_hotel(hotel_params):
 		condation = 'AND tbl1.name=%(location)s'
 	elif hotel_params.get('location-type') == 'town':
 		condation = 'AND tbl1.town=%(location)s'
+	# ToDo check if there more than one image per room =
 	all_hotels  = frappe.db.sql("""
 		select 
-		tbl1.name as hotel_id, tbl1.hotel_name, 
+		tbl1.name as hotel_id, tbl1.hotel_name,
+		tbl1.hotel_image, tbl1.address, tbl1.gps_location, tbl1.star_rating,
 		tbl2.room_type, tbl2.room_accommodation_type, 
 		tbl2.name as room_id,
 		file.file_url as room_image,
@@ -107,6 +120,8 @@ def search_for_available_hotel(hotel_params):
 	hotels = {}
 	for hotel in all_hotels:
 		hotel['contracts'] = get_hotel_room_contracts(hotel, hotel_params)
+		if hotel['hotel_cancellation_policy']:
+			hotel['cancellation_policy_description'] = frappe.db.get_value("Cancellation Policy", hotel['hotel_cancellation_policy'], "policy_description")
 		if len(hotel['contracts']) > 0: hotel['contract_id'] = hotel['contracts'][0]['contract_id'] 
 		if not hotels.get(hotel.get('hotel_id')):
 			hotels[hotel.get('hotel_id')] = []

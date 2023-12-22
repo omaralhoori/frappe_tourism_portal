@@ -46,8 +46,14 @@
 
 {% block page_content %}
 <script>
-    var searchResults = `{{rooms}}`
-    searchResults = JSON.parse(searchResults);
+    var searchResults = ''//`{rooms_}`
+    //searchResults = JSON.parse(searchResults);
+    var hotelSearchParams =  `{{hotel_search_params}}`;
+    var transferSearchParams = `{{transfer_search_params}}`;
+    var tourSearchParams = `{{tour_search_params}}`;
+    hotelSearchParams = JSON.parse(hotelSearchParams);
+    transferSearchParams = JSON.parse(transferSearchParams);
+    tourSearchParams = JSON.parse(tourSearchParams);
 </script>
 <div class="row pt-4 ">
 <div class="content col-lg-9">
@@ -126,17 +132,44 @@
 </div>
 
 <script type="text/template" id="hotel-room-results-template">
-    <div class="card">
+    <div class="card hotel-card mt-3">
         <div class="card-header" id="{Hotel ID}-header">
-          <h5 class="mb-0">
-            <button class="btn btn-link" data-toggle="collapse" data-target="#{Hotel ID}" 
-            aria-expanded="true" aria-controls="{Hotel ID}">
-                {Hotel ID}
-            </button>
-          </h5>
+         <div class="row full-details">
+            <div class="col-md-3">
+                <div class="hotel-image" style="height: 150px">
+                    <img src="{Hotel Image}" alt="" style="height: 100%;width: 100%;">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="hotel-title">{Hotel Name}</div>
+                <div class="hotel-details mt-3">
+                    <div >{Hotel Address}</div>
+                    <div class="mt-2">{Hotel Location}</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="d-flex justify-content-center align-items-center flex-column h-100">
+                    <!--<div class='hotel-stars'>
+                        {Hotel Stars}
+                    </div> -->
+                    <div class="hotel-price-container">
+                        Strats from <span class="hotel-price">{Hotel Price}</span>
+                    </div>
+                    <div class="container ask-button-container mt-3">
+                        <button onclick="seeHotelMoreDetails(this)" style="font-size: .8em;" class="btn btn-primary tm-btn-search p-2">See Details</button>
+                    </div>
+                    
+                </div>
+            </div>
+         </div>
+         <div class="row short-details d-none">
+            <div class="col-md-12">
+                <div class="hotel-title">{Hotel Name}</div>
+            </div>
+         </div>
         </div>
     
-        <div id="{Hotel ID}" class="collapse" aria-labelledby="{Hotel ID}-header" data-parent="#accordion">
+        <div class="hotel-rooms-details" aria-labelledby="{Hotel ID}-header" >
           <div class="card-body">
             Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
           </div>

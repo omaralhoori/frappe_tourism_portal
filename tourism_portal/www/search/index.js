@@ -8,9 +8,17 @@ var reservation_details = {
 }
 var availabeRooms = {}
 
-$(document).ready(function(){
+$(document).ready(async function(){
     toggleLoadingIndicator(true);
     // check if there is common rooms
+    var searchParams = new URLSearchParams(window.location.search)
+    var res = await frappe.call({
+        "method": "tourism_portal.api.search.get_search_results", 
+        args: {"search": searchParams.get("search")},
+    })
+    if (res.message){
+        searchResults = JSON.parse(res.message);
+    }
     var results = checkCommonRooms(searchResults);
     formatResults(results);
     // updateAvailableRooms();
@@ -29,12 +37,36 @@ function formatResults(allResults){
         var hotelReuslts = "";
         var accordion = Object.keys(results).length > 1;
         for (var hotel in results){
-            
+            // console.log(results[hotel])
             
             var resultFormatted = formatHotelResults(results[hotel]);
             if (accordion){
                 var resultItem = $('#hotel-room-results-template').html()
-                resultItem = resultItem.replaceAll("{Hotel ID}", hotel)
+                var location  = '';
+                if (results[hotel][0]['results'][0]['gps_location']){
+                    location = `<a target="_blank" href="https://maps.google.com/?q=${results[hotel][0]['results'][0]['gps_location']}" >Location On Map</a>`
+                }
+                var minPrice = null;
+                for (var room of results[hotel]){
+                    if (room.details.price){
+                        if (!minPrice){
+                            minPrice = room.details.price;
+                        }else{
+                            if (room.details.price < minPrice){
+                                minPrice = room.details.price;
+                            }
+                        }
+
+                    }
+                }
+                resultItem = resultItem.
+                    replaceAll("{Hotel ID}", hotel).
+                    replaceAll("{Hotel Name}", results[hotel][0]['results'][0]['hotel_name']).
+                    replaceAll("{Hotel Image}", results[hotel][0]['results'][0]['hotel_image'] || '/assets/tourism_portal/images/no-image.jpg').
+                    replaceAll("{Hotel Location}", location).
+                    replaceAll("{Hotel Stars}", results[hotel][0]['results'][0]['star_rating'] || '').
+                    replaceAll("{Hotel Address}", results[hotel][0]['results'][0]['address'] || '').
+                    replaceAll("{Hotel Price}", minPrice? minPrice.toFixed(2) : 'N/A');
                 var $resultItem = $(resultItem);
                 $resultItem.find('.card-body').html(`<div class="hotel-cards" hotel-id="${hotel}">${resultFormatted}</div>`)
                 resultItem = $resultItem.prop('outerHTML');
@@ -87,7 +119,12 @@ function formatRoomResult(roomResult){
 
     var roomDetails = ''
     if (roomResult['results'][0]['hotel_cancellation_policy']){
-        roomDetails = `<div class="room-details-item"><div class="badge badge-primary">${roomResult['results'][0]['hotel_cancellation_policy']}</div></div>`
+        roomDetails = `<div class="room-details-item pop-container">
+        <div class="badge badge-primary ">
+            ${roomResult['results'][0]['hotel_cancellation_policy']}
+        </div>
+        <div class="pop-details">${roomResult['results'][0]['cancellation_policy_description']}</div>
+    </div>`
     }
     if (roomResult['results'][0]['features']){
         for (var dd of roomResult['results'][0]['features'])
@@ -241,6 +278,7 @@ function compareRoomDetails(room1, room2){
 }
 
 function getRoomDetails(room){
+    console.log(room)
     var details = {
         "price": room['price'] ? room['price'][0] : null,
         "room_id": room['room_id'],
@@ -547,12 +585,12 @@ function confirmButtonClicked(e){
 
 function encodeParamsJson(selected_rooms, selected_transfers, selected_tours){
     // ToDo Make encode for multiple hotels
-    var searchParams = new URLSearchParams(window.location.search)
-    var params = JSON.parse(searchParams.get("params"))
+    // var searchParams = new URLSearchParams(window.location.search)
+    // var params = JSON.parse(searchParams.get("params"))
     
-    var hotelParams = params['hotelParams']
-    var transferParams = params['transferParams']
-    var tourParams = params['toursparams']
+    var hotelParams = hotelSearchParams//params['hotelParams']
+    var transferParams = transferSearchParams//params['transferParams']
+    var tourParams = tourSearchParams//params['toursparams']
     var room_search = encodeHotelRoomSeearch(hotelParams, selected_rooms);
     var tour_search = encodeTourSearch(tourParams, selected_tours);
     var transfer_search = encodeTransferSearch(transferParams, selected_transfers);
@@ -654,3 +692,11 @@ function encodeTourSearch(tourParams, selected_tours){
 //     }
 //    })
 //   });
+
+function seeHotelMoreDetails(e){
+    var hotelCard = e.closest('.hotel-card');
+    hotelCard.querySelector('.full-details').classList.toggle('d-none');
+    hotelCard.querySelector('.short-details').classList.toggle('d-none');
+    hotelCard.querySelector('.hotel-rooms-details').style.maxHeight = 'none';
+
+}

@@ -109,3 +109,8 @@ return {
 def get_tour_price():
 	params = frappe.form_dict
 	return get_available_tours(params)
+
+@frappe.whitelist()
+def get_search_results(search):
+	room_results = frappe.db.get_value("Search Result", {"name": search, "user": frappe.session.user}, "room_results")
+	return room_results
