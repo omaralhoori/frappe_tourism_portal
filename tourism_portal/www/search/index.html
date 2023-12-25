@@ -86,9 +86,11 @@
     {% for search in transfers%}
         <div class="row">
         {{render_transfer_search_header(search)}}
-        <div class="col-12 transfer-search" transfer-search="{{search}}">
-        {% for transfer in transfers[search] %}
-            {{transfer_card(transfers[search][transfer], transfer)}}
+        <div class="col-12 flex-wrap transfer-search" transfer-search="{{search}}">
+        {% for transferName in transfers[search] %}
+            {% set all_transfers = transfers[search][transferName]%}
+             {{transfer_card(all_transfers, transferName)}} 
+            
         {%endfor%}
         </div>
         </div>
@@ -265,30 +267,65 @@
 {% include "templates/includes/children_template_container.html" %}
 {% endblock %}
 
-{%macro transfer_card(transfer, transferName)%}
-    <div class="card m-2 transfer-card" style="width: 18rem;" 
-    transfer-type="{{transfer.transfer_type}}"
-     transfer-price="{{transfer.transfer_price}}"
-     from-postal-code="{{transfer.search_params['from_postal_code']}}"
-        to-postal-code="{{transfer.search_params['to_postal_code']}}"
-        transfer-name="{{transferName}}"
-        flight-no="{{transfer.search_params['params']['flight-no']}}"
-     >
-  <img class="card-img-top" src="{{transfer['transfer_details'].get('transfer_image')}}" alt="Card image cap">
-  <div class="card-body">
-    <h5 class="card-title">{{transfer['transfer_details'].get('transfer_type')}}</h5>
-    <p class="card-text">{{transfer['transfer_details'].get('transfer_description') or ''}}</p>
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item">Pickup: {{transfer['search_params']['params']['from-location']}}</li>
-    <li class="list-group-item">Dropoff: {{transfer['search_params']['params']['to-location']}}</li>
-    <li class="list-group-item">Transfer Date: {{transfer['search_params']['params']['transfer-date']}}</li>
-    {% if transfer['search_params']['params']['flight-no'] %}
-    <li class="list-group-item">Flight No: {{transfer['search_params']['params']['flight-no']}}</li>
-    {% endif %}
-    <li class="list-group-item transfer-price" transfer-price="{{transfer['transfer_price']}}">Price: {{transfer['transfer_price']}}</li>
-  </ul>
-</div>
+{%macro transfer_card(transfers, transferName)%}
+{% set options = [] %}
+{% for transfer in transfers%}
+    {% set _ = options.append({
+        "transfer_type_id": transfer['transfer_type'],
+        "transfer_type_name": transfer['transfer_details'].get('transfer_type'),
+        "transfer_price": transfer['transfer_price'],
+        "from_postal_code": transfer.search_params['from_postal_code'],
+        "to_postal_code": transfer.search_params['to_postal_code'],
+        "flight_no": transfer.search_params['params']['flight-no'],
+        "transfer_image": transfer['transfer_details'].get('transfer_image'),
+        "transfer_description": transfer['transfer_details'].get('transfer_description'),
+        "from_location": transfer['search_params']['params']['from-location'],
+        "to_location": transfer['search_params']['params']['to-location'],
+        "transfer_date": transfer['search_params']['params']['transfer-date'],
+
+        }) %}
+{% endfor %}
+{% if transfers|length > 0%}
+    {% set transfer = transfers[0]%}
+        <div class="card m-2 transfer-card" style="width: 18rem;" 
+        transfer-type="{{transfer.transfer_type}}"
+        transfer-price="{{transfer.transfer_price}}"
+        from-postal-code="{{transfer.search_params['from_postal_code']}}"
+            to-postal-code="{{transfer.search_params['to_postal_code']}}"
+            transfer-name="{{transferName}}"
+            flight-no="{{transfer.search_params['params']['flight-no']}}"
+        >
+    <img class="card-img-top" src="{{transfer['transfer_details'].get('transfer_image')}}" alt="Card image cap">
+    <div class="card-body">
+        <h5 class="card-title">{{transfer['transfer_details'].get('transfer_type')}}</h5>
+        <p class="card-text transfer-description">{{transfer['transfer_details'].get('transfer_description') or ''}}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+    <li class="list-group-item"><select onchange="transferSelectedNewType(this)">{% for option in options %}
+        <option {% if option.transfer_type_id == transfer.transfer_type %} selected {% endif %}
+            transfer_type_id="{{option.transfer_type_id}}"
+            transfer_type_name="{{option.transfer_type_name}}"
+            transfer_price="{{option.transfer_price}}"
+            from_postal_code="{{option.from_postal_code}}"
+            to_postal_code="{{option.to_postal_code}}"
+            flight_no="{{option.flight_no}}"
+            transfer_image="{{option.transfer_image}}"
+            transfer_description="{{option.transfer_description}}"
+            from_location="{{option.from_location}}"
+            to_location="{{option.to_location}}"
+            transfer_date="{{option.transfer_date}}"
+        >{{option.transfer_type_name}} - {{option.transfer_price}}</option>
+    {%endfor%}</select></li>
+        <li class="list-group-item">Pickup: {{transfer['search_params']['params']['from-location']}}</li>
+        <li class="list-group-item">Dropoff: {{transfer['search_params']['params']['to-location']}}</li>
+        <li class="list-group-item">Transfer Date: {{transfer['search_params']['params']['transfer-date']}}</li>
+        {% if transfer['search_params']['params']['flight-no'] %}
+        <li class="list-group-item">Flight No: {{transfer['search_params']['params']['flight-no']}}</li>
+        {% endif %}
+        <li class="list-group-item transfer-price" transfer-price="{{transfer['transfer_price']}}">Price: {{transfer['transfer_price']}}</li>
+    </ul>
+    </div>
+{% endif %}
 {%endmacro%}
 
 {%macro vip_tour_card(tour, tour_id)%}

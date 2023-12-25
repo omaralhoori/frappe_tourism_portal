@@ -10,6 +10,8 @@
  "field_order": [
   "contract_no",
   "hotel",
+  "area",
+  "town",
   "date",
   "available_qty"
  ],
@@ -47,12 +49,29 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Hotel",
-   "options": "Hotel"
+   "options": "Hotel",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "hotel.area",
+   "fieldname": "area",
+   "fieldtype": "Link",
+   "label": "Area",
+   "options": "Area",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "hotel.town",
+   "fieldname": "town",
+   "fieldtype": "Link",
+   "label": "Town",
+   "options": "Town",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-19 11:26:20.877132",
+ "modified": "2023-12-25 12:07:28.533909",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Room Availability",

@@ -1011,3 +1011,17 @@ function transferTypeChanged(e) {
         e.closest('form').querySelector('.allowed-flights').style.display = 'none';
     }
 }
+
+function transferSelectedNewType(e){
+    var selectedOption = e.options[e.selectedIndex];
+    var transferCard = e.closest('.transfer-card');
+    transferCard.querySelector('.card-title').innerText = selectedOption.getAttribute('transfer_type_name');
+    transferCard.querySelector('.card-img-top').src = selectedOption.getAttribute('transfer_image');
+    transferCard.querySelector('.transfer-description').innerText = selectedOption.getAttribute('transfer_description') || "";
+    var priceContainer = transferCard.querySelector('.transfer-price')
+    priceContainer.innerHTML = 'Price: ' + selectedOption.getAttribute('transfer_price');
+    priceContainer.setAttribute('transfer-price', selectedOption.getAttribute('transfer_price'));
+    transferCard.setAttribute('transfer-type', selectedOption.getAttribute('transfer_type_id'));
+    transferCard.setAttribute('transfer-price', selectedOption.getAttribute('transfer_price'));
+    calculate_total_transfers()
+}
