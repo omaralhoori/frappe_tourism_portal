@@ -135,11 +135,15 @@
    "label": "Selling Dates"
   },
   {
+   "fetch_from": "room_contract.selling_from_date",
+   "fetch_if_empty": 1,
    "fieldname": "selling_from_date",
    "fieldtype": "Date",
    "label": "Selling From Date"
   },
   {
+   "fetch_from": "room_contract.check_in_from_date",
+   "fetch_if_empty": 1,
    "fieldname": "check_in_from_date",
    "fieldtype": "Date",
    "label": "Check In From Date"
@@ -149,11 +153,15 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "room_contract.selling_to_date",
+   "fetch_if_empty": 1,
    "fieldname": "selling_to_date",
    "fieldtype": "Date",
    "label": "Selling To Date"
   },
   {
+   "fetch_from": "room_contract.check_in_to_date",
+   "fetch_if_empty": 1,
    "fieldname": "check_in_to_date",
    "fieldtype": "Date",
    "label": "Check In To Date"
@@ -161,7 +169,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-19 11:26:26.151143",
+ "modified": "2023-12-28 13:41:10.107910",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Room Price",

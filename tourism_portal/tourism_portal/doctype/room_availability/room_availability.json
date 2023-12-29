@@ -10,10 +10,14 @@
  "field_order": [
   "contract_no",
   "hotel",
+  "room_type",
   "area",
   "town",
   "date",
-  "available_qty"
+  "available_qty",
+  "selling_from_date",
+  "selling_to_date",
+  "release_days"
  ],
  "fields": [
   {
@@ -67,11 +71,37 @@
    "label": "Town",
    "options": "Town",
    "reqd": 1
+  },
+  {
+   "fetch_from": "contract_no.room_type",
+   "fieldname": "room_type",
+   "fieldtype": "Link",
+   "label": "Room Type",
+   "options": "Room Type",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "contract_no.selling_from_date",
+   "fieldname": "selling_from_date",
+   "fieldtype": "Date",
+   "label": "Selling From Date"
+  },
+  {
+   "fetch_from": "contract_no.selling_to_date",
+   "fieldname": "selling_to_date",
+   "fieldtype": "Date",
+   "label": "Selling To Date"
+  },
+  {
+   "fetch_from": "contract_no.release_days",
+   "fieldname": "release_days",
+   "fieldtype": "Int",
+   "label": "Release Days"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-25 12:07:28.533909",
+ "modified": "2023-12-27 17:37:21.165386",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Room Availability",
