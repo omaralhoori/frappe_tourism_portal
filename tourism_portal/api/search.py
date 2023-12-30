@@ -5,7 +5,7 @@ from tourism_portal.tourism_portal.doctype.tour_price.tour_price import get_avai
 from tourism_portal.tourism_portal.doctype.transfer_price.transfer_price import get_available_transfers
 import json
 
-from tourism_portal.utils import get_portal_setting
+from tourism_portal.utils import calculate_extra_price, get_location_city, get_portal_setting
 """
 	search_params: [
 		{
@@ -56,6 +56,7 @@ def search_for_available_hotel_by_hotel(hotel_params):
 	#all_rooms = get_hotel_all_rooms(hotel_params.get("location"))
 	#available_rooms = {}
 	# Filter Rooms by Pax
+	company_class = get_company_class(hotel_params)
 	all_hotel_contracts = get_hotel_contracts(
 					hotel_params.get("location"),
 					  hotel_params.get('checkin'), hotel_params.get('checkout'), )
@@ -71,9 +72,13 @@ def search_for_available_hotel_by_hotel(hotel_params):
 				copy_contract = contract.copy()
 				accommondation_rule = get_hotel_accommodation_type_rule(contract=copy_contract.get('contract_no'))
 				room_acmnd_type = get_available_amnd_hotel_room_by_pax(accommondation_rule, roomPax)
-				get_room_contract_price(copy_contract, room_acmnd_type, hotel_params.get('nationality'))
-				contract['room_type_name'] = frappe.db.get_value("Room Type", copy_contract.get('room_type'), "room_type")
+				copy_contract['profit_margin'] = frappe.db.get_value("Hotel Room Contract", copy_contract.get('contract_no'), "profit_margin", cache=True)
+				copy_contract['room_type_name'] = frappe.db.get_value("Room Type", copy_contract.get('room_type'), "room_type")
+				copy_contract['room_accommodation_type'] = room_acmnd_type
+				copy_contract['room_accommodation_type_name'] = frappe.db.get_value("Room Accommodation Type", room_acmnd_type, "accommodation_type_name", cache=True)
 				room_type_contracts.append(copy_contract)
+				get_room_contract_price(copy_contract, room_acmnd_type, hotel_params.get('nationality'), company_class)
+
 			if len(room_type_contracts) > 0:
 				available_rooms[roomPax.get('roomName')]['contracts'].append(room_type_contracts)
 	return available_rooms
@@ -90,16 +95,80 @@ def search_for_available_hotel_by_hotel(hotel_params):
 
 
 	# return available_rooms
+def get_company_class(search_params):
+	location_type = search_params.get('location-type')
+	location = search_params.get('location')
+	city = get_location_city(location_type, location)
+	company = frappe.db.get_value("User", frappe.session.user, "company", cache=True)
+	company_class= frappe.db.get_value("Company Assigned Class", {
+		"company": company, "city": city, 
+		"from_date": ["<=", frappe.utils.nowdate()], 
+		"to_date": [">=", frappe.utils.nowdate()]},
+		["company_class", "extra_price_type", "extra_price"], as_dict=True
+		) or {}
+	return company_class
 
 def get_hotel_contracts(hotel, checkin, checkout):
 	contracts = get_hotel_availabilities(hotel, checkin, checkout)
 	contracts = filter_contracts(contracts, checkin, checkout)
 	return contracts
 
-def get_room_contract_price(contract, room_acmnd_type, nationality):
+def get_room_contract_price(contract, room_acmnd_type, nationality, company_class):
 	contract['prices'] = get_contract_prices(contract, room_acmnd_type, nationality)
 	contract['prices'] = restart_price_dates(contract['prices'], contract['from_date'], contract['to_date'])
-	# return contract
+	for price in contract['prices']:
+		if not price.get('selling_price'):
+			get_selling_price_profit_margin_based(contract, price)
+		del price['buying_price']
+		price['selling_price'] = get_room_selling_price_based_on_class(price['selling_price'], price['item_price_name'], company_class)
+
+def get_room_selling_price_based_on_class(selling_price: float, item_price_name: str, company_class: dict) -> float:
+	class_extra_price = frappe.db.get_value("Hotel Room Price Company", {"parent": item_price_name, "company_class": company_class.get('company_class')}, ['extra_type', 'extra_profit'])
+	if not class_extra_price: return selling_price
+	extra_type, extra_price = class_extra_price
+	return calculate_extra_price(selling_price, extra_type, extra_price)
+
+def get_selling_price_profit_margin_based(contract, room_price):
+	selling_price = None
+	selling_currency = None
+	profit_margin_doc = frappe.get_cached_doc("Profit Margin", contract.get('profit_margin'))
+	profit_margin_item = None
+	for item in profit_margin_doc.profit_margins:
+		if item.room_type == contract.get('room_accommodation_type'):
+			profit_margin_item = item
+			break
+	if profit_margin_item:
+		selling_price, selling_currency = get_currency_based_price(room_price.get('buying_price'), room_price.get('buying_currency'))
+		if selling_price:
+			selling_price = calculate_extra_price(selling_price, profit_margin_item.get('margin_type'), profit_margin_item.get('profit_margin'))
+			room_price['selling_price'] = selling_price
+			room_price['selling_currency'] = selling_currency
+	return selling_price, selling_currency
+
+
+def get_currency_based_price(from_price, from_currency):
+	selling_currency = frappe.db.get_single_value("Tourism Portal Settings", "selling_currency")
+	if selling_currency == from_currency:
+		selling_price = from_price
+	else:
+		selling_price = convert_currency(from_price, from_currency, selling_currency)
+	return selling_price,selling_currency
+
+
+def convert_currency(from_price, from_currency, to_currency):
+	to_price = 0
+	currency_rate = frappe.db.get_single_value("Currency Convertor", from_currency.lower() )
+	# if not currency_rates  or currency_rates.get('success') == False:
+	# 	return to_price
+	# if not currency_rates.get('quotes'):
+	# 	return to_price
+	if not currency_rate:
+		return None
+	to_price = from_price / currency_rate
+	return to_price
+
+
+
 # Get Contract Price
 	# every contract has multiple prices based on room_acmnd_type
 	# every contract may have multiple prices based on checkin and checkout dates

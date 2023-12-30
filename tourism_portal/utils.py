@@ -47,7 +47,7 @@ def get_location_city(location_type, location):
     return city
 
 
-def calculate_extra_price(selling_price, extra_type, extra_price):
+def calculate_extra_price(selling_price: float, extra_type: str, extra_price: float) -> float:
 	if extra_type == 'Amount':
 			selling_price += extra_price
 	else:

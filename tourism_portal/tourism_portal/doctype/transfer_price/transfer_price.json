@@ -27,8 +27,8 @@
    "fieldname": "from_postal_code",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "From Postal Code",
-   "options": "Postal Code",
+   "label": "From Area",
+   "options": "Transfer Postal Code Group",
    "reqd": 1
   },
   {
@@ -39,8 +39,8 @@
    "fieldname": "to_postal_code",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "To Postal Code",
-   "options": "Postal Code",
+   "label": "To Area",
+   "options": "Transfer Postal Code Group",
    "reqd": 1
   },
   {
@@ -95,7 +95,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-19 11:26:24.118504",
+ "modified": "2023-12-30 14:04:49.150087",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Transfer Price",
