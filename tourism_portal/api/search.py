@@ -53,36 +53,53 @@ def search_for_available_hotel_by_area(hotel):
 
 def search_for_available_hotel_by_hotel(hotel_params):
 	# Get All Hotel Rooms
-	all_rooms = get_hotel_all_rooms(hotel_params.get("location"))
-	available_rooms = {}
+	#all_rooms = get_hotel_all_rooms(hotel_params.get("location"))
+	#available_rooms = {}
 	# Filter Rooms by Pax
+	all_hotel_contracts = get_hotel_contracts(
+					hotel_params.get("location"),
+					  hotel_params.get('checkin'), hotel_params.get('checkout'), )
+	available_rooms = {}
 	for roomPax in hotel_params.get('paxInfo'):
 		available_rooms[roomPax.get('roomName')] = {}
-		available_rooms[roomPax.get('roomName')]['rooms'] = filter_hotel_rooms_by_pax(all_rooms, roomPax)
-		if len(available_rooms[roomPax.get('roomName')]['rooms']) == 0:
-			return {}
+		available_rooms[roomPax.get('roomName')]['contracts'] = []
 		available_rooms[roomPax.get('roomName')]['roomPax'] = roomPax
-	
-	# Get Room Contracts
-	for roomName in available_rooms:
-		rooms = available_rooms[roomName]['rooms']
-		for room in rooms:
-			room_contracts = get_hotel_contracts(hotel_params.get("location"), hotel_params.get('checkin'), hotel_params.get('checkout'), room.get('room_accommodation_type'), hotel_params.get('nationality'))
-			
-			room['contracts'] = room_contracts
-
-
+		for room_type in all_hotel_contracts:
+			room_type_contracts = []
+			contracts = all_hotel_contracts[room_type]
+			for contract in contracts:
+				copy_contract = contract.copy()
+				accommondation_rule = get_hotel_accommodation_type_rule(contract=copy_contract.get('contract_no'))
+				room_acmnd_type = get_available_amnd_hotel_room_by_pax(accommondation_rule, roomPax)
+				get_room_contract_price(copy_contract, room_acmnd_type, hotel_params.get('nationality'))
+				contract['room_type_name'] = frappe.db.get_value("Room Type", copy_contract.get('room_type'), "room_type")
+				room_type_contracts.append(copy_contract)
+			if len(room_type_contracts) > 0:
+				available_rooms[roomPax.get('roomName')]['contracts'].append(room_type_contracts)
 	return available_rooms
+	# for roomPax in hotel_params.get('paxInfo'):
+	# 	room_contracts = get_hotel_contracts(
+	# 				hotel_params.get("location"),
+	# 				  hotel_params.get('checkin'), hotel_params.get('checkout'), 
+	# 				  roomPax, hotel_params.get('nationality'))
+	# 	# available_rooms[roomPax.get('roomName')] = {}
+	# 	# available_rooms[roomPax.get('roomName')]['rooms'] = filter_hotel_rooms_by_pax(all_rooms, roomPax)
+	# 	# if len(available_rooms[roomPax.get('roomName')]['rooms']) == 0:
+	# 	# 	return {}
+	# 	# available_rooms[roomPax.get('roomName')]['roomPax'] = roomPax	
 
-def get_hotel_contracts(hotel, checkin, checkout, room_acmnd_type, nationality):
+
+	# return available_rooms
+
+def get_hotel_contracts(hotel, checkin, checkout):
 	contracts = get_hotel_availabilities(hotel, checkin, checkout)
 	contracts = filter_contracts(contracts, checkin, checkout)
-	for roomType in contracts:
-		room_contracts = contracts[roomType]
-		for contract in room_contracts:
-			contract['prices'] = get_contract_prices(contract, room_acmnd_type, nationality)
 	return contracts
 
+def get_room_contract_price(contract, room_acmnd_type, nationality):
+	contract['prices'] = get_contract_prices(contract, room_acmnd_type, nationality)
+	contract['prices'] = restart_price_dates(contract['prices'], contract['from_date'], contract['to_date'])
+	# return contract
 # Get Contract Price
 	# every contract has multiple prices based on room_acmnd_type
 	# every contract may have multiple prices based on checkin and checkout dates
@@ -93,14 +110,14 @@ def get_contract_prices(contract, room_acmnd_type, nationality):
 	prices = frappe.db.sql("""
 		SELECT prc.name as item_price_name ,prc.company_class, prc.selling_type, prc.hotel, 
 		prc.buying_currency, prc.buying_price,
-		prc.check_in_from_date, prc.check_in_to_date, 
+						prc.room_accommodation_type,
+		prc.check_in_from_date as from_date, prc.check_in_to_date as to_date, 
 		 prc.selling_currency, prc.selling_price FROM  `tabHotel Room Price` prc
 		WHERE prc.room_contract=%(contract_id)s 
 		AND (prc.nationality=%(nationality)s OR prc.nationality IS NULL OR prc.nationality='')
 		AND (
 			   prc.room_accommodation_type=%(room_accommodation_type)s 
-			   OR prc.room_accommodation_type IS NULL  
-			   OR prc.room_accommodation_type='')
+			   )
 		AND (prc.selling_from_date <= %(selling_date)s AND prc.selling_to_date >= %(selling_date)s)
 		AND ((prc.check_in_from_date <= %(checkin)s AND prc.check_in_to_date >= %(checkin)s)
 		OR (prc.check_in_from_date <= %(checkout)s AND prc.check_in_to_date >= %(checkout)s))
@@ -139,9 +156,19 @@ def convert_date_to_object(date):
 	if type(date) is str:
 		return datetime.strptime(date, "%Y-%m-%d").date()
 	return date
+
+def restart_price_dates(prices, checkin, checkout):
+	checkin_date = convert_date_to_object(checkin)
+	checkout_date = convert_date_to_object(checkout) 
+
+	for price in prices:
+		price['from_date'] = str(max([checkin_date, convert_date_to_object(price['from_date'])]))
+		price['to_date'] = str(min([checkout_date, convert_date_to_object(price['to_date'])]))
+	return prices
+
 def filter_contracts_by_dates(contracts, checkin_date, checkout_date):
 	checkin_date = convert_date_to_object(checkin_date)
-	checkout_date = convert_date_to_object(checkout_date)
+	checkout_date = convert_date_to_object(checkout_date) + timedelta(days= - 1)
 
 	filtered_contracts = []
 
@@ -149,7 +176,7 @@ def filter_contracts_by_dates(contracts, checkin_date, checkout_date):
 	sorted_contracts = sorted(contracts, key=lambda x: convert_date_to_object(x["from_date"]))
 
 	current_date = checkin_date
-    
+
 	for contract in sorted_contracts:
 		from_date = convert_date_to_object(contract["from_date"])
 		to_date = convert_date_to_object(contract["to_date"])
@@ -160,11 +187,12 @@ def filter_contracts_by_dates(contracts, checkin_date, checkout_date):
 
 		# Extend the current date range if the current contract covers it
 		if from_date <= current_date <= to_date:
+			contract['from_date'] = str(max([current_date, from_date]))
+			contract['to_date'] = str(min([to_date, checkout_date]))
 			current_date = to_date + timedelta(days=1)
 			filtered_contracts.append(contract)
-
 		# If the current date range covers the requested date range, return the result
-		if current_date >= checkout_date:
+		if current_date > checkout_date:
 			return filtered_contracts
 
 	# If we reach this point, there's a gap at the end, return an empty list
@@ -224,8 +252,14 @@ def get_hotel_availabilities(hotel, checkin, checkout):
 	""", {"hotel": hotel,	"checkin": checkin, 
 	   "checkout": checkout, "selling_date": selling_date}, as_dict=True)
 	return room_qty
-		
 
+def get_hotel_accommodation_type_rule(hotel=None,contract=None):
+	if hotel:
+		return frappe.db.get_value("Hotel", hotel, "hotel_accommodation_type_rule", cache=True)
+	elif contract:
+		return frappe.db.get_value("Hotel Room Contract", contract, "accommodation_type_rule", cache=True)
+	else:
+		return None
 def filter_hotel_rooms_by_pax(all_rooms, roomPax):
 	available_rooms = []
 	for room in all_rooms:
@@ -236,6 +270,12 @@ def filter_hotel_rooms_by_pax(all_rooms, roomPax):
 				if is_room_suitable_for_pax(room_type, roomPax):
 					available_rooms.append(room)
 	return available_rooms
+def get_available_amnd_hotel_room_by_pax(amnd_rule, roomPax):
+	room_accommodation_type_doc = frappe.get_cached_doc("Room Accommodation Type Rule", amnd_rule)
+	for room_type in room_accommodation_type_doc.rules:
+		if is_room_suitable_for_pax(room_type, roomPax):
+			return room_type.room_type
+	return None
 
 def is_room_suitable_for_pax(room_rule, pax_info):
 	adults =int(pax_info.get('adults'))
