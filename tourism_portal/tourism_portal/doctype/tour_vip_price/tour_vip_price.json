@@ -31,8 +31,8 @@
    "fieldname": "pickup_postal_code",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Pickup Postal Code",
-   "options": "Postal Code",
+   "label": "Pickup Area",
+   "options": "Transfer Postal Code Group",
    "reqd": 1
   },
   {
@@ -49,7 +49,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-19 11:26:24.393649",
+ "modified": "2023-12-30 17:44:28.482836",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour VIP Price",

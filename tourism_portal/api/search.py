@@ -25,7 +25,7 @@ from tourism_portal.utils import calculate_extra_price, get_location_city, get_p
 """
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def get_available_hotels():
     search_params = frappe.form_dict.hotels_params#json.loads(frappe.form_dict)
     return get_available_hotel_rooms(search_params)
@@ -48,10 +48,86 @@ def search_for_available_hotel(hotel):
 	else:
 		return {}
 		
-def search_for_available_hotel_by_area(hotel):
-	return {}
-
+def search_for_available_hotel_by_area(hotel_params):
+	hotels = frappe.db.get_all("Hotel", filters={hotel_params.get('location-type'): hotel_params.get("location")}, fields=["name"])
+	results = {}
+	for hotel in hotels:
+		copy_params = hotel_params.copy()
+		copy_params['location-type'] = "hotel"
+		copy_params['location'] = hotel.get('name')
+		hotel_data = search_for_available_hotel_by_hotel(copy_params)
+		if len(hotel_data) > 0:
+			results.update(hotel_data)
+	return results
 def search_for_available_hotel_by_hotel(hotel_params):
+	hotel = frappe.get_cached_doc("Hotel", hotel_params.get("location"))
+	company_class = get_company_class(hotel_params)
+	if hotel.disabled:
+		return {}
+	hotel_rooms = get_hotel_rooms(hotel.name)
+	available_rooms = {}
+	for roomPax in hotel_params.get('paxInfo'):
+		available_rooms[roomPax.get('roomName')] = {}
+		available_rooms[roomPax.get('roomName')]['roomPax'] = roomPax
+		available_rooms[roomPax.get('roomName')]['rooms'] = []
+		paxRooms = filter_hotel_rooms_by_pax(hotel_rooms, roomPax, hotel.hotel_accommodation_type_rule)
+		if len(paxRooms) == 0:
+			return {}
+		available_rooms[roomPax.get('roomName')]['rooms'] = paxRooms
+		for room in available_rooms[roomPax.get('roomName')]['rooms']:
+			room['room_type_name'] = frappe.db.get_value("Room Type", room.get('room_type'), "room_type")
+			room['room_accommodation_type_name'] = frappe.db.get_value("Room Accommodation Type", room['room_accommodation_type'], "accommodation_type_name", cache=True)
+			get_room_contracts(room, hotel_params, roomPax, company_class)
+	return {
+		hotel.name:{
+			  **get_hotel_data(hotel),
+			  "rooms": available_rooms
+		}
+	}
+
+def get_room_contracts(room, hotel_params, roomPax, company_class):
+	room['contracts'] = []
+	all_room_contracts = get_all_room_contracts(room, hotel_params)
+	all_room_contracts = filter_contracts(all_room_contracts, hotel_params.get('checkin'), hotel_params.get('checkout'))
+	for contract in all_room_contracts:
+		contract['child_rate_contract'] = frappe.db.get_value("Hotel", room.get('hotel'), "hotel_child_rate_policy", cache=True)
+		get_room_contract_price(contract, room.get('room_accommodation_type'), hotel_params.get('nationality'), company_class, roomPax)
+	room['contracts'] = all_room_contracts
+
+def get_all_room_contracts(room, hotel_params):
+	contracts = frappe.db.sql("""
+		SELECT 
+		cntrct.name as contract_id, 
+		contract_type, qty, release_days,
+		check_in_from_date as from_date, check_in_to_date as to_date,
+		accommodation_type_rule as hotel_accommodation_type_rule, 
+		cancellation_policy as hotel_cancellation_policy
+			FROM `tabHotel Room Contract` as cntrct
+		WHERE hotel=%(hotel)s AND room_type=%(room_type)s
+						   	AND ( now() BETWEEN cntrct.selling_from_date and cntrct.selling_to_date)
+		AND (cntrct.release_days =0 or DATEDIFF(%(checkin)s, now()) > cntrct.release_days )
+		AND ((%(checkin)s >= cntrct.check_in_from_date and %(checkin)s <= cntrct.check_in_to_date)
+			OR ( %(checkout)s >= cntrct.check_in_from_date and  %(checkout)s <= cntrct.check_in_to_date))
+		AND cntrct.docstatus=1
+	""", {"hotel": room.get('hotel'), 'room_type': room.get('room_type'),
+       'checkin': hotel_params.get('checkin'), 'checkout': hotel_params.get('checkout')
+	   }, as_dict=True)
+	
+	return contracts
+
+def get_hotel_data(hotel):
+	return {
+			"hotel_id": hotel.name,
+			"hotel_name": hotel.hotel_name,
+			"hotel_image": hotel.hotel_image,
+			"address": hotel.address,
+			"gps_location": hotel.gps_location,
+			"star_rating": hotel.star_rating,
+			"town": hotel.town,
+			"area": hotel.area,
+		}
+
+def search_for_available_hotel_by_hotel_old(hotel_params):
 	# Get All Hotel Rooms
 	#all_rooms = get_hotel_all_rooms(hotel_params.get("location"))
 	#available_rooms = {}
@@ -73,14 +149,17 @@ def search_for_available_hotel_by_hotel(hotel_params):
 				accommondation_rule = get_hotel_accommodation_type_rule(contract=copy_contract.get('contract_no'))
 				room_acmnd_type = get_available_amnd_hotel_room_by_pax(accommondation_rule, roomPax)
 				copy_contract['profit_margin'] = frappe.db.get_value("Hotel Room Contract", copy_contract.get('contract_no'), "profit_margin", cache=True)
+				copy_contract['child_rate_contract'] = frappe.db.get_value("Hotel", copy_contract.get('hotel'), "hotel_child_rate_policy", cache=True)
 				copy_contract['room_type_name'] = frappe.db.get_value("Room Type", copy_contract.get('room_type'), "room_type")
 				copy_contract['room_accommodation_type'] = room_acmnd_type
 				copy_contract['room_accommodation_type_name'] = frappe.db.get_value("Room Accommodation Type", room_acmnd_type, "accommodation_type_name", cache=True)
 				room_type_contracts.append(copy_contract)
-				get_room_contract_price(copy_contract, room_acmnd_type, hotel_params.get('nationality'), company_class)
-
+				get_room_contract_price(copy_contract, room_acmnd_type, hotel_params.get('nationality'), company_class, roomPax)
+		
 			if len(room_type_contracts) > 0:
 				available_rooms[roomPax.get('roomName')]['contracts'].append(room_type_contracts)
+		# if len(available_rooms[roomPax.get('roomName')]['contracts']) == 0:
+		# 	available_rooms[roomPax.get('roomName')]['contracts'] = get_hotel_
 	return available_rooms
 	# for roomPax in hotel_params.get('paxInfo'):
 	# 	room_contracts = get_hotel_contracts(
@@ -113,7 +192,7 @@ def get_hotel_contracts(hotel, checkin, checkout):
 	contracts = filter_contracts(contracts, checkin, checkout)
 	return contracts
 
-def get_room_contract_price(contract, room_acmnd_type, nationality, company_class):
+def get_room_contract_price(contract, room_acmnd_type, nationality, company_class, roomPax):
 	contract['prices'] = get_contract_prices(contract, room_acmnd_type, nationality)
 	contract['prices'] = restart_price_dates(contract['prices'], contract['from_date'], contract['to_date'])
 	for price in contract['prices']:
@@ -121,6 +200,7 @@ def get_room_contract_price(contract, room_acmnd_type, nationality, company_clas
 			get_selling_price_profit_margin_based(contract, price)
 		del price['buying_price']
 		price['selling_price'] = get_room_selling_price_based_on_class(price['selling_price'], price['item_price_name'], company_class)
+		price['selling_price_with_childs'] = get_room_price_with_children(roomPax, price['selling_price'], contract.get('child_rate_contract'))
 
 def get_room_selling_price_based_on_class(selling_price: float, item_price_name: str, company_class: dict) -> float:
 	class_extra_price = frappe.db.get_value("Hotel Room Price Company", {"parent": item_price_name, "company_class": company_class.get('company_class')}, ['extra_type', 'extra_profit'])
@@ -129,6 +209,7 @@ def get_room_selling_price_based_on_class(selling_price: float, item_price_name:
 	return calculate_extra_price(selling_price, extra_type, extra_price)
 
 def get_selling_price_profit_margin_based(contract, room_price):
+	contract['profit_margin'] = frappe.db.get_value("Hotel Room Contract", contract.get('contract_id'), "profit_margin", cache=True)
 	selling_price = None
 	selling_currency = None
 	profit_margin_doc = frappe.get_cached_doc("Profit Margin", contract.get('profit_margin'))
@@ -177,7 +258,7 @@ def convert_currency(from_price, from_currency, to_currency):
 def get_contract_prices(contract, room_acmnd_type, nationality):
 	selling_date = frappe.utils.nowdate()
 	prices = frappe.db.sql("""
-		SELECT prc.name as item_price_name ,prc.company_class, prc.selling_type, prc.hotel, 
+		SELECT prc.name as item_price_name , prc.selling_type, prc.hotel, 
 		prc.buying_currency, prc.buying_price,
 						prc.room_accommodation_type,
 		prc.check_in_from_date as from_date, prc.check_in_to_date as to_date, 
@@ -191,7 +272,7 @@ def get_contract_prices(contract, room_acmnd_type, nationality):
 		AND ((prc.check_in_from_date <= %(checkin)s AND prc.check_in_to_date >= %(checkin)s)
 		OR (prc.check_in_from_date <= %(checkout)s AND prc.check_in_to_date >= %(checkout)s))
 """, {
-	"contract_id": contract.get('contract_no'),
+	"contract_id": contract.get('contract_id'),
 	"nationality": nationality,
 	"room_accommodation_type": room_acmnd_type,
 	"selling_date": selling_date,
@@ -202,23 +283,24 @@ def get_contract_prices(contract, room_acmnd_type, nationality):
 
 def filter_contracts(contracts, checkin, checkout):
 	# Filter Contracts by Remain Room Qty
-	contracts = filter_contracts_by_remain_qty(contracts)
+	# contracts = filter_contracts_by_remain_qty(contracts)
 	# Concat Contracts with same rome type
 	contracts = concat_contracts(contracts, checkin, checkout)
 	return contracts
 
 def concat_contracts(contracts, checkin, checkout):
-	room_type_contracts = {}
-	for contract in contracts:
-		if not room_type_contracts.get(contract.get('room_type')):
-			room_type_contracts[contract.get('room_type')] = []
-		room_type_contracts[contract.get('room_type')].append(contract)
+	# room_type_contracts = {}
+	# for contract in contracts:
+	# 	if not room_type_contracts.get(contract.get('room_type')):
+	# 		room_type_contracts[contract.get('room_type')] = []
+	# 	room_type_contracts[contract.get('room_type')].append(contract)
 	
-	contracts = {}
-	for room_type in room_type_contracts:
-		room_contracts = filter_contracts_by_dates(room_type_contracts[room_type], checkin, checkout)
-		if len(room_contracts) > 0:
-			contracts[room_type] = room_contracts
+	# contracts = {}
+	# for room_type in room_type_contracts:
+	# 	room_contracts = filter_contracts_by_dates(room_type_contracts[room_type], checkin, checkout)
+	# 	if len(room_contracts) > 0:
+	# 		contracts[room_type] = room_contracts
+	contracts = filter_contracts_by_dates(contracts, checkin, checkout)
 	return contracts
 from datetime import datetime, timedelta
 def convert_date_to_object(date):
@@ -329,14 +411,15 @@ def get_hotel_accommodation_type_rule(hotel=None,contract=None):
 		return frappe.db.get_value("Hotel Room Contract", contract, "accommodation_type_rule", cache=True)
 	else:
 		return None
-def filter_hotel_rooms_by_pax(all_rooms, roomPax):
+def filter_hotel_rooms_by_pax(all_rooms, roomPax, room_accommodation_type):
 	available_rooms = []
 	for room in all_rooms:
-		room_accommodation_type = room.get("hotel_accommodation_type_rule")
+		# room_accommodation_type = room.get("hotel_accommodation_type_rule")
 		room_accommodation_type_doc = frappe.get_cached_doc("Room Accommodation Type Rule", room_accommodation_type)
 		for room_type in room_accommodation_type_doc.rules:
 			if room_type.room_type == room.get('room_accommodation_type'):
 				if is_room_suitable_for_pax(room_type, roomPax):
+					# return room
 					available_rooms.append(room)
 	return available_rooms
 def get_available_amnd_hotel_room_by_pax(amnd_rule, roomPax):
@@ -361,20 +444,16 @@ def is_room_suitable_for_pax(room_rule, pax_info):
 	if children < room_rule.get('min_childs') or children > room_rule.get('max_childs'): return False
 	return True
 
-def get_hotel_all_rooms(hotel):
+def get_hotel_rooms(hotel):
 	all_rooms  = frappe.db.sql("""
 		select 
-		tbl1.name as hotel_id, tbl1.hotel_name,
-		tbl1.hotel_image, tbl1.address, tbl1.gps_location, tbl1.star_rating,
-		tbl2.room_type, tbl2.room_accommodation_type, 
+		tbl2.room_type, 
+		tbl2.room_accommodation_type, 
 		tbl2.name as room_id,
 		tbl2.room_image,
-		tbl1.hotel_child_rate_policy,
-		tbl1.hotel_accommodation_type_rule,
-		tbl1.hotel_cancellation_policy
+		tbl2.hotel
 		FROM `tabHotel Room` tbl2 
-		INNER JOIN `tabHotel` tbl1 ON tbl1.name=tbl2.hotel
-		WHERE	tbl2.disabled=0 AND tbl1.disabled=0  AND tbl1.name=%(hotel)s
+		WHERE tbl2.disabled=0 AND tbl2.hotel=%(hotel)s
 		;
 	""", {"hotel": hotel }, as_dict=True)
 	return all_rooms
@@ -471,3 +550,20 @@ def set_new_search_results(search, params):
 	search_doc.hotel_params = params
 	search_doc.save(ignore_permissions=True)
 	return search
+
+def get_room_price_with_children(pax, selling_price, hotel_child_rate_policy):
+	room_price = selling_price
+	child_policy = frappe.get_cached_doc("Child Rate Policy", hotel_child_rate_policy)
+	if pax:
+		adult_price = selling_price / float(pax.get('adults'))
+		child_ages = [int(child) for  child in pax.get('childrenInfo')]
+		child_ages.sort()
+		child_order = 0
+		for child in child_ages:
+			child_order += 1
+			for plc in child_policy.policy_details:
+				if int(plc.get('room_child_order')) == child_order:
+					if child >= plc.get('from_age') and child <= plc.get('to_age'):
+						room_price += ((adult_price * plc.get('adult_price_percentage')) / 100)
+						break
+	return room_price
