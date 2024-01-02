@@ -1,5 +1,6 @@
 import frappe
 from frappe import _
+from tourism_portal.api.search import get_available_hotel_rooms
 from tourism_portal.tourism_portal.doctype.tour_price.tour_price import apply_tour_discount, get_available_tours, get_available_tours_and_prices
 from tourism_portal.tourism_portal.doctype.transfer_price.transfer_price import get_available_transfers
 from tourism_portal.utils import calculate_extra_price, get_portal_setting
@@ -18,12 +19,11 @@ def get_context(context):
 	transferParams = json.loads(search_doc.transfer_params)#params.get('transferParams')
 	tourParams = json.loads(search_doc.tour_params)#params.get('toursparams')
 	transfers = search_for_transfers(transferParams)
-	print(transfers)
 	total_days = get_hotel_total_days(hotelParams)
 	context.tours = search_for_tours(tourParams, total_days)
 	# context.rooms = get_available_hotel_rooms(hotelParams)
 	# context.rooms = json.dumps(context.rooms, default=str)
-	rooms = get_available_hotel_rooms(hotelParams)
+	rooms = get_available_hotel_rooms_old(hotelParams)
 	# search_doc.room_results = context.rooms
 	# search_doc.save(ignore_permissions=True)
 	context.hotel_search_params = json.dumps(hotelParams, default=str)
@@ -91,7 +91,7 @@ def search_for_tours(tourParams, total_days= None):
 		}
 	]
 """
-def get_available_hotel_rooms(search_params):
+def get_available_hotel_rooms_old(search_params):
 	
 	hotels = {}
 	for search in search_params:

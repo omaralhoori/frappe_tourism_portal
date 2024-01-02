@@ -32,6 +32,9 @@ def get_location_postal_code(location_type, location):
         frappe.throw("Please enter valid location type")
     return frappe.db.get_value("Area", area, 'postal_code', cache=True)
 
+def get_postal_code_transfer_area(postal_code):
+    return frappe.db.get_value("Postal Code Item", {"postal_code": postal_code}, 'parent')
+
 def get_location_city(location_type, location):
     area = None
     if location_type == 'area':

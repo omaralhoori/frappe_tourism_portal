@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-from tourism_portal.utils import calculate_discount_price, calculate_extra_price, get_location_postal_code
+from tourism_portal.utils import calculate_discount_price, calculate_extra_price, get_location_postal_code, get_postal_code_transfer_area
 
 class TourPrice(Document):
 	pass
@@ -101,6 +101,7 @@ def get_available_tours(params):
 	"""
 	check_tour_params(params)
 	from_postal_code = get_location_postal_code(params['location-type'], params['location'])
+	from_area = get_postal_code_transfer_area(from_postal_code)
 	tour_id = params['tour-id']
 	where_stmt = ""
 	if params['tour-type'] == "vip":
@@ -128,7 +129,7 @@ def get_available_tours(params):
 	{join_table}
 	{where_stmt}
 	""".format(where_stmt=where_stmt, search_columns=search_columns, join_table=join_table, parenttype=parenttype),
-	{"from_postal_code": from_postal_code, "tour_id": tour_id,
+	{"from_postal_code": from_area, "tour_id": tour_id,
 	 "tour_date": params['tour-date']}, as_dict=True)    
 	transfer_price = 0
 	trasfers = []

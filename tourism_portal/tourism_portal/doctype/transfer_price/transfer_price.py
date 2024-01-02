@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-from tourism_portal.utils import get_location_postal_code
+from tourism_portal.utils import get_location_postal_code, get_postal_code_transfer_area
 
 class TransferPrice(Document):
 	pass
@@ -22,6 +22,8 @@ def get_available_transfers(params):
 	check_transfer_params(params)
 	from_postal_code = get_location_postal_code(params['from-location-type'], params['from-location'])
 	to_postal_code = get_location_postal_code(params['to-location-type'], params['to-location'])
+	from_area = get_postal_code_transfer_area(from_postal_code)
+	to_area = get_postal_code_transfer_area(to_postal_code)
 	if params['transfer-type'] == "vip":
 		search_columns = "vip.transfer_type, vip.transfer_price"
 		join_table = "INNER JOIN `tabVIP Transfer Price` vip ON vip.parent=tp.name"
@@ -37,8 +39,8 @@ def get_available_transfers(params):
 	AND (to_date IS NULL OR to_date >= %(transfer_date)s)
 	ORDER BY from_date DESC;
 	""".format(search_columns=search_columns, join_table=join_table),
-	{"from_postal_code": from_postal_code,
-	 "to_postal_code": to_postal_code,
+	{"from_postal_code": from_area,
+	 "to_postal_code": to_area,
 	 "transfer_date": params['transfer-date']}, as_dict=True)    
 	transfer_price = 0
 	trasfers = []
