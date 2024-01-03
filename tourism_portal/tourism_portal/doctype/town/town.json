@@ -32,7 +32,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-19 11:26:29.180897",
+ "modified": "2024-01-02 16:41:53.842134",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Town",
@@ -53,6 +53,7 @@
   }
  ],
  "quick_entry": 1,
+ "search_fields": "city",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

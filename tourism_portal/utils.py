@@ -1,4 +1,5 @@
 import frappe
+from frappe.tests.utils import FrappeTestCase
 
 
 def get_portal_setting(fieldname):
@@ -71,3 +72,58 @@ def get_date_weekday(date):
     weekday =  frappe.utils.get_weekday(date)
     #print(weekday_number)
     return weekday#weekdays[weekday_number]
+import datetime
+def get_cancellation_refund(policy, total_price, check_in, check_out, day_margin=0, day_start_hour=12):
+    refund = 0
+    policy = frappe.get_doc("Cancellation Policy", policy)
+    if type(check_in) == str:
+        check_in = frappe.utils.datetime.datetime.strptime(check_in, "%Y-%m-%d").date()
+    if type(check_out) == str:
+        check_out = frappe.utils.datetime.datetime.strptime(check_out, "%Y-%m-%d").date()
+    total_price = float(total_price)
+    # cancellations = frappe.db.get_all("Cancellation Policy Item", 
+    #                                 {"parent": policy}, 
+    #         ['duration_type', 'duration', 'refund_type', 'refund', 'is_deduction'], order_by="idx")
+    cancellation_policy = frappe.get_cached_doc("Cancellation Policy", policy)
+    days = frappe.utils.date_diff(check_out, check_in) + day_margin
+    day_diff = frappe.utils.date_diff(check_in, frappe.utils.now())
+    check_in_datetime = datetime.datetime.combine(check_in, datetime.time(day_start_hour))
+
+    time_difference = check_in_datetime - frappe.utils.datetime.datetime.now()
+    total_seconds = time_difference.total_seconds()
+    hour_diff = total_seconds / 3600
+    price_per_day = total_price / days
+    selected_cncl = None
+    for cncl in cancellation_policy.refunds:
+        if cncl.duration_type == 'Hour':
+            if cncl.duration >= hour_diff:
+                selected_cncl = cncl
+                break
+        elif cncl.duration_type == 'Day':
+            if cncl.duration >= day_diff:
+                selected_cncl = cncl
+                break
+    refund = total_price
+    if selected_cncl:
+        if selected_cncl.refund_type == 'Day':
+            refund =  price_per_day * selected_cncl.refund
+        elif selected_cncl.refund_type == 'Percentage':
+            refund = (total_price * selected_cncl.refund) / 100
+        elif selected_cncl.refund_type == 'Amount':
+            refund = selected_cncl.refund
+        if selected_cncl.is_deduction:
+            refund = total_price - refund
+    if not selected_cncl: selected_cncl = {}
+    return refund
+
+class TestEvent(FrappeTestCase):
+    def test_get_cancellation_refund(self):
+        refund = get_cancellation_refund("24 Hours Refundable", 1000, "2024-01-04", "2024-01-07")
+        print("Test 1 Refund:", refund)
+        self.assertTrue(refund == 1000)
+        refund = get_cancellation_refund("24 Hours Refundable", 1000, "2024-01-03", "2024-01-08")
+        print("Test 2 Refund:", refund)
+        self.assertTrue(refund == 800)
+        refund = get_cancellation_refund("24 Hours Refundable", 1000, "2024-01-02", "2024-01-07")
+        print("Test 3 Refund:", refund)
+        self.assertTrue(refund == 600)

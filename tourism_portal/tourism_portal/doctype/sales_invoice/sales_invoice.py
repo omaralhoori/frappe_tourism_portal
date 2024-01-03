@@ -4,22 +4,133 @@
 import frappe
 from frappe.model.document import Document
 from frappe import _
+from frappe.tests.utils import FrappeTestCase
 from tourism_portal.tourism_portal.doctype.company_payment.company_payment import add_company_refund, create_payment
 from tourism_portal.tourism_portal.doctype.room_availability.room_availability import free_room, reserve_room
 from tourism_portal.tourism_portal.doctype.sales_invoice.reserve import add_transfers_to_invoice
+from tourism_portal.tourism_portal.doctype.tour_price.tour_price import get_tour_price_with_child_prices
 from tourism_portal.tourism_portal.doctype.tour_schedule_order.tour_schedule_order import schedule_tours_dates
+from tourism_portal.utils import get_cancellation_refund, get_location_city
 class SalesInvoice(Document):
 	def after_insert(self):
 		session_expires_in = frappe.db.get_single_value("Tourism Portal Settings", "session_expires_in")
 		session_expires = frappe.utils.now_datetime()+frappe.utils.datetime.timedelta(seconds=int(session_expires_in))
 		self.db_set('session_expires',session_expires)
 		self.reserve_rooms()
+		self.add_free_tours()
 		self.schedule_tours()
 	def on_update(self):
 		self.calculate_total_hotel_fees()
 		self.calculate_total_transfer_fees()
 		self.calculate_total_tour_fees()
 		self.calculate_total_fees()
+	def add_free_tours(self):
+		if len(self.rooms) == 0 or len(self.transfers) == 0:
+			return
+		# GET FREE TOURS
+		discount_doc = frappe.get_single("Tour Discount")
+		for free_tour in discount_doc.free_tour:
+			tour_added = False
+			for tour in self.tour_types:
+				if tour.tour_name == free_tour.tour_type:
+					tour_added = True
+					break
+			if tour_added:
+				continue
+			print("0----------------------------------------")
+			print("Adding Free Tour", free_tour.tour_type)
+			tour_city = frappe.db.get_value("Tour Type", free_tour.tour_type, "tour_pickup_city", cache=True)
+			for room in self.rooms:
+				town = frappe.db.get_value("Hotel", room.hotel, "town", cache=True)
+				hotel_city = frappe.db.get_value("Town", town, "city", cache=True)
+				if tour_city == hotel_city and frappe.utils.date_diff(room.check_out, room.check_in) >= free_tour.min_nights:
+					for transfer in self.transfers:
+						transfer_city = get_location_city(transfer.drop_off_type, transfer.drop_off)
+						if transfer_city == tour_city:
+							tour_added = self.add_free_tour(free_tour, tour_city, room.hotel_search,room.hotel ,room.check_in, room.check_out)
+							
+						if tour_added: break
+				if tour_added: break
+		self.save(ignore_permissions=True)
+	def add_free_tour(self, free_tour, free_tour_city, hotel_search,pickup_hotel, from_date, to_date):
+		tour_search = None
+		adults = 0
+		childs = 0
+		child_ages = []
+		new_tour = False
+		print("Add free Tour", free_tour.tour_type, free_tour_city, hotel_search,pickup_hotel, from_date, to_date)
+		for tour in self.tours:
+			if tour.tour_type != "package":
+				tour_city = get_location_city(tour.pick_up_type, tour.pick_up)
+				if tour_city == free_tour_city:
+					tour_search = tour
+					break
+		for room_pax in self.room_pax_info:
+			if room_pax.hotel_search == hotel_search and room_pax.guest_type == "Adult":
+				adults += 1
+			elif room_pax.hotel_search == hotel_search and room_pax.guest_type == "Child":
+				childs += 1
+				child_ages.append(room_pax.guest_age)
+		if tour_search:
+			tour_adults = 0
+			tour_childs = 0
+			tour_child_ages = []
+			for tour_pax in self.tour_pax_info:
+				if tour_search.search_name == tour_pax.search_name  and tour_pax.guest_type == "Adult":
+					tour_adults += 1
+				elif tour_search.search_name == tour_pax.search_name  and tour_pax.guest_type == "Child":
+					tour_childs += 1
+					tour_child_ages.append(tour_pax.guest_age)
+			if tour_adults != adults or tour_childs != childs or sorted(child_ages) != sorted(tour_child_ages):
+				new_tour = True
+
+		tour_price = self.get_tour_price(free_tour.tour_type, adults, childs, child_ages)
+		print("Tour Price", tour_price)
+		if not tour_price: return False
+		discount_price = tour_price - (tour_price * free_tour.discount / 100)
+		print("Discount Price", discount_price) 
+		if not tour_search or new_tour:
+			tour_search = self.append("tours")
+			tour_search.search_name = "Free Tour"
+			tour_search.tour_type = self.map_tours_type(frappe.db.get_value("Tour Type", free_tour.tour_type, "tour_type", cache=True))
+			tour_search.pick_up = pickup_hotel
+			tour_search.pick_up_type = "hotel"
+			tour_search.from_date = frappe.utils.add_days(from_date, 1)
+			tour_search.to_date = frappe.utils.add_days(to_date, -1)
+			tour_search.tour_price = discount_price
+			tour_search.adults = adults
+			tour_search.children = childs
+			for room_pax in self.room_pax_info:
+				if room_pax.hotel_search == hotel_search: 
+					tour_pax = self.append("tour_pax_info")
+					tour_pax.search_name = tour_search.search_name
+					tour_pax.guest_type = room_pax.guest_type
+					tour_pax.guest_age = room_pax.guest_age
+		tour_type = self.append("tour_types")
+		tour_type.search_name = tour_search.search_name
+		tour_type.tour_type = "single"
+		tour_type.tour_name = free_tour.tour_type
+		tour_type.tour_price= discount_price
+		return True
+
+	def get_tour_price(self, tour_type, adults, childs, child_ages):
+		tour_price = None
+		adult_price = 0
+		tour_price_doc = frappe.get_value("Tour Price", {"tour_type": tour_type}, ["adult_economic_price", "adult_premium_price", "tour_child_policy"])
+		if not tour_price_doc: return
+		tour = frappe.db.get_value("Tour Type",  tour_type, "tour_type")
+		if tour == "Economic":
+			adult_price = tour_price_doc[0]
+		elif tour == "Premium":
+			adult_price = tour_price_doc[1]
+		tour_price = get_tour_price_with_child_prices(tour_price_doc[2], adult_price, adults, childs, child_ages)
+		return tour_price
+	def map_tours_type(self, tour_type):
+		return {
+			"VIP": "vip",
+			"Premium": "group-premium",
+			"Economic": "group-economic",
+		}.get(tour_type)
 	def schedule_tours(self):
 		all_tours = {}
 		for tour_search in self.tours:
@@ -153,8 +264,43 @@ class SalesInvoice(Document):
 
 	# 	self.cancel_invoice()
 	def cancel_invoice(self):
+		print("Cancel Invoice")
+		if self.status == "Cancelled":
+			frappe.throw(_("Invoice is already cancelled"))
 		self.cancel_hotels()
+		self.cancel_transfers()
+		self.cancel_tours()
 		self.db_set("status", "Cancelled")
+	def cancel_transfers(self):
+		cancellation_policy = frappe.db.get_single_value("Tourism Portal Settings", "transfer_cancellation_policy")
+		total_refunds = 0
+		for transfer in self.transfers:
+			# transfer.is_canceled = 1
+			total_refunds += get_cancellation_refund(cancellation_policy, transfer.transfer_price, transfer.transfer_date, transfer.transfer_date, day_margin=1, day_start_hour=0)
+		if total_refunds > 0:
+			add_company_refund( company=self.company, refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype, remarks="Transfer Refund")
+			
+	def cancel_tours(self):
+		cancellation_policy = frappe.db.get_single_value("Tourism Portal Settings", "tour_cancellation_policy")
+		total_refunds = 0
+		for tour in self.tours:
+			if tour.tour_type == "package":
+				total_refunds += get_cancellation_refund(cancellation_policy, tour.tour_price, tour.from_date, tour.to_date, day_margin=1, day_start_hour=0)
+			else:
+				total_refunds += self.get_single_tour_refund(tour, cancellation_policy)
+			#tour.is_canceled = 1
+			#tour.save(ignore_permissions=True)
+		if total_refunds > 0:
+			add_company_refund( company=self.company, refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype, remarks="Tour Refund")
+	def get_single_tour_refund(self,tour, cancellation_policy):
+		total_refund = 0
+		for tour_type in self.tour_types:
+			if tour_type.search_name == tour.search_name:
+				total_refund += get_cancellation_refund(cancellation_policy, tour_type.tour_price, tour_type.tour_date, tour_type.tour_date, day_margin=1, day_start_hour=0)
+		return total_refund
+		# if tour.tour_date:
+		# 	refund = refund_tour(cancellation_policy, tour.tour_price, tour.tour_date)
+		# return refund
 	def cancel_hotels(self):
 		# ToDo cannot cancel any room if checkin is passed
 		total_refunds = 0
@@ -236,3 +382,9 @@ def test_schedule(invoice):
 	invoice.schedule_tours()
 	invoice.save(ignore_permissions=True)
 	frappe.db.commit()
+
+
+class TestEvent(FrappeTestCase):
+	def test_add_free_tour(self):
+		sales_invoice = frappe.get_doc("Sales Invoice", "INV-24-01-00007")
+		sales_invoice.add_free_tours()

@@ -28,7 +28,11 @@
   "default_hotel_accommodation_type_rule",
   "column_break_tiaee",
   "default_hotel_child_rate_policy",
-  "default_hotel_profit_margin"
+  "default_hotel_profit_margin",
+  "section_break_jqycl",
+  "tour_cancellation_policy",
+  "column_break_usmi5",
+  "transfer_cancellation_policy"
  ],
  "fields": [
   {
@@ -159,13 +163,35 @@
    "fieldtype": "Int",
    "label": "Max Child Age",
    "reqd": 1
+  },
+  {
+   "fieldname": "section_break_jqycl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "tour_cancellation_policy",
+   "fieldtype": "Link",
+   "label": "Tour Cancellation Policy",
+   "options": "Cancellation Policy",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_usmi5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "transfer_cancellation_policy",
+   "fieldtype": "Link",
+   "label": "Transfer Cancellation Policy",
+   "options": "Cancellation Policy",
+   "reqd": 1
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-12-18 16:49:05.717432",
+ "modified": "2024-01-02 14:50:02.936702",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal Settings",

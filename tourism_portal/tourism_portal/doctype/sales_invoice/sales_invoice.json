@@ -168,15 +168,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Status",
-   "options": "Draft\nSubmitted\nCancelled",
-   "read_only": 1
-  },
-  {
    "fieldname": "room_price",
    "fieldtype": "Table",
    "label": "Room Price",
@@ -236,12 +227,21 @@
    "fieldtype": "Currency",
    "label": "Tour Fees",
    "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Draft\nSubmitted\nCancelled",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-19 11:26:18.374488",
+ "modified": "2024-01-02 14:34:33.274752",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice",

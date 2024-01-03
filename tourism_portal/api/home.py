@@ -1,5 +1,5 @@
 import frappe
-from tourism_portal.utils import get_location_city, get_location_postal_code
+from tourism_portal.utils import get_location_city, get_location_postal_code, get_postal_code_transfer_area
 import json
 
 @frappe.whitelist(allow_guest=True)

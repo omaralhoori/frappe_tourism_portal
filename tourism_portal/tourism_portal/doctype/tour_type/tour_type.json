@@ -94,7 +94,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-19 11:26:19.988534",
+ "modified": "2024-01-02 16:44:03.535374",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour Type",
@@ -114,6 +114,7 @@
    "write": 1
   }
  ],
+ "search_fields": "tour_name, tour_pickup_city, tour_type",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

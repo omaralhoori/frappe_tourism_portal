@@ -210,6 +210,25 @@ def get_group_transfer_price(paxes, available_transfers):
 		transfer_price += child_price
 	return adult_price, child_prices
 
+def get_tour_price_with_child_prices(child_policy, adult_price, adults, children, child_ages):
+	policies = frappe.db.get_all("Transfer Child Price", {"parent": child_policy},
+	 ["child_order", "from_age", "to_age", "adult_price_percentage"], order_by="idx, child_order")
+	child_ages.sort()
+	child_prices = []
+	for child_age in child_ages:
+		for policy in policies:
+			if policy['from_age'] <= int(child_age) <= policy['to_age'] and policy['child_order'] == len(child_prices) + 1:
+				child_prices.append(adult_price * policy['adult_price_percentage'] / 100)
+				break
+			elif policy['from_age'] <= int(child_age) <= policy['to_age'] and policy['child_order'] == 0:
+				child_prices.append(adult_price * policy['adult_price_percentage'] / 100)
+				break
+	adults = adults + children - len(child_prices)
+	transfer_price = adult_price * adults
+	for child_price in child_prices:
+		transfer_price += child_price
+	return transfer_price
+
 def check_available_vip_transfer(available_transfer, paxes):
 	"""
 	Check if a VIP transfer is available based on the available transfer and passenger details.

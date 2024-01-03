@@ -56,6 +56,27 @@ def create_reservation():
 def get_invoice_data(sales_invoice):
     company = frappe.db.get_value("User", frappe.session.user, "company")
     invoice = frappe.get_doc("Sales Invoice", {"name": sales_invoice, "company": company})
+    if invoice.status == "Cancelled":
+        #frappe.throw("This invoice has been cancelled!")
+        return {
+        "invoice_id": invoice.name,
+        "session_expires": invoice.session_expires,
+        "post_date": invoice.post_date,
+        "post_time": invoice.post_time,
+        "hotel_fees": invoice.hotel_fees,
+        "transfer_fees": invoice.transfer_fees,
+        "tour_fees": invoice.tour_fees,
+        "grand_total": invoice.grand_total,
+        "rooms": {},
+        "tours": {},
+        "transfers": {},
+        "docstatus": invoice.docstatus,
+        "status": invoice.status,
+        "sales_invoice": sales_invoice, 
+        "customer_name": invoice.customer_name,
+        "customer_email": invoice.customer_email,
+        "customer_mobile_no": invoice.customer_mobile_no
+    }
     rooms = {}
     tours = {}
     transfers = {}
@@ -222,14 +243,15 @@ def get_invoice_data(sales_invoice):
         "sales_invoice": sales_invoice, 
         "customer_name": invoice.customer_name,
         "customer_email": invoice.customer_email,
-        "customer_mobile_no": invoice.customer_mobile_no
+        "customer_mobile_no": invoice.customer_mobile_no,
+        "status": invoice.status,
     }
 
 
 @frappe.whitelist()
 def get_all_invoices(start=0, limit=20):
     company = frappe.db.get_value("User", frappe.session.user, "company")
-    return frappe.db.get_all("Sales Invoice", {"company": company}, [
+    return frappe.db.get_all("Sales Invoice", {"company": company, "status": ["!=", "Cancelled"]}, [
         "name", "grand_total", "post_date", "status",
           "post_time", "session_expires", "docstatus"], order_by="creation DESC" ,limit=limit, start=start)
 
