@@ -260,7 +260,6 @@ function different_names_clicked(e){
 
 function roomExtraChanged(e){
   var extraPrice = e.getAttribute("extra-price");
-
   if(e.checked){
     changeTotalFees("hotel_fees", extraPrice)
   }else{
@@ -269,13 +268,13 @@ function roomExtraChanged(e){
 }
 
 function changeTotalFees(totalId, amount){
-  var totalAmount = Number( document.querySelector(`#${totalId}`).innerText);
+  var totalAmount = Number( document.querySelector(`#${totalId}`).innerText.replaceAll(",", "."));
   document.querySelector(`#${totalId}`).innerText = totalAmount + Number(amount)
   updateGrandTotal()
 }
 
 function updateGrandTotal(){
-  var hotelFees = Number(document.querySelector('#hotel_fees').innerText)
+  var hotelFees = Number(document.querySelector('#hotel_fees').innerText.replaceAll(",", "."))
   document.querySelector('#total_fees').innerText = hotelFees 
 }
 

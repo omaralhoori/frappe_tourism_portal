@@ -73,7 +73,7 @@
             {% if invoice_details.docstatus == 1 %}
             {% set extras = rsrv_room['extras'] %}
             {% else %}
-            {% set extras = get_room_extras(hotel_rsv) %}
+            {% set extras = get_room_extras(hotelName) %}
             {% endif %}
             {% if extras | length > 0%}
             <div class="">

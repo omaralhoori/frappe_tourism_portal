@@ -265,13 +265,16 @@ def complete_reservation():
     invoice.room_extras = []
     for roomRowId in rooms:
         extras = rooms[roomRowId].pop('extras')
+        hotel_search = None
         for paxRowId in rooms[roomRowId]:
             for pax in invoice.room_pax_info:
                 if pax.name == paxRowId:
                     pax.guest_salutation = rooms[roomRowId][paxRowId]['salut']
                     pax.guest_name = rooms[roomRowId][paxRowId]['guest_name']
+                    hotel_search = pax.hotel_search
         for extra in extras:
             extra_row = invoice.append('room_extras')
+            extra_row.hotel_search = hotel_search
             extra_row.extra = extra['extra']
             extra_row.room_name = extra['room_name']
             extra_row.extra_price = float(extra['extra_price'])

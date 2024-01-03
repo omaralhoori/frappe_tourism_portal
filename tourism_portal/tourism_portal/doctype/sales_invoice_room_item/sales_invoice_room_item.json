@@ -18,6 +18,10 @@
   "check_in",
   "check_out",
   "section_break_fmvkn",
+  "board",
+  "column_break_1gikl",
+  "board_extra_price",
+  "section_break_uapdf",
   "refund",
   "is_cancelled"
  ],
@@ -40,7 +44,8 @@
   },
   {
    "fieldname": "section_break_fmvkn",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Board"
   },
   {
    "fieldname": "room_name",
@@ -109,12 +114,31 @@
   {
    "fieldname": "column_break_ztxm9",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "board",
+   "fieldtype": "Link",
+   "label": "Board",
+   "options": "Hotel Boarding Type"
+  },
+  {
+   "fieldname": "column_break_1gikl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "board_extra_price",
+   "fieldtype": "Currency",
+   "label": "Board Extra Price"
+  },
+  {
+   "fieldname": "section_break_uapdf",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-19 11:26:21.808290",
+ "modified": "2024-01-03 12:33:13.622468",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice Room Item",
