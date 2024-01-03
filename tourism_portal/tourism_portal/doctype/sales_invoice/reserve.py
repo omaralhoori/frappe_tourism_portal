@@ -108,6 +108,8 @@ def add_tours_to_invoice(invoice, tours):
                     invoice_tour.tour_name = tour
                     if search['tour_type'] == 'vip':
                         invoice_tour.tour_price = float(selected_tour['price'])
+                    else:
+                        invoice_tour.tour_price = float(selected_tour['toursPrice'].get(tour, '0'))
             else:
                 for package in selected_tour['tours']:
                     package_tours = get_package_tours(package)

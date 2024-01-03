@@ -713,13 +713,16 @@ function getSelectedTours(){
             var tourPrice = tourResult.querySelector('.tour-price').getAttribute('tour-price')
             var tourPickup = tourResult.querySelector('.tour-pickup').getAttribute('tour-pickup')
             var tours = []
+            var toursPrice = {}
             for (var tourItem of tourResult.querySelectorAll('.tour-item')){
                 tours.push(tourItem.getAttribute('tour-id'))
+                toursPrice[tourItem.getAttribute('tour-id')] = tourItem.getAttribute('tour-indv-price')
             }
             selectedTours[tourSearchName].push({
                 "tours": tours,
                 "price": tourPrice,
-                "pickup": tourPickup
+                "pickup": tourPickup,
+                "toursPrice": toursPrice
             })
         }
     }

@@ -25,7 +25,7 @@ def get_locations(search="", start=0, page_len=10):
 @frappe.whitelist(allow_guest=True)
 def get_tour_locations(search="", start=0, page_len=10):
 	hotels = frappe.db.sql("""
-        SELECT area.name as locationId, area.area_name as locationName, 'area' AS locationType, 'Area' AS locationDetails
+        SELECT area.name as locationId, area.area_name as locationName, 'area' AS locationType, CONCAT(area.town,',Area') AS locationDetails
         FROM `tabArea` as area
 		INNER JOIN `tabTown` as town ON area.town=town.name
         WHERE area.area_name LIKE %(txt)s or town.town_name LIKE %(txt)s
@@ -47,7 +47,7 @@ def get_transfer_locations(search="", start=0, page_len=10):
         FROM `tabAirport` as air
         WHERE air.airport_name LIKE %(txt)s AND air.portal_disabled=0
         UNION
-        SELECT area.name as locationId, area.area_name as locationName, 'area' AS locationType, 'Area' AS locationDetails
+        SELECT area.name as locationId, area.area_name as locationName, 'area' AS locationType, CONCAT(area.town,',Area')  AS locationDetails
         FROM `tabArea` as area
 		INNER JOIN `tabTown` as town ON area.town=town.name
         WHERE area.area_name LIKE %(txt)s or town.town_name LIKE %(txt)s
