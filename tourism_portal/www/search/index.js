@@ -128,7 +128,6 @@ function formatResults(allResults){
         var hotelReuslts = "";
         var accordion = Object.keys(results).length > 1;
         for (var hotel in results){
-            // console.log(results[hotel])
             
             var resultFormatted = formatHotelResults(results[hotel]);
             if (accordion){
@@ -171,7 +170,7 @@ function formatResults(allResults){
         //     hotelReuslts = `<div id="accordion"> ${hotelReuslts}</div>`
         // }
         //if (multipleResults){
-            hotelReuslts = `<div class="card p-3 mt-3" >${renderHotelSearchBar(resultLabel)}</div> ${hotelReuslts}`
+            hotelReuslts = `<div class="card p-3 mt-3" >${renderHotelSearchBar(resultLabel, accordion)}</div> ${hotelReuslts}`
         //}
         hotelReuslts = `<div class='hotel-search-results' hotel-result="${resultLabel}"> ${hotelReuslts}</div>`
         allHotelResults += hotelReuslts
@@ -181,11 +180,43 @@ function formatResults(allResults){
 
 }
 
-function renderHotelSearchBar(resultLabel){
+function hotelSearchStarChanged(e){
+    var selected = e.value;
+    e.closest(".hotel-search-results").querySelectorAll(`div.hotel-stars`).forEach(hotel => {
+            hotel.closest('.hotel-card').style.display="block";
+        })
+    if (!selected || selected ==""){
+    }else{
+        var hotels = e.closest(".hotel-search-results").querySelectorAll(`div.hotel-stars:not([star-rating='${selected}'])`)
+        hotels.forEach(hotel => {
+            hotel.closest('.hotel-card').style.display="none";
+        })
+
+    }
+}
+
+function renderHotelSearchBar(resultLabel, multipleResults){
+    var filters = ""
+    if (multipleResults){
+        filters += `
+            <select class="form-select" onchange="hotelSearchStarChanged(this)">
+            <option value ="" selected>Star Rating</option>
+            <option value="One Star">One Star</option>
+            <option value="Two-Star">Two-Star</option>
+            <option value="Three-Star">Three-Star</option>
+            <option value="Four-Star">Four-Star</option>
+            <option value="Five-Star">Five-Star</option>
+            </select>
+        `
+    }
     var html = `
         <div class="d-flex justify-content-between">
             <div class="hotel-search-label">${resultLabel}</div>
-            <div class="hotel-search-buttons">
+
+            <div class="hotel-search-buttons d-flex">
+                <div class="search-filters mr-2">
+                ${filters}
+                </div>
                 <button class="btn btn-sm" search-results="${resultLabel}"
                  onclick="editHotelSearchResults(this)">Edit <i class="fa fa-pencil"></i></button>
             </div>

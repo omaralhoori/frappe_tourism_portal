@@ -41,7 +41,7 @@ def get_available_transfers(params):
 	""".format(search_columns=search_columns, join_table=join_table),
 	{"from_postal_code": from_area,
 	 "to_postal_code": to_area,
-	 "transfer_date": params['transfer-date']}, as_dict=True)    
+	 "transfer_date": params['transfer-date']}, as_dict=True)  
 	transfer_price = 0
 	trasfers = []
 	search_params = {

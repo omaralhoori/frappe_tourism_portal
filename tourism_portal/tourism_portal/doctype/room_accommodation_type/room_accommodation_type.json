@@ -10,7 +10,8 @@
  "engine": "InnoDB",
  "field_order": [
   "accommodation_type_code",
-  "accommodation_type_name"
+  "accommodation_type_name",
+  "bed_types"
  ],
  "fields": [
   {
@@ -26,11 +27,17 @@
    "label": "Accommodation Type Code ",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "bed_types",
+   "fieldtype": "Table",
+   "label": "Bed Types",
+   "options": "Room Accommodation Bed Type item"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-19 11:26:30.805439",
+ "modified": "2024-01-04 03:51:41.956553",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Room Accommodation Type",

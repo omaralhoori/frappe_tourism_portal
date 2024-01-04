@@ -94,14 +94,15 @@ def get_invoice_data(sales_invoice):
                 "nationality": room.get('nationality'),
                 "check_out": room.get('check_out'),
             }
-        room_type, room_acmnd_type = frappe.db.get_value("Hotel Room", room.room, ['room_type', 'room_accommodation_type'])
+        room_type, room_acmnd_type_code = frappe.db.get_value("Hotel Room", room.room, ['room_type', 'room_accommodation_type'])
         room_type = frappe.db.get_value("Room Type", room_type, 'room_type', cache=True)
-        room_acmnd_type = frappe.db.get_value("Room Accommodation Type", room_acmnd_type, 'accommodation_type_name', cache=True)
+        room_acmnd_type = frappe.db.get_value("Room Accommodation Type", room_acmnd_type_code, 'accommodation_type_name', cache=True)
         hotel_room = {
             "room_name": room.room_name,
             "row_id": room.name,
             "total_price": room.total_price,
             "hotel": room.hotel,
+            "room_acmnd_type_code": room_acmnd_type_code,
             "accommodation_type": room_acmnd_type,
             "room_type": room_type,
         }
@@ -265,7 +266,15 @@ def complete_reservation():
     invoice.room_extras = []
     for roomRowId in rooms:
         extras = rooms[roomRowId].pop('extras')
+        roomDetails = rooms[roomRowId].pop('details')
         hotel_search = None
+        for room in invoice.rooms:
+            if room.name == roomRowId:
+                if roomDetails.get('board'):
+                    room.board = roomDetails.get('board')
+                    room.board_extra_price = float(roomDetails.get('board_price'))
+                if roomDetails.get('bed_type'):
+                    room.bed_type = roomDetails.get('bed_type')
         for paxRowId in rooms[roomRowId]:
             for pax in invoice.room_pax_info:
                 if pax.name == paxRowId:

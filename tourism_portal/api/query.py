@@ -4,15 +4,15 @@ import frappe
 @frappe.whitelist(allow_guest=True)
 def get_locations(search="", start=0, page_len=10):
     hotels = frappe.db.sql("""
+						   SELECT town.name as locationId, town.town_name as locationName, 'town' AS locationType, 'Town' as locationDetails
+        FROM `tabTown` as town
+        WHERE town.town_name LIKE %(txt)s
+						   UNION
     SELECT hotel.name as locationId, hotel.hotel_name as locationName, 'hotel' AS locationType, IFNULL(hotel.address, '') as locationDetails
         FROM `tabHotel` as hotel
         INNER JOIN `tabArea` as area ON hotel.area=area.name
         INNER JOIN `tabTown` as town ON area.town=town.name
         WHERE hotel.hotel_name LIKE %(txt)s or area.area_name LIKE %(txt)s or town.town_name LIKE %(txt)s
-        UNION
-        SELECT town.name as locationId, town.town_name as locationName, 'town' AS locationType, 'Town' as locationDetails
-        FROM `tabTown` as town
-        WHERE town.town_name LIKE %(txt)s
         UNION
         SELECT area.name as locationId, area.area_name as locationName, 'area' AS locationType, 'Area' AS locationDetails
         FROM `tabArea` as area

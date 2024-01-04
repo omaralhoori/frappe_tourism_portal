@@ -19,6 +19,7 @@
   "check_out",
   "section_break_fmvkn",
   "board",
+  "bed_type",
   "column_break_1gikl",
   "board_extra_price",
   "section_break_uapdf",
@@ -44,8 +45,7 @@
   },
   {
    "fieldname": "section_break_fmvkn",
-   "fieldtype": "Section Break",
-   "label": "Board"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "room_name",
@@ -133,12 +133,18 @@
   {
    "fieldname": "section_break_uapdf",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "bed_type",
+   "fieldtype": "Link",
+   "label": "Bed Type",
+   "options": "Room Bed Type"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-01-03 12:33:13.622468",
+ "modified": "2024-01-04 05:43:44.341269",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice Room Item",

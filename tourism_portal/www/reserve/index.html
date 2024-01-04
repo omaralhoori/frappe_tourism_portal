@@ -27,7 +27,7 @@
         {% set hotelSearch = invoice_details['rooms'][hotel_rsv] %}
         {% for hotelName in hotelSearch %}
         {% set hotel = hotelSearch[hotelName] %}
-         <div class="reservation_details mt-4 card p-3 card-details">
+         <div class="reservation_details hotel-reservation_details mt-4 card p-3 card-details" total-nights="{{get_hotel_total_nights(hotel['booking_details']['check_in'], hotel['booking_details']['check_out'])}}">
             <div class="row">
                 <div class="col-sm-9"><strong>{{hotel['details'].get('hotel_name')}}</strong></div>
                 <div class="col-sm-3"><label>Different Names</label> <input type="checkbox" onchange="different_names_clicked(this)"/></div>
@@ -70,6 +70,36 @@
                     </div>
             </div>
             {% endfor %}
+            {% set room_beds = get_room_beds(rsrv_room.get('room_acmnd_type_code')) %}
+            {% if invoice_details.docstatus == 0 %}
+                {% if room_beds | length > 0 %}
+                <div class="list-group room-bed-list">
+                {% for bed_type in room_beds %}
+                    {{room_bed_item(hotel_rsv, rsrv_room.get('room_name'), bed_type['type_code'], bed_type['bed_type'], 0)}}
+                {% endfor %}
+                </div>
+                {% endif%}
+            {% endif %}
+            {% if invoice_details.docstatus == 1 %}
+            {% else %}
+            {% set boards = get_room_boards(hotelName) %}
+            {% endif %}
+            {% if boards | length > 0%}
+                {% if boards | length > 1%}
+                <div class="">
+                Select Room Board:
+                <div class="list-group room-board-list">
+                    {% for board in boards %}
+                    {{room_board_item(hotel_rsv, rsrv_room.get('room_name'),board.get('boarding_type'), board.get('extra_price'), invoice_details.docstatus)}}
+                    {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="list-group room-board-list">
+                    {{room_board_item(hotel_rsv, rsrv_room.get('room_name'),boards[0].get('boarding_type'), boards[0].get('extra_price'), 1)}}
+                </div>
+                {% endif%}
+            {% endif %}
             {% if invoice_details.docstatus == 1 %}
             {% set extras = rsrv_room['extras'] %}
             {% else %}
@@ -198,6 +228,20 @@
 <label class="list-group-item">
     <input class="form-check-input me-1 extra-price-input" {% if disable == 1 %} checked disabled {% endif %} onchange="roomExtraChanged(this)" type="checkbox" room-name="{{room_name}}" extra-price="{{extra_price}}" value="{{extra_name}}">
         {{extra_name}} +{{extra_price}}$
+    </label>
+{% endmacro %}
+
+{%macro room_board_item(search, room_name, board_name, extra_price, selected)%}
+<label class="list-group-item">
+    <input class="form-check-input me-1 board-input" {% if selected == 1 %} checked disabled {% endif %} onchange="roomBoardChanged(this)" type="radio" name="{{search}}-{{room_name}}-board" room-name="{{room_name}}" extra-price="{{extra_price}}" value="{{board_name}}">
+        {{board_name}} +{{extra_price}}$
+    </label>
+{% endmacro %}
+
+{%macro room_bed_item(search, room_name, type_code,bed_type, selected)%}
+<label class="list-group-item">
+    <input class="form-check-input me-1 bed-input" {% if selected == 1 %} checked disabled {% endif %} type="radio" name="{{search}}-{{room_name}}-bed" room-name="{{room_name}}" value="{{type_code}}">
+        {{bed_type}}
     </label>
 {% endmacro %}
 {% macro render_transfer(transfer_search) %}

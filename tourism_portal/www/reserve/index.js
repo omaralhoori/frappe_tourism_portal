@@ -109,6 +109,11 @@ function notifiyPaxName(paxName){
   console.log(paxName + " Changed")
 }
 
+function roomBoardChanged(e){
+  var totalNights = e.closest('.hotel-reservation_details').getAttribute('total-nights')
+  var boardPrice = e.getAttribute('extra-price')
+}
+
 function confirmReservationButtonClicked(e){
   var customerName = document.querySelector('input[name="customer-name"]').value
   var customerEmail = document.querySelector('input[name="email"]').value
@@ -225,6 +230,15 @@ function getRoomsInfo(){
         "extra_price": extra.getAttribute('extra-price'),
         "room_name": extra.getAttribute('room-name')
       })
+    }
+    var selectedBoard =room.querySelector('.board-input:checked')
+    var selectedBed =room.querySelector('.bed-input:checked')
+    roomsInfo[room.getAttribute('row-id')]['details'] = {
+      "board": selectedBoard.value,
+      "board_price": selectedBoard.getAttribute('extra-price'),
+    }
+    if (selectedBed){
+      roomsInfo[room.getAttribute('row-id')]['details']['bed_type'] = selectedBed.value
     }
   }
   return roomsInfo;

@@ -10,7 +10,7 @@ from tourism_portal.tourism_portal.doctype.room_availability.room_availability i
 from tourism_portal.tourism_portal.doctype.sales_invoice.reserve import add_transfers_to_invoice
 from tourism_portal.tourism_portal.doctype.tour_price.tour_price import get_tour_price_with_child_prices
 from tourism_portal.tourism_portal.doctype.tour_schedule_order.tour_schedule_order import schedule_tours_dates
-from tourism_portal.utils import get_cancellation_refund, get_location_city
+from tourism_portal.utils import get_cancellation_refund, get_hotel_total_nights, get_location_city
 class SalesInvoice(Document):
 	def after_insert(self):
 		session_expires_in = frappe.db.get_single_value("Tourism Portal Settings", "session_expires_in")
@@ -185,7 +185,10 @@ class SalesInvoice(Document):
 					total  += room_extra.extra_price
 					# ToDo make for percentage too
 			total += room.total_price
-
+			if room.board_extra_price:
+				nights = get_hotel_total_nights(room.check_in, room.check_out)
+				board_price = room.board_extra_price * nights
+				total += board_price
 		self.hotel_fees = total
 		self.db_set('hotel_fees', total)
 	def calculate_total_transfer_fees(self):

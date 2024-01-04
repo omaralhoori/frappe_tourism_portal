@@ -1,10 +1,21 @@
-.room-extra-list{
+.room-extra-list, .room-bed-list {
     max-height: 200px;
     margin-bottom: 10px;
-    overflow-y:scroll;
+    overflow-y:auto;
     -webkit-overflow-scrolling: touch;
 }
 
-.room-extra-list .list-group-item{
+.room-extra-list .list-group-item,
+.room-bed-list  .list-group-item{
+    padding-left: 35px;
+}
+.room-board-list{
+    max-height: 200px;
+    margin-bottom: 10px;
+    overflow-y:auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.room-board-list .list-group-item{
     padding-left: 35px;
 }

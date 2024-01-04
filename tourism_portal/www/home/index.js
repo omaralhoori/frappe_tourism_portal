@@ -29,6 +29,9 @@ function formatSelect2() {
             },
             templateResult: formatState
         });
+        $(this).on("select2:open", function (e) { 
+                document.querySelector('.select2-search__field').focus()
+            });
     })
 
     function formatState(state) {
@@ -430,6 +433,16 @@ function validateTransferSearchData(params) {
     return true;
 }
 
+function isDateBefore(dateString1, dateString2) {
+    // Convert date strings to Date objects
+    const date1 = new Date(dateString1);
+    const date2 = new Date(dateString2);
+  
+    // Compare the dates
+    return date1 < date2;
+  }
+  
+
 function getHotelSearchInfo(hotel, validate) {
     var params = {};
     if (!hotel) return params
@@ -441,6 +454,9 @@ function getHotelSearchInfo(hotel, validate) {
     params['nationality'] = hotel.querySelector('select[name="nationality"]').value
     params['checkin'] = hotel.querySelector('input[name="check-in"]').value
     params['checkout'] = hotel.querySelector('input[name="check-out"]').value
+    if (isDateBefore( params['checkout'], params['checkin']) ){
+        frappe.throw("Please check selected dates for " +  params['location-name'] )
+    }
     params['room'] = hotel.querySelector('select[name="room"]').value
     var pax = hotel.querySelectorAll(".pax-search-card")
     // ToDo: Validate Same pax count selected as rooms count
@@ -724,6 +740,9 @@ function getTourData(form, validate) {
     params['location-type'] = locationInput.getAttribute('location-type')//form.querySelector('select[name="location"]').options[form.querySelector('select[name="location"]').selectedIndex].getAttribute('doc-type');
     params['checkin'] = form.querySelector('input[name="check-in"]').value
     params['checkout'] = form.querySelector('input[name="check-out"]').value
+    if (isDateBefore( params['checkout'], params['checkin']) ){
+        frappe.throw("Please check selected dates for " +  params['location-name'] )
+    }
     params['paxes'] = {}
     params['paxes']['adults'] = form.querySelector('select[name="adult"]').value
     params['paxes']['children'] = form.querySelector('select[name="children"]').value

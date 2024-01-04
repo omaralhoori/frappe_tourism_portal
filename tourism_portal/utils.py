@@ -14,6 +14,19 @@ def get_site_name():
 def get_room_extras(hotel):
     extras = frappe.db.get_all("Hotel Extra Service Item", {"parent": hotel, "parenttype": "Hotel"}, ['service', 'extra_price_type', 'extra_price'])
     return extras
+
+def get_room_boards(hotel):
+    boards = frappe.db.get_all("Hotel Boarding Table", {"parent": hotel, "parenttype": "Hotel"}, ['boarding_type', 'extra_price_type', 'extra_price'], order_by="idx")
+    return boards
+
+def get_room_beds(room_type):
+    return frappe.db.sql("""
+    SELECT tbl2.type_code, tbl2.bed_type
+        FROM `tabRoom Accommodation Bed Type item` as tbl1
+        INNER JOIN `tabRoom Bed Type` as tbl2 on tbl1.bed_type=tbl2.name
+        WHERE tbl1.parent=%(room_type)s
+""",{"room_type": room_type}, as_dict=True)
+
 def delete_expired_invoices():
     expired_invoices = frappe.db.get_all("Sales Invoice", {"session_expires": ["<", frappe.utils.now()], "docstatus": 0})
     for invoice in expired_invoices:
@@ -115,6 +128,12 @@ def get_cancellation_refund(policy, total_price, check_in, check_out, day_margin
             refund = total_price - refund
     if not selected_cncl: selected_cncl = {}
     return refund
+
+def get_hotel_total_nights(check_in, check_out):
+    total_nights = frappe.utils.date_diff(check_out, check_in)
+    if total_nights > 0:
+        return total_nights
+    frappe.throw("Check out cannot be before check in or in the same day")
 
 class TestEvent(FrappeTestCase):
     def test_get_cancellation_refund(self):
