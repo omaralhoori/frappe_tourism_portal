@@ -11,6 +11,10 @@
  "field_order": [
   "flight_code",
   "is_regular",
+  "section_break_kasrn",
+  "from_date",
+  "column_break_cofm3",
+  "to_date",
   "section_break_k9chk",
   "departure",
   "column_break_d8e7q",
@@ -56,11 +60,31 @@
   {
    "fieldname": "column_break_d8e7q",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_kasrn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_cofm3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-19 11:26:24.831497",
+ "modified": "2024-01-04 17:26:19.401806",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Flight",

@@ -156,21 +156,27 @@ function addTransferClicked(e) {
             dropoffInput = transferRow.querySelector('input[name="dropoff"]')
 
             if (hotelData['location-type'] != 'town') {
-                dropoffInput.value = hotelData['location-name']
-                dropoffInput.setAttribute('location-id', hotelData.location);
-                dropoffInput.setAttribute('location-type', hotelData['location-type']);
+                if (hotelData.location){
+                    dropoffInput.value = hotelData['location-name']
+                    dropoffInput.setAttribute('location-id', hotelData.location);
+                    dropoffInput.setAttribute('location-type', hotelData['location-type']);
+                }
+                
             }
-
+            if(hotelData.checkin)
             transferRow.querySelector('input[name="check-in"]').value = hotelData.checkin;
         } else {
             pickupInput = transferRow.querySelector('input[name="pickup"]')
             if (hotelData['location-type'] != 'town') {
-                pickupInput.value = hotelData['location-name'];//hotelData.location;
+                if (hotelData.location){
+                   pickupInput.value = hotelData['location-name'];//hotelData.location;
                 pickupInput.setAttribute('location-id', hotelData.location);
-                pickupInput.setAttribute('location-type', hotelData['location-type']);
+                pickupInput.setAttribute('location-type', hotelData['location-type']); 
+                }
+                
             }
 
-
+            if(hotelData.checkout)
             transferRow.querySelector('input[name="check-in"]').value = hotelData.checkout;
         }
         autocompleteLocations(transferRow.querySelector('input[name="dropoff"]'), 'tourism_portal.api.query.get_transfer_locations', (element) => {
@@ -289,6 +295,8 @@ function checkRegularFlights(e, type) {
     var locationType = e.querySelector('input').getAttribute('location-type')//options[e.selectedIndex].getAttribute('doc-type');
     var location = e.querySelector('input').getAttribute('location-id')
     var transferRow = e.closest('.transfer-search-row')
+    var transferSearch = e.closest('.transfer-search-card').querySelector('input[name="transfer-card"]').value;
+    var selectName = transferSearch + transferRow.getAttribute('transfer-way') 
     if (locationType == 'airport') {
         //e.closest('.transfer-search-row').querySelector('.allowed-flights').style.display = 'block';
         //);
@@ -302,7 +310,8 @@ function checkRegularFlights(e, type) {
                 var allowedFlights = transferRow.querySelector('.allowed-flights-list');
                 var html = '';
                 for (var flight of r.message) {
-                    html += `<li value="${flight.name}">${flight.name}</li>`;
+                    //html += `<li value="${flight.name}">${flight.name}</li>`;
+                    html += `<input type="radio" name="${selectName}" value="${flight.name}" id="${selectName}-${flight.name}"> <label for="${selectName}-${flight.name}">${flight.name}</label><br>`
                 }
                 allowedFlights.innerHTML = html;
             }
@@ -392,6 +401,13 @@ function getTransferSearchInfo(transferCard, validate) {
         params[i]['to-location-name'] = dropoffInput.getAttribute('location-name');
         params[i]['transfer-date'] = transfer.querySelector('input[name="check-in"]').value;
         params[i]['transfer-type'] = transfer.querySelector('select[name="transfer-type"]').value;
+        if (params[i]['transfer-type'] == 'group') {
+            var selectedFlight = transfer.querySelector('.allowed-flights-list input[type="radio"]:checked');
+            if (!selectedFlight) {
+                frappe.throw("Please select flight for " + params[i]['from-location-name'] + " - " + params[i]['to-location-name'] + " from allowed flights")
+            }
+            params[i]['selected-flight'] = selectedFlight.value;
+        }
         params[i]['flight-no'] = transfer.querySelector('input[name="flight-no"]').value;
         params[i]['paxes'] = {}
         params[i]['paxes']['adults'] = Number(transfer.querySelector('select[name="adult"]').value);
@@ -829,7 +845,6 @@ function tourAddTourClicked(e) {
    var toursCard = document.querySelectorAll('.tour-search-card').length + 1;
    var tourCardName = `Tour ${toursCard}`
    var html = '';
-   console.log(params)
     var tourTemplate = document.querySelector('#tour-search-template');
     html += tourTemplate.innerHTML;
     moreTourContainer.innerHTML = html;
@@ -847,7 +862,6 @@ function tourAddTourClicked(e) {
         moreTourContainer.querySelector('input[name="check-in"]').value = addDays(params.checkout, 1);
     }
     moreTourContainer.querySelector('input[name="check-out"]').addEventListener('change', function(e){
-    console.log(e)
     })
     moreTourContainer.querySelector('input[name="tour-card"]').value = tourCardName;
     var adults = params.paxes.adults;
@@ -897,7 +911,6 @@ function transferAddTransferClicked(e){
    var trnasferCardName = `Transfer Search ${transferCards}`
 
    var html = '';
-   console.log(params)
     var transferTemplate = document.querySelector('#transfer-search-template');
     html += transferTemplate.innerHTML;
     moreTransferContainer.innerHTML = html;
