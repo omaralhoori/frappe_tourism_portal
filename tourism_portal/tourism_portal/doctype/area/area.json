@@ -12,7 +12,9 @@
   "area_code",
   "area_name",
   "town",
-  "postal_code"
+  "city",
+  "postal_code",
+  "portal_disabled"
  ],
  "fields": [
   {
@@ -44,11 +46,25 @@
    "label": "Town",
    "options": "Town",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "portal_disabled",
+   "fieldtype": "Check",
+   "label": "Portal Disabled"
+  },
+  {
+   "fetch_from": "town.city",
+   "fieldname": "city",
+   "fieldtype": "Link",
+   "label": "City",
+   "options": "City",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-19 11:44:55.703044",
+ "modified": "2024-01-04 16:30:00.872606",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Area",

@@ -4,7 +4,7 @@ import frappe
 @frappe.whitelist(allow_guest=True)
 def get_locations(search="", start=0, page_len=10):
     hotels = frappe.db.sql("""
-						   SELECT town.name as locationId, town.town_name as locationName, 'town' AS locationType, 'Town' as locationDetails
+						   SELECT town.name as locationId, town.town_name as locationName, 'town' AS locationType, CONCAT(town.city, ', Town') as locationDetails
         FROM `tabTown` as town
         WHERE town.town_name LIKE %(txt)s
 						   UNION
@@ -14,7 +14,7 @@ def get_locations(search="", start=0, page_len=10):
         INNER JOIN `tabTown` as town ON area.town=town.name
         WHERE hotel.hotel_name LIKE %(txt)s or area.area_name LIKE %(txt)s or town.town_name LIKE %(txt)s
         UNION
-        SELECT area.name as locationId, area.area_name as locationName, 'area' AS locationType, 'Area' AS locationDetails
+        SELECT area.name as locationId, area.area_name as locationName, 'area' AS locationType, CONCAT(area.city, ", ", area.town) AS locationDetails
         FROM `tabArea` as area
         INNER JOIN `tabTown` as town ON area.town=town.name
         WHERE area.area_name LIKE %(txt)s or town.town_name LIKE %(txt)s
@@ -25,7 +25,7 @@ def get_locations(search="", start=0, page_len=10):
 @frappe.whitelist(allow_guest=True)
 def get_tour_locations(search="", start=0, page_len=10):
 	hotels = frappe.db.sql("""
-        SELECT area.name as locationId, area.area_name as locationName, 'area' AS locationType, CONCAT(area.town,',Area') AS locationDetails
+        SELECT area.name as locationId, area.area_name as locationName, 'area' AS locationType, CONCAT(area.city, ", ", area.town) AS locationDetails
         FROM `tabArea` as area
 		INNER JOIN `tabTown` as town ON area.town=town.name
         WHERE area.area_name LIKE %(txt)s or town.town_name LIKE %(txt)s
@@ -47,7 +47,7 @@ def get_transfer_locations(search="", start=0, page_len=10):
         FROM `tabAirport` as air
         WHERE air.airport_name LIKE %(txt)s AND air.portal_disabled=0
         UNION
-        SELECT area.name as locationId, area.area_name as locationName, 'area' AS locationType, CONCAT(area.town,',Area')  AS locationDetails
+        SELECT area.name as locationId, area.area_name as locationName, 'area' AS locationType,CONCAT(area.city, ", ", area.town)  AS locationDetails
         FROM `tabArea` as area
 		INNER JOIN `tabTown` as town ON area.town=town.name
         WHERE area.area_name LIKE %(txt)s or town.town_name LIKE %(txt)s

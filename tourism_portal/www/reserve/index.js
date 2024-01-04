@@ -10,7 +10,6 @@ var currentDate = new Date();
 var timeDifference = dateObject.getTime() - currentDate.getTime();
 
 const countdownTime = Math.round(Math.max(timeDifference / 1000, 0)); // 5 minutes
-console.log(countdownTime)
 let timeRemaining = countdownTime;
 let timerInterval;
 
@@ -106,7 +105,6 @@ function notifiyPaxName(paxName){
       nameInput.value = paxesNames[paxName].name
     }
   }
-  console.log(paxName + " Changed")
 }
 
 function roomBoardChanged(e){
@@ -114,7 +112,52 @@ function roomBoardChanged(e){
   var boardPrice = e.getAttribute('extra-price')
 }
 
+function validateReservationData(){
+    var customerInput = $("input[name='customer-name']")
+    var emailInput = $("input[name='email']")
+    var phoneInput = $("input[name='phone-number']")
+    var uncompleatedForm = false;
+    uncompleatedForm = validateInput(customerInput) ? uncompleatedForm: true;
+    uncompleatedForm = validateInput(emailInput) ? uncompleatedForm: true;
+    uncompleatedForm = validateInput(phoneInput) ? uncompleatedForm: true;
+    $("select[name='pax-salut']").each(function(index, element) {
+      if (element)
+        uncompleatedForm = validateInput($(element)) ? uncompleatedForm: true;
+    })
+    $("input[name='pax-name']").each(function(index, element) {
+      if (element)
+        uncompleatedForm = validateInput($(element)) ? uncompleatedForm: true;
+    })
+    uncompleatedForm = validateRadioInputSelected('room-bed-list') ? uncompleatedForm: true;
+    uncompleatedForm = validateRadioInputSelected('room-board-list') ? uncompleatedForm: true;
+    if (uncompleatedForm){
+      frappe.throw("Please complete all required fields!")
+    }
+}
+function validateInput(input){
+  if(!input.val()){
+    input.addClass('is-invalid');
+    return false;
+  }else{
+    input.removeClass('is-invalid');
+    return true;
+  }
+}
+function validateRadioInputSelected(className){
+  var uncompleatedForm = false;
+  $(`.${className}`).each(function(){
+    var listElement = $(this)
+    listElement.css('border', '');
+    var listName = listElement.find('input[type="radio"]').attr('name')
+    if (!$('input[name="' + listName  + '"]:checked').length){
+      uncompleatedForm = true;
+      listElement.css('border', '2px solid red');
+    }
+  })
+  return !uncompleatedForm
+}
 function confirmReservationButtonClicked(e){
+  validateReservationData();
   var customerName = document.querySelector('input[name="customer-name"]').value
   var customerEmail = document.querySelector('input[name="email"]').value
   var customerMobile = document.querySelector('input[name="phone-number"]').value

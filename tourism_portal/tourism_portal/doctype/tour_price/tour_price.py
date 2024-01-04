@@ -27,7 +27,8 @@ def get_available_tours_and_prices(params):
 					"tour_name": tour_details['search_params']['tour_name'],
 					"tour_description": tour_details['search_params']['tour_description'],
 					"tour_type": "vip",
-					"tour_date": params['tour-date']
+					"tour_date": params['tour-date'],
+					"paxes": paxes,
 				})
 		else:
 			tour_details = get_available_tours(params)
@@ -39,7 +40,8 @@ def get_available_tours_and_prices(params):
 				"tour_name": tour_details['search_params']['tour_name'],
 				"tour_description": tour_details['search_params']['tour_description'],
 				"tour_type": "package",
-				"tour_date": params['tour-date']
+				"tour_date": params['tour-date'],
+				"paxes": paxes,
 			})
 	available_tours = sorted(available_tours, key=lambda x: x['tour_date'])
 	if params['tour-type'] in ('group-premium', 'group-economic', 'package'):
@@ -47,6 +49,7 @@ def get_available_tours_and_prices(params):
 			tour_packages.append({
 				"tour_type": "package",
 				"pickup": available_tours[0]['pickup'],
+				"paxes": paxes,
 				"tours": [ {
 					"tour_date": avT['tour_date'], 
 					"tour_id": avT['tour_id'],
@@ -61,9 +64,12 @@ def get_available_tours_and_prices(params):
 			})
 			for tt in tour_packages[-1]['tours']:
 				tour_packages[-1]['package_price'] += tt['tour_price']
+		print(paxes)
 		for childAge in range(int(paxes['children'])):
+			print(childAge)
 			pp = []
 			for avT in available_tours:
+				print(avT['children_prices'])
 				childPkg = {
 					"tour_date": avT['tour_date'], 
 					"tour_id": avT['tour_id'],
@@ -77,6 +83,7 @@ def get_available_tours_and_prices(params):
 				"tour_type": "package",
 				"pickup": available_tours[0]['pickup'],
 				"tours": pp,
+				"paxes": paxes,
 				"package_price": 0,
 			})
 			for tt in tour_packages[-1]['tours']:
@@ -197,13 +204,18 @@ def get_group_transfer_price(paxes, available_transfers):
 	child_ages.sort()
 	child_prices = []
 	for child_age in child_ages:
+		added = False
 		for policy in policies:
 			if policy['from_age'] <= int(child_age) <= policy['to_age'] and policy['child_order'] == len(child_prices) + 1:
 				child_prices.append(adult_price * policy['adult_price_percentage'] / 100)
+				added = True
 				break
 			elif policy['from_age'] <= int(child_age) <= policy['to_age'] and policy['child_order'] == 0:
 				child_prices.append(adult_price * policy['adult_price_percentage'] / 100)
+				added = True
 				break
+		if not added:
+			child_prices.append(adult_price)
 	adults = adults + children - len(child_prices)
 	transfer_price = adult_price * adults
 	for child_price in child_prices:

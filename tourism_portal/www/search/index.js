@@ -291,8 +291,19 @@ function editTransferSearchResults(e){
     $modal.find('input[name="hotel-card"]').val(searchResults);
     $modal.modal('show');
 }
-
+function sortHotelResults(a, b) {
+    if (a.details.price === null && b.details.price === null) {
+      return 0; // Both have null prices, leave them in their current order
+    } else if (a.details.price === null) {
+      return 1; // Null comes after non-null
+    } else if (b.details.price === null) {
+      return -1; // Non-null comes before null
+    } else {
+      return a.details.price - b.details.price; // Sort based on price
+    }
+  }
 function formatHotelResults(hotelResults){
+    hotelResults.sort(sortHotelResults)
     var roomResultsFormated = "";
     for(var roomResult of hotelResults){
         var resultFormatted = formatRoomResult(roomResult)
@@ -367,7 +378,7 @@ function formatRoomResult(roomResult){
             }
             
         }
-        selectRoom = `<select 
+        selectRoom = `<div><label>Rooms: </label> <select 
         room-price="${roomResult['results'][0]['price'][0]}"
         onchange="roomSelectChanged(this)"  class="room-select-input"
         contract-id="${roomResult['results'][0]['contract_id']}"
@@ -375,7 +386,7 @@ function formatRoomResult(roomResult){
         hotel=${roomResult['results'][0]['hotel_id']} rooms="${rooms}">
         <option>0</option>
             ${selectRoom}
-        </select>`
+        </select></div>`
         resultItem = $(resultItem)
         .find('.ask-button-container')
         .after(selectRoom)

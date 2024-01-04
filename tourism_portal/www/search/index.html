@@ -326,6 +326,7 @@
         <li class="list-group-item">Flight No: {{transfer['search_params']['params']['flight-no']}}</li>
         {% endif %}
         <li class="list-group-item transfer-price" transfer-price="{{transfer['transfer_price']}}">Price: {{transfer['transfer_price']}}</li>
+        <li class="list-group-item">Total Pax: {{transfer['search_params']['params']['paxes']['adults'] | int + transfer['search_params']['params']['paxes']['children'] | int}} <small>(Adults: {{transfer['search_params']['params']['paxes']['adults']}}, Children: {{transfer['search_params']['params']['paxes']['children']}})</small></li>
     </ul>
     </div>
 {% endif %}
@@ -344,6 +345,8 @@
     <li class="list-group-item tour-pickup" tour-pickup="{{tour['pickup']}}">Pickup: {{tour['pickup']}}</li>
     {# <li class="list-group-item">Tour Date: {{tour['tour_date']}}</li> #}
     <li class="list-group-item tour-price" tour-price="{{tour['tour_price']}}">Price: {{tour['tour_price']}}</li>
+            <li class="list-group-item">Total Pax: {{tour['paxes']['adults'] | int + tour['paxes']['children'] | int}} <small>(Adults: {{tour['paxes']['adults']}}, Children: {{tour['paxes']['children']}})</small></li>
+
   </ul>
   {%endif%}
 </div>
@@ -377,6 +380,7 @@
             <li class="list-group-item tour-item" tour-id="{{tour.get('tour_id')}}" tour-indv-price="{{tour_prices.get(tour.get('tour_id'))}}">{{tour['tour_name']}}</li>
         {% endfor %}
         <li class="list-group-item tour-price" tour-price="{{totalPrice}}">Total Price: {{totalPrice}}</li>
+        <li class="list-group-item">Total Pax: {{tourPackage['paxes']['adults'] | int + tourPackage['paxes']['children'] | int}} <small>(Adults: {{tourPackage['paxes']['adults']}}, Children: {{tourPackage['paxes']['children']}})</small></li>
     </ul>
     </div>
   {%endif%}
