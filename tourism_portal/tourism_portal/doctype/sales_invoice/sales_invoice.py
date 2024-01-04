@@ -4,6 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe import _
+from frappe.model.naming import make_autoname
 from frappe.tests.utils import FrappeTestCase
 from tourism_portal.tourism_portal.doctype.company_payment.company_payment import add_company_refund, create_payment
 from tourism_portal.tourism_portal.doctype.room_availability.room_availability import free_room, reserve_room
@@ -255,6 +256,17 @@ class SalesInvoice(Document):
 		make_room_request(room, new_check_in, room.check_in)
 	def add_new_nights_after(self, room, new_check_out):
 		pass
+		
+	def add_voucher_no(self):
+		format_ser =  "VOCH-"+self.company+"-.#######"
+		prg_serial = make_autoname(format_ser, "Sales Invoice")
+		self.voucher_no = prg_serial
+		self.db_set('voucher_no', prg_serial)
+	def add_invoice_no(self):
+		format_ser =  "INVC-.#######"
+		prg_serial = make_autoname(format_ser, "Sales Invoice")
+		self.invoice_no = prg_serial
+		self.db_set('invoice_no', prg_serial)
 	# def before_cancel(self):
 	# 	self.cancel_payment()
 	def cancel_payment(self):
@@ -319,6 +331,8 @@ class SalesInvoice(Document):
 			add_company_refund( company=self.company, refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype)
 	def on_submit(self):
 		create_payment(self.company, self.grand_total,'Pay',against_doctype= 'Sales Invoice', against_docname=self.name)
+		self.add_voucher_no()
+		self.add_invoice_no()
 		self.db_set("status", "Submitted")
 def create_reservation():
 	pass

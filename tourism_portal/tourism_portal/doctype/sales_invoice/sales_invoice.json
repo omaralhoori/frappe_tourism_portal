@@ -9,9 +9,12 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "details_tab",
   "section_break_1wfwx",
   "company",
   "customer",
+  "invoice_no",
+  "voucher_no",
   "column_break_v9ehp",
   "post_date",
   "post_time",
@@ -23,6 +26,12 @@
   "customer_email",
   "column_break_1tgnb",
   "customer_mobile_no",
+  "section_break_np3bd",
+  "transfer_fees",
+  "tour_fees",
+  "column_break_dlfzt",
+  "hotel_fees",
+  "grand_total",
   "section_break_09xmx",
   "rooms",
   "room_pax_info",
@@ -35,11 +44,6 @@
   "tours",
   "tour_types",
   "tour_pax_info",
-  "section_break_np3bd",
-  "hotel_fees",
-  "transfer_fees",
-  "tour_fees",
-  "grand_total",
   "amended_from"
  ],
  "fields": [
@@ -84,7 +88,7 @@
   {
    "collapsible": 1,
    "fieldname": "section_break_09xmx",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Hotels"
   },
   {
@@ -175,7 +179,7 @@
   },
   {
    "fieldname": "transfers_section",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Transfers"
   },
   {
@@ -200,7 +204,7 @@
   },
   {
    "fieldname": "tours_section",
-   "fieldtype": "Section Break",
+   "fieldtype": "Tab Break",
    "label": "Tours"
   },
   {
@@ -236,12 +240,35 @@
    "label": "Status",
    "options": "Draft\nSubmitted\nCancelled",
    "read_only": 1
+  },
+  {
+   "fieldname": "voucher_no",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Voucher No",
+   "unique": 1
+  },
+  {
+   "fieldname": "invoice_no",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Invoice No",
+   "unique": 1
+  },
+  {
+   "fieldname": "details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "column_break_dlfzt",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-02 14:34:33.274752",
+ "modified": "2024-01-04 18:58:00.571873",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice",
