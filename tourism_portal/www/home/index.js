@@ -182,10 +182,10 @@ function addTransferClicked(e) {
             transferRow.querySelector('input[name="check-in"]').value = hotelData.checkout;
         }
         autocompleteLocations(transferRow.querySelector('input[name="dropoff"]'), 'tourism_portal.api.query.get_transfer_locations', (element) => {
-            checkRegularFlights(element, 'arrival')
+            checkRegularFlights(element, 'departure')
         });
         autocompleteLocations(transferRow.querySelector('input[name="pickup"]'), 'tourism_portal.api.query.get_transfer_locations', (element) => {
-            checkRegularFlights(element, 'departure')
+            checkRegularFlights(element, 'arrival')
         });
         formatDataPicker(transferRow)
         transferRow.querySelector('select[name="adult"]').value = adults;
@@ -932,10 +932,10 @@ function transferAddTransferClicked(e){
         }
 
         autocompleteLocations(transferRow.querySelector('input[name="dropoff"]'), 'tourism_portal.api.query.get_transfer_locations', (element) => {
-            checkRegularFlights(element, 'arrival')
+            checkRegularFlights(element, 'departure')
         });
         autocompleteLocations(transferRow.querySelector('input[name="pickup"]'), 'tourism_portal.api.query.get_transfer_locations', (element) => {
-            checkRegularFlights(element, 'departure')
+            checkRegularFlights(element, 'arrival')
         });
         formatDataPicker(transferRow)
         if (paxes){

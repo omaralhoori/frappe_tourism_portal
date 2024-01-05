@@ -28,16 +28,16 @@ $(document).ready(async function(){
     calculate_total_tours()
     autocompleteLocations(document.querySelector('.hotel-location'), 'tourism_portal.api.query.get_locations');
     autocompleteLocations(document.querySelector('.transfer-pickup-1'), 'tourism_portal.api.query.get_transfer_locations', (element) => {
-        checkRegularFlights(element, 'departure')
+        checkRegularFlights(element, 'arrival')
     });
     autocompleteLocations(document.querySelector('.transfer-pickup-2'), 'tourism_portal.api.query.get_transfer_locations',(element) => {
-        checkRegularFlights(element, 'departure')
+        checkRegularFlights(element, 'arrival')
     });
     autocompleteLocations(document.querySelector('.transfer-dropoff-1'), 'tourism_portal.api.query.get_transfer_locations',(element) => {
-        checkRegularFlights(element, 'arrival')
+        checkRegularFlights(element, 'departure')
     });
     autocompleteLocations(document.querySelector('.transfer-dropoff-2'), 'tourism_portal.api.query.get_transfer_locations',(element) => {
-        checkRegularFlights(element, 'arrival')
+        checkRegularFlights(element, 'departure')
     });
 
     formatSelect2()
@@ -311,7 +311,8 @@ function editTransferSearchResults(e){
         for (var j=0; j<ages.length; j++){
             $transferRow.find(`select[name="child-age"]`).eq(j).val(ages[j])
         }
-        // checkRegularFlights(, transferRoutes[transferRoute])
+        checkRegularFlights($pickupLocation[0].parentNode, 'arrival')
+        checkRegularFlights($dropoffLocation[0].parentNode, 'departure')
 
     }
 
