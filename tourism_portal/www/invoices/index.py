@@ -11,4 +11,5 @@ def get_context(context):
         frappe.throw(_("Log in to access this page."), frappe.PermissionError)
     page = frappe.form_dict.page or 1
     start = (int(page) - 1) * 20
-    context.invoices = get_all_invoices(start=start)
+    voucher_no = frappe.form_dict.voucher_no
+    context.invoices = get_all_invoices(voucher_no=voucher_no, start=start)

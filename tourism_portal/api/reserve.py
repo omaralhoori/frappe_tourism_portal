@@ -250,12 +250,16 @@ def get_invoice_data(sales_invoice):
 
 
 @frappe.whitelist()
-def get_all_invoices(start=0, limit=20):
+def get_all_invoices(voucher_no=None, start=0, limit=20):
     company = frappe.db.get_value("User", frappe.session.user, "company")
-    return frappe.db.get_all("Sales Invoice", {"company": company, "status": ["!=", "Cancelled"]}, [
-        "name", "grand_total", "post_date", "status",
-          "post_time", "session_expires", "docstatus"], order_by="creation DESC" ,limit=limit, start=start)
-
+    if voucher_no:
+        return frappe.db.get_all("Sales Invoice", {"company": company, "status": ["!=", "Cancelled"], "voucher_no": ["like", "%"+ voucher_no +"%"]}, [
+            "name", "voucher_no", "grand_total", "post_date", "status",
+            "post_time", "session_expires", "docstatus"], order_by="creation DESC" ,limit=limit, start=start)
+    else:
+        return frappe.db.get_all("Sales Invoice", {"company": company, "status": ["!=", "Cancelled"]}, [
+            "name","voucher_no", "grand_total", "post_date", "status",
+            "post_time", "session_expires", "docstatus"], order_by="creation DESC" ,limit=limit, start=start)
 
 @frappe.whitelist()
 def complete_reservation():
