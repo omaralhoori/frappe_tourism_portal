@@ -544,10 +544,15 @@ def get_search_results(search):
 	return room_results
 
 @frappe.whitelist()
-def set_new_search_results(search, params):
+def set_new_search_results(search, hotel_params=None, transfer_params=None, tour_params=None):
 	search_doc = frappe.get_doc("Search Result", 
 				{"name": search, "user": frappe.session.user})
-	search_doc.hotel_params = params
+	if hotel_params:
+		search_doc.hotel_params = hotel_params
+	if transfer_params:
+		search_doc.transfer_params = transfer_params
+	if tour_params:
+		search_doc.tour_params = tour_params
 	search_doc.save(ignore_permissions=True)
 	return search
 

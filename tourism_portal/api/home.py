@@ -108,6 +108,7 @@ def get_regular_flights(location, route):
 
 @frappe.whitelist()
 def create_search(hotelParams, transferParams, tourParams):
+	print(transferParams)
 	search_doc = frappe.get_doc({
 		"doctype": "Search Result",
 		"hotel_params": hotelParams,

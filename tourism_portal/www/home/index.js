@@ -160,6 +160,7 @@ function addTransferClicked(e) {
                     dropoffInput.value = hotelData['location-name']
                     dropoffInput.setAttribute('location-id', hotelData.location);
                     dropoffInput.setAttribute('location-type', hotelData['location-type']);
+                    dropoffInput.setAttribute('location-name', hotelData['location-name']);
                 }
                 
             }
@@ -172,6 +173,7 @@ function addTransferClicked(e) {
                    pickupInput.value = hotelData['location-name'];//hotelData.location;
                 pickupInput.setAttribute('location-id', hotelData.location);
                 pickupInput.setAttribute('location-type', hotelData['location-type']); 
+                pickupInput.setAttribute('location-name', hotelData['location-name']);
                 }
                 
             }

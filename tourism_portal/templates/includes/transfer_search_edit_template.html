@@ -1,9 +1,11 @@
-<div class="mt-4 tm-bg-white ie-container-width-fix-2 search-card-container transfer-search-card" card-type="transfer">
+<div class=" tm-bg-white ie-container-width-fix-2 search-card-container transfer-search-card" card-type="transfer">
     <input type="hidden" name="transfer-card" value="1">
-
+    <div class="row justify-content-end mb-2">
+                    <button class="btn btn-primary route-btn" data-way="one-way" onclick="onWayTransfer(this)"><i class="fa fa-exchange" aria-hidden="true"></i> One Way</button>
+                </div>
     <div class="row">
         <div class="col-xs-12 ml-auto mr-auto ie-container-width-fix search-card transfers">
-            <div class="transfer-search-row">
+            <div class="transfer-search-row departure-transfer" transfer-way="departure">
                 <form class="tm-search-form tm-section-pad-2">
                     <div class="form-row tm-search-form-row">
                         <div class="form-group tm-form-element tm-form-element-2">
@@ -76,7 +78,7 @@
                     </div>
                 </form>
             </div>
-            <div class="transfer-search-row return-transfer">
+            <div class="transfer-search-row return-transfer" transfer-way="return">
                 <form class="tm-search-form tm-section-pad-2">
                     <div class="form-row tm-search-form-row">
                         <div class="form-group tm-form-element tm-form-element-2">

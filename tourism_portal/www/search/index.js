@@ -257,35 +257,70 @@ function editHotelSearchResults(e){
     $modal.find('input[name="hotel-card"]').val(searchResults);
     $modal.modal('show');
 }
+
+function onWayTransfer(e){
+    var transferCard = e.closest('.transfer-search-card')
+    var dataWay = e.getAttribute("data-way")
+    if (dataWay == 'one-way'){
+        // transferCard.querySelector('.return-transfer').style.display = 'none';
+        transferCard.querySelector('.return-transfer').classList.add('d-none');
+        e.setAttribute("data-way", "two-way")
+        e.innerHTML = `<i class="fa fa-exchange" aria-hidden="true"></i> Two Way`
+
+    }else{
+        // transferCard.querySelector('.return-transfer').style.display = 'block';
+        transferCard.querySelector('.return-transfer').classList.remove('d-none');
+        e.setAttribute("data-way", "one-way")
+        e.innerHTML = `<i class="fa fa-exchange" aria-hidden="true"></i> One Way`
+    }
+}
+
 function editTransferSearchResults(e){
     var searchResults = e.getAttribute('search-results');
     var $modal = $('#transferSearchModal');
+    $modal.find('input[name="transfer-card"]').val(searchResults);
     var transferParams = transferSearchParams[searchResults];
     var twoWay = Object.keys(transferParams).length > 1;
-    for (var transferRoute in transferParams){
-        
+    var transferRows = {
+        0: "departure-transfer",
+        1: "return-transfer"
     }
-    // $locationInput = $modal.find('input[name="location"]')
-    // $locationInput.val(hotelParams['location-name'])
-    // $locationInput.attr('location-id', hotelParams['location'])
-    // $locationInput.attr('location-name', hotelParams['location-name'])
-    // $locationInput.attr('location-type', hotelParams['location-type'])
+    var transferRoutes = {
+        0: "arrival",
+        1: "departure"
+    }
+    for (var transferRoute in transferParams){
+        var transferRouteParams = transferParams[transferRoute];
+        var $transferRow = $modal.find(`.${transferRows[transferRoute]}`)
+        var $pickupLocation = $transferRow.find('input[name="pickup"]')
+        $pickupLocation.val(transferRouteParams['from-location-name'])
+        $pickupLocation.attr('location-id', transferRouteParams['from-location'])
+        $pickupLocation.attr('location-name', transferRouteParams['from-location-name'])
+        $pickupLocation.attr('location-type', transferRouteParams['from-location-type'])
+        $dropoffLocation = $transferRow.find('input[name="dropoff"]')
+        $dropoffLocation.val(transferRouteParams['to-location-name'])
+        $dropoffLocation.attr('location-id', transferRouteParams['to-location'])
+        $dropoffLocation.attr('location-name', transferRouteParams['to-location-name'])
+        $dropoffLocation.attr('location-type', transferRouteParams['to-location-type'])
+        $transferRow.find('input[name="check-in"]').val(transferRouteParams['transfer-date'])
+        $transferRow.find('select[name="transfer-type"]').val(transferRouteParams['transfer-type'])
+        $transferRow.find('input[name="flight-no"]').val(transferRouteParams['flight-no'])
+        $transferRow.find('select[name="adult"]').val(transferRouteParams['paxes']['adults'])
+        $transferRow.find('select[name="children"]').val(transferRouteParams['paxes']['children']).change()
+        var ages = transferRouteParams['paxes']['child-ages'] || []
+        for (var j=0; j<ages.length; j++){
+            $transferRow.find(`select[name="child-age"]`).eq(j).val(ages[j])
+        }
+        // checkRegularFlights(, transferRoutes[transferRoute])
 
-    // $modal.find('input[name="check-in"]').val(hotelParams['checkin'])
-    // $modal.find('input[name="check-out"]').val(hotelParams['checkout'])
-    // $modal.find('select[name="nationality"]').val(hotelParams['nationality'])
+    }
 
-    // $modal.find('select[name="room"]').val( hotelParams['room']).change();
-    // $modal.find(`.pax-search-card`).each(function(i, card){
-    //     var pax = hotelParams['paxInfo'][i]
-    //     $(card).find(`select[name="adult"]`).val(pax['adults'] || "0").change()
-    //     $(card).find(`select[name="children"]`).val(pax['children'] || "0").change()
-    //     var ages = pax['childrenInfo'] || []
-    //     for (var j=0; j<ages.length; j++){
-
-    //         $(card).find(`select[name="child-age"]`).eq(j).val(ages[j])
-    //     }
-    // })
+    if (!twoWay){
+        var routeBtn = $modal.find('.route-btn')
+        $modal.find('.return-transfer').addClass('d-none');
+        routeBtn.attr("data-way", "two-way")
+        routeBtn.html(`<i class="fa fa-exchange" aria-hidden="true"></i> Two Way`)
+    }
 
     $modal.find('.modal-title').text(`Edit ${searchResults}`);
     $modal.find('input[name="hotel-card"]').val(searchResults);
@@ -937,7 +972,12 @@ function childCountChanged(e) {
     }
     childrenContainer.innerHTML = html;
 }
-
+function dropoffTransferChanged(e) {
+    // checkRegularFlights(e, 'arrival');
+}
+function pickupTransferChanged(e) {
+    // checkRegularFlights(e, 'arrival');
+}
 
 function newHotelSearchClicked(e){
     toggleLoadingIndicator(true);
@@ -950,7 +990,28 @@ function newHotelSearchClicked(e){
         method: "tourism_portal.api.search.set_new_search_results",
         args: {
             search: searchParams.get('search'),
-            params: hotelSearchParams,
+            hotel_params: hotelSearchParams,
+        },
+        callback: res => {
+            window.location.reload();
+        }
+    })
+
+}
+function newTransferSearchClicked(e){
+    var searchCard = e.closest('.modal-content').querySelector('.transfer-search-card')
+
+    var transferSearch = searchCard.querySelector('input[name="transfer-card"]').value;
+    var newParams = getTransferSearchInfo(searchCard, true);
+    toggleLoadingIndicator(true);
+
+    var searchParams = new URLSearchParams(window.location.search);
+    transferSearchParams[transferSearch] = newParams;
+    frappe.call({
+        method: "tourism_portal.api.search.set_new_search_results",
+        args: {
+            search: searchParams.get('search'),
+            transfer_params: transferSearchParams,
         },
         callback: res => {
             window.location.reload();
@@ -1024,10 +1085,77 @@ function validateHotelSearchData(params) {
     return true;
 }
 
+function getTransferSearchInfo(transferCard, validate) {
+    var params = {};
+    // ToDo: Validate All inputs inserted 
+    var transfers = transferCard.querySelectorAll('.transfer-search-row:not(.d-none)');
+    for (var i = 0; i < transfers.length; i++) {
+        var transfer = transfers[i];
+        var picupInput = transfer.querySelector('input[name="pickup"]');
+        var dropoffInput = transfer.querySelector('input[name="dropoff"]');
+        params[i] = {};
+        params[i]['from-location'] = picupInput.getAttribute('location-id');
+        params[i]['from-location-type'] = picupInput.getAttribute('location-type');
+        params[i]['from-location-name'] = picupInput.getAttribute('location-name');
+        params[i]['to-location'] = dropoffInput.getAttribute('location-id');
+        params[i]['to-location-type'] = dropoffInput.getAttribute('location-type');
+        params[i]['to-location-name'] = dropoffInput.getAttribute('location-name');
+        params[i]['transfer-date'] = transfer.querySelector('input[name="check-in"]').value;
+        params[i]['transfer-type'] = transfer.querySelector('select[name="transfer-type"]').value;
+        if (params[i]['transfer-type'] == 'group') {
+            var selectedFlight = transfer.querySelector('.allowed-flights-list input[type="radio"]:checked');
+            if (!selectedFlight) {
+                frappe.throw("Please select flight for " + params[i]['from-location-name'] + " - " + params[i]['to-location-name'] + " from allowed flights")
+            }
+            params[i]['selected-flight'] = selectedFlight.value;
+        }
+        params[i]['flight-no'] = transfer.querySelector('input[name="flight-no"]').value;
+        params[i]['paxes'] = {}
+        params[i]['paxes']['adults'] = Number(transfer.querySelector('select[name="adult"]').value);
+        params[i]['paxes']['children'] = Number(transfer.querySelector('select[name="children"]').value);
+        params[i]['paxes']['child-ages'] = []
+        var ages = transfer.querySelectorAll('select[name="child-age"]');
+        ages.forEach(age => {
+            params[i]['paxes']['child-ages'].push(Number(age.value))
+        })
+    }
+    if (validate){
+        validateTransferSearchData(params)
+    }
+    return params
+}
+
+function validateTransferSearchData(params) {
+    for (var transferNo in params) {
+        var transfer = params[transferNo];
+        if (!transfer['from-location']) {
+            frappe.throw("Please select transfer pickup location")
+        }
+        if (!transfer['to-location']) {
+            frappe.throw("Please select transfer dropoff location")
+        }
+        if (!transfer['transfer-date']) {
+            frappe.throw("Please select transfer date")
+        }
+        if (!transfer['transfer-type']) {
+            frappe.throw("Please select transfer type")
+        }
+        if (!transfer['paxes']) {
+            frappe.throw("Please select transfer paxes")
+        }
+        if (!transfer['paxes']['adults']) {
+            frappe.throw("Please select transfer adults count")
+        }
+    }
+    return true;
+}
+
 function checkRegularFlights(e, type) {
     var locationType = e.querySelector('input').getAttribute('location-type')//options[e.selectedIndex].getAttribute('doc-type');
     var location = e.querySelector('input').getAttribute('location-id')
     var transferRow = e.closest('.transfer-search-row')
+    var transferSearch = e.closest('.transfer-search-card').querySelector('input[name="transfer-card"]').value;
+    var selectName = transferSearch + transferRow.getAttribute('transfer-way') 
     if (locationType == 'airport') {
         //e.closest('.transfer-search-row').querySelector('.allowed-flights').style.display = 'block';
         //);
@@ -1041,7 +1169,8 @@ function checkRegularFlights(e, type) {
                 var allowedFlights = transferRow.querySelector('.allowed-flights-list');
                 var html = '';
                 for (var flight of r.message) {
-                    html += `<li value="${flight.name}">${flight.name}</li>`;
+                    //html += `<li value="${flight.name}">${flight.name}</li>`;
+                    html += `<input type="radio" name="${selectName}" value="${flight.name}" id="${selectName}-${flight.name}"> <label for="${selectName}-${flight.name}">${flight.name}</label><br>`
                 }
                 allowedFlights.innerHTML = html;
             }
