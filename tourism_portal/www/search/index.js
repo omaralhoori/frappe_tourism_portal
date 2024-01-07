@@ -20,8 +20,6 @@ $(document).ready(async function(){
         searchResults = JSON.parse(res.message);
     }
     var results = checkCommonRooms(searchResults);
-    console.log("results------------")
-    console.log(results)
     formatResults(results);
     // updateAvailableRooms();
     // checkRightSelected()
@@ -196,7 +194,43 @@ function hotelSearchStarChanged(e){
     }
 }
 
+function formatHotelSerachParams(hotelParams){
+    /**
+     * hotelParams = {
+     * location: locationId,
+     * location-name: locationName,
+     * location-type: locationType,
+     * checkin: checkin,
+     * checkout: checkout,
+     * paxInfo: [
+     * {
+     * adults: adults,
+     * children: children,
+     * roomName: roomName,
+     * childrenInfo: [age1, age2, age3]
+     * }
+     * ]
+     * }
+     * **/
+    var html = `
+        <div class="row">
+            <div class="col-4"><i class="fa fa-map-marker text-warning"></i> ${hotelParams['location-name']}</div>
+            <div class="col-4"><i class="fa fa-calendar text-warning"></i> ${hotelParams['checkin']}</div>
+            <div class="col-4"><i class="fa fa-calendar text-warning"></i> ${hotelParams['checkout']}</div>
+        </div>`
+        for (var room of hotelParams['paxInfo']){
+            html += `
+            <div class="row">
+            <div class="col-4"><i class="fa fa-bed text-warning"></i> ${room['roomName']}</div>
+            <div class="col-8"><i class="fa fa-users text-warning" colspan="2"></i> ${room['adults']} Adults, ${room['children']} Children</div>
+            </div>`
+        }
+        html = `${html}`
+    return html;
+}
+
 function renderHotelSearchBar(resultLabel, multipleResults){
+    var searchParams = formatHotelSerachParams(hotelSearchParams[resultLabel]);
     var filters = ""
     if (multipleResults){
         filters += `
@@ -211,15 +245,15 @@ function renderHotelSearchBar(resultLabel, multipleResults){
         `
     }
     var html = `
-        <div class="d-flex justify-content-between">
-            <div class="hotel-search-label">${resultLabel}</div>
-
-            <div class="hotel-search-buttons d-flex">
-                <div class="search-filters mr-2">
+        <div class="row">
+            <div class="col-lg-2 hotel-search-label">${resultLabel}</div>
+            <div class="col-lg-7 hotel-search-params">${searchParams}</div>
+            <div class="col-lg-3 hotel-search-buttons d-flex flex-row-reverse">
+                <button class="btn btn-sm" style="height: fit-content;" search-results="${resultLabel}"
+                 onclick="editHotelSearchResults(this)">Edit <i class="fa fa-pencil"></i></button>
+                 <div class="search-filters mr-2">
                 ${filters}
                 </div>
-                <button class="btn btn-sm" search-results="${resultLabel}"
-                 onclick="editHotelSearchResults(this)">Edit <i class="fa fa-pencil"></i></button>
             </div>
         </div>
     `;
@@ -379,7 +413,6 @@ function formatRoomPrices(price, showDates){
     return pricesHtml;
 }
 function formatRoomResult(roomResult){
-    console.log(roomResult)
     var resultItem = $('#room-result-item-template').html()
     var showAskButton = false;
     var askForAvailability = false;
@@ -937,7 +970,6 @@ function confirmButtonClicked(e){
    if (!selected_rooms){
     return
    }
-   console.log(selected_rooms)
    var selected_transfers = getSelectedTransfers();
    var selected_tours = getSelectedTours();
     var data = encodeParamsJson(selected_rooms, selected_transfers, selected_tours)
@@ -1001,7 +1033,6 @@ function encodeTransferSearch(transferParams, selected_transfers){
 
 function encodeHotelRoomSeearch(hotelParams, selected_rooms){
     var all_searches = {}
-    console.log(selected_rooms)
     for (search in selected_rooms){
         var rooms = {};
         for (var room in selected_rooms[search]){
