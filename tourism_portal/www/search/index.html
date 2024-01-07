@@ -198,7 +198,7 @@
         <div class="col-md-6 room-detail-container">
             <div class="">
                 <div class="hotel-title mt-2">{Hotel Name}</div>
-            <div class="room-title">{Room Type} <span class="pax-image"><img src="{PAX IMAGE}"/></span></div>
+            <div class="room-title">{Room Type}-{Room ACMND}<span class="pax-image"><img src="{PAX IMAGE}"/></span></div>
             <div class="room-details">
                 <div class="room-details-item"><div class="badge badge-primary">Non Refundable</div></div>
                 <div class="room-details-item">Full Board</div>
@@ -207,8 +207,11 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="d-flex justify-content-center align-items-center flex-column h-100" >
+            <div class="room-price-qty-details d-flex justify-content-center align-items-center flex-column h-100" >
                 <!-- if room.get('price') -->
+                <div class="room-contracts-container d-none">
+
+                </div>
                 <div class="room-price-container">
                 <div class="room-total"><span class="room-total-nights">{Nights} Nights</span><span class="room-total-price">{Room Price}</span></div>
                 <!-- <div class="room-price mt-1">(Per Room 500USD)</div> -->

@@ -10,10 +10,10 @@ class RoomAvailability(Document):
 			frappe.throw("Room Qty cannot be less than 0")
 
 
-def reserve_room(contract_id, check_in, check_out):
+def reserve_room(contract_id, from_date, to_date):
 	room_qtys = frappe.db.sql("""
-	 SELECT date, available_qty, name FROM `tabRoom Availability` WHERE contract_no=%(contract_id)s AND date >= %(check_in)s AND date < %(check_out)s
-     """, {"contract_id": contract_id, "check_in": check_in, "check_out": check_out}, as_dict=True)
+	 SELECT date, available_qty, name FROM `tabRoom Availability` WHERE contract_no=%(contract_id)s AND date >= %(from_date)s AND date <= %(to_date)s
+     """, {"contract_id": contract_id, "from_date": from_date, "to_date": to_date}, as_dict=True)
 
 	for room_qty in room_qtys:
 		if room_qty['available_qty'] < 1:
@@ -27,7 +27,7 @@ def reserve_room(contract_id, check_in, check_out):
 
 def free_room(contract_id, check_in, check_out):
 	room_qtys = frappe.db.sql("""
-	 SELECT date, available_qty, name FROM `tabRoom Availability` WHERE contract_no=%(contract_id)s AND date >= %(check_in)s AND date < %(check_out)s
+	 SELECT date, available_qty, name FROM `tabRoom Availability` WHERE contract_no=%(contract_id)s AND date >= %(check_in)s AND date <= %(check_out)s
      """, {"contract_id": contract_id, "check_in": check_in, "check_out": check_out}, as_dict=True)
 
 	# for room_qty in room_qtys:

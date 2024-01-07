@@ -4,6 +4,8 @@
 import frappe
 from frappe.model.document import Document
 from datetime import datetime, timedelta
+
+from frappe.model.naming import make_autoname
 class HotelRoomContract(Document):
 	def on_submit(self):
 		if self.check_in_from_date > self.check_in_to_date:
@@ -16,7 +18,12 @@ class HotelRoomContract(Document):
 				date_list.append(current_date)
 				current_date += timedelta(days=1)
 		self.create_room_availabilities(date_list)
-
+		self.add_contract_no()
+	def add_contract_no(self):
+		format_ser = 'RMCNT-.YY.-.#####'
+		prg_serial = make_autoname(format_ser, "Hotel Room Contract")
+		self.contract_no = prg_serial
+		self.db_set('contract_no', prg_serial)
 	def create_room_availabilities(self, date_list):
 		for date in date_list:
 			frappe.get_doc({

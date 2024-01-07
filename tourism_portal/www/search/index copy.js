@@ -128,6 +128,7 @@ function formatResults(allResults){
         var hotelReuslts = "";
         var accordion = Object.keys(results).length > 1;
         for (var hotel in results){
+            
             var resultFormatted = formatHotelResults(results[hotel]);
             if (accordion){
                 var resultItem = $('#hotel-room-results-template').html()
@@ -327,96 +328,55 @@ function editTransferSearchResults(e){
     $modal.modal('show');
 }
 function sortHotelResults(a, b) {
-    if (a.details.total_price === null && b.details.total_price === null) {
+    if (a.details.price === null && b.details.price === null) {
       return 0; // Both have null prices, leave them in their current order
-    } else if (a.details.total_price === null) {
+    } else if (a.details.price === null) {
       return 1; // Null comes after non-null
-    } else if (b.details.total_price === null) {
+    } else if (b.details.price === null) {
       return -1; // Non-null comes before null
     } else {
-      return a.details.total_price - b.details.total_price; // Sort based on price
+      return a.details.price - b.details.price; // Sort based on price
     }
   }
 function formatHotelResults(hotelResults){
-    hotelResults['rooms'].sort(sortHotelResults)
+    hotelResults.sort(sortHotelResults)
     var roomResultsFormated = "";
-    for(var roomResult of hotelResults['rooms']){
+    for(var roomResult of hotelResults){
         var resultFormatted = formatRoomResult(roomResult)
-        resultFormatted = resultFormatted.replace('{Hotel Name}', hotelResults['details']['hotel_name'])
         roomResultsFormated +=`<div class="room-result-container pax-${roomResult.details.pax}" room-id="${roomResult.details.room_id}" pax="${roomResult.details.pax}">
             ${resultFormatted}
         </div>`
     }
     return roomResultsFormated;
 }
-function nightCalculator(checkin, checkout){
-    var checkinDate = new Date(checkin);
-    var checkoutDate = new Date(checkout);
-    var diff = checkoutDate.getTime() - checkinDate.getTime() ; 
-    var nights = diff / (1000 * 3600 * 24) + 1;
-    return nights;
-}
-function formatRoomPrices(price, showDates){
-    pricesHtml = '';
-    var totalNights = nightCalculator(price['from_date'], price['to_date']);
-    var nightsPrice = Number(price['selling_price_with_childs']) * totalNights;
-    nightsPrice = parseFloat(nightsPrice).toFixed(2)
-    var datesHtml = '';
-    if (showDates){
-        datesHtml = `<div class="room-dates">
-        <small class="room-date-from">${price['from_date']}</small>/<small class="room-date-to">${price['to_date']}</small>
-        </div>`;
-    }
-    pricesHtml += `<div class="room-total">
-    <span class="room-total-nights">
-        ${totalNights} Nights
-    </span>
-    <span class="room-total-price" price-id="${price['item_price_name']}" from-date="${price['from_date']}" to-date="${price['to_date']}" total-price="${nightsPrice}" selling-price="${price['selling_price_with_childs']}">${nightsPrice}</span></div>
-    ${datesHtml}
-    `;
-    return pricesHtml;
-}
+
 function formatRoomResult(roomResult){
-    console.log(roomResult)
     var resultItem = $('#room-result-item-template').html()
     var showAskButton = false;
-    var askForAvailability = false;
-    var askForPrice = false;
-    var pricesHtml = '';
-    if (roomResult.remain_qty < 1){
-        showAskButton = true;
-        askForAvailability = true;
-    }
-    if (roomResult.details.prices.length == 0){
+    if (!roomResult.details.price){
         resultItem = $(resultItem)
             .find('.room-price-container')
             .remove()
             .end()
             .prop('outerHTML');
         showAskButton = true;
-        askForPrice = true;
     }else{
-        var showDates = false;
-        if (roomResult.result['contracts'].length > 1 || roomResult.result['contracts'][0]['prices'].length > 1){
-            showDates = true;
-        }
-        for (var contract of roomResult.result['contracts']){
-            for(var price of contract['prices']){
-                pricesHtml += formatRoomPrices(price, showDates);
-            }
-        }
-        resultItem = $(resultItem).find('.room-price-container').html(pricesHtml).end().prop('outerHTML'); 
+        resultItem= resultItem
+        .replace('{Room Price}', parseFloat(roomResult['results'][0]['price'][0]).toFixed(2))
+        .replace('{Nights}', roomResult['results'][0]['price'][1])
     }
-    var roomContracts = formatRoomContracts(roomResult)
-    resultItem = $(resultItem)
-        .find('.room-contracts-container')
-        .html(roomContracts)
-        .end()
-        .prop('outerHTML');
-    var roomDetails = format_cancelation_policies(roomResult)
-    
-    if (roomResult['result']['features']){
-        for (var dd of roomResult['result']['features'])
+
+    var roomDetails = ''
+    if (roomResult['results'][0]['hotel_cancellation_policy']){
+        roomDetails = `<div class="room-details-item pop-container">
+        <div class="badge badge-primary ">
+            ${roomResult['results'][0]['hotel_cancellation_policy']}
+        </div>
+        <div class="pop-details">${roomResult['results'][0]['cancellation_policy_description']}</div>
+    </div>`
+    }
+    if (roomResult['results'][0]['features']){
+        for (var dd of roomResult['results'][0]['features'])
             roomDetails += `<div class="room-details-item">${dd}</div>`
     }
 
@@ -425,18 +385,18 @@ function formatRoomResult(roomResult){
             .html(roomDetails)
             .end()
             .prop('outerHTML');
-
-    if (roomResult['result']['room_image']){
+    
+    if (roomResult['results'][0]['room_image']){
         resultItem= resultItem
-        .replace('{Room Image}', roomResult['result']['room_image']) 
+        .replace('{Room Image}', roomResult['results'][0]['room_image']) 
     }else{
         resultItem= resultItem
         .replace('{Room Image}', '/assets/tourism_portal/images/no-image.jpg') 
     }
-    // if (roomResult.results[0]['qty'] < 1){
-    //     showAskButton = true;
-    // }
-    var showAvailableLabel = roomResult.result['remain_qty'] < roomResult['rooms'].length + 2
+    if (roomResult.results[0]['qty'] < 1){
+        showAskButton = true;
+    }
+    var showAvailableLabel = roomResult.results[0]['qty'] < roomResult['rooms'].length + 2
     if (!showAvailableLabel){
         resultItem = $(resultItem)
     .find('.room-available-label')
@@ -444,78 +404,41 @@ function formatRoomResult(roomResult){
     .end()
     .prop('outerHTML');
     }
-    if (!askForAvailability && !askForPrice){
-        var selectRoom = formatRoomSelect(roomResult);
+    if (!showAskButton){
+        var selectRoom = ``; 
+        var rooms = roomResult['rooms'].join('-')
+        for (var room in roomResult['rooms']){
+            var roomNo = Number(room) + 1
+            if (roomNo <= Number(roomResult.results[0]['qty'])){
+                selectRoom += `<option value="${roomNo}">${roomNo}</option>`
+            }
+            
+        }
+        selectRoom = `<div><label>Rooms: </label> <select 
+        room-price="${roomResult['results'][0]['price'][0]}"
+        onchange="roomSelectChanged(this)"  class="room-select-input"
+        contract-id="${roomResult['results'][0]['contract_id']}"
+        price-id="${roomResult['results'][0]['price'][3]}"
+        hotel=${roomResult['results'][0]['hotel_id']} rooms="${rooms}">
+        <option>0</option>
+            ${selectRoom}
+        </select></div>`
         resultItem = $(resultItem)
         .find('.ask-button-container')
         .after(selectRoom)
         .remove()
         .end()
         .prop('outerHTML');
+
+        
     }
     var modified = resultItem
-                .replace('{Room Type}', roomResult['result']['room_type_name'])
-                .replace('{Room ACMND}', roomResult['result']['room_accommodation_type_name'])
-                .replace('{Available QTY}', `Avilable ${roomResult['result']['remain_qty']}`)
+                .replace('{Hotel Name}', roomResult['results'][0]['hotel_name'])
+                .replace('{Room Type}', roomResult['results'][0]['room_type'])
+                .replace('{Available QTY}', `Avilable ${roomResult['results'][0]['qty']}`)
                 .replace('{PAX IMAGE}', `/assets/tourism_portal/images/pax/${roomResult.details.pax}.png`);
     
     return modified;
-}
-
-function format_cancelation_policies(roomResult){
-    var roomDetails ='';
-    var cancellations = [];
-    for (var contract  of roomResult.result['contracts']){
-        if (!cancellations.includes(contract['hotel_cancellation_policy'])){
-            cancellations.push(contract['hotel_cancellation_policy'])
-            roomDetails += `<div class="room-details-item pop-container">
-                <div class="badge badge-primary ">
-                    ${contract['hotel_cancellation_policy']}
-                </div>
-                <div class="pop-details">${contract['cancellation_policy_description']}</div>
-            </div>`
-        }
-    }
-    return roomDetails;
-}
-
-function formatRoomContracts(roomResult){
-    var roomContracts = '';
-    for (var contract of roomResult.result['contracts']){
-        roomContracts += `<input type="hidden" value="${contract['contract_id']}" 
-        from-date="${contract['from_date']}" to-date="${contract['to_date']}"/>`
-    }
-    return roomContracts;
-}
-
-function formatRoomSelect(roomResult){
-        var selectRoom = ``; 
-        var rooms = roomResult['rooms'].join('-')
-        for (var room in roomResult['rooms']){
-            var roomNo = Number(room) + 1
-            if (roomNo <= Number(roomResult.result['remain_qty'])){
-                selectRoom += `<option value="${roomNo}" ask-qty="0">${roomNo}</option>`
-            }else{
-                selectRoom += `<option value="${roomNo}" ask-qty="1">${roomNo}</option>`
-            }
-            
-        }
-        // room-price="${roomResult['results'][0]['price'][0]}"
-        // contract-id="${roomResult['results'][0]['contract_id']}"
-        // price-id="${roomResult['results'][0]['price'][3]}"
-        selectRoom = `<div><label>Rooms: </label> <select 
-        onchange="roomSelectChanged(this)"  class="room-select-input"
-        hotel=${roomResult['result']['hotel']} rooms="${rooms}">
-        <option>0</option>
-            ${selectRoom}
-        </select></div>`
-    //     resultItem = $(resultItem)
-    //     .find('.ask-button-container')
-    //     .after(selectRoom)
-    //     .remove()
-    //     .end()
-    //     .prop('outerHTML');
-    return selectRoom;
 }
 
 function roomSelectChanged(e){
@@ -559,6 +482,7 @@ function disable_other_hotel_selects(hotel, hotel_search){
 }
 
 function checkCommonRooms(searchResults){
+    console.log(searchResults)
     var results = {}
     var searchCount = 0;
     for (var resultName in searchResults){
@@ -567,26 +491,24 @@ function checkCommonRooms(searchResults){
         results[searchLabel] = {}
         var res = searchResults[resultName];
         for (var hotel in res){
-            results[searchLabel][hotel] = {}
-            results[searchLabel][hotel]['details'] = res[hotel]['details']
-            results[searchLabel][hotel]['rooms'] = []
-            for (var roomName in res[hotel]['rooms']) {
-                for (var room of res[hotel]['rooms'][roomName]['rooms']){
+            results[searchLabel][hotel] = []
+            for (var roomResults in res[hotel]) {
+                for (var room of res[hotel][roomResults]){
                     var found = false;
-                    var roomDetails = getRoomDetails(room,res[hotel]['rooms'][roomName]['roomPax'])
-                    for (var commonRoom of results[searchLabel][hotel]['rooms']){
+                    var roomDetails = getRoomDetails(room)
+                    for (var commonRoom of results[searchLabel][hotel]){
                         if (compareRoomDetails(commonRoom.details,  roomDetails)){
                             found = true;
-                            commonRoom.rooms.push(roomName)
-                            //commonRoom.results.push(room)
+                            commonRoom.rooms.push(roomResults)
+                            commonRoom.results.push(room)
                             break;
                         }
                     }
                     if (!found){
-                        results[searchLabel][hotel]['rooms'].push({
-                            "rooms": [roomName],
+                        results[searchLabel][hotel].push({
+                            "rooms": [roomResults],
                             "details": roomDetails,
-                            "result": room
+                            "results": [room]
                         })
                     }
                 }
@@ -595,36 +517,23 @@ function checkCommonRooms(searchResults){
         }
         
     }
+    console.log(results)
     return results
 }
 
 function compareRoomDetails(room1, room2){
-    for (var price of room1.prices){
-        if (! room2.prices.includes(price)){
-            return false;
-        }
-    }
+    if (room1.price != room2.price) return false;
     if (room1.room_id != room2.room_id) return false;
     if (room1.pax != room2.pax) return false;
     return true;
 }
 
-function getRoomDetails(room, roomPax){
+function getRoomDetails(room){
+
     var details = {
-        "prices": [],//room['price'] ? room['price'][0] : null,
-        "total_price": 0,
+        "price": room['price'] ? room['price'][0] : null,
         "room_id": room['room_id'],
-        "pax": roomPax['adults'] + "-" + roomPax['children'],
-    }
-    if (room['contracts'] && room['contracts'].length > 0){
-        for (var contract of room['contracts']){
-            if (contract['prices'] && contract['prices'].length > 0){
-                for(var price of contract['prices']){
-                    details.prices.push(contract.contract_id +price.item_price_name + price.selling_price_with_childs)
-                    details.total_price += Number(price.selling_price_with_childs)
-                }
-            }
-        }
+        "pax": room['pax']['adults'] + "-" + room['pax']['children'],
     }
     return details;
 }
@@ -748,12 +657,7 @@ function calculate_total_hotel(hotel, hotel_search){
     var total = 0;
     var all_selects =document.querySelectorAll(`.hotel-search-results select.room-select-input`); //document.querySelectorAll(`.hotel-search-results[hotel-result="${hotel_search}"] select.room-select-input[hotel="${hotel}"]`)
     for (var selectInput of all_selects){
-        var roomPrice = 0;
-        var prices = selectInput.closest('.room-price-qty-details').querySelectorAll('.room-total-price')
-        for (var price of prices){
-            roomPrice += Number(price.getAttribute("total-price"))
-        }
-        total += Number( selectInput.value || 0) * roomPrice
+        total += Number( selectInput.value || 0) * Number(selectInput.getAttribute("room-price"))
     }
     $('.hotels-total').text(`${total.toFixed(2)} USD`)
     totals['hotels'] = total;
@@ -799,33 +703,10 @@ function getSelectedRooms(){
         // check if all rooms are selected
         var all_selects= document.querySelectorAll(`div[hotel-result="${hotelSearch}"] select.room-select-input[hotel="${reservation_details['hotel'][hotelSearch]}"]`)
         for (var ss of all_selects){
-            var detailsContainer = ss.closest('.room-price-qty-details');
-            var prices = detailsContainer.querySelectorAll('.room-total-price')
-            var pricesIds = [];
-            var totalPrice = 0;
-            for (var price of prices){
-                pricesIds.push({
-                    "priceId": price.getAttribute("price-id"),
-                    "fromDate": price.getAttribute("from-date"),
-                    "toDate": price.getAttribute("to-date"),
-                    "totalPrice": price.getAttribute("total-price"),
-                    "sellingPrice": price.getAttribute("selling-price")
-                })
-                totalPrice += Number(price.getAttribute("total-price"))
-            }
-            var contracts = detailsContainer.querySelectorAll('.room-contracts-container input[type="hidden"]')
-            var contractIds = [];
-            for (var contract of contracts){
-                contractIds.push({
-                    "contractId": contract.value,
-                    "fromDate": contract.getAttribute("from-date"),
-                    "toDate": contract.getAttribute("to-date")
-                })
-            }
             var rooms = ss.getAttribute("rooms");
-            // var price = ss.getAttribute("room-price");
-            // var contractId = ss.getAttribute("contract-id");
-            // var priceId = ss.getAttribute("price-id");
+            var price = ss.getAttribute("room-price");
+            var contractId = ss.getAttribute("contract-id");
+            var priceId = ss.getAttribute("price-id");
             var roomId = ss.closest('.room-result-container').getAttribute('room-id')
             var value = 0;
             if (ss.value && ss.value > 0){
@@ -836,10 +717,10 @@ function getSelectedRooms(){
             }
             if (!selected_rooms[hotelSearch][rooms][roomId]){
                 selected_rooms[hotelSearch][rooms][roomId] = {
-                    "prices": pricesIds,
+                    "price": price,
                     "qty": 0,
-                    "contracts": contractIds,
-                    "total-price": totalPrice,
+                    "contractId": contractId,
+                    "priceId": priceId
                 } 
             }
     
@@ -935,7 +816,6 @@ function confirmButtonClicked(e){
    if (!selected_rooms){
     return
    }
-   console.log(selected_rooms)
    var selected_transfers = getSelectedTransfers();
    var selected_tours = getSelectedTours();
     var data = encodeParamsJson(selected_rooms, selected_transfers, selected_tours)
@@ -999,7 +879,6 @@ function encodeTransferSearch(transferParams, selected_transfers){
 
 function encodeHotelRoomSeearch(hotelParams, selected_rooms){
     var all_searches = {}
-    console.log(selected_rooms)
     for (search in selected_rooms){
         var rooms = {};
         for (var room in selected_rooms[search]){
@@ -1012,8 +891,8 @@ function encodeHotelRoomSeearch(hotelParams, selected_rooms){
                         "search_name": search,
                         "room_name": roomNames[selectedIndexes],
                         "room_id": ss,
-                        "price": selected_rooms[search][room][ss]['total-price'],
-                        // "contract_id": selected_rooms[search][room][ss]['contractId'],
+                        "price": selected_rooms[search][room][ss]['price'],
+                        "contract_id": selected_rooms[search][room][ss]['contractId'],
                         "pax_info": paxInfo,
                         "check_in": hotelParams[search]['checkin'],
                         "check_out": hotelParams[search]['checkout'],
@@ -1021,34 +900,16 @@ function encodeHotelRoomSeearch(hotelParams, selected_rooms){
                     }
                     // ToDo Add multiple contracts
                     // Add Price id
-                    encodedRoom['contracts'] = []
-                    // for (var contract in selected_rooms[search][room][ss]['contracts']){
-                    //     encodedRoom['contracts'].push({
-                    //         "contract_id": selected_rooms[search][room][ss]['contracts'][contract]['contractId'],
-                    //         "from_date": selected_rooms[search][room][ss]['contracts'][contract]['fromDate'],
-                    //         "to_date": selected_rooms[search][room][ss]['contracts'][contract]['toDate'],
-                    //     })
-                    // }
-                    for (var contract_price in selected_rooms[search][room][ss]['prices']){
+                    if (selected_rooms[search][room][ss]['contractId']){
+                        encodedRoom['contracts'] = []
                         encodedRoom['contracts'].push({
-                            // "contract_id": selected_rooms[search][room][ss]['prices'][contract_price]['contractId'],
-                            "price_id": selected_rooms[search][room][ss]['prices'][contract_price]['priceId'],
-                            "selling_price": selected_rooms[search][room][ss]['prices'][contract_price]['sellingPrice'],
-                            "total_price": selected_rooms[search][room][ss]['prices'][contract_price]['totalPrice'],
-                            "check_in": selected_rooms[search][room][ss]['prices'][contract_price]['fromDate'],
-                            "check_out": selected_rooms[search][room][ss]['prices'][contract_price]['toDate'],
+                            "contract_id": selected_rooms[search][room][ss]['contractId'],
+                            "price_id": selected_rooms[search][room][ss]['priceId'],
+                            "price": selected_rooms[search][room][ss]['price'],
+                            "check_in": hotelParams[search]['checkin'],
+                            "check_out": hotelParams[search]['checkout'],
                         })
                     }
-                    // if (selected_rooms[search][room][ss]['contractId']){
-                    //     encodedRoom['contracts'] = []
-                    //     encodedRoom['contracts'].push({
-                    //         "contract_id": selected_rooms[search][room][ss]['contractId'],
-                    //         "price_id": selected_rooms[search][room][ss]['priceId'],
-                    //         "price": selected_rooms[search][room][ss]['price'],
-                    //         "check_in": hotelParams[search]['checkin'],
-                    //         "check_out": hotelParams[search]['checkout'],
-                    //     })
-                    // }
                     rooms[roomNames[selectedIndexes]] = encodedRoom
                     selectedIndexes++;
                 }

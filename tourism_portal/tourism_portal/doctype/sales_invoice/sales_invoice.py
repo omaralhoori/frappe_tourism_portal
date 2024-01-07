@@ -173,7 +173,7 @@ class SalesInvoice(Document):
 				if not reserve_room(room.contract_id, room.check_in, room.check_out):
 					frappe.throw('Room is not avilable')
 	def free_rooms(self):
-		for room in self.rooms:
+		for room in self.room_price:
 			if room.contract_id:
 				if not free_room(room.contract_id, room.check_in, room.check_out):
 					frappe.throw('Room is not avilable')
@@ -319,11 +319,11 @@ class SalesInvoice(Document):
 	def cancel_hotels(self):
 		# ToDo cannot cancel any room if checkin is passed
 		total_refunds = 0
-		for room in self.rooms:
+		for room in self.room_price:
 			if room.contract_id:
 				if not free_room(room.contract_id, room.check_in, room.check_out):
 					frappe.throw('Room is not avilable')
-			refund = refund_room(room.cancellation_policy, room.total_price, room.check_in, room.check_out)
+			refund = refund_room(room.cancellation_policy, room.total_selling_price, room.check_in, room.check_out, 1, 14)
 			room.refund = refund
 			room.is_canceled = 1
 			total_refunds += refund
@@ -352,7 +352,7 @@ def make_room_request(room, check_in, check_out):
 	}
 
 @frappe.whitelist()
-def refund_room(cancellation_policy, total_price, check_in, check_out):
+def refund_room(cancellation_policy, total_price, check_in, check_out, margin_date=0, margin_hour=0):
 	if type(check_in) == str:
 		check_in = frappe.utils.datetime.datetime.strptime(check_in, "%Y-%m-%d").date()
 	if type(check_out) == str:
@@ -361,9 +361,11 @@ def refund_room(cancellation_policy, total_price, check_in, check_out):
 	cancellations = frappe.db.get_all("Cancellation Policy Item", 
 								   {"parent": cancellation_policy}, 
 			['duration_type', 'duration', 'refund_type', 'refund', 'is_deduction'], order_by="idx")
-	days = frappe.utils.date_diff(check_out, check_in)
+	days = frappe.utils.date_diff(check_out, check_in) + margin_date
+	if days < 1:
+		frappe.throw("Check out cannot be before check in")
 	day_diff = frappe.utils.date_diff(check_in, frappe.utils.now())
-	check_in_datetime = datetime.datetime.combine(check_in, datetime.time(12))
+	check_in_datetime = datetime.datetime.combine(check_in, datetime.time(margin_hour))
 
 	time_difference = check_in_datetime - frappe.utils.datetime.datetime.now()
 	total_seconds = time_difference.total_seconds()

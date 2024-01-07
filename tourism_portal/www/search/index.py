@@ -23,7 +23,7 @@ def get_context(context):
 	context.tours = search_for_tours(tourParams, total_days)
 	# context.rooms = get_available_hotel_rooms(hotelParams)
 	# context.rooms = json.dumps(context.rooms, default=str)
-	rooms = get_available_hotel_rooms_old(hotelParams)
+	rooms = get_available_hotel_rooms(hotelParams)
 	# search_doc.room_results = context.rooms
 	# search_doc.save(ignore_permissions=True)
 	context.hotel_search_params = json.dumps(hotelParams, default=str)

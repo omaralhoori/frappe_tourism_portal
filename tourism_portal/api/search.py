@@ -80,7 +80,7 @@ def search_for_available_hotel_by_hotel(hotel_params):
 			get_room_contracts(room, hotel_params, roomPax, company_class)
 	return {
 		hotel.name:{
-			  **get_hotel_data(hotel),
+			  "details":get_hotel_data(hotel),
 			  "rooms": available_rooms
 		}
 	}
@@ -91,8 +91,12 @@ def get_room_contracts(room, hotel_params, roomPax, company_class):
 	all_room_contracts = filter_contracts(all_room_contracts, hotel_params.get('checkin'), hotel_params.get('checkout'))
 	for contract in all_room_contracts:
 		contract['child_rate_contract'] = frappe.db.get_value("Hotel", room.get('hotel'), "hotel_child_rate_policy", cache=True)
+		contract['cancellation_policy_description'] = frappe.db.get_value("Cancellation Policy", contract.get('hotel_cancellation_policy'), "policy_description", cache=True)
 		get_room_contract_price(contract, room.get('room_accommodation_type'), hotel_params.get('nationality'), company_class, roomPax)
 	room['contracts'] = all_room_contracts
+	for contract in room['contracts']:
+		contract['remain_qty'] = get_contract_availabilities(contract.get('contract_id'), contract.get('from_date'), contract.get('to_date'))
+	room['remain_qty'] = min([contract.get('remain_qty') for contract in room['contracts']])
 
 def get_all_room_contracts(room, hotel_params):
 	contracts = frappe.db.sql("""
@@ -380,8 +384,8 @@ def filter_contracts_by_remain_qty(contracts):
 
 def get_contract_availabilities(contract, checkin, checkout):
 	room_qty = frappe.db.sql("""
-		SELECT min(available_qty) as qty FROM `tabRoom Availability`
-		WHERE contract_no=%(contract_no)s AND date >= %(checkin)s AND date < %(checkout)s
+		SELECT min(available_qty) as qty FROM `tabRoom Availability` as tbl1
+		WHERE tbl1.contract_no=%(contract_no)s AND tbl1.date >= %(checkin)s AND tbl1.date <= %(checkout)s
 	""", {"contract_no": contract, 
        "checkin": checkin, "checkout": checkout}, as_dict=True)
 	if len(room_qty) > 0:
@@ -456,6 +460,8 @@ def get_hotel_rooms(hotel):
 		WHERE tbl2.disabled=0 AND tbl2.hotel=%(hotel)s
 		;
 	""", {"hotel": hotel }, as_dict=True)
+	for room in all_rooms:
+		room['features'] =  []
 	return all_rooms
 @frappe.whitelist()
 def ask_for_availability(room_id, room_qty):
