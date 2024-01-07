@@ -10,7 +10,8 @@
  "engine": "InnoDB",
  "field_order": [
   "town_name",
-  "city"
+  "city",
+  "portal_disabled"
  ],
  "fields": [
   {
@@ -28,11 +29,17 @@
    "label": "City",
    "options": "City",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "portal_disabled",
+   "fieldtype": "Check",
+   "label": "Portal Disabled"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-02 16:41:53.842134",
+ "modified": "2024-01-07 14:17:55.121837",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Town",

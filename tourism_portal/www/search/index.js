@@ -20,6 +20,8 @@ $(document).ready(async function(){
         searchResults = JSON.parse(res.message);
     }
     var results = checkCommonRooms(searchResults);
+    console.log("results------------")
+    console.log(results)
     formatResults(results);
     // updateAvailableRooms();
     // checkRightSelected()
@@ -132,17 +134,17 @@ function formatResults(allResults){
             if (accordion){
                 var resultItem = $('#hotel-room-results-template').html()
                 var location  = '';
-                if (results[hotel][0]['results'][0]['gps_location']){
-                    location = `<a target="_blank" href="https://maps.google.com/?q=${results[hotel][0]['results'][0]['gps_location']}" >Location On Map</a>`
+                if (results[hotel]['details']['gps_location']){
+                    location = `<a target="_blank" href="https://maps.google.com/?q=${results[hotel]['details']['gps_location']}" >Location On Map</a>`
                 }
                 var minPrice = null;
-                for (var room of results[hotel]){
-                    if (room.details.price){
+                for (var room of results[hotel]['rooms']){
+                    if (room.details.total_price){
                         if (!minPrice){
-                            minPrice = room.details.price;
+                            minPrice = room.details.total_price;
                         }else{
-                            if (room.details.price < minPrice){
-                                minPrice = room.details.price;
+                            if (room.details.total_price < minPrice){
+                                minPrice = room.details.total_price;
                             }
                         }
 
@@ -150,11 +152,11 @@ function formatResults(allResults){
                 }
                 resultItem = resultItem.
                     replaceAll("{Hotel ID}", hotel).
-                    replaceAll("{Hotel Name}", results[hotel][0]['results'][0]['hotel_name']).
-                    replaceAll("{Hotel Image}", results[hotel][0]['results'][0]['hotel_image'] || '/assets/tourism_portal/images/no-image.jpg').
+                    replaceAll("{Hotel Name}", results[hotel]['details']['hotel_name']).
+                    replaceAll("{Hotel Image}", results[hotel]['details']['hotel_image'] || '/assets/tourism_portal/images/no-image.jpg').
                     replaceAll("{Hotel Location}", location).
-                    replaceAll("{Hotel Stars}", results[hotel][0]['results'][0]['star_rating'] || '').
-                    replaceAll("{Hotel Address}", results[hotel][0]['results'][0]['address'] || '').
+                    replaceAll("{Hotel Stars}", results[hotel]['details']['star_rating'] || '').
+                    replaceAll("{Hotel Address}", results[hotel]['details']['address'] || '').
                     replaceAll("{Hotel Price}", minPrice? minPrice.toFixed(2) : 'N/A');
                 var $resultItem = $(resultItem);
                 $resultItem.find('.card-body').html(`<div class="hotel-cards" hotel-id="${hotel}">${resultFormatted}</div>`)

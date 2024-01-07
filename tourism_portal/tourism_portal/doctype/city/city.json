@@ -11,7 +11,8 @@
  "field_order": [
   "city_code",
   "city_name",
-  "country"
+  "country",
+  "portal_disabled"
  ],
  "fields": [
   {
@@ -35,11 +36,17 @@
    "label": "Country",
    "options": "Country",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "portal_disabled",
+   "fieldtype": "Check",
+   "label": "Portal Disabled"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-19 11:26:31.178886",
+ "modified": "2024-01-07 14:18:32.551917",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "City",

@@ -41,7 +41,7 @@ def get_available_hotel_rooms(search_params):
 	return hotels
 
 def search_for_available_hotel(hotel):
-	if hotel["location-type"] == "area" or hotel["location-type"] == "town":
+	if hotel["location-type"] == "area" or hotel["location-type"] == "town" or hotel['location-type'] == "city":
 		return search_for_available_hotel_by_area(hotel)
 	elif hotel["location-type"] == "hotel":
 		return search_for_available_hotel_by_hotel(hotel)
@@ -59,6 +59,7 @@ def search_for_available_hotel_by_area(hotel_params):
 		if len(hotel_data) > 0:
 			results.update(hotel_data)
 	return results
+
 def search_for_available_hotel_by_hotel(hotel_params):
 	hotel = frappe.get_cached_doc("Hotel", hotel_params.get("location"))
 	company_class = get_company_class(hotel_params)
@@ -96,7 +97,11 @@ def get_room_contracts(room, hotel_params, roomPax, company_class):
 	room['contracts'] = all_room_contracts
 	for contract in room['contracts']:
 		contract['remain_qty'] = get_contract_availabilities(contract.get('contract_id'), contract.get('from_date'), contract.get('to_date'))
-	room['remain_qty'] = min([contract.get('remain_qty') for contract in room['contracts']])
+	remains = [contract.get('remain_qty', 0) for contract in room['contracts']]
+	if len(remains)  == 0:
+		room['remain_qty'] = 0
+	else:
+		room['remain_qty'] = min(remains)
 
 def get_all_room_contracts(room, hotel_params):
 	contracts = frappe.db.sql("""
