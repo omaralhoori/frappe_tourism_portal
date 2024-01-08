@@ -204,9 +204,10 @@ def get_hotel_contracts(hotel, checkin, checkout):
 def get_room_contract_price(contract, room_acmnd_type, nationality, company_class, roomPax):
 	contract['prices'] = get_contract_prices(contract, room_acmnd_type, nationality)
 	contract['prices'] = restart_price_dates(contract['prices'], contract['from_date'], contract['to_date'])
+	print(contract['prices'])
 	for price in contract['prices']:
 		if not price.get('selling_price'):
-			get_selling_price_profit_margin_based(contract, price)
+			get_selling_price_profit_margin_based(contract, price, room_acmnd_type)
 		del price['buying_price']
 		price['selling_price'] = get_room_selling_price_based_on_class(price['selling_price'], price['item_price_name'], company_class)
 		price['selling_price_with_childs'] = get_room_price_with_children(roomPax, price['selling_price'], contract.get('child_rate_contract'))
@@ -217,14 +218,14 @@ def get_room_selling_price_based_on_class(selling_price: float, item_price_name:
 	extra_type, extra_price = class_extra_price
 	return calculate_extra_price(selling_price, extra_type, extra_price)
 
-def get_selling_price_profit_margin_based(contract, room_price):
+def get_selling_price_profit_margin_based(contract, room_price, room_acmnd_type):
 	contract['profit_margin'] = frappe.db.get_value("Hotel Room Contract", contract.get('contract_id'), "profit_margin", cache=True)
 	selling_price = None
 	selling_currency = None
 	profit_margin_doc = frappe.get_cached_doc("Profit Margin", contract.get('profit_margin'))
 	profit_margin_item = None
 	for item in profit_margin_doc.profit_margins:
-		if item.room_type == contract.get('room_accommodation_type'):
+		if item.room_type == room_acmnd_type:#contract.get('room_accommodation_type'):
 			profit_margin_item = item
 			break
 	if profit_margin_item:
@@ -292,10 +293,13 @@ def get_contract_prices(contract, room_acmnd_type, nationality):
 
 def filter_contracts(contracts, checkin, checkout):
 	# Filter Contracts by Remain Room Qty
-	# contracts = filter_contracts_by_remain_qty(contracts)
+	qtycontracts, noncontracts = filter_contracts_by_remain_qty(contracts)
 	# Concat Contracts with same rome type
-	contracts = concat_contracts(contracts, checkin, checkout)
-	return contracts
+	if filteredContracts := concat_contracts(qtycontracts, checkin, checkout):
+		return filteredContracts
+	elif filteredContracts := concat_contracts(noncontracts, checkin, checkout):
+		return filteredContracts
+	else: return concat_contracts(contracts, checkin, checkout)
 
 def concat_contracts(contracts, checkin, checkout):
 	# room_type_contracts = {}
@@ -384,8 +388,9 @@ def test_filter_contracts_by_dates():
 
 
 def filter_contracts_by_remain_qty(contracts):
-	contracts = [contract for contract in contracts if contract.get('remain_qty') > 0]
-	return contracts
+	contracts = [contract for contract in contracts if contract.get('qty') > 0]
+	noncontracts = [contract for contract in contracts if contract.get('qty') == 0]
+	return contracts, noncontracts
 
 def get_contract_availabilities(contract, checkin, checkout):
 	room_qty = frappe.db.sql("""

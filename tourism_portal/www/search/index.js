@@ -552,10 +552,22 @@ function formatRoomSelect(roomResult){
     //     .prop('outerHTML');
     return selectRoom;
 }
+function askForRoomsQty(e){
+    // var roomId = $(e).closest('.room-result-container').attr('room-id');
+    // var selectedQty = $(e).val();
 
+}
 function roomSelectChanged(e){
     var rooms = e.getAttribute("rooms")
     var hotel = e.getAttribute("hotel")
+    var selectedOption = e.options[e.selectedIndex];
+    if (selectedOption.getAttribute("ask-qty")){
+        var askQty = selectedOption.getAttribute("ask-qty");
+        if (askQty == "1"){
+            askForRoomsQty(e);
+            return;
+        }
+    }
     var hotel_search =e.closest('.hotel-search-results').getAttribute('hotel-result')
     var selectedRooms = 0;
     var requiredRoomsToSelect = rooms.split('-').length
