@@ -11,7 +11,8 @@
   "guest_salutation",
   "guest_name",
   "guest_type",
-  "guest_age"
+  "guest_age",
+  "mobile_no"
  ],
  "fields": [
   {
@@ -53,12 +54,17 @@
    "in_list_view": 1,
    "label": "Hotel Search",
    "reqd": 1
+  },
+  {
+   "fieldname": "mobile_no",
+   "fieldtype": "Data",
+   "label": "Mobile No"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-19 11:26:22.034772",
+ "modified": "2024-01-08 10:18:27.372293",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice Room Pax",

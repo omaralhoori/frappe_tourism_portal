@@ -10,7 +10,8 @@
   "guest_salutation",
   "guest_name",
   "guest_type",
-  "guest_age"
+  "guest_age",
+  "mobile_no"
  ],
  "fields": [
   {
@@ -45,12 +46,17 @@
    "fieldname": "guest_age",
    "fieldtype": "Int",
    "label": "Guest Age"
+  },
+  {
+   "fieldname": "mobile_no",
+   "fieldtype": "Data",
+   "label": "Mobile No"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-19 11:26:19.344225",
+ "modified": "2024-01-08 10:18:39.114736",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice Tour Pax",

@@ -41,6 +41,10 @@ function formatTime(time) {
 startTimer();
 }
 
+$(document).ready(function(){
+  $('.phone-container').first().removeClass('d-none')
+})
+
 document.querySelectorAll(".adult-pax").forEach((e) => {
   var paxName = "adult-" + e.getAttribute("adult-pax")
   paxesNames[paxName] = {
@@ -113,13 +117,13 @@ function roomBoardChanged(e){
 }
 
 function validateReservationData(){
-    var customerInput = $("input[name='customer-name']")
-    var emailInput = $("input[name='email']")
-    var phoneInput = $("input[name='phone-number']")
+    // var customerInput = $("input[name='customer-name']")
+    // var emailInput = $("input[name='email']")
+    // var phoneInput = $("input[name='phone-number']")
     var uncompleatedForm = false;
-    uncompleatedForm = validateInput(customerInput) ? uncompleatedForm: true;
-    uncompleatedForm = validateInput(emailInput) ? uncompleatedForm: true;
-    uncompleatedForm = validateInput(phoneInput) ? uncompleatedForm: true;
+    // uncompleatedForm = validateInput(customerInput) ? uncompleatedForm: true;
+    // uncompleatedForm = validateInput(emailInput) ? uncompleatedForm: true;
+    // uncompleatedForm = validateInput(phoneInput) ? uncompleatedForm: true;
     $("select[name='pax-salut']").each(function(index, element) {
       if (element)
         uncompleatedForm = validateInput($(element)) ? uncompleatedForm: true;
@@ -158,9 +162,9 @@ function validateRadioInputSelected(className){
 }
 function confirmReservationButtonClicked(e){
   validateReservationData();
-  var customerName = document.querySelector('input[name="customer-name"]').value
-  var customerEmail = document.querySelector('input[name="email"]').value
-  var customerMobile = document.querySelector('input[name="phone-number"]').value
+  // var customerName = document.querySelector('input[name="customer-name"]').value
+  // var customerEmail = document.querySelector('input[name="email"]').value
+  // var customerMobile = document.querySelector('input[name="phone-number"]').value
   var roomsInfo = getRoomsInfo()
   var toursInfo = getToursInfo()
   var transferInfo = getTransferInfo()
@@ -173,9 +177,9 @@ function confirmReservationButtonClicked(e){
       rooms: roomsInfo,
       tours: toursInfo,
       transfers: transferInfo,
-      customer_name: customerName,
-      customer_email: customerEmail,
-      customer_mobile_no: customerMobile
+      // customer_name: customerName,
+      // customer_email: customerEmail,
+      // customer_mobile_no: customerMobile
     },
     callback: (res) =>{
       if(res.message && res.message.success_key){
@@ -206,14 +210,21 @@ function getTransferInfo(){
     transfersInfo[transferSearch][transferName]['flight_no'] = flightNo
     for (var pax of paxes){
       var salutInput = pax.querySelector('select[name="pax-salut"]');
+      var mobileInput = pax.querySelector('input[name="phone-number"]');
       var salut = ""
+      var mobile = ""
       if (salutInput){
         // ToDo show Error if empty
         salut = salutInput.value
       }
+      if (mobileInput){
+        // ToDo show Error if empty
+        mobile = mobileInput.value
+      }
       transfersInfo[transferSearch][transferName]['paxes'][pax.getAttribute('row-id')] = {
         "salut": salut,
         "guest_name": pax.querySelector('input[name="pax-name"]').value,
+        "mobile_no": mobile,
         "row_id": pax.getAttribute("row-id")
       }
     }
@@ -229,14 +240,21 @@ function getToursInfo(){
     toursInfo[tour.getAttribute('search-name')] = {}
     for (var pax of paxes){
       var salutInput = pax.querySelector('select[name="pax-salut"]');
+      var mobileInput = pax.querySelector('input[name="phone-number"]');
       var salut = ""
+      var mobile = ""
       if (salutInput){
         // ToDo show Error if empty
         salut = salutInput.value
       }
+      if (mobileInput){
+        // ToDo show Error if empty
+        mobile = mobileInput.value
+      }
       toursInfo[tour.getAttribute('search-name')][pax.getAttribute('row-id')] = {
         "salut": salut,
         "guest_name": pax.querySelector('input[name="pax-name"]').value,
+        "mobile_no": mobile,
         "row_id": pax.getAttribute("row-id")
       }
     }
@@ -253,14 +271,21 @@ function getRoomsInfo(){
     roomsInfo[room.getAttribute('row-id')] = {}
     for (var pax of paxes){
       var salutInput = pax.querySelector('select[name="pax-salut"]');
+      var mobileInput = pax.querySelector('input[name="phone-number"]');
       var salut = ""
+      var mobile = ""
       if (salutInput){
         // ToDo show Error if empty
         salut = salutInput.value
       }
+      if (mobileInput){
+        // ToDo show Error if empty
+        mobile = mobileInput.value
+      }
       roomsInfo[room.getAttribute('row-id')][pax.getAttribute('row-id')] = {
         "salut": salut,
         "guest_name": pax.querySelector('input[name="pax-name"]').value,
+        "mobile_no": mobile,
         "row_id": pax.getAttribute("row-id")
       }
     }

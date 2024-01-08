@@ -116,14 +116,16 @@ def get_invoice_data(sales_invoice):
                         "guest_salutation": pax.guest_salutation,
                         "guest_name": pax.guest_name,
                         "guest_type": pax.guest_type,
-                        "guest_age": pax.guest_age
+                        "guest_age": pax.guest_age,
+                        "mobile_no": pax.mobile_no
                     })
                 if pax.guest_type == 'Child':
                     child_paxes.append({
                         "row_id": pax.name,
                         "guest_name": pax.guest_name,
                         "guest_type": pax.guest_type,
-                        "guest_age": pax.guest_age
+                        "guest_age": pax.guest_age,
+                        "mobile_no": pax.mobile_no,
                     })
         extras = []
         for extra in invoice.room_extras:
@@ -145,6 +147,7 @@ def get_invoice_data(sales_invoice):
         tours[tour.get('search_name')]['check_out'] = tour.get('to_date')
         tours[tour.get('search_name')]['pickup'] = tour.get('pick_up')
         tours[tour.get('search_name')]['pickup_type'] = tour.get('pick_up_type')
+        tours[tour.get('search_name')]['pickup_name'] = get_location_name(tour.get('pick_up'), tour.get('pick_up_type'))
         tours[tour.get('search_name')]['tours'] = []
         tours[tour.get('search_name')]['total_price'] = tour.get('tour_price')
         tours[tour.get('search_name')]['adults'] = tour.get('adults')
@@ -171,14 +174,16 @@ def get_invoice_data(sales_invoice):
                         "guest_salutation": tour_pax.guest_salutation,
                         "guest_name": tour_pax.guest_name,
                         "guest_type": tour_pax.guest_type,
-                        "guest_age": tour_pax.guest_age
+                        "guest_age": tour_pax.guest_age,
+                        "mobile_no": tour_pax.mobile_no,
                     })
                 if tour_pax.guest_type == 'Child':
                     child_paxes.append({
                         "row_id": tour_pax.name,
                         "guest_name": tour_pax.guest_name,
                         "guest_type": tour_pax.guest_type,
-                        "guest_age": tour_pax.guest_age
+                        "guest_age": tour_pax.guest_age,
+                        "mobile_no": tour_pax.mobile_no,
                     })
         tours[tour.get('search_name')]['adult_paxes'] = adult_paxes
         tours[tour.get('search_name')]['child_paxes'] = child_paxes
@@ -200,8 +205,10 @@ def get_invoice_data(sales_invoice):
         }
         transfers[transfer_search][transfer_name]['pickup'] = transfer.get('pick_up')
         transfers[transfer_search][transfer_name]['pickup_type'] = transfer.get('pick_up_type')
+        transfers[transfer_search][transfer_name]['pickup_name'] = get_location_name(transfer.get('pick_up'), transfer.get('pick_up_type'))
         transfers[transfer_search][transfer_name]['dropoff'] = transfer.get('drop_off')
         transfers[transfer_search][transfer_name]['dropoff_type'] = transfer.get('drop_off_type')
+        transfers[transfer_search][transfer_name]['dropoff_name'] = get_location_name(transfer.get('drop_off'), transfer.get('drop_off_type'))
         transfers[transfer_search][transfer_name]['transfer_date'] = transfer.get('transfer_date')
         transfers[transfer_search][transfer_name]['pick_up_postal_code'] = transfer.get('pick_up_postal_code')
         transfers[transfer_search][transfer_name]['drop_off_postal_code'] = transfer.get('drop_off_postal_code')
@@ -216,14 +223,16 @@ def get_invoice_data(sales_invoice):
                         "guest_salutation": transfer_pax.guest_salutation,
                         "guest_name": transfer_pax.guest_name,
                         "guest_type": transfer_pax.guest_type,
-                        "guest_age": transfer_pax.guest_age
+                        "guest_age": transfer_pax.guest_age,
+                        "mobile_no": transfer_pax.mobile_no,
                     })
                 if transfer_pax.guest_type == 'Child':
                     child_paxes.append({
                         "row_id": transfer_pax.name,
                         "guest_name": transfer_pax.guest_name,
                         "guest_type": transfer_pax.guest_type,
-                        "guest_age": transfer_pax.guest_age
+                        "guest_age": transfer_pax.guest_age,
+                        "mobile_no": transfer_pax.mobile_no,
                     })
         transfers[transfer_search][transfer_name]['adult_paxes'] = adult_paxes
         transfers[transfer_search][transfer_name]['child_paxes'] = child_paxes
@@ -248,6 +257,19 @@ def get_invoice_data(sales_invoice):
         "status": invoice.status,
     }
 
+def get_location_name(location, location_type):
+    if location_type == 'hotel':
+        return frappe.db.get_value("Hotel", location, "hotel_name", cache=True)
+    elif location_type == 'area':
+        return frappe.db.get_value("Area", location, "area_name", cache=True)
+    elif location_type == 'town':
+        return frappe.db.get_value("Town", location, "town_name", cache=True)
+    elif location_type == 'city':
+        return frappe.db.get_value("City", location, "city_name", cache=True)
+    elif location_type == 'airport':
+        return frappe.db.get_value("Airport", location, "airport_name", cache=True)
+    else:
+        return location
 
 @frappe.whitelist()
 def get_all_invoices(voucher_no=None, start=0, limit=20):
@@ -284,6 +306,7 @@ def complete_reservation():
                 if pax.name == paxRowId:
                     pax.guest_salutation = rooms[roomRowId][paxRowId]['salut']
                     pax.guest_name = rooms[roomRowId][paxRowId]['guest_name']
+                    pax.mobile_no = rooms[roomRowId][paxRowId]['mobile_no']
                     hotel_search = pax.hotel_search
         for extra in extras:
             extra_row = invoice.append('room_extras')
@@ -300,6 +323,7 @@ def complete_reservation():
                 if pax.name == paxRowId:
                     pax.guest_salutation = tourPax[paxRowId]['salut']
                     pax.guest_name = tourPax[paxRowId]['guest_name']
+                    pax.mobile_no = tourPax[paxRowId]['mobile_no']
                     break
     for searchName in transfers:
         transferSearch = transfers[searchName]
@@ -310,6 +334,7 @@ def complete_reservation():
                     if pax.name == paxRowId:
                         pax.guest_salutation = transferPax[paxRowId]['salut']
                         pax.guest_name = transferPax[paxRowId]['guest_name']
+                        pax.mobile_no = transferPax[paxRowId]['mobile_no']
                         break
             for transfer in invoice.transfers:
                 if str(transfer.transfer_name) == str(transferName) and transfer.transfer_search == searchName:

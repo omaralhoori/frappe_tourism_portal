@@ -3,7 +3,7 @@
 {% block page_content %}
 <div class="row" style="margin-top: 150px;">
     <div class="col-lg-9">
-        <div class="tm-search-form tm-section-pad-2 card p-3">
+        {# <div class="tm-search-form tm-section-pad-2 card p-3">
             <div class="row mb-3">
                 <div class="col">Contact Info</div>
             </div>
@@ -22,7 +22,7 @@
                     <i class="fa fa-2x fa-phone tm-form-element-icon"></i>
                 </div>
         </div>
-        </div>
+        </div> #}
         {% for hotel_rsv in invoice_details.get('rooms') %}
         {% set hotelSearch = invoice_details['rooms'][hotel_rsv] %}
         {% for hotelName in hotelSearch %}
@@ -55,6 +55,10 @@
                         <input class="form-control" placeholder="Guest Name" name="pax-name" onchange="adultPaxChanged(this)" value="{{adult.guest_name or ''}}" />
                         <i class="fa fa-2x fa-user tm-form-element-icon"></i>
                     </div>
+                    <div class="form-group tm-form-element tm-form-element-2 phone-container d-none">
+                    <input class="form-control" placeholder="Phone Number" name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
+                    <i class="fa fa-2x fa-phone tm-form-element-icon"></i>
+                </div>
             </div>
             {% endfor %}
             {% for child in rsrv_room.get('child_paxes') %}
@@ -268,8 +272,8 @@
 {% macro render_transfer_details(transfer_search) %}
 <div class="row">
     <div class="col-lg-4 pb-2 "><strong>{{transfer_search['transfer_search']}}</strong></div>
-    <div class="col-lg-4 pb-2 ">PickUp: {{transfer_search['pickup']}}</div>
-    <div class="col-lg-4 pb-2 ">Drop Off: {{transfer_search['dropoff']}}</div>
+    <div class="col-lg-4 pb-2 ">PickUp: {{transfer_search['pickup_name']}}</div>
+    <div class="col-lg-4 pb-2 ">Drop Off: {{transfer_search['dropoff_name']}}</div>
     <div class="col-lg-4 pb-2 ">Transfer Date: {{transfer_search['transfer_date']}}</div>
     <div class="col-lg-4 pb-2 ">Adults: {{transfer_search['pax_info']['adults']}}</div>
     <div class="col-lg-4 pb-2 ">Children: {{transfer_search['pax_info']['children']}}</div>
@@ -294,6 +298,10 @@
                         <input class="form-control" placeholder="Guest Name" name="pax-name" onchange="adultPaxChanged(this)" value="{{adult.guest_name or ''}}" />
                         <i class="fa fa-2x fa-user tm-form-element-icon"></i>
                     </div>
+                    <div class="form-group tm-form-element tm-form-element-2 phone-container d-none">
+                    <input class="form-control" placeholder="Phone Number" name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
+                    <i class="fa fa-2x fa-phone tm-form-element-icon"></i>
+                </div>
             </div>
             {% endfor %}
             {% for child in child_paxes %}
@@ -315,7 +323,7 @@
 <div class="row">
     <div class="col-lg-4"><strong>{{tourSearch['search_name']}}</strong></div>
     <div class="col-lg-4">Tour Date: {{tourSearch['check_in']}} - {{tourSearch['check_out']}}</div>
-    <div class="col-lg-4">PickUp: {{tourSearch['pickup']}}</div>
+    <div class="col-lg-4">PickUp: {{tourSearch['pickup_name']}}</div>
     <div class="col-lg-4">Adults: {{tourSearch['adults']}}</div>
     <div class="col-lg-4">Children: {{tourSearch['children']}}</div>
 </div>
@@ -350,6 +358,10 @@
                         <input class="form-control" placeholder="Guest Name" onchange="adultPaxChanged(this)" name="pax-name" value="{{adult.guest_name or ''}}" />
                         <i class="fa fa-2x fa-user tm-form-element-icon"></i>
                     </div>
+                    <div class="form-group tm-form-element tm-form-element-2 phone-container d-none">
+                    <input class="form-control" placeholder="Phone Number" name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
+                    <i class="fa fa-2x fa-phone tm-form-element-icon"></i>
+                </div>
             </div>
             {% endfor %}
             {% for child in child_paxes %}
