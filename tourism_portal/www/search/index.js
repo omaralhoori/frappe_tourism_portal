@@ -120,9 +120,10 @@ function formatDataPicker(template, onchange) {
 
 }
 
-function formatResults(allResults){
+function formatResults(allResults, returnHtml = false){
     var multipleResults = Object.keys(allResults).length > 1;
     var allHotelResults = "";
+    var loadMoreBtn = "";
     for (var resultLabel in allResults){
         var results = allResults[resultLabel]
         var hotelReuslts = "";
@@ -165,11 +166,17 @@ function formatResults(allResults){
             }
            
         }
+        if (returnHtml){
+            return hotelReuslts;
+        }
+        if (Object.keys(results).length > 1){
+            loadMoreBtn = `<div class="text-center my-3"><button class="btn btn-sm btn-primary" start="0" onclick="loadMoreHotelResults(this)">Load More</button></div>`
+        }
         // if (accordion){
         //     hotelReuslts = `<div id="accordion"> ${hotelReuslts}</div>`
         // }
         //if (multipleResults){
-            hotelReuslts = `<div class="card p-3 mt-3" >${renderHotelSearchBar(resultLabel, accordion)}</div> ${hotelReuslts}`
+            hotelReuslts = `<div class="card p-3 mt-3" >${renderHotelSearchBar(resultLabel, accordion)}</div> <div class="hotel-list-results">${hotelReuslts}</div> ${loadMoreBtn}`
         //}
         hotelReuslts = `<div class='hotel-search-results' hotel-result="${resultLabel}"> ${hotelReuslts}</div>`
         allHotelResults += hotelReuslts
@@ -177,6 +184,42 @@ function formatResults(allResults){
     }
     $('.search-results').html(allHotelResults);
 
+}
+
+function loadMoreHotelResults(e){
+    var start = Number(e.getAttribute('start'));
+    var hotelSearchCard = e.closest('.hotel-search-results')
+    var hotelSearch = hotelSearchCard.getAttribute('hotel-result');
+    var params = {};
+    params[ hotelSearch] =  hotelSearchParams[hotelSearch]
+    var LIMIT = 10;
+    start += LIMIT;
+    e.innerHTML = `<i class="fa fa-spinner fa-spin"></i> Loading...`
+    frappe.call({
+        "method": "tourism_portal.api.search.load_more_hotels",
+        args: {
+            hotel_params: params,
+            start: start,
+            limit: LIMIT
+        },
+        callback: res => {
+            if (res.message){
+                var hotelReuslts = "";
+                var results = checkCommonRooms(res.message);
+                if (Object.keys(results[hotelSearch]).length == 0){
+                    e.style.display = 'none';
+                }else{
+                    hotelReuslts = formatResults(results, true);
+                    hotelSearchCard.querySelector('.hotel-list-results').innerHTML += hotelReuslts;
+                    e.setAttribute('start', start)
+                    e.innerHTML = `Load More`
+                }
+                
+            }else{
+                e.style.display = 'none';
+            }
+        }})
+        
 }
 
 function hotelSearchStarChanged(e){

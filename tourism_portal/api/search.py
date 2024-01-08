@@ -31,25 +31,27 @@ def get_available_hotels():
     return get_available_hotel_rooms(search_params)
 
 
-def get_available_hotel_rooms(search_params):
-	
+def get_available_hotel_rooms(search_params, start=0, limit=10):
 	hotels = {}
 	for search in search_params:
 		hotel = search_params[search]
-		avilables = search_for_available_hotel(hotel)
+		avilables = search_for_available_hotel(hotel, start, limit)
 		hotels[search] = avilables
 	return hotels
 
-def search_for_available_hotel(hotel):
+def search_for_available_hotel(hotel, start=0, limit=10):
 	if hotel["location-type"] == "area" or hotel["location-type"] == "town" or hotel['location-type'] == "city":
-		return search_for_available_hotel_by_area(hotel)
+		return search_for_available_hotel_by_area(hotel, start, limit)
 	elif hotel["location-type"] == "hotel":
 		return search_for_available_hotel_by_hotel(hotel)
 	else:
 		return {}
-		
-def search_for_available_hotel_by_area(hotel_params):
-	hotels = frappe.db.get_all("Hotel", filters={hotel_params.get('location-type'): hotel_params.get("location")}, fields=["name"])
+@frappe.whitelist()
+def load_more_hotels(hotel_params, start=0, limit=10):
+	hotels = get_available_hotel_rooms(json.loads(hotel_params), start, limit)
+	return hotels
+def search_for_available_hotel_by_area(hotel_params, start=0, limit=10):
+	hotels = frappe.db.get_all("Hotel", filters={hotel_params.get('location-type'): hotel_params.get("location")}, fields=["name"], order_by="hotel_priority desc", start=start, limit=limit)
 	results = {}
 	for hotel in hotels:
 		copy_params = hotel_params.copy()
@@ -204,7 +206,6 @@ def get_hotel_contracts(hotel, checkin, checkout):
 def get_room_contract_price(contract, room_acmnd_type, nationality, company_class, roomPax):
 	contract['prices'] = get_contract_prices(contract, room_acmnd_type, nationality)
 	contract['prices'] = restart_price_dates(contract['prices'], contract['from_date'], contract['to_date'])
-	print(contract['prices'])
 	for price in contract['prices']:
 		if not price.get('selling_price'):
 			get_selling_price_profit_margin_based(contract, price, room_acmnd_type)

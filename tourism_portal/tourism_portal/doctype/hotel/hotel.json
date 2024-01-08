@@ -13,6 +13,7 @@
   "hotel_info_section",
   "hotel_code",
   "hotel_name",
+  "hotel_priority",
   "column_break_froge",
   "star_rating",
   "address_and_location_section",
@@ -202,13 +203,19 @@
    "label": "City",
    "options": "City",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "hotel_priority",
+   "fieldtype": "Int",
+   "label": "Hotel Priority"
   }
  ],
  "image_field": "hotel_image",
  "index_web_pages_for_search": 1,
  "links": [],
  "make_attachments_public": 1,
- "modified": "2024-01-07 14:37:16.278657",
+ "modified": "2024-01-08 15:03:13.353280",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel",
