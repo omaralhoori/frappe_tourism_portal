@@ -382,3 +382,15 @@ function confirmCancelReservation(invoiceId){
     }
   })
 }
+
+window.addEventListener('beforeunload', function() {
+  var invoice =new URLSearchParams(window.location.search).get("invoice") 
+  frappe.call({
+    "method": "tourism_portal.api.reserve.delete_reservation",
+    args:{"invoice": invoice},
+    callback: res => {
+        if (res.message){
+        }
+    }
+   })
+  });

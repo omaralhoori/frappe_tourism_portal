@@ -10,6 +10,7 @@
   "child_company",
   "parent_company",
   "amount",
+  "parent_amount",
   "debit",
   "credit",
   "transaction_type",
@@ -93,12 +94,17 @@
    "fieldname": "remarks",
    "fieldtype": "Data",
    "label": "Remarks"
+  },
+  {
+   "fieldname": "parent_amount",
+   "fieldtype": "Currency",
+   "label": "Parent Amount"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-12 15:59:04.039122",
+ "modified": "2024-01-13 17:45:47.368443",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Child Company Transaction",

@@ -25,6 +25,7 @@
             <th scope="col">{{_('Debit')}}</th>
             <th scope="col">{{_('Credit')}}</th>
             <th scope="col">{{_('Balance')}}</th>
+            <th scope="col">{{_('Voucher')}}</th>
             <th scope="col">{{_('Remarks')}}</th>
         </thead>
         <tbody>
@@ -41,13 +42,15 @@
             <td>{{gl_entry.get('debit')}}</td>
             <td>{{gl_entry.get('credit')}}</td>
             <td>{{gl_entry.get('balance')}}</td>
+            <td>{% if gl_entry.get('voucher_no')%}<a href="/reserve?invoice={{gl_entry.get('invoice_name')}}" target="_blank">{{gl_entry.get('voucher_no')}}</a> {% endif %}</td>
             {% set _ = total_balance.append(total_balance.pop() + gl_entry.get('balance', 0))%}
             <td>{% if gl_entry.get('remarks')%}{{gl_entry.get('remarks')}}{%endif%}</td>
             </tr>
             {% endfor %}
             <tr>
                 <td colspan="4"></td>
-                <td>{{total_balance[0]}}</td>
+                <td>{{frappe.utils.fmt_money(total_balance[0])}}</td>
+                <td></td>
                 <td></td>
             </tr>
         </tbody>

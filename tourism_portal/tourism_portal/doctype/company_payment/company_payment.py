@@ -47,7 +47,7 @@ def create_payment(company, amount, payment_type,currency=None, against_doctype=
 	payment.insert()
 	payment.submit()
 	return payment.name
-def create_child_company_payment(company, parent_company, amount, payment_type,currency=None, against_doctype=None, against_docname=None, remarks=''):
+def create_child_company_payment(company, parent_company, amount, parent_amount, payment_type,currency=None, against_doctype=None, against_docname=None, remarks=''):
 	if payment_type == 'Payment':
 		balance = get_child_company_balance(company)
 		if balance < amount:
@@ -59,6 +59,7 @@ def create_child_company_payment(company, parent_company, amount, payment_type,c
 		"transaction_type": payment_type,
 		"transaction_date": frappe.utils.nowdate(),
 		"amount": amount,
+		"parent_amount": parent_amount,
 		"voucher_type": against_doctype,
 		"voucher_no": against_docname,
 		"remarks": remarks
@@ -72,7 +73,7 @@ def create_child_company_payment(company, parent_company, amount, payment_type,c
 
 def add_child_company_deposit(deposit, company, parent_company):
 	create_payment(parent_company, deposit, payment_type='Reserve', remarks='Deposit for '+company)
-	create_child_company_payment(company, parent_company, deposit, payment_type='Deposit')
+	create_child_company_payment(company, parent_company, deposit,0, payment_type='Deposit')
 def get_company_balance(company=None):
 	if not company:
 		company = frappe.db.get_value("User", frappe.session.user, "company")
@@ -129,5 +130,5 @@ def add_company_refund(refund, company=None, voucher_type=None, voucher_no=None,
 
 	create_payment(company, refund, payment_type='Refund', against_docname=voucher_no, against_doctype=voucher_type, remarks=remarks)
 
-def add_child_company_refund(refund, company, parent_company, voucher_type=None, voucher_no=None, remarks=''):
-	create_child_company_payment(company, parent_company,refund, payment_type='Refund', against_docname=voucher_no, against_doctype=voucher_type, remarks=remarks)
+def add_child_company_refund(refund,parent_refund, company, parent_company, voucher_type=None, voucher_no=None, remarks=''):
+	create_child_company_payment(company, parent_company,refund,parent_refund, payment_type='Refund', against_docname=voucher_no, against_doctype=voucher_type, remarks=remarks)

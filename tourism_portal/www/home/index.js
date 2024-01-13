@@ -1,12 +1,45 @@
 var selectedTours = {}
-
+var datepickers = {}
 $(document).ready(function () {
 
     autocompleteLocations(document.querySelector('.hotel-location'), 'tourism_portal.api.query.get_locations');
 
     formatSelect2()
-    formatDataPicker()
+    formatDataPicker(document, function(e) {
+        var toDateClass = checkToDateClass(e.el.getAttribute('name'))
+        if (toDateClass){
+            var parentContainer = e.parent.parentNode;
+            var toDateInput = parentContainer.querySelector(`input[name='${toDateClass["check_class"]}']`);
+            var selectedDate = new Date(e.el.value);
+            //console.log(e)
+            //selectedDate.setDate(selectedDate.getDate() + toDateClass["day_margin"]);
+            var toDateId = toDateInput.getAttribute('id')
+           datepickers[toDateId].minDate = selectedDate;
+        //    var toDate = datepickers[toDateId].getDate();
+        var toDate = new Date(toDateInput.value);
+        if (!toDate || toDateInput.value == "" || toDate <= selectedDate){
+            toDateInput.value = e.el.value;
+            var dates = new Date(e.el.value).getDate() + toDateClass["day_margin"]
+        var toDateObject = new Date(new Date().setDate(dates));
+
+        datepickers[toDateId].setDate(toDateObject);
+        }
+            //$(`#${toDateId}`).datepicker("option", "minDate", selectedDate);    
+            //toDateInput.minDate = selectedDate;
+
+        }
+    })
 });
+
+function checkToDateClass(checkInName){
+    if (checkInName == "check-in"){
+        return {
+            check_class: "check-out",
+            day_margin: 1
+        }
+    }
+    return false;
+}
 
 function formatSelect2() {
     $('.select2-select').each(function (i, select) {
@@ -59,7 +92,9 @@ function formatSelect2() {
 function formatDataPicker(template, onchange) {
     if (template) {
         template.querySelectorAll('.date-picker').forEach(datePickerInput => {
-            datepicker(datePickerInput, {
+            var uniqueId = generateUniqueId();
+            datePickerInput.setAttribute("id", uniqueId);
+            var initDatepicker = datepicker(datePickerInput, {
                 formatter: (input, date, instance) => {
                     const value = date.toLocaleDateString("fr-CA")
                     input.value = value // => '1/1/2099',
@@ -68,12 +103,15 @@ function formatDataPicker(template, onchange) {
                 
                 minDate: new Date()
             });
+            datepickers[uniqueId] = initDatepicker;
 
         })
         return;
     }
     $('.date-picker').each(function (i, select) {
-        datepicker(this, {
+        var uniqueId = generateUniqueId();
+        $(this).attr("id", uniqueId);
+        var initDatepicker = datepicker(this, {
             formatter: (input, date, instance) => {
                 const value = date.toLocaleDateString("fr-CA")
                 input.value = value // => '1/1/2099'
@@ -81,7 +119,7 @@ function formatDataPicker(template, onchange) {
             onSelect:  onchange,
             minDate: new Date()
         });
-
+        datepickers[uniqueId] = initDatepicker;
     })
 
 }
@@ -90,6 +128,11 @@ $('.room-select').change(function (e) {
     var roomCount = $(this).val();
 
 })
+
+function generateUniqueId(){
+    return Math.random().toString(36).substring(2, 9);
+
+}
 
 function romCountChanged(e) {
     if (!e.value) e.value = 0;

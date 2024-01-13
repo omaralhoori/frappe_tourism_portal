@@ -397,4 +397,11 @@ def add_nights_to_room(sales_invoice, row_id, check_in=None, check_out=None):
 
 @frappe.whitelist()
 def delete_reservation():
-    print(frappe.form_dict)
+    sales_invoice = frappe.form_dict.invoice
+    company_details = get_company_details()
+    if company_details.get('is_child_company'):
+        invoice = frappe.get_doc("Sales Invoice", {"name": sales_invoice, "company": company_details.get('company'), "child_company": company_details.get('child_company')})
+    else:
+        invoice = frappe.get_doc("Sales Invoice", {"name": sales_invoice, "company": company_details.get('company')})
+    if invoice.docstatus == 0:
+        invoice.delete()

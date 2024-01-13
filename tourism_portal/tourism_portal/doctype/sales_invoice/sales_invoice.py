@@ -315,7 +315,7 @@ class SalesInvoice(Document):
 			if self.child_company:
 				commission_refund = get_commission_refund(self.transfer_fees_company, self.transfer_fees, total_refunds)
 				create_payment(self.company, commission_refund,'Reserve', remarks="Reserve for "+self.child_company)
-				add_child_company_refund( company=self.child_company, parent_company=self.company,refund=commission_refund, voucher_no=self.name, voucher_type=self.doctype, remarks="Transfer Refund for voucher "+self.voucher_no)
+				add_child_company_refund( company=self.child_company, parent_company=self.company,refund=commission_refund,parent_refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype, remarks="Transfer Refund for voucher "+self.voucher_no)
 			
 	def cancel_tours(self):
 		cancellation_policy = frappe.db.get_single_value("Tourism Portal Settings", "tour_cancellation_policy")
@@ -332,7 +332,7 @@ class SalesInvoice(Document):
 			if self.child_company:
 				commission_refund = get_commission_refund(self.tour_fees_company, self.tour_fees, total_refunds)
 				create_payment(self.company, commission_refund,'Reserve', remarks="Reserve for "+self.child_company)
-				add_child_company_refund( company=self.child_company, parent_company=self.company, refund=commission_refund, voucher_no=self.name, voucher_type=self.doctype, remarks="Tour Refund for voucher "+self.voucher_no)
+				add_child_company_refund( company=self.child_company, parent_company=self.company, refund=commission_refund, parent_refund=total_refunds,voucher_no=self.name, voucher_type=self.doctype, remarks="Tour Refund for voucher "+self.voucher_no)
 	def get_single_tour_refund(self,tour, cancellation_policy):
 		total_refund = 0
 		for tour_type in self.tour_types:
@@ -360,10 +360,10 @@ class SalesInvoice(Document):
 			if self.child_company:
 				commission_refund = get_commission_refund(self.hotel_fees_company, self.hotel_fees, total_refunds)
 				create_payment(self.company, commission_refund,'Reserve', remarks="Reserve for "+self.child_company)
-				add_child_company_refund( company=self.child_company, parent_company=self.company, refund=commission_refund, voucher_no=self.name, voucher_type=self.doctype, remarks="Hotel Refund for voucher "+self.voucher_no)
+				add_child_company_refund( company=self.child_company, parent_company=self.company, refund=commission_refund,parent_refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype, remarks="Hotel Refund for voucher "+self.voucher_no)
 	def on_submit(self):
 		if self.child_company:
-			create_child_company_payment(self.child_company, self.company, self.grand_total,'Payment',against_doctype= 'Sales Invoice', against_docname=self.name)
+			create_child_company_payment(self.child_company, self.company, self.grand_total, self.grand_total_company,'Payment',against_doctype= 'Sales Invoice', against_docname=self.name)
 			create_payment(self.company, self.grand_total_company,'Pay',against_doctype= 'Sales Invoice', against_docname=self.name, remarks="Payment for "+self.child_company)
 		else:
 			create_payment(self.company, self.grand_total,'Pay',against_doctype= 'Sales Invoice', against_docname=self.name)
