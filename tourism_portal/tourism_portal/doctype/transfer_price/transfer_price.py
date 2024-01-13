@@ -3,7 +3,8 @@
 
 import frappe
 from frappe.model.document import Document
-from tourism_portal.utils import get_location_postal_code, get_postal_code_transfer_area
+from tourism_portal.api.company import get_company_details
+from tourism_portal.utils import get_location_postal_code, get_postal_code_transfer_area, get_subagency_extra_price
 
 class TransferPrice(Document):
 	pass
@@ -66,6 +67,15 @@ def get_available_transfers(params):
 		transfer['transfer_details'] = get_transfer_details(transfer)
 		transfer['search_params'] = search_params
 	trasfers = sorted(trasfers, key=lambda x: x['transfer_price'])
+	company_details = get_company_details()
+	if company_details['is_child_company']:
+		transfer_margin = frappe.db.get_value("Company", company_details['child_company'], ['transfer_margin'])
+		for transfer in trasfers:
+			transfer['transfer_price_company'] = transfer['transfer_price'] 
+			transfer['transfer_price'] =  get_subagency_extra_price(transfer['transfer_price'],transfer_margin)
+	else:
+		for transfer in trasfers:
+			transfer['transfer_price_company'] = transfer['transfer_price']
 	return trasfers#trasfers[0] if len(trasfers) > 0 else None
 
 def get_transfer_details(transfer):

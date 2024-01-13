@@ -1,0 +1,146 @@
+{% extends "templates/website_base.html" %}
+
+{% block page_content %}
+<h1>AGENCIES</h1>
+<div class="mb-2 d-flex flex-row-reverse">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addagency-modal">Add Agency</button>
+    <div class="mx-2"><span class="badge badge-info p-2"><h6>BALANCE: {{frappe.utils.fmt_money(company_balance)}}</h6></span></div>
+
+</div>
+<div>
+    <table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <td>CODE</td>
+            <td>NAME</td>
+            <td>BALANCE</td>
+            <td>USER</td>
+            <td>ACTIONS</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for agency in agencies %}
+        <tr>
+            <td>{{ agency.agency_code }}</td>
+            <td>
+                {{ agency.agency_name }}
+            </td>
+            <td>{{agency.agency_balance}}</td>
+            <td>{{agency.user}}</td>
+            <td>
+                <button agency-id="{{agency.name}}" class="btn btn-small btn-info" onclick="addMoneyModalOpen(this)">ADD MONEY</button>
+                <button agency-id="{{agency.name}}" 
+                hotel-profit="{{agency.hotel_margin}}"
+                 transfer-profit="{{agency.transfer_margin}}" 
+                 tour-profit="{{agency.tour_margin}}"
+                 onclick="profitModalOpen(this)"
+                 class="btn btn-small btn-warning">PROFIT MARGIN</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+</div>
+
+
+<div class="modal fade" id="addagency-modal" tabindex="-1" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-title">New Agency</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+        <input type="hidden" id="user-id" />
+          <div class="form-group">
+            <label for="agency-code" class="col-form-label">Agency Code</label>
+            <input type="text" class="form-control" id="agency-code">
+          </div>
+          <div class="form-group">
+            <label for="agency-name" class="col-form-label">Agency Name</label>
+            <input type="text" class="form-control" id="agency-name">
+          </div>
+          <div class="form-group">
+            <label for="user-full-name" class="col-form-label">User Full Name</label>
+            <input type="text" class="form-control" id="user-full-name">
+          </div>
+          <div class="form-group">
+            <label for="user-email" class="col-form-label">User Email</label>
+            <input type="text" class="form-control" id="user-email">
+          </div>
+          <div class="form-group">
+            <label for="user-password" class="col-form-label">User Password</label>
+            <input type="text" class="form-control" id="user-password">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="agencyModalSubmitted(this)" id="submit-modal" action="create">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="money-modal" tabindex="-1" role="dialog" aria-labelledby="money-modal-title" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="money-modal-title">ADD MONEY</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+        <input type="hidden" id="agency-money-id" />
+          <div class="form-group">
+            <label for="agency-amount" class="col-form-label">Amount</label>
+            <input type="number"  min="0" class="form-control" id="agency-amount">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="moneyModalSubmitted(this)" id="submit-money" action="create">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="profit-modal" tabindex="-1" role="dialog" aria-labelledby="profit-modal-title" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="profit-modal-title">PROFIT MARGIN</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+        <input type="hidden" id="agency-profit-id" />
+          <div class="form-group">
+            <label for="agency-hotel-profit" class="col-form-label">Hotel Profit Margin</label>
+            <input type="number"  min="0" class="form-control" id="agency-hotel-profit">
+          </div>
+          <div class="form-group">
+            <label for="agency-transfer-profit" class="col-form-label">Transfer Profit Margin</label>
+            <input type="number"  min="0" class="form-control" id="agency-transfer-profit">
+          </div>
+          <div class="form-group">
+            <label for="agency-tour-profit" class="col-form-label">Tour Profit Margin</label>
+            <input type="number"  min="0" class="form-control" id="agency-tour-profit">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="profitModalSubmitted(this)" id="submit-proft" action="update">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

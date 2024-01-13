@@ -11,6 +11,7 @@
   "tour_name",
   "tour_date",
   "tour_price",
+  "tour_price_company",
   "package_id"
  ],
  "fields": [
@@ -54,12 +55,17 @@
    "label": "Package ID",
    "mandatory_depends_on": "eval:doc.tour_type=='package'",
    "options": "Tour Package"
+  },
+  {
+   "fieldname": "tour_price_company",
+   "fieldtype": "Currency",
+   "label": "Tour Price Company"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-19 11:26:18.948313",
+ "modified": "2024-01-12 14:25:48.266986",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice Tour",

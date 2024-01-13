@@ -14,6 +14,7 @@
   "column_break_ajuyi",
   "is_child_company",
   "parent_company",
+  "company_logo",
   "balance_and_payments_section",
   "company_blance",
   "section_break_u7zry",
@@ -23,7 +24,10 @@
   "column_break_crlya",
   "credit_current_limit",
   "column_break_vdmgu",
-  "credit"
+  "credit",
+  "child_company_margins_section",
+  "transfer_margin",
+  "tour_margin"
  ],
  "fields": [
   {
@@ -127,8 +131,32 @@
    "fieldname": "credit",
    "fieldtype": "Currency",
    "label": "Credit"
+  },
+  {
+   "depends_on": "eval:doc.is_child_company",
+   "fieldname": "child_company_margins_section",
+   "fieldtype": "Section Break",
+   "label": "Child Company Margins"
+  },
+  {
+   "default": "0",
+   "fieldname": "transfer_margin",
+   "fieldtype": "Float",
+   "label": "Transfer Margin"
+  },
+  {
+   "default": "0",
+   "fieldname": "tour_margin",
+   "fieldtype": "Float",
+   "label": "Tour Margin"
+  },
+  {
+   "fieldname": "company_logo",
+   "fieldtype": "Attach Image",
+   "label": "Company Logo"
   }
  ],
+ "image_field": "company_logo",
  "index_web_pages_for_search": 1,
  "links": [
   {
@@ -148,7 +176,8 @@
    "link_fieldname": "company"
   }
  ],
- "modified": "2023-12-19 11:27:57.477721",
+ "make_attachments_public": 1,
+ "modified": "2024-01-09 17:47:56.090905",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Company",

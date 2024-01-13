@@ -1,6 +1,7 @@
 import json
 import frappe
 from frappe import _
+from tourism_portal.api.company import get_company_details
 from tourism_portal.tourism_portal.doctype.sales_invoice.reserve import add_rooms_to_invoice, add_tours_to_invoice, add_transfers_to_invoice
 
 """
@@ -23,14 +24,26 @@ rooms -> [{
 def create_reservation():
     params = frappe.form_dict
     user = frappe.session.user
-    company = frappe.db.get_value("User", user, "company")
-    invoice = frappe.get_doc({
-        "doctype": "Sales Invoice",
-        "company": company,
-        "customer": user,
-        "post_date": frappe.utils.nowdate(),
-        "post_time": frappe.utils.nowtime()
-    })
+    company_details = get_company_details()#frappe.db.get_value("User", user, "company")
+    hotel_margin, transfer_margin, tour_margin = 0, 0, 0
+    if company_details.get('is_child_company'):
+        invoice = frappe.get_doc({
+            "doctype": "Sales Invoice",
+            "company": company_details.get('company'),
+            "child_company": company_details.get('child_company'),
+            "customer": user,
+            "post_date": frappe.utils.nowdate(),
+            "post_time": frappe.utils.nowtime()
+        })
+        hotel_margin, transfer_margin, tour_margin = frappe.db.get_value("Company", company_details.get('child_company'), ['hotel_margin', 'transfer_margin', 'tour_margin'])
+    else:
+        invoice = frappe.get_doc({
+            "doctype": "Sales Invoice",
+            "company": company_details.get('company'),
+            "customer": user,
+            "post_date": frappe.utils.nowdate(),
+            "post_time": frappe.utils.nowtime()
+        })
     if type(params.rooms) == str:
         rooms = json.loads(params.rooms)
     else:
@@ -43,9 +56,9 @@ def create_reservation():
         tours = json.loads(params.tours)
     else:
         tours = params.tours
-    add_rooms_to_invoice(invoice, rooms)
-    add_transfers_to_invoice(invoice, transfers)
-    add_tours_to_invoice(invoice, tours)
+    add_rooms_to_invoice(invoice, rooms, hotel_margin)
+    add_transfers_to_invoice(invoice, transfers, transfer_margin)
+    add_tours_to_invoice(invoice, tours, tour_margin)
     
     invoice.insert(ignore_permissions=True)
     return invoice.name
@@ -54,8 +67,11 @@ def create_reservation():
 
 @frappe.whitelist()
 def get_invoice_data(sales_invoice):
-    company = frappe.db.get_value("User", frappe.session.user, "company")
-    invoice = frappe.get_doc("Sales Invoice", {"name": sales_invoice, "company": company})
+    company_details = get_company_details()#frappe.db.get_value("User", frappe.session.user, "company")
+    if company_details.get('is_child_company'):
+        invoice = frappe.get_doc("Sales Invoice", {"name": sales_invoice, "company": company_details.get('company'), "child_company": company_details.get('child_company')})
+    else:
+        invoice = frappe.get_doc("Sales Invoice", {"name": sales_invoice, "company": company_details.get('company')})
     if invoice.status == "Cancelled":
         #frappe.throw("This invoice has been cancelled!")
         return {
@@ -273,16 +289,26 @@ def get_location_name(location, location_type):
 
 @frappe.whitelist()
 def get_all_invoices(voucher_no=None, start=0, limit=20):
-    company = frappe.db.get_value("User", frappe.session.user, "company")
-    if voucher_no:
-        return frappe.db.get_all("Sales Invoice", {"company": company, "status": ["!=", "Cancelled"], "voucher_no": ["like", "%"+ voucher_no +"%"]}, [
-            "name", "voucher_no", "grand_total", "post_date", "status",
-            "post_time", "session_expires", "docstatus"], order_by="creation DESC" ,limit=limit, start=start)
+    #company = frappe.db.get_value("User", frappe.session.user, "company")
+    company_details = get_company_details()
+    if company_details.get('is_child_company'):
+        if voucher_no:
+            return frappe.db.get_all("Sales Invoice", {"child_company": company_details.get('child_company'), "status": ["!=", "Cancelled"], "voucher_no": ["like", "%"+ voucher_no +"%"]}, [
+                "name", "voucher_no", "grand_total", "post_date", "status",
+                "post_time", "session_expires", "docstatus"], order_by="creation DESC" ,limit=limit, start=start)
+        else:
+            return frappe.db.get_all("Sales Invoice", {"child_company": company_details.get('child_company'), "status": ["!=", "Cancelled"]}, [
+                "name","voucher_no", "grand_total", "post_date", "status",
+                "post_time", "session_expires", "docstatus"], order_by="creation DESC" ,limit=limit, start=start)
     else:
-        return frappe.db.get_all("Sales Invoice", {"company": company, "status": ["!=", "Cancelled"]}, [
-            "name","voucher_no", "grand_total", "post_date", "status",
-            "post_time", "session_expires", "docstatus"], order_by="creation DESC" ,limit=limit, start=start)
-
+        if voucher_no:
+            return frappe.db.get_all("Sales Invoice", {"company": company_details.get('company'), "status": ["!=", "Cancelled"], "voucher_no": ["like", "%"+ voucher_no +"%"]}, [
+                "name", "voucher_no", "grand_total", "post_date", "status",
+                "post_time", "session_expires", "docstatus"], order_by="creation DESC" ,limit=limit, start=start)
+        else:
+            return frappe.db.get_all("Sales Invoice", {"company": company_details.get('company'), "status": ["!=", "Cancelled"]}, [
+                "name","voucher_no", "grand_total", "post_date", "status",
+                "post_time", "session_expires", "docstatus"], order_by="creation DESC" ,limit=limit, start=start)
 @frappe.whitelist()
 def complete_reservation():
     invoice = frappe.get_doc("Sales Invoice", {"name": frappe.form_dict.sales_invoice, "customer": frappe.session.user})
@@ -350,8 +376,12 @@ def complete_reservation():
 
 @frappe.whitelist()
 def cancel_reservation(invoice_id):
-    company = frappe.db.get_value("User", frappe.session.user, "company")
-    invoice = frappe.get_doc("Sales Invoice", {"name": invoice_id, "company": company})
+    #company = frappe.db.get_value("User", frappe.session.user, "company")
+    company_details = get_company_details()
+    if company_details.get('is_child_company'):
+        invoice = frappe.get_doc("Sales Invoice", {"name": invoice_id, "company": company_details.get('company'), "child_company": company_details.get('child_company')})
+    else:
+        invoice = frappe.get_doc("Sales Invoice", {"name": invoice_id, "company": company_details.get('company')})
     invoice.cancel_invoice()
     invoice.save(ignore_permissions=True)
     return {"success_key": 1}

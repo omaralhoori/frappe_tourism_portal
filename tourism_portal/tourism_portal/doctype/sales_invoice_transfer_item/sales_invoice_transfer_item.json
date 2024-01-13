@@ -12,6 +12,7 @@
   "column_break_b3xp7",
   "transfer",
   "transfer_price",
+  "transfer_price_company",
   "section_break_mjqx5",
   "adults",
   "pick_up",
@@ -133,12 +134,18 @@
    "fieldtype": "Data",
    "label": "Drop Off Type",
    "reqd": 1
+  },
+  {
+   "fieldname": "transfer_price_company",
+   "fieldtype": "Currency",
+   "label": "Transfer Price Company",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-19 11:26:21.337043",
+ "modified": "2024-01-12 12:57:56.233889",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice Transfer Item",

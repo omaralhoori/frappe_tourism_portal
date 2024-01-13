@@ -1,7 +1,7 @@
 import frappe
 
 
-def add_rooms_to_invoice(invoice, rooms):
+def add_rooms_to_invoice(invoice, rooms, hotel_margin):
     for searchName in rooms:
         search = rooms[searchName]
         for roomName in search:
@@ -15,6 +15,7 @@ def add_rooms_to_invoice(invoice, rooms):
             invc_room.check_in = room.get('check_in')
             invc_room.check_out = room.get('check_out')
             total_price = 0
+            total_price_company = 0
             for i in range(int(room['pax_info'].get('adults'))):
                 guest = invoice.append("room_pax_info")
                 guest.room_name = roomName#room['room_name']
@@ -36,8 +37,11 @@ def add_rooms_to_invoice(invoice, rooms):
                 if room_price.nights < 1:
                     frappe.throw("Check out date must be greater than check in date")
                 room_price.selling_price = float(contract['selling_price']) #/ room_price.nights
+                room_price.selling_price_company = float(contract['selling_price_company']) #/ room_price.nights
                 room_price.total_selling_price = float(contract['total_price'])
+                room_price.total_selling_price_company = float(contract['total_price_company'])
                 total_price += float(contract['total_price'])
+                total_price_company += float(contract['total_price_company'])
                 #room_price.contract_id = contract.get('contract_id')
                 room_price.contract_price = contract.get('price_id')
                 room_price.inquiry_id = contract.get('inquiry_id')
@@ -52,9 +56,10 @@ def add_rooms_to_invoice(invoice, rooms):
                     hotel = frappe.db.get_value("Hotel Room",  room['room_id'], "hotel", cache=True)
                     room_price.cancellation_policy = frappe.db.get_value("Hotel", hotel, "hotel_cancellation_policy")
             invc_room.total_price = total_price
+            invc_room.total_price_company = total_price_company
     
 
-def add_transfers_to_invoice(invoice, transfers):
+def add_transfers_to_invoice(invoice, transfers, transfer_margin):
     for searchName in transfers:
         search = transfers[searchName]
         for transferName in search:
@@ -65,6 +70,7 @@ def add_transfers_to_invoice(invoice, transfers):
             invc_transfer.transfer_type = transfer['transfer_type']
             invc_transfer.transfer = transfer['transfer_id']
             invc_transfer.transfer_price = float(transfer['transfer_price'])
+            invc_transfer.transfer_price_company = float(transfer['transfer_price_company'])
             invc_transfer.adults = transfer['pax_info'].get('adults')
             invc_transfer.children = transfer['pax_info'].get('children')
             invc_transfer.pick_up = transfer['pick_up']
@@ -88,9 +94,10 @@ def add_transfers_to_invoice(invoice, transfers):
                 guest.guest_age = int(child_age)
     
 
-def add_tours_to_invoice(invoice, tours):
+def add_tours_to_invoice(invoice, tours, tour_margin):
     for searchName in tours:
         total_price = 0
+        total_price_company = 0
         search = tours[searchName]
         tour_search = invoice.append("tours")
         tour_search.search_name = searchName
@@ -103,6 +110,7 @@ def add_tours_to_invoice(invoice, tours):
         tour_search.children = int(search['paxes'].get('children'))
         for selected_tour in search['selected_tours']:
             total_price += float(selected_tour['price'])
+            total_price_company += float(selected_tour['priceCompany'])#get_company_price(float(selected_tour['price']), tour_margin)
             tour_type = get_tour_doctype(search['tour_type'])
             if tour_type == "single":
                 for tour in selected_tour['tours']:
@@ -112,8 +120,10 @@ def add_tours_to_invoice(invoice, tours):
                     invoice_tour.tour_name = tour
                     if search['tour_type'] == 'vip':
                         invoice_tour.tour_price = float(selected_tour['price'])
+                        invoice_tour.tour_price_company = float(selected_tour['priceCompany'])#get_company_price(float(selected_tour['price']), tour_margin)
                     else:
                         invoice_tour.tour_price = float(selected_tour['toursPrice'].get(tour, '0'))
+                        invoice_tour.tour_price_company = float(selected_tour['toursPriceCompany'].get(tour, '0')) #get_company_price(float(selected_tour['toursPrice'].get(tour, '0')), tour_margin)
             else:
                 for package in selected_tour['tours']:
                     package_tours = get_package_tours(package)
@@ -133,6 +143,7 @@ def add_tours_to_invoice(invoice, tours):
             guest.search_name = searchName
             guest.guest_age = int(child_age)
         tour_search.tour_price = total_price
+        tour_search.tour_price_company = total_price_company
 
 def get_tour_doctype(tour_type):
     doctype = "single"
@@ -143,3 +154,10 @@ def get_tour_doctype(tour_type):
 
 def get_package_tours(package):
     return frappe.db.get_all("Tour Package Item", {"parent": package}, ["tour"])
+
+
+
+def get_company_price(selling_price, margin):
+    if float(selling_price) == 0:
+        return 0
+    return float(selling_price) - float(margin) 

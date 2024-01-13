@@ -1,57 +1,69 @@
 {
  "actions": [],
- "allow_import": 1,
  "allow_rename": 1,
- "autoname": "PMNT-.YY.-.MM.-.#####",
- "creation": "2023-10-27 18:15:36.832912",
+ "creation": "2024-01-09 18:29:31.502165",
  "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "company",
-  "payment_type",
-  "post_date",
-  "currency",
+  "child_company",
+  "parent_company",
   "amount",
   "debit",
   "credit",
+  "transaction_type",
+  "transaction_date",
   "voucher_type",
   "voucher_no",
-  "remarks",
-  "amended_from"
+  "amended_from",
+  "remarks"
  ],
  "fields": [
   {
-   "fieldname": "company",
+   "fieldname": "child_company",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Company",
+   "label": "Child Company",
    "options": "Company",
    "reqd": 1
   },
   {
-   "fieldname": "payment_type",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Payment Type",
-   "options": "\nDeposit\nPay\nRefund\nReserve\nRelease",
-   "reqd": 1
-  },
-  {
-   "default": "USD",
-   "fieldname": "currency",
+   "fieldname": "parent_company",
    "fieldtype": "Link",
-   "label": "Currency",
-   "options": "Currency",
+   "label": "Parent Company",
+   "options": "Company",
    "reqd": 1
   },
   {
    "fieldname": "amount",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Amount",
-   "options": "currency",
    "reqd": 1
+  },
+  {
+   "fieldname": "transaction_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Transaction Type",
+   "options": "Deposit\nPayment\nRefund",
+   "reqd": 1
+  },
+  {
+   "fieldname": "transaction_date",
+   "fieldtype": "Date",
+   "label": "Transaction Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Child Company Transaction",
+   "print_hide": 1,
+   "read_only": 1
   },
   {
    "fieldname": "voucher_type",
@@ -66,26 +78,6 @@
    "options": "voucher_type"
   },
   {
-   "fieldname": "remarks",
-   "fieldtype": "Small Text",
-   "label": "Remarks"
-  },
-  {
-   "fieldname": "post_date",
-   "fieldtype": "Date",
-   "label": "Post Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Company Payment",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
    "fieldname": "debit",
    "fieldtype": "Currency",
    "label": "Debit",
@@ -96,16 +88,20 @@
    "fieldtype": "Currency",
    "label": "Credit",
    "reqd": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Data",
+   "label": "Remarks"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-12 10:33:59.499213",
+ "modified": "2024-01-12 15:59:04.039122",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
- "name": "Company Payment",
- "naming_rule": "Expression (old style)",
+ "name": "Child Company Transaction",
  "owner": "Administrator",
  "permissions": [
   {
@@ -121,18 +117,10 @@
    "write": 1
   },
   {
-   "cancel": 1,
    "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
    "if_owner": 1,
-   "print": 1,
    "read": 1,
-   "report": 1,
    "role": "Customer",
-   "select": 1,
-   "share": 1,
    "submit": 1,
    "write": 1
   }

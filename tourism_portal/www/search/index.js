@@ -169,9 +169,9 @@ function formatResults(allResults, returnHtml = false){
         if (returnHtml){
             return hotelReuslts;
         }
-        if (Object.keys(results).length > 1){
-            loadMoreBtn = `<div class="text-center my-3"><button class="btn btn-sm btn-primary" start="0" onclick="loadMoreHotelResults(this)">Load More</button></div>`
-        }
+        // if (Object.keys(results).length > 1){
+        //     loadMoreBtn = `<div class="text-center my-3"><button class="btn btn-sm btn-primary" start="0" onclick="loadMoreHotelResults(this)">Load More</button></div>`
+        // }
         // if (accordion){
         //     hotelReuslts = `<div id="accordion"> ${hotelReuslts}</div>`
         // }
@@ -438,7 +438,8 @@ function nightCalculator(checkin, checkout){
 function formatRoomPrices(price, showDates){
     pricesHtml = '';
     var totalNights = nightCalculator(price['from_date'], price['to_date']);
-    var nightsPrice = Number(price['selling_price_with_childs']) * totalNights;
+    var nightsPrice = Number(price['child_company_price']) * totalNights;
+    var totalPriceCompany = Number(price['selling_price_with_childs']) * totalNights;
     nightsPrice = parseFloat(nightsPrice).toFixed(2)
     var datesHtml = '';
     if (showDates){
@@ -450,7 +451,7 @@ function formatRoomPrices(price, showDates){
     <span class="room-total-nights">
         ${totalNights} Nights
     </span>
-    <span class="room-total-price" price-id="${price['item_price_name']}" from-date="${price['from_date']}" to-date="${price['to_date']}" total-price="${nightsPrice}" selling-price="${price['selling_price_with_childs']}">${nightsPrice}</span></div>
+    <span class="room-total-price" price-id="${price['item_price_name']}" from-date="${price['from_date']}" to-date="${price['to_date']}" total-price="${nightsPrice}" total-price-company="${totalPriceCompany}" selling-price="${price['child_company_price']}" selling-price-company="${price['selling_price_with_childs']}">${nightsPrice}</span></div>
     ${datesHtml}
     `;
     return pricesHtml;
@@ -710,8 +711,8 @@ function getRoomDetails(room, roomPax){
         for (var contract of room['contracts']){
             if (contract['prices'] && contract['prices'].length > 0){
                 for(var price of contract['prices']){
-                    details.prices.push(contract.contract_id +price.item_price_name + price.selling_price_with_childs)
-                    details.total_price += Number(price.selling_price_with_childs)
+                    details.prices.push(contract.contract_id +price.item_price_name + price.child_company_price)
+                    details.total_price += Number(price.child_company_price)
                 }
             }
         }
@@ -893,15 +894,19 @@ function getSelectedRooms(){
             var prices = detailsContainer.querySelectorAll('.room-total-price')
             var pricesIds = [];
             var totalPrice = 0;
+            var totalPriceCompany = 0;
             for (var price of prices){
                 pricesIds.push({
                     "priceId": price.getAttribute("price-id"),
                     "fromDate": price.getAttribute("from-date"),
                     "toDate": price.getAttribute("to-date"),
                     "totalPrice": price.getAttribute("total-price"),
-                    "sellingPrice": price.getAttribute("selling-price")
+                    "totalPriceCompany": price.getAttribute("total-price-company"),
+                    "sellingPrice": price.getAttribute("selling-price"),
+                    "sellingPriceCompany": price.getAttribute("selling-price-company"),
                 })
                 totalPrice += Number(price.getAttribute("total-price"))
+                totalPriceCompany += Number(price.getAttribute("total-price-company"))
             }
             var contracts = detailsContainer.querySelectorAll('.room-contracts-container input[type="hidden"]')
             var contractIds = [];
@@ -930,6 +935,7 @@ function getSelectedRooms(){
                     "qty": 0,
                     "contracts": contractIds,
                     "total-price": totalPrice,
+                    "total-price-company": totalPriceCompany,
                 } 
             }
     
@@ -981,6 +987,7 @@ function getSelectedTransfers(){
             selectedTransfers[transferSearchName][transferName] = {
                 "transfer_id": transferResult.getAttribute('transfer-type'),
                 "transfer_price": transferResult.getAttribute('transfer-price'),
+                "transfer_price_company": transferResult.getAttribute('transfer-price-company'),
                 "pick_up_postal_code": transferResult.getAttribute('from-postal-code'),
                 "drop_off_postal_code": transferResult.getAttribute('to-postal-code'),
                 "flight_no": transferResult.getAttribute('flight-no'),
@@ -1000,18 +1007,23 @@ function getSelectedTours(){
         var tourResults = tourSearch.querySelectorAll('.tour-card')
         for (var tourResult of tourResults){
             var tourPrice = tourResult.querySelector('.tour-price').getAttribute('tour-price')
+            var tourPriceCompany = tourResult.querySelector('.tour-price').getAttribute('tour-price-company')
             var tourPickup = tourResult.querySelector('.tour-pickup').getAttribute('tour-pickup')
             var tours = []
             var toursPrice = {}
+            var toursPriceCompany = {}
             for (var tourItem of tourResult.querySelectorAll('.tour-item')){
                 tours.push(tourItem.getAttribute('tour-id'))
                 toursPrice[tourItem.getAttribute('tour-id')] = tourItem.getAttribute('tour-indv-price')
+                toursPriceCompany[tourItem.getAttribute('tour-id')] = tourItem.getAttribute('tour-indv-price')
             }
             selectedTours[tourSearchName].push({
                 "tours": tours,
                 "price": tourPrice,
                 "pickup": tourPickup,
-                "toursPrice": toursPrice
+                "toursPrice": toursPrice,
+                "toursPriceCompany": toursPriceCompany,
+                "priceCompany": tourPriceCompany,
             })
         }
     }
@@ -1078,6 +1090,7 @@ function encodeTransferSearch(transferParams, selected_transfers){
             all_selected[cardName][searchName]['pax_info']['childrenInfo'] = transferParams[cardName][searchName]['paxes']['child-ages'];
             all_selected[cardName][searchName]['transfer_id'] = selected_transfers[cardName][searchName]['transfer_id'];
             all_selected[cardName][searchName]['transfer_price'] = selected_transfers[cardName][searchName]['transfer_price'];
+            all_selected[cardName][searchName]['transfer_price_company'] = selected_transfers[cardName][searchName]['transfer_price_company'];
             all_selected[cardName][searchName]['pick_up_postal_code'] = selected_transfers[cardName][searchName]['pick_up_postal_code'];
             all_selected[cardName][searchName]['drop_off_postal_code'] = selected_transfers[cardName][searchName]['drop_off_postal_code'];
             all_selected[cardName][searchName]['flight_no'] = selected_transfers[cardName][searchName]['flight_no'];
@@ -1101,6 +1114,7 @@ function encodeHotelRoomSeearch(hotelParams, selected_rooms){
                         "room_name": roomNames[selectedIndexes],
                         "room_id": ss,
                         "price": selected_rooms[search][room][ss]['total-price'],
+                        "priceCompany": selected_rooms[search][room][ss]['total-price-company'],
                         // "contract_id": selected_rooms[search][room][ss]['contractId'],
                         "pax_info": paxInfo,
                         "check_in": hotelParams[search]['checkin'],
@@ -1123,6 +1137,8 @@ function encodeHotelRoomSeearch(hotelParams, selected_rooms){
                             "price_id": selected_rooms[search][room][ss]['prices'][contract_price]['priceId'],
                             "selling_price": selected_rooms[search][room][ss]['prices'][contract_price]['sellingPrice'],
                             "total_price": selected_rooms[search][room][ss]['prices'][contract_price]['totalPrice'],
+                            "selling_price_company": selected_rooms[search][room][ss]['prices'][contract_price]['sellingPriceCompany'],
+                            "total_price_company": selected_rooms[search][room][ss]['prices'][contract_price]['totalPriceCompany'],
                             "check_in": selected_rooms[search][room][ss]['prices'][contract_price]['fromDate'],
                             "check_out": selected_rooms[search][room][ss]['prices'][contract_price]['toDate'],
                         })
@@ -1425,7 +1441,9 @@ function transferSelectedNewType(e){
     var priceContainer = transferCard.querySelector('.transfer-price')
     priceContainer.innerHTML = 'Price: ' + selectedOption.getAttribute('transfer_price');
     priceContainer.setAttribute('transfer-price', selectedOption.getAttribute('transfer_price'));
+    priceContainer.setAttribute('transfer-price-company', selectedOption.getAttribute('transfer_price_company'));
     transferCard.setAttribute('transfer-type', selectedOption.getAttribute('transfer_type_id'));
     transferCard.setAttribute('transfer-price', selectedOption.getAttribute('transfer_price'));
+    transferCard.setAttribute('transfer-price-company', selectedOption.getAttribute('transfer_price_company'));
     calculate_total_transfers()
 }

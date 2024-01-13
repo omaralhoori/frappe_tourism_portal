@@ -1,0 +1,55 @@
+{% extends "templates/website_base.html" %}
+
+{% block page_content %}
+<h1>STATEMENT OF ACCOUNT</h1>
+<div class="row m-3">
+    <div class="col">
+        <div class="input-group date"> 
+            <label class="m-2" for="from_date">{{_("From Date")}}</label>
+            <input id="from_date" class="form-control date-picker" name="from_date" placeholder="{{_('From Date')}}" type="date" value="{{from_date}}">  
+          </div>
+    </div>
+    <div class="col">
+        <div class="input-group date"> 
+            <label class="m-2" for="to_date">{{_("To Date")}}</label>
+            <input id="to_date" class="form-control date-picker" name="to_date" placeholder="{{_('To Date')}}" type="date" value="{{to_date}}">  
+            
+          </div>
+    </div>
+</div>
+
+   <table class="table table-striped">
+        <thead>
+            <th scope="col">#</th>
+            <th scope="col">{{_('Date')}}</th>
+            <th scope="col">{{_('Debit')}}</th>
+            <th scope="col">{{_('Credit')}}</th>
+            <th scope="col">{{_('Balance')}}</th>
+            <th scope="col">{{_('Remarks')}}</th>
+        </thead>
+        <tbody>
+            {% set total_balance = [0] %}
+            {% for gl_entry in transactions %}
+            <tr>
+                <th scope="row">{{loop.index}}</th>
+            <td>{% if gl_entry.get('post_date') %} {{gl_entry.get('post_date')}} {% endif %}</td>
+            {# <td>
+                {% if gl_entry.get('account') in ["'Opening'", "'Closing (Opening + Total)'", "'Total'"] %} {{_(gl_entry.get('account').replace("'", ""))}} {% endif %}
+                {% if gl_entry.get('voucher_type') %}{{gl_entry.get('voucher_type')}} {% endif %}
+            </td>
+            <td> {% if gl_entry.get('voucher_no') %}{{gl_entry.get('voucher_no')}} {% endif %}</td> #}
+            <td>{{gl_entry.get('debit')}}</td>
+            <td>{{gl_entry.get('credit')}}</td>
+            <td>{{gl_entry.get('balance')}}</td>
+            {% set _ = total_balance.append(total_balance.pop() + gl_entry.get('balance', 0))%}
+            <td>{% if gl_entry.get('remarks')%}{{gl_entry.get('remarks')}}{%endif%}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="4"></td>
+                <td>{{total_balance[0]}}</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

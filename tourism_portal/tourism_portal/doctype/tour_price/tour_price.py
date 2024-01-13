@@ -3,7 +3,8 @@
 
 import frappe
 from frappe.model.document import Document
-from tourism_portal.utils import calculate_discount_price, calculate_extra_price, get_location_postal_code, get_postal_code_transfer_area
+from tourism_portal.api.company import get_company_details
+from tourism_portal.utils import calculate_discount_price, calculate_extra_price, get_location_postal_code, get_postal_code_transfer_area, get_subagency_extra_price
 
 class TourPrice(Document):
 	pass
@@ -90,10 +91,20 @@ def get_available_tours_and_prices(params):
 				tour_packages[-1]['package_price'] += tt['tour_price']
 		
 		# Group Tours Return Price For Each Package
+	company_details = get_company_details()
+	tour_margin = 0
+	if company_details['is_child_company']:
+		tour_margin = frappe.db.get_value("Company", company_details['child_company'], ['tour_margin'])
+		
 	if params['tour-type'] == 'vip':
+		for tour in available_tours:
+			tour['tour_price_company'] = tour['tour_price']
+			tour['tour_price'] = get_subagency_extra_price(tour['tour_price'], tour_margin)
 		return available_tours
 	else:
-		
+		for tour in tour_packages:
+			tour['package_price_company'] = tour['package_price']
+			tour['package_price'] = get_subagency_extra_price(tour['package_price'], tour_margin)
 		return tour_packages
 def get_available_tours(params):
 	"""

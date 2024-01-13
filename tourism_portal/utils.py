@@ -146,3 +146,6 @@ class TestEvent(FrappeTestCase):
         refund = get_cancellation_refund("24 Hours Refundable", 1000, "2024-01-02", "2024-01-07")
         print("Test 3 Refund:", refund)
         self.assertTrue(refund == 600)
+
+def get_subagency_extra_price(price, subagency_margin):
+    return price + (price * subagency_margin) / 100

@@ -23,7 +23,8 @@ class Company(Document):
 			"last_name": last_name,
 			"company": self.name
 		})
-		user.insert()
+		user.append_roles(('Customer'))
+		user.save(ignore_permissions=True)
 		update_password(user=user.name, pwd=password)
 
 
@@ -33,3 +34,20 @@ def get_account_settings(company=None):
 
 	account_details = frappe.db.get_value("Company", company, ["account_type", "credit_limit", "credit_current_limit", "credit"], as_dict=True)
 	return account_details or {}
+
+def get_company_details():
+    company = frappe.db.get_value("User", frappe.session.user, "company")
+    company_doc = frappe.get_cached_doc("Company", company)
+    company_details = {
+    }
+    if company.is_child_company:
+        company_details['is_child_company'] = True
+        company_details['company'] = company_doc.parent_company
+        company_details['child_company'] = company_doc.name
+        company_details['hotel_margin'] = company_doc.hotel_margin
+        company_details['tour_margin'] = company_doc.tour_margin
+        company_details['transfer_margin'] = company_doc.transfer_margin
+    else:
+        company_details['is_child_company'] = False
+        company_details['company'] = company_doc.name
+    return company_details

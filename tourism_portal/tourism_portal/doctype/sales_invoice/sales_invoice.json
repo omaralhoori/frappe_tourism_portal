@@ -12,6 +12,7 @@
   "details_tab",
   "section_break_1wfwx",
   "company",
+  "child_company",
   "customer",
   "invoice_no",
   "voucher_no",
@@ -32,6 +33,12 @@
   "column_break_dlfzt",
   "hotel_fees",
   "grand_total",
+  "company_fees_section",
+  "transfer_fees_company",
+  "tour_fees_company",
+  "column_break_6otvi",
+  "hotel_fees_company",
+  "grand_total_company",
   "section_break_09xmx",
   "rooms",
   "room_pax_info",
@@ -263,12 +270,51 @@
   {
    "fieldname": "column_break_dlfzt",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company_fees_section",
+   "fieldtype": "Section Break",
+   "label": "Company Fees"
+  },
+  {
+   "fieldname": "transfer_fees_company",
+   "fieldtype": "Currency",
+   "label": "Transfer Fees Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "tour_fees_company",
+   "fieldtype": "Currency",
+   "label": "Tour Fees Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_6otvi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hotel_fees_company",
+   "fieldtype": "Currency",
+   "label": "Hotel Fees Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grand_total_company",
+   "fieldtype": "Currency",
+   "label": "Grand Total Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "child_company",
+   "fieldtype": "Link",
+   "label": "Child Company",
+   "options": "Company"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-04 18:58:00.571873",
+ "modified": "2024-01-10 16:33:29.162153",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice",

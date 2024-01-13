@@ -1,0 +1,191 @@
+<style>
+
+.sidebar {
+	width: 250px; height: 100vh; position: fixed; top: 0; left: 0; z-index: 999; 
+	background: #333; color: #fff; transition: all .3s; box-shadow: 3px 3px 3px rgba(51, 51, 51, 0.5);
+	text-align: left;
+}
+
+.sidebar.active { left: 0; }
+
+.dismiss {
+	width: 35px; height: 35px; position: absolute; top: 10px; right: 10px; transition: all .3s; 
+	background: #444; border-radius: 4px; text-align: center; line-height: 35px; cursor: pointer;
+}
+
+.dismiss:hover, .dismiss:focus { background: #555; color: #fff; }
+
+.sidebar .logo { padding: 40px 20px; border-bottom: 1px solid #444; transition: all .3s; }
+
+.sidebar .logo a {
+	display: inline-block;
+	width: 172px;
+	height: 34px;
+	background: url(../img/logo.png) left top no-repeat;
+	border: 0;
+	text-indent: -999999px;
+}
+
+.sidebar ul.menu-elements { padding: 10px 0; border-bottom: 1px solid #444; transition: all .3s; }
+
+.sidebar ul li a {
+	display: block; padding: 20px 20px;
+	border: 0; color: #fff;
+}
+.sidebar ul li a:hover,
+.sidebar ul li a:focus,
+.sidebar ul li.active > a:hover,
+.sidebar ul li.active > a:focus { outline: 0; background: #555; color: #fff; }
+
+.sidebar ul li a i { margin-right: 5px; }
+
+.sidebar ul li.active > a, a[aria-expanded="true"] {
+	background: #444;
+	color: #fff;
+}
+
+.sidebar ul ul a { background: #444; padding-left: 30px; font-size: 14px; }
+
+.sidebar ul ul li.active > a { background: #555; }
+
+.sidebar a[data-toggle="collapse"] {
+    position: relative;
+}
+
+.sidebar .dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+
+.sidebar .to-top { padding: 20px; text-align: center; }
+
+.sidebar .dark-light-buttons { padding: 10px 20px 30px 20px; text-align: center; }
+
+/* sidebar light */
+
+.sidebar.light { background: #fff; color: #888; }
+
+.sidebar.light .dismiss { background: #ddd; color: #888; }
+
+.sidebar.light .dismiss:hover, 
+.sidebar.light .dismiss:focus { background: #ccc; color: #888; }
+
+.sidebar.light .logo { border-color: #eee; }
+.sidebar.light .logo a { background-image: url(../img/logo-dark.png); }
+
+.sidebar.light ul.menu-elements { border-color: #eee; }
+
+.sidebar.light ul li a { color: #888; }
+
+.sidebar.light ul li a:hover,
+.sidebar.light ul li a:focus,
+.sidebar.light ul li.active > a:hover,
+.sidebar.light ul li.active > a:focus { background: #ccc; color: #888; }
+
+.sidebar.light ul li.active > a, .sidebar.light a[aria-expanded="true"] {
+	background: #ddd;
+	color: #888;
+}
+
+.sidebar.light ul ul a { background: #ddd; }
+
+.sidebar.light ul ul li.active > a { background: #ccc; }
+
+.sidebar.light a.btn-customized-3 { background: #ddd; color: #888; }
+
+.sidebar.light a.btn-customized-3:hover, 
+.sidebar.light a.btn-customized-3:active, 
+.sidebar.light a.btn-customized-3:focus, 
+.sidebar.light a.btn-customized-3:active:focus, 
+.sidebar.light a.btn-customized-3.active:focus,
+.sidebar.light a.btn-customized-3.btn.btn-primary:not(:disabled):not(.disabled):active,
+.sidebar.light a.btn-customized-3.btn.btn-primary:not(:disabled):not(.disabled):active:focus {
+	background: #ccc; color: #888;
+}
+
+.sidebar.light a.btn-customized-4.btn-customized-dark { background: #555; }
+.sidebar.light a.btn-customized-4.btn-customized-light { background: #eee; }
+
+.sidebar.light a.btn-customized-4.btn-customized-dark:hover, 
+.sidebar.light a.btn-customized-4.btn-customized-dark:active, 
+.sidebar.light a.btn-customized-4.btn-customized-dark:focus, 
+.sidebar.light a.btn-customized-4.btn-customized-dark:active:focus, 
+.sidebar.light a.btn-customized-4.btn-customized-dark.active:focus,
+.sidebar.light a.btn-customized-4.btn-customized-dark.btn.btn-primary:not(:disabled):not(.disabled):active,
+.sidebar.light a.btn-customized-4.btn-customized-dark.btn.btn-primary:not(:disabled):not(.disabled):active:focus {
+	background: #ccc; color: #fff;
+}
+
+.sidebar.light a.btn-customized-4.btn-customized-light:hover, 
+.sidebar.light a.btn-customized-4.btn-customized-light:active, 
+.sidebar.light a.btn-customized-4.btn-customized-light:focus, 
+.sidebar.light a.btn-customized-4.btn-customized-light:active:focus, 
+.sidebar.light a.btn-customized-4.btn-customized-light.active:focus,
+.sidebar.light a.btn-customized-4.btn-customized-light.btn.btn-primary:not(:disabled):not(.disabled):active,
+.sidebar.light a.btn-customized-4.btn-customized-light.btn.btn-primary:not(:disabled):not(.disabled):active:focus {
+	background: #ccc; color: #fff;
+}
+
+
+</style>
+
+<nav class="sidebar">
+
+    <div class="logo">
+					{{get_site_logo()}}
+        </div>
+    <ul class="list-unstyled menu-elements">
+        {# <li class="active"> #}
+        <li>
+            <a class="scroll-link" href="/home"><i class="fa fa-home"></i> Home</a>
+        </li>
+        
+        <li>
+            <a class="scroll-link" href="/account/statement"><i class="fa fa-file-text-o" aria-hidden="true"></i> STATEMENT OF ACCOUNT</a>
+        </li>
+        <li>
+            <a class="scroll-link" href="/account/users"><i class="fa fa-users"></i> USERS</a>
+        </li>
+        <li>
+            <a class="scroll-link" href="/account/agencies"><i class="fa fa-briefcase"></i> AGENCIES</a>
+        </li>
+        <li>
+            <a class="scroll-link" href="/account/agency_account"><i class="fa fa-briefcase"></i> SUBAGENCY ACCOUNT</a>
+        </li>
+        <li>
+            <a class="scroll-link" href="/account/settings"><i class="fa fa-cog"></i> SETTINGS</a>
+        </li>
+        {# <li>
+            <a class="scroll-link" href="#section-6"><i class="fa fa-envelope"></i> Contact us</a>
+        </li> #}
+        {# <li>
+            <a href="#otherSections" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" role="button"
+                aria-controls="otherSections">
+                <i class="fas fa-sync"></i>Other sections
+            </a>
+            <ul class="collapse list-unstyled" id="otherSections">
+                <li>
+                    <a class="scroll-link" href="#section-3">Our projects</a>
+                </li>
+                <li>
+                    <a class="scroll-link" href="#section-4">We think that...</a>
+                </li>
+            </ul>
+        </li> #}
+    </ul>
+
+    {# <div class="to-top">
+        <a class="btn btn-primary btn-customized-3" href="#" role="button">
+            <i class="fas fa-arrow-up"></i> Top
+        </a>
+    </div>
+
+    <div class="dark-light-buttons">
+        <a class="btn btn-primary btn-customized-4 btn-customized-dark" href="#" role="button">Dark</a>
+        <a class="btn btn-primary btn-customized-4 btn-customized-light" href="#" role="button">Light</a>
+    </div> #}
+
+</nav>

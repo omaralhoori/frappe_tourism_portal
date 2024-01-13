@@ -280,6 +280,7 @@
         "transfer_type_id": transfer['transfer_type'],
         "transfer_type_name": transfer['transfer_details'].get('transfer_type'),
         "transfer_price": transfer['transfer_price'],
+        "transfer_price_company": transfer['transfer_price_company'],
         "from_postal_code": transfer.search_params['from_postal_code'],
         "to_postal_code": transfer.search_params['to_postal_code'],
         "flight_no": transfer.search_params['params']['flight-no'],
@@ -296,6 +297,7 @@
         <div class="card m-2 transfer-card" style="width: 18rem;" 
         transfer-type="{{transfer.transfer_type}}"
         transfer-price="{{transfer.transfer_price}}"
+        transfer-price-company="{{transfer.transfer_price_company}}"
         from-postal-code="{{transfer.search_params['from_postal_code']}}"
             to-postal-code="{{transfer.search_params['to_postal_code']}}"
             transfer-name="{{transferName}}"
@@ -312,6 +314,7 @@
             transfer_type_id="{{option.transfer_type_id}}"
             transfer_type_name="{{option.transfer_type_name}}"
             transfer_price="{{option.transfer_price}}"
+            transfer_price_company="{{option.transfer_price_company}}"
             from_postal_code="{{option.from_postal_code}}"
             to_postal_code="{{option.to_postal_code}}"
             flight_no="{{option.flight_no}}"
@@ -328,7 +331,7 @@
         {% if transfer['search_params']['params']['flight-no'] %}
         <li class="list-group-item">Flight No: {{transfer['search_params']['params']['flight-no']}}</li>
         {% endif %}
-        <li class="list-group-item transfer-price" transfer-price="{{transfer['transfer_price']}}">Price: {{transfer['transfer_price']}}</li>
+        <li class="list-group-item transfer-price" transfer-price="{{transfer['transfer_price']}}" transfer-price-company="{{transfer['transfer_price_company']}}">Price: {{transfer['transfer_price']}}</li>
         <li class="list-group-item">Total Pax: {{transfer['search_params']['params']['paxes']['adults'] | int + transfer['search_params']['params']['paxes']['children'] | int}} <small>(Adults: {{transfer['search_params']['params']['paxes']['adults']}}, Children: {{transfer['search_params']['params']['paxes']['children']}})</small></li>
     </ul>
     </div>
@@ -347,7 +350,7 @@
   <ul class="list-group list-group-flush">
     <li class="list-group-item tour-pickup" tour-pickup="{{tour['pickup']}}">Pickup: {{tour['pickup']}}</li>
     {# <li class="list-group-item">Tour Date: {{tour['tour_date']}}</li> #}
-    <li class="list-group-item tour-price" tour-price="{{tour['tour_price']}}">Price: {{tour['tour_price']}}</li>
+    <li class="list-group-item tour-price" tour-price-company="{{tour['tour_price_company']}}" tour-price="{{tour['tour_price']}}">Price: {{tour['tour_price']}}</li>
             <li class="list-group-item">Total Pax: {{tour['paxes']['adults'] | int + tour['paxes']['children'] | int}} <small>(Adults: {{tour['paxes']['adults']}}, Children: {{tour['paxes']['children']}})</small></li>
 
   </ul>
@@ -358,17 +361,23 @@
 {%macro package_tour_card(tourPackages)%}
 {% if tourPackages|length > 0 %}
 {% set  total   = [0] %}
+{% set  total_company   = [0] %}
 {% set tour_prices = {} %}
+{% set tour_prices_company = {} %}
 {% for tour in tourPackages%}
     {% set _ = total.append(total.pop() + tour['package_price']) %}
+    {% set _ = total_company.append(total_company.pop() + tour['package_price_company']) %}
     {% for _tr in tour['tours']%}
         {% if not tour_prices.get(_tr['tour_id']) %}
             {% set _ = tour_prices.update({_tr['tour_id']:  0}) %}
+            {% set _ = tour_prices_company.update({_tr['tour_id']:  0}) %}
         {% endif %}
         {% set  _ = tour_prices.update({_tr['tour_id']:  tour_prices[_tr['tour_id']] + _tr['tour_price']}) %}
+        {# {% set  _ = tour_prices_company.update({_tr['tour_id']:  tour_prices_company[_tr['tour_id']] + _tr['tour_price_company']}) %} #}
     {% endfor %}
 {% endfor %}
 {% set  totalPrice   = total[0] %}
+{% set  totalPriceCompany   = total_company[0] %}
  {% set tourPackage = tourPackages[0] %}
     {% if not totalPrice or totalPrice <= 0 %}
 
@@ -382,7 +391,7 @@
         {% for tour in tourPackage['tours'] %}
             <li class="list-group-item tour-item" tour-id="{{tour.get('tour_id')}}" tour-indv-price="{{tour_prices.get(tour.get('tour_id'))}}">{{tour['tour_name']}}</li>
         {% endfor %}
-        <li class="list-group-item tour-price" tour-price="{{totalPrice}}">Total Price: {{totalPrice}}</li>
+        <li class="list-group-item tour-price" tour-price-company="{{totalPriceCompany}}" tour-price="{{totalPrice}}">Total Price: {{totalPrice}}</li>
         <li class="list-group-item">Total Pax: {{tourPackage['paxes']['adults'] | int + tourPackage['paxes']['children'] | int}} <small>(Adults: {{tourPackage['paxes']['adults']}}, Children: {{tourPackage['paxes']['children']}})</small></li>
     </ul>
     </div>

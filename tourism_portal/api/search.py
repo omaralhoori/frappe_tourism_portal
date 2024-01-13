@@ -1,11 +1,12 @@
 import frappe
 from frappe import _
+from tourism_portal.api.company import get_company_details
 from tourism_portal.tourism_portal.doctype.tour_price.tour_price import get_available_tours
 # from tourism_portal.www.search.index import get_available_hotel_rooms
 from tourism_portal.tourism_portal.doctype.transfer_price.transfer_price import get_available_transfers
 import json
 
-from tourism_portal.utils import calculate_extra_price, get_location_city, get_portal_setting
+from tourism_portal.utils import calculate_extra_price, get_location_city, get_portal_setting, get_subagency_extra_price
 """
 	search_params: [
 		{
@@ -51,7 +52,7 @@ def load_more_hotels(hotel_params, start=0, limit=10):
 	hotels = get_available_hotel_rooms(json.loads(hotel_params), start, limit)
 	return hotels
 def search_for_available_hotel_by_area(hotel_params, start=0, limit=10):
-	hotels = frappe.db.get_all("Hotel", filters={hotel_params.get('location-type'): hotel_params.get("location")}, fields=["name"], order_by="hotel_priority desc", start=start, limit=limit)
+	hotels = frappe.db.get_all("Hotel", filters={hotel_params.get('location-type'): hotel_params.get("location")}, fields=["name"], order_by="hotel_priority desc", )#start=start, limit=limit
 	results = {}
 	for hotel in hotels:
 		copy_params = hotel_params.copy()
@@ -212,7 +213,15 @@ def get_room_contract_price(contract, room_acmnd_type, nationality, company_clas
 		del price['buying_price']
 		price['selling_price'] = get_room_selling_price_based_on_class(price['selling_price'], price['item_price_name'], company_class)
 		price['selling_price_with_childs'] = get_room_price_with_children(roomPax, price['selling_price'], contract.get('child_rate_contract'))
+		# Child Company Price
+		price['child_company_price'] = get_child_company_hotel_price(price['selling_price_with_childs'])
 
+def get_child_company_hotel_price(selling_price):
+	company_details = get_company_details()
+	if company_details.get('is_child_company'):
+		if company_details.get('hotel_margin'):
+			return get_subagency_extra_price( selling_price, float(company_details.get('hotel_margin')))
+	return selling_price
 def get_room_selling_price_based_on_class(selling_price: float, item_price_name: str, company_class: dict) -> float:
 	class_extra_price = frappe.db.get_value("Hotel Room Price Company", {"parent": item_price_name, "company_class": company_class.get('company_class')}, ['extra_type', 'extra_profit'])
 	if not class_extra_price: return selling_price

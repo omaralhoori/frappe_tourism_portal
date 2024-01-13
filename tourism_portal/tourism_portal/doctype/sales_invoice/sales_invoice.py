@@ -6,7 +6,7 @@ from frappe.model.document import Document
 from frappe import _
 from frappe.model.naming import make_autoname
 from frappe.tests.utils import FrappeTestCase
-from tourism_portal.tourism_portal.doctype.company_payment.company_payment import add_company_refund, create_payment
+from tourism_portal.tourism_portal.doctype.company_payment.company_payment import add_child_company_refund, add_company_refund, create_child_company_payment, create_payment
 from tourism_portal.tourism_portal.doctype.room_availability.room_availability import free_room, reserve_room
 from tourism_portal.tourism_portal.doctype.sales_invoice.reserve import add_transfers_to_invoice
 from tourism_portal.tourism_portal.doctype.tour_price.tour_price import get_tour_price_with_child_prices
@@ -180,48 +180,66 @@ class SalesInvoice(Document):
 
 	def calculate_total_hotel_fees(self):
 		total = 0
+		total_company = 0
 		for room in self.rooms:
 			for room_extra in self.room_extras:
 				if room_extra.room_row_id == room.name:
 					total  += room_extra.extra_price
+					total_company += room_extra.extra_price
 					# ToDo make for percentage too
 			total += room.total_price
+			total_company += room.total_price_company
 			if room.board_extra_price:
 				nights = get_hotel_total_nights(room.check_in, room.check_out)
 				board_price = room.board_extra_price * nights
 				total += board_price
+				total_company += board_price
 		self.hotel_fees = total
+		self.hotel_fees_company = total_company
 		self.db_set('hotel_fees', total)
+		self.db_set('hotel_fees_company', total_company)
 	def calculate_total_transfer_fees(self):
 		total = 0
+		total_company = 0
 		for transfer in self.transfers:
 			# for room_extra in self.room_extras:
 			# 	if room_extra.room_row_id == room.name:
 			# 		total  += room_extra.extra_price
 					# ToDo make for percentage too
 			total += transfer.transfer_price
-
+			total_company += transfer.transfer_price_company
 		self.transfer_fees = total
+		self.transfer_fees_company = total_company
 		self.db_set('transfer_fees', total)
+		self.db_set('transfer_fees_company', total_company)
 	def calculate_total_tour_fees(self):
 		total = 0
+		total_company = 0
 		for tour in self.tours:
 			# for room_extra in self.room_extras:
 			# 	if room_extra.room_row_id == room.name:
 			# 		total  += room_extra.extra_price
 					# ToDo make for percentage too
 			total += tour.tour_price
-
+			total_company += tour.tour_price_company
 		self.tour_fees = total
+		self.tour_fees_company = total_company
 		self.db_set('tour_fees', total)
+		self.db_set('tour_fees_company', total_company)
 	
 	def calculate_total_fees(self):
+		total_company = 0
 		total = 0
 		total += self.hotel_fees
 		total += self.transfer_fees
 		total += self.tour_fees
+		total_company += self.hotel_fees_company
+		total_company += self.transfer_fees_company
+		total_company += self.tour_fees_company
 		self.grand_total = total
+		self.grand_total_company = total_company
 		self.db_set('grand_total', total)
+		self.db_set('grand_total_company', total_company)
 	def on_trash(self):
 		print("On Trash")
 		self.free_rooms()
@@ -291,27 +309,35 @@ class SalesInvoice(Document):
 		total_refunds = 0
 		for transfer in self.transfers:
 			# transfer.is_canceled = 1
-			total_refunds += get_cancellation_refund(cancellation_policy, transfer.transfer_price, transfer.transfer_date, transfer.transfer_date, day_margin=1, day_start_hour=0)
+			total_refunds += get_cancellation_refund(cancellation_policy, transfer.transfer_price_company, transfer.transfer_date, transfer.transfer_date, day_margin=1, day_start_hour=0)
 		if total_refunds > 0:
-			add_company_refund( company=self.company, refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype, remarks="Transfer Refund")
+			add_company_refund( company=self.company, refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype, remarks="Transfer Refund for voucher "+self.voucher_no)
+			if self.child_company:
+				commission_refund = get_commission_refund(self.transfer_fees_company, self.transfer_fees, total_refunds)
+				create_payment(self.company, commission_refund,'Reserve', remarks="Reserve for "+self.child_company)
+				add_child_company_refund( company=self.child_company, parent_company=self.company,refund=commission_refund, voucher_no=self.name, voucher_type=self.doctype, remarks="Transfer Refund for voucher "+self.voucher_no)
 			
 	def cancel_tours(self):
 		cancellation_policy = frappe.db.get_single_value("Tourism Portal Settings", "tour_cancellation_policy")
 		total_refunds = 0
 		for tour in self.tours:
 			if tour.tour_type == "package":
-				total_refunds += get_cancellation_refund(cancellation_policy, tour.tour_price, tour.from_date, tour.to_date, day_margin=1, day_start_hour=0)
+				total_refunds += get_cancellation_refund(cancellation_policy, tour.tour_price_company, tour.from_date, tour.to_date, day_margin=1, day_start_hour=0)
 			else:
 				total_refunds += self.get_single_tour_refund(tour, cancellation_policy)
 			#tour.is_canceled = 1
 			#tour.save(ignore_permissions=True)
 		if total_refunds > 0:
-			add_company_refund( company=self.company, refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype, remarks="Tour Refund")
+			add_company_refund( company=self.company, refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype, remarks="Tour Refund for voucher "+self.voucher_no)
+			if self.child_company:
+				commission_refund = get_commission_refund(self.tour_fees_company, self.tour_fees, total_refunds)
+				create_payment(self.company, commission_refund,'Reserve', remarks="Reserve for "+self.child_company)
+				add_child_company_refund( company=self.child_company, parent_company=self.company, refund=commission_refund, voucher_no=self.name, voucher_type=self.doctype, remarks="Tour Refund for voucher "+self.voucher_no)
 	def get_single_tour_refund(self,tour, cancellation_policy):
 		total_refund = 0
 		for tour_type in self.tour_types:
 			if tour_type.search_name == tour.search_name:
-				total_refund += get_cancellation_refund(cancellation_policy, tour_type.tour_price, tour_type.tour_date, tour_type.tour_date, day_margin=1, day_start_hour=0)
+				total_refund += get_cancellation_refund(cancellation_policy, tour_type.tour_price_company, tour_type.tour_date, tour_type.tour_date, day_margin=1, day_start_hour=0)
 		return total_refund
 		# if tour.tour_date:
 		# 	refund = refund_tour(cancellation_policy, tour.tour_price, tour.tour_date)
@@ -319,25 +345,41 @@ class SalesInvoice(Document):
 	def cancel_hotels(self):
 		# ToDo cannot cancel any room if checkin is passed
 		total_refunds = 0
+		
 		for room in self.room_price:
 			if room.contract_id:
 				if not free_room(room.contract_id, room.check_in, room.check_out):
 					frappe.throw('Room is not avilable')
-			refund = refund_room(room.cancellation_policy, room.total_selling_price, room.check_in, room.check_out, 1, 14)
+			
+			refund = refund_room(room.cancellation_policy, room.total_selling_price_company, room.check_in, room.check_out, 1, 14)
 			room.refund = refund
 			room.is_canceled = 1
 			total_refunds += refund
 		if total_refunds > 0:
-			add_company_refund( company=self.company, refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype)
+			add_company_refund( company=self.company, refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype, remarks="Hotel Refund for voucher "+self.voucher_no)
+			if self.child_company:
+				commission_refund = get_commission_refund(self.hotel_fees_company, self.hotel_fees, total_refunds)
+				create_payment(self.company, commission_refund,'Reserve', remarks="Reserve for "+self.child_company)
+				add_child_company_refund( company=self.child_company, parent_company=self.company, refund=commission_refund, voucher_no=self.name, voucher_type=self.doctype, remarks="Hotel Refund for voucher "+self.voucher_no)
 	def on_submit(self):
-		create_payment(self.company, self.grand_total,'Pay',against_doctype= 'Sales Invoice', against_docname=self.name)
+		if self.child_company:
+			create_child_company_payment(self.child_company, self.company, self.grand_total,'Payment',against_doctype= 'Sales Invoice', against_docname=self.name)
+			create_payment(self.company, self.grand_total_company,'Pay',against_doctype= 'Sales Invoice', against_docname=self.name, remarks="Payment for "+self.child_company)
+		else:
+			create_payment(self.company, self.grand_total,'Pay',against_doctype= 'Sales Invoice', against_docname=self.name)
 		self.add_voucher_no()
 		self.add_invoice_no()
 		self.db_set("status", "Submitted")
 def create_reservation():
 	pass
 import datetime
-
+def get_commission_refund(selling_price, selling_price_with_commission, total_refund):
+	if selling_price == 0:
+		return 0
+	commission =  selling_price_with_commission - selling_price
+	refund_ratio = total_refund   / selling_price
+	return (commission * refund_ratio) + total_refund
+	
 def make_room_request(room, check_in, check_out):
 	return {
 		"location": room.hotel,
