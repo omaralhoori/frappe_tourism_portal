@@ -99,6 +99,7 @@ class SalesInvoice(Document):
 			tour_search.from_date = frappe.utils.add_days(from_date, 1)
 			tour_search.to_date = frappe.utils.add_days(to_date, -1)
 			tour_search.tour_price = discount_price
+			tour_search.tour_price_company = discount_price
 			tour_search.adults = adults
 			tour_search.children = childs
 			for room_pax in self.room_pax_info:
@@ -112,6 +113,7 @@ class SalesInvoice(Document):
 		tour_type.tour_type = "single"
 		tour_type.tour_name = free_tour.tour_type
 		tour_type.tour_price= discount_price
+		tour_type.tour_price_company= discount_price
 		return True
 
 	def get_tour_price(self, tour_type, adults, childs, child_ages):
