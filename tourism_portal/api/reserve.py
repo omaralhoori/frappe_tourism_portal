@@ -256,6 +256,7 @@ def get_invoice_data(sales_invoice):
     return {
         "invoice_id": invoice.name,
         "session_expires": invoice.session_expires,
+        "voucher_no": invoice.voucher_no,
         "post_date": invoice.post_date,
         "post_time": invoice.post_time,
         "hotel_fees": invoice.hotel_fees,

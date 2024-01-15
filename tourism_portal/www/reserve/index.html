@@ -155,7 +155,7 @@
             <div class="badge badge-danger">Cancelled</div>
         {% else%}
             {% if invoice_details.docstatus == 1 and invoice_details.status=='Submitted'%}
-            <a target="_blank" class="btn btn-primary w-100" href="/api/method/frappe.utils.print_format.download_pdf?doctype=Sales%20Invoice&name={{invoice_details.invoice_id}}&key=None">Print Voucher</a>
+            <a target="_blank" class="btn btn-primary w-100" href="/api/method/tourism_portal.api.pdf.print_voucher?voucher_no={{invoice_details.voucher_no}}">Print Voucher</a>
             <button class="btn btn-secondary mt-2 w-100" invoice-id="{{invoice_details.invoice_id}}" onclick="cancelReservation(this)">Cancel Reservation</button>
             {% else %}
             {{session_expires_card(invoice_details.session_expires) }}
