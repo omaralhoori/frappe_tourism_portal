@@ -11,5 +11,24 @@ frappe.listview_settings["Sales Invoice"] = {
         if (doc.status=="Cancelled") {
 			return [__("Cancelled"), "red", "status,=,Cancelled"];
         }
-    }
+    },
+    button: {
+        show: function(doc) {
+            return true;
+            },
+        get_label: function() {
+            return __('Voucher');
+            },
+        get_description: function(doc) {
+            return ('Print {0}', [doc.name]);
+            },
+        action: function(doc) {
+            var objWindowOpenResult = window.open(frappe.urllib.get_full_url("/api/method/tourism_portal.api.pdf.print_invoice_voucher?"
+                + "invoice_no=" + encodeURIComponent(doc.name)
+            ));
+        if(!objWindowOpenResult) {
+            msgprint("Please set permission for pop-up windows in your browser!"); 
+            return;
+        }
+    }}
 }

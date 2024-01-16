@@ -374,8 +374,16 @@ class SalesInvoice(Document):
 		self.db_set("status", "Submitted")
 	def get_room_and_group(self):
 		room_groups = {}
+		extras_cnt = 0
 		for room in self.rooms:
-			room_key = room.hotel_search+ room.room_name
+			extras = []
+			for room_extra in self.room_extras:
+				if room_extra.hotel_search == room.hotel_search and room_extra.room_name == room.room_name:
+					extras.append(room_extra.extra)
+			room_key = room.hotel_search + room.room + room.board 
+			if len(extras) > 0:
+				room_key += str(extras_cnt)
+				extras_cnt += 1
 			if not room_groups.get(room_key):
 				room_type = frappe.db.get_value("Hotel Room", room.room, "room_type", cache=True)
 				acmd_type = frappe.db.get_value("Hotel Room", room.room, "room_accommodation_type", cache=True)
@@ -390,7 +398,7 @@ class SalesInvoice(Document):
 					"qty": 0,
 					"adults": [],
 					"childs": [],
-					"extras": []
+					"extras": extras
 				}
 			room_groups[room_key]['qty'] += 1
 			for room_pax in self.room_pax_info:
@@ -399,9 +407,8 @@ class SalesInvoice(Document):
 						room_groups[room_key]['adults'].append(room_pax.guest_salutation + ". " + room_pax.guest_name)
 					elif room_pax.guest_type == "Child":
 						room_groups[room_key]['childs'].append(room_pax.guest_name)
-			for room_extra in self.room_extras:
-				if room_pax.hotel_search == room.hotel_search and room_pax.room_name == room.room_name:
-					room_groups[room_key]['extras'].append(room_extra.extra)
+			
+			
 		return room_groups
 	def get_transfer_groups(self):
 		transfer_groups = {}
