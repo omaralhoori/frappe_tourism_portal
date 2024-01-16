@@ -8,6 +8,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "disabled",
   "company_code",
   "company_name",
   "country",
@@ -56,14 +57,6 @@
    "fieldname": "is_child_company",
    "fieldtype": "Check",
    "label": "Is Child Company"
-  },
-  {
-   "depends_on": "eval:doc.is_child_company",
-   "fieldname": "parent_company",
-   "fieldtype": "Link",
-   "label": "Parent Company",
-   "mandatory_depends_on": "eval:doc.is_child_company",
-   "options": "Company"
   },
   {
    "depends_on": "eval:doc.is_child_company",
@@ -160,6 +153,12 @@
    "fieldname": "hotel_margin",
    "fieldtype": "Float",
    "label": "Hotel Margin"
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
   }
  ],
  "image_field": "company_logo",
@@ -183,7 +182,7 @@
   }
  ],
  "make_attachments_public": 1,
- "modified": "2024-01-13 11:23:56.501414",
+ "modified": "2024-01-16 17:08:17.513068",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Company",

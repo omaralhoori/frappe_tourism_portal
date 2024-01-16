@@ -108,3 +108,29 @@ def update_agency_profit():
     agency_doc.tour_margin = tour_profit
     agency_doc.save()
     return "success"
+
+@frappe.whitelist()
+def disable_agency(agency_id):
+    company_details = get_company_details()
+    if company_details['is_child_company']:
+        frappe.throw(_("You are not allowed to access this page."), frappe.PermissionError)
+    agency_doc = frappe.get_doc("Company", agency_id)
+    if not agency_doc.is_child_company or agency_doc.parent_company != company_details['company']:
+        frappe.throw(_("You are not allowed to access this page."), frappe.PermissionError)
+    agency_doc.disabled = 1
+    agency_doc.save()
+    frappe.db.set_value("User", {"company": agency_id}, "enabled", 0)
+    return "success"
+
+@frappe.whitelist()
+def enable_agency(agency_id):
+    company_details = get_company_details()
+    if company_details['is_child_company']:
+        frappe.throw(_("You are not allowed to access this page."), frappe.PermissionError)
+    agency_doc = frappe.get_doc("Company", agency_id)
+    if not agency_doc.is_child_company or agency_doc.parent_company != company_details['company']:
+        frappe.throw(_("You are not allowed to access this page."), frappe.PermissionError)
+    agency_doc.disabled = 0
+    agency_doc.save()
+    frappe.db.set_value("User", {"company": agency_id}, "enabled", 1)
+    return "success"

@@ -35,6 +35,11 @@
                  tour-profit="{{agency.tour_margin}}"
                  onclick="profitModalOpen(this)"
                  class="btn btn-small btn-warning">PROFIT MARGIN</button>
+                 {% if agency.disabled %}
+                <button agency-id="{{agency.name}}" class="btn btn-small btn-success" onclick="enableAgencyClicked(this)">ENABLE</button>
+                 {% else %}
+                <button agency-id="{{agency.name}}" class="btn btn-small btn-danger" onclick="disableAgencyClicked(this)">DISABLE</button>
+                  {%  endif %}
             </td>
         </tr>
         {% endfor %}

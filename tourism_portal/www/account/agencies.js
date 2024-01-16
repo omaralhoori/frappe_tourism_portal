@@ -131,3 +131,34 @@ function profitModalSubmitted(e){
         }
     })
 }
+
+function disableAgencyClicked(e){
+    var agencyId = e.getAttribute("agency-id");
+    frappe.call({
+        "method": "tourism_portal.api.company.disable_agency",
+        "args": {
+            "agency_id": agencyId
+        },
+        "callback": function(response){
+            if (response.message){
+                frappe.msgprint(response.message);
+                window.location.reload();
+            }
+        }
+    })
+}
+function enableAgencyClicked(e){
+    var agencyId = e.getAttribute("agency-id");
+    frappe.call({
+        "method": "tourism_portal.api.company.enable_agency",
+        "args": {
+            "agency_id": agencyId
+        },
+        "callback": function(response){
+            if (response.message){
+                frappe.msgprint(response.message);
+                window.location.reload();
+            }
+        }
+    })
+}

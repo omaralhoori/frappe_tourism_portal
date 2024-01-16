@@ -16,7 +16,7 @@ def get_context(context):
     SELECT 
     name, company_code as agency_code, 
     company_name as agency_name,
-    hotel_margin, transfer_margin, tour_margin
+    hotel_margin, transfer_margin, tour_margin, disabled
     FROM `tabCompany`
     WHERE is_child_company = 1 AND parent_company = %(parent_company)s
 """, {"parent_company": company_details['company']}, as_dict=True)
