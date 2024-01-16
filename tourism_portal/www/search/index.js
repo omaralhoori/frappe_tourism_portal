@@ -292,8 +292,8 @@ function renderHotelSearchBar(resultLabel, multipleResults){
             <div class="col-lg-2 hotel-search-label">${resultLabel}</div>
             <div class="col-lg-7 hotel-search-params">${searchParams}</div>
             <div class="col-lg-3 hotel-search-buttons d-flex flex-row-reverse">
-                <button class="btn btn-sm" style="height: fit-content;" search-results="${resultLabel}"
-                 onclick="editHotelSearchResults(this)">Edit <i class="fa fa-pencil"></i></button>
+                <!--<button class="btn btn-sm" style="height: fit-content;" search-results="${resultLabel}"
+                 onclick="editHotelSearchResults(this)">Edit <i class="fa fa-pencil"></i></button> -->
                  <div class="search-filters mr-2">
                 ${filters}
                 </div>

@@ -325,8 +325,8 @@
             transfer_date="{{option.transfer_date}}"
         >{{option.transfer_type_name}} - {{option.transfer_price}}</option>
     {%endfor%}</select></li>
-        <li class="list-group-item">Pickup: {{transfer['search_params']['params']['from-location']}}</li>
-        <li class="list-group-item">Dropoff: {{transfer['search_params']['params']['to-location']}}</li>
+        <li class="list-group-item">Pickup: {{transfer['search_params']['params']['from-location-name']}}</li>
+        <li class="list-group-item">Dropoff: {{transfer['search_params']['params']['to-location-name']}}</li>
         <li class="list-group-item">Transfer Date: {{transfer['search_params']['params']['transfer-date']}}</li>
         {% if transfer['search_params']['params']['flight-no'] %}
         <li class="list-group-item">Flight No: {{transfer['search_params']['params']['flight-no']}}</li>
@@ -405,8 +405,8 @@
         <div class="d-flex justify-content-between">
             <div class="transfer-search-label">{{search}}</div>
             <div class="transfer-search-buttons">
-                <button class="btn btn-sm" search-results="{{search}}"
-                 onclick="editTransferSearchResults(this)">Edit <i class="fa fa-pencil"></i></button>
+                {# <button class="btn btn-sm" search-results="{{search}}"
+                 onclick="editTransferSearchResults(this)">Edit <i class="fa fa-pencil"></i></button> #}
             </div>
         </div>
 

@@ -92,7 +92,7 @@ class SalesInvoice(Document):
 		print("Discount Price", discount_price) 
 		if not tour_search or new_tour:
 			tour_search = self.append("tours")
-			tour_search.search_name = "Free Tour"
+			tour_search.search_name = "Free " + free_tour.tour_type
 			tour_search.tour_type = self.map_tours_type(frappe.db.get_value("Tour Type", free_tour.tour_type, "tour_type", cache=True))
 			tour_search.pick_up = pickup_hotel
 			tour_search.pick_up_type = "hotel"

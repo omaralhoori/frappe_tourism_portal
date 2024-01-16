@@ -198,7 +198,7 @@ function addTransferClicked(e) {
         if (i == 0) {
             dropoffInput = transferRow.querySelector('input[name="dropoff"]')
 
-            if (hotelData['location-type'] != 'town') {
+            if (hotelData['location-type'] != 'town' && hotelData['location-type'] != 'city') {
                 if (hotelData.location){
                     dropoffInput.value = hotelData['location-name']
                     dropoffInput.setAttribute('location-id', hotelData.location);
@@ -211,7 +211,7 @@ function addTransferClicked(e) {
             transferRow.querySelector('input[name="check-in"]').value = hotelData.checkin;
         } else {
             pickupInput = transferRow.querySelector('input[name="pickup"]')
-            if (hotelData['location-type'] != 'town') {
+            if (hotelData['location-type'] != 'town' && hotelData['location-type'] != 'city') {
                 if (hotelData.location){
                    pickupInput.value = hotelData['location-name'];//hotelData.location;
                 pickupInput.setAttribute('location-id', hotelData.location);
@@ -261,7 +261,7 @@ function addTourClicked(e) {
     html += tourTemplate.innerHTML;
     childrenContainer.innerHTML = html;
     var locationInput = childrenContainer.querySelector('input[name="location"]')
-    if (hotelData['location-type'] != 'town') {
+    if (hotelData['location-type'] != 'town' && hotelData['location-type'] != 'city') {
         if(hotelData.location){
             locationInput.value = hotelData['location-name']
             locationInput.setAttribute('location-id', hotelData.location);
