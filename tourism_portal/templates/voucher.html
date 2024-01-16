@@ -11,48 +11,503 @@
         .page-break {
             page-break-after: always;
         }
-        thead {display: table-header-group; }
+        .txt-center{
+            text-align: center;
+        }
+        .gray-row td{
+            background-color: rgb(184, 184, 185);
+        }
+        td {
+            padding: 5px;
+        }
+        table{
+             width: 100%;
+             border: none;
+             margin-bottom: 15px;
+        }
+        .w-2{
+            width: 20%;
+        }
+        .w-3{
+            width: 30%;
+        }
+        .w-6{
+            width: 60%;
+        }
+        .w-4{
+            width: 40%;
+        }
+        .w-7{
+            width: 70%;
+        }
+        .p-4{
+            padding: 40px;
+        }
+        .p-2{
+            padding: 20px;
+        }
+        .p-1{
+            padding: 10px;
+        }
+        .p-0{
+            padding: 0px;
+        }
+        .m-4{
+            margin: 40px;
+        }
+        .m-2{
+            margin: 20px;
+        }
+        .m-1{
+            margin: 10px;
+        }  
     </style>
     </head>
     <body>
-    
-        <table>
-           <thead class="pdf-header">
-            <tr><td><h1>Header</h1></td></tr>
-           </thead>
-            <tbody>
-                <tr>
+        <div id="header-html" >
+            <div class="" style="position: absolute;">
+                <img src="{{frappe.utils.get_url(get_print_settings('company_logo'))}}" style="height: 80px;">
+            </div>
+            <div class="txt-center" style="height: 100px;">
+                <h3>{{get_print_settings('company_name')}}</h3>
+                <h4>VOUCHER FORM</h4>
+            </div>
+        </div>
+        {% set room_groups = doc.get_room_and_group() %}
+        {% set first_page = [false] %}
+        {% for room_name in room_groups %}
+        {% set room = room_groups[room_name] %}
+        {% if first_page[0] == false %}
+        {% set _ = first_page.append(first_page.pop() or true) %}
+        {% else %}
+        <div class="page-break"></div>
+        {% endif %}
+                <table >
+                <tr class="gray-row">
+                    <td class="w-6">
+                        Voucher NO.
+                    </td>
+                    <td >
+                        Print Date
+                    </td>
                     <td>
-                    <table>
-                        <tr>
-                            <td>
-                                asdas
-                            </td>
-                        </tr>
-                    </table>
-                <div class="page-break"></div>
-                <table>
-                    <tr>
-                        <td>
-                            asdas
-                        </td>
-                        <td>
-                            asdas
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            asdas
-                        </td>
-                        <td>
-                            asdas
-                        </td>
-                    </tr>
-                </table>
+                        Time
                     </td>
                 </tr>
-            </tbody>
+                <tr>
+                    <td class="w-6">
+                        {{doc.voucher_no.split('-')[-1]}}
+                    </td>
+                    <td>
+                        {{frappe.utils.nowdate()}}
+                    </td>
+                    <td>
+                        {{frappe.utils.nowtime().split('.')[0]}}
+                    </td>
+                </tr>
         </table>
-        
+        <table >
+                <tr class="gray-row">
+                    <td class="w-5">
+                         Customer Name
+                    </td>
+                    <td >
+                        Adult
+                    </td>
+                    <td>
+                        Child
+                    </td>
+                    <td>
+                        Total
+                    </td>
+                </tr>
+                <tr>
+                    <td class="w-5">
+                        {{room.adults[0]}}
+                    </td>
+                    <td>
+                       {% set adults = room.adults | length%}
+                        {{ adults }}
+                    </td>
+                    <td>
+                        {% set childs = room.childs | length %}
+                        {{ childs }}
+                    </td>
+                    <td>
+                        {{adults + childs}}
+                    </td>
+                </tr>
+        </table>
+        <table >
+                <tr class="gray-row">
+                    <td class="w-3 txt-center">
+                         Hotel
+                    </td>
+                    <td class="w-7 txt-center">
+                        Address
+                    </td>
+                   
+                </tr>
+                <tr>
+                    <td class="w-3 txt-center">
+                        {{room.hotel}}
+                    </td>
+                    <td class="w-7 txt-center">
+                        {{room.address}}
+                    </td>
+                </tr>
+        </table>
+        <table >
+                <tr class="gray-row">
+                    <td class="w-3 txt-center">
+                         Room
+                    </td>
+                    <td class="w-4 txt-center">
+                        Room Type
+                    </td>
+                    <td class="w-3 txt-center">
+                        Board
+                    </td>
+                   
+                </tr>
+                <tr>
+                    <td class="w-3 txt-center">
+                        {{room.acmd_type}}
+                    </td>
+                    <td class="w-4 txt-center">
+                        {{room.room_type}}
+                    </td>
+                    <td class="w-3 txt-center">
+                        {{room.board}}
+                    </td>
+                </tr>
+        </table>
+        <table >
+                <tr class="gray-row">
+                    <td class="w-3 txt-center">
+                         C/In Date
+                    </td>
+                    <td class="w-3 txt-center">
+                        C/Out Date
+                    </td>
+                    <td class="w-2 txt-center">
+                        Room Count
+                    </td>
+                    <td class="w-2 txt-center">
+                        Overnight
+                    </td>
+                   
+                </tr>
+                <tr>
+                    <td class="w-3 txt-center">
+                         {{room.check_in}}
+                    </td>
+                    <td class="w-3 txt-center">
+                        {{room.check_out}}
+                    </td>
+                    <td class="w-2 txt-center">
+                        {{room.qty}}
+                    </td>
+                    <td class="w-2 txt-center">
+                        {{frappe.utils.date_diff(room.check_out, room.check_in)}}
+                    </td>
+                </tr>
+        </table>
+        {% if room.extras | length > 0 %}
+        Extra Services: 
+        {% for extra in room.extras %}
+            <span class="room-extra">{{extra}}</span>
+        {% endfor %}
+        {%  endif %}
+        {{get_print_settings('hotel_voucher_footer')}}
+        {{get_print_settings('agency_voucher_footer')}}
+        <table>
+            <tr>
+                <td >
+                    Customer name <br/>
+                    ----------------------------
+                </td>
+            </tr>
+            {% for customer in room.adults %}
+            <tr>
+                <td>
+                    {{customer}}
+                </td>
+            </tr>
+            {% endfor%}
+            {% for customer in room.childs %}
+            <tr>
+                <td>
+                    {{customer}}
+                </td>
+            </tr>
+            {% endfor%}
+        </table>
+        {% endfor %}
+        {% set transfer_groups = doc.get_transfer_groups() %}
+        {% for transfer_name in transfer_groups %}
+        {% set transfer_group = transfer_groups[transfer_name] %}
+        {% if first_page[0] == false %}
+        {% set _ = first_page.append(first_page.pop() or true) %}
+        {% else %}
+        <div class="page-break"></div>
+        {% endif %}
+                <table >
+                <tr class="gray-row">
+                    <td class="w-6">
+                        Voucher NO.
+                    </td>
+                    <td >
+                        Print Date
+                    </td>
+                    <td>
+                        Time
+                    </td>
+                </tr>
+                <tr>
+                    <td class="w-6">
+                        {{doc.voucher_no.split('-')[-1]}}
+                    </td>
+                    <td>
+                        {{frappe.utils.nowdate()}}
+                    </td>
+                    <td>
+                        {{frappe.utils.nowtime().split('.')[0]}}
+                    </td>
+                </tr>
+        </table>
+        <table >
+                <tr class="gray-row">
+                    <td class="w-5">
+                         Customer Name
+                    </td>
+                    <td >
+                        Adult
+                    </td>
+                    <td>
+                        Child
+                    </td>
+                    <td>
+                        Total
+                    </td>
+                </tr>
+                <tr>
+                    <td class="w-5">
+                        {{transfer_group.adults[0]}}
+                    </td>
+                    <td>
+                       {% set adults = transfer_group.adults | length%}
+                        {{ adults }}
+                    </td>
+                    <td>
+                        {% set childs = transfer_group.childs | length %}
+                        {{ childs }}
+                    </td>
+                    <td>
+                        {{adults + childs}}
+                    </td>
+                </tr>
+        </table>
+        <table >
+                <tr class="gray-row">
+                    <td class="w-5">
+                         Transfer
+                    </td>
+                    <td class="w-2">
+                        Transfer Date
+                    </td>
+                    <td class="w-3">
+                        Flight No
+                    </td>
+                </tr>
+                <tr>
+                    <td class="w-5">
+                        {{transfer_group.transfer}}
+                    </td>
+                    <td class="w-2">
+                          {{transfer_group.transfer_date}}
+                    </td>
+                    <td class="w-3">
+                        {{transfer_group.flight_no}}
+                    </td>
+                </tr>
+        </table>
+        <table >
+                <tr class="gray-row">
+                    <td class="w-5">
+                         Pick Up
+                    </td>
+                    <td class="w-5">
+                        Drop Off
+                    </td>
+                </tr>
+                <tr>
+                    <td class="w-5">
+                        {{transfer_group.pickup}}
+                    </td>
+                    <td class="w-5">
+                          {{transfer_group.drop_off}}
+                    </td>
+
+                </tr>
+        </table>
+        {{get_print_settings('transfer_voucher_footer')}}
+        {{get_print_settings('agency_voucher_footer')}}
+        <table>
+            <tr>
+                <td >
+                    Customer name <br/>
+                    ----------------------------
+                </td>
+            </tr>
+            {% for customer in transfer_group.adults %}
+            <tr>
+                <td>
+                    {{customer}}
+                </td>
+            </tr>
+            {% endfor%}
+            {% for customer in transfer_group.childs %}
+            <tr>
+                <td>
+                    {{customer}}
+                </td>
+            </tr>
+            {% endfor%}
+        </table>
+        {% endfor %}
+        {% set tour_groups = doc.get_tour_groups() %}
+        {% for tour_name in tour_groups %}
+        {% set tour_group = tour_groups[tour_name] %}
+        {% if first_page[0] == false %}
+        {% set _ = first_page.append(first_page.pop() or true) %}
+        {% else %}
+        <div class="page-break"></div>
+        {% endif %}
+        <table >
+            <tr class="gray-row">
+                <td class="w-6">
+                    Voucher NO.
+                </td>
+                <td >
+                    Print Date
+                </td>
+                <td>
+                    Time
+                </td>
+            </tr>
+            <tr>
+                <td class="w-6">
+                    {{doc.voucher_no.split('-')[-1]}}
+                </td>
+                <td>
+                    {{frappe.utils.nowdate()}}
+                </td>
+                <td>
+                    {{frappe.utils.nowtime().split('.')[0]}}
+                </td>
+            </tr>
+        </table>
+        <table >
+                <tr class="gray-row">
+                    <td class="w-5">
+                         Customer Name
+                    </td>
+                    <td >
+                        Adult
+                    </td>
+                    <td>
+                        Child
+                    </td>
+                    <td>
+                        Total
+                    </td>
+                </tr>
+                <tr>
+                    <td class="w-5">
+                        {{tour_group.adults[0]}}
+                    </td>
+                    <td>
+                       {% set adults = tour_group.adults | length%}
+                        {{ adults }}
+                    </td>
+                    <td>
+                        {% set childs = tour_group.childs | length %}
+                        {{ childs }}
+                    </td>
+                    <td>
+                        {{adults + childs}}
+                    </td>
+                </tr>
+        </table>
+        <table>
+            <tr class="gray-row">
+                <td class="w-5 txt-center">
+                    Pick Up
+                </td>
+                <td class="w-2 txt-center">
+                    Tour Type
+                </td>
+                <td class="w-3 txt-center">
+                    Tour Count
+                </td>
+            </tr>
+            <tr>
+                <td class="w-5 txt-center">
+                    {{tour_group.pickup}}
+                </td>
+                <td class="w-2 txt-center">
+                    {{tour_group.tour_type}}
+                </td>
+                <td class="w-3 txt-center">
+                    {{tour_group.tours | length}}
+                </td>
+            </tr>
+        </table>
+        <table>
+        <tr class="gray-row">
+                <td class="w-7 txt-center">
+                    Tour Name
+                </td>
+                <td class="w-3 txt-center">
+                    Tour Date
+                </td>
+            </tr>
+        {% for tour in tour_group.tours %}
+            <tr>
+                <td class="w-7 txt-center">
+                    {{tour.tour_name}}
+                </td>
+                <td class="w-3 txt-center">
+                    {{tour.tour_date or "" }}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+        {{get_print_settings('tour_voucher_footer')}}
+        {{get_print_settings('agency_voucher_footer')}}
+        <table>
+            <tr>
+                <td >
+                    Customer name <br/>
+                    ----------------------------
+                </td>
+            </tr>
+            {% for customer in tour_group.adults %}
+            <tr>
+                <td>
+                    {{customer}}
+                </td>
+            </tr>
+            {% endfor%}
+            {% for customer in tour_group.childs %}
+            <tr>
+                <td>
+                    {{customer}}
+                </td>
+            </tr>
+            {% endfor%}
+        </table>
+        {% endfor %}
     </body>
 </html>

@@ -8,7 +8,12 @@
  "engine": "InnoDB",
  "field_order": [
   "company_name",
-  "company_logo"
+  "company_logo",
+  "section_break_dwisa",
+  "hotel_voucher_footer",
+  "transfer_voucher_footer",
+  "tour_voucher_footer",
+  "agency_voucher_footer"
  ],
  "fields": [
   {
@@ -23,13 +28,41 @@
    "fieldtype": "Attach Image",
    "label": "Company Logo",
    "reqd": 1
+  },
+  {
+   "fieldname": "section_break_dwisa",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "hotel_voucher_footer",
+   "fieldtype": "Text Editor",
+   "label": "Hotel Voucher Footer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "agency_voucher_footer",
+   "fieldtype": "Text Editor",
+   "label": "Agency Voucher Footer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "transfer_voucher_footer",
+   "fieldtype": "Text Editor",
+   "label": "Transfer Voucher Footer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tour_voucher_footer",
+   "fieldtype": "Text Editor",
+   "label": "Tour Voucher Footer",
+   "reqd": 1
   }
  ],
  "image_field": "company_logo",
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-01-15 11:53:28.434434",
+ "modified": "2024-01-16 05:33:14.763878",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Invoice Print Settings",

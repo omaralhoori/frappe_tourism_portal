@@ -5,6 +5,12 @@ from frappe.tests.utils import FrappeTestCase
 def get_portal_setting(fieldname):
     return frappe.db.get_single_value("Tourism Portal Settings", fieldname)
 
+def get_print_settings(fieldname):
+    return frappe.db.get_single_value("Invoice Print Settings", fieldname)
+
+def format_file_link_print(file_url):
+        return frappe.utils.get_url(file_url)
+
 def get_site_logo():
     return frappe.db.get_single_value("Website Settings", "brand_html")
 

@@ -370,6 +370,103 @@ class SalesInvoice(Document):
 		self.add_voucher_no()
 		self.add_invoice_no()
 		self.db_set("status", "Submitted")
+	def get_room_and_group(self):
+		room_groups = {}
+		for room in self.rooms:
+			room_key = room.hotel_search+ room.room_name
+			if not room_groups.get(room_key):
+				room_type = frappe.db.get_value("Hotel Room", room.room, "room_type", cache=True)
+				acmd_type = frappe.db.get_value("Hotel Room", room.room, "room_accommodation_type", cache=True)
+				room_groups[room_key] = {
+					"room_type": frappe.db.get_value("Room Type", room_type, "room_type", cache=True),
+					"acmd_type": frappe.db.get_value("Room Accommodation Type", acmd_type, "accommodation_type_name", cache=True),
+					"board": frappe.db.get_value("Hotel Boarding Type", room.board, "boarding_type_name", cache=True),
+					"hotel": frappe.db.get_value("Hotel", room.hotel, "hotel_name", cache=True),
+					"address": frappe.db.get_value("Hotel", room.hotel, "address", cache=True),
+					"check_in": room.check_in,
+					"check_out": room.check_out,
+					"qty": 0,
+					"adults": [],
+					"childs": [],
+					"extras": []
+				}
+			room_groups[room_key]['qty'] += 1
+			for room_pax in self.room_pax_info:
+				if room_pax.hotel_search == room.hotel_search and room_pax.room_name == room.room_name:
+					if room_pax.guest_type == "Adult":
+						room_groups[room_key]['adults'].append(room_pax.guest_salutation + ". " + room_pax.guest_name)
+					elif room_pax.guest_type == "Child":
+						room_groups[room_key]['childs'].append(room_pax.guest_name)
+			for room_extra in self.room_extras:
+				if room_pax.hotel_search == room.hotel_search and room_pax.room_name == room.room_name:
+					room_groups[room_key]['extras'].append(room_extra.extra)
+		return room_groups
+	def get_transfer_groups(self):
+		transfer_groups = {}
+
+		for transfer in self.transfers:
+			transfer_key =  transfer.transfer_search + transfer.transfer_name
+			if not transfer_groups.get(transfer_key):
+				transfer_groups[transfer_key] = {
+					"transfer": frappe.db.get_value("Transfer Type", transfer.transfer, "transfer_type", cache=True),
+					"pickup": get_location_name(transfer.pick_up, transfer.pick_up_type),
+					"drop_off": get_location_name(transfer.drop_off, transfer.drop_off_type),
+					"qty": 0,
+					"transfer_date": transfer.transfer_date,
+					"flight_no": transfer.flight_no,
+					"adults": [],
+					"childs": [],
+				}
+			transfer_groups[transfer_key]['qty'] += 1
+			for transfer_pax in self.transfer_pax_info:
+				if transfer_pax.transfer_search == transfer.transfer_search and transfer_pax.transfer_name == transfer.transfer_name:
+					if transfer_pax.guest_type == "Adult":
+						transfer_groups[transfer_key]['adults'].append(transfer_pax.guest_salutation + ". " + transfer_pax.guest_name)
+					elif transfer_pax.guest_type == "Child":
+						transfer_groups[transfer_key]['childs'].append(transfer_pax.guest_name)
+
+		return transfer_groups
+	
+	def get_tour_groups(self):
+		tour_groups = {}
+		for tour in self.tours:
+			tour_key = tour.search_name
+			if not tour_groups.get(tour_key):
+				tour_groups[tour_key] = {
+					"tour_type": get_voucher_tour_type(tour.tour_type),
+					"pickup": get_location_name(tour.pick_up, tour.pick_up_type),
+					"qty": 0,
+					"from_date": tour.from_date,
+					"to_date": tour.to_date,
+					"adults": [],
+					"childs": [],
+					"tours": []
+				}
+			tour_groups[tour_key]['qty'] += 1
+			for tour_type in self.tour_types:
+				if tour_type.search_name == tour.search_name:
+					tour_groups[tour_key]['tours'].append({
+						"tour_name": frappe.db.get_value("Tour Type", tour_type.tour_name, "tour_name", cache=True),
+						"tour_date": tour_type.tour_date or "Not Scheduled",
+					})
+			for tour_pax in self.tour_pax_info:
+				if tour_pax.search_name == tour.search_name:
+					if tour_pax.guest_type == "Adult":
+						tour_groups[tour_key]['adults'].append(tour_pax.guest_salutation + ". " + tour_pax.guest_name)
+					elif tour_pax.guest_type == "Child":
+						tour_groups[tour_key]['childs'].append(tour_pax.guest_name)
+		return tour_groups
+def get_location_name(location, location_type):
+	if location_type == 'hotel':
+		return frappe.db.get_value("Hotel", location, "hotel_name", cache=True)
+	elif location_type == 'airport':
+		return frappe.db.get_value("Airport", location, "airport_name", cache=True)
+	elif location_type == 'area':
+		return frappe.db.get_value("Area", location, "area_name", cache=True)
+	else:
+		return location
+def get_voucher_tour_type(tour_type):
+	return "VIP" if tour_type == "vip" else "Group"
 def create_reservation():
 	pass
 import datetime

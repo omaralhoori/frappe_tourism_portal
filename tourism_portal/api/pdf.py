@@ -9,15 +9,19 @@ def print_voucher(voucher_no):
         invoice = frappe.get_doc("Sales Invoice", {"voucher_no": voucher_no, "child_company": company_details['child_company']})
     else:
         invoice = frappe.get_doc("Sales Invoice", {"voucher_no": voucher_no, "company": company_details['company']})
-    pdf = frappe.get_print(doctype="Sales Invoice", name=invoice.name, print_format="Sales Voucher", as_pdf=True, no_letterhead=0)
-    frappe.local.response.filename = invoice.voucher_no + ".pdf"
-    frappe.local.response.filecontent = pdf
-    frappe.local.response.type = "pdf"
+    # pdf = frappe.get_print(doctype="Sales Invoice", name=invoice.name, print_format="Sales Voucher", as_pdf=True, letterhead='VOUCHER HEADER')
+    # frappe.local.response.filename = invoice.voucher_no + ".pdf"
+    # frappe.local.response.filecontent = pdf
+    # frappe.local.response.type = "pdf"
+    return get_voucher_pdf(invoice)
 
 def get_voucher_pdf(invoice):
-    from frappe.utils import get_html_format
-    html = frappe.get_print#frappe.render_template("tourism_portal/templates/voucher.html", {"doc": invoice})
-    pdf = pdfkit.from_string(html, False, options={"quiet": ""})
+    html = frappe.render_template("tourism_portal/templates/voucher.html", {"doc": invoice})
+    options = {
+        "quiet": "",
+         "--margin-left" : "0","--margin-right" : "0","--margin-bottom": "10mm",
+    }
+    pdf = get_pdf(html, options=options)#pdfkit.from_string(html, False, options={"quiet": ""})
     frappe.local.response.filename = invoice.voucher_no + ".pdf"
     frappe.local.response.filecontent = pdf
     frappe.local.response.type = "pdf"
