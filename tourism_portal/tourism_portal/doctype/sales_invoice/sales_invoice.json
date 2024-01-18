@@ -20,6 +20,7 @@
   "post_date",
   "post_time",
   "session_expires",
+  "invoice_check_out",
   "status",
   "contact_info_section",
   "customer_name",
@@ -309,12 +310,18 @@
    "fieldtype": "Link",
    "label": "Child Company",
    "options": "Company"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "invoice_check_out",
+   "fieldtype": "Date",
+   "label": "Invoice Check Out"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-10 16:33:29.162153",
+ "modified": "2024-01-16 17:50:33.722529",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice",

@@ -3,26 +3,6 @@
 {% block page_content %}
 <div class="row" style="margin-top: 150px;">
     <div class="col-lg-9">
-        {# <div class="tm-search-form tm-section-pad-2 card p-3">
-            <div class="row mb-3">
-                <div class="col">Contact Info</div>
-            </div>
-            <div class="form-row tm-search-form-row">
-                <div class="form-group tm-form-element tm-form-element-2">
-                    <input class="form-control" placeholder="Customer Name" name="customer-name" value="{{invoice_details.get('customer_name') or ''}}"/>
-                    <i class="fa fa-2x fa-user tm-form-element-icon"></i>
-                </div>
-                <div class="form-group tm-form-element tm-form-element-2">
-                    <input class="form-control" placeholder="Email" name="email" value="{{invoice_details.get('customer_email') or ''}}"/>
-                    <i class="fa fa-2x fa-envelope tm-form-element-icon"></i>
-                </div>
-        
-                <div class="form-group tm-form-element tm-form-element-2">
-                    <input class="form-control" placeholder="Phone Number" name="phone-number" value="{{invoice_details.get('customer_mobile_no') or ''}}" />
-                    <i class="fa fa-2x fa-phone tm-form-element-icon"></i>
-                </div>
-        </div>
-        </div> #}
         {% for hotel_rsv in invoice_details.get('rooms') %}
         {% set hotelSearch = invoice_details['rooms'][hotel_rsv] %}
         {% for hotelName in hotelSearch %}
@@ -155,10 +135,9 @@
             <div class="badge badge-danger">Cancelled</div>
         {% else%}
             {% if invoice_details.docstatus == 1 and invoice_details.status=='Submitted'%}
-            <a target="_blank" class="btn btn-primary w-100" href="/api/method/tourism_portal.api.pdf.print_voucher?voucher_no={{invoice_details.voucher_no}}">Print Voucher</a>
-            <a target="_blank" class="btn btn-primary w-100 mt-2" href="/api/method/tourism_portal.api.pdf.print_invoice?voucher_no={{invoice_details.voucher_no}}">Print Invoice</a>
-            <a class="btn btn-info mt-2 w-100" href="/reserve/edit?invoice={{invoice_details.invoice_id}}">Edit Invoice</a>
-            <button class="btn btn-secondary mt-2 w-100" invoice-id="{{invoice_details.invoice_id}}" onclick="cancelReservation(this)">Cancel Reservation</button>
+            <button class="btn btn-primary w-100" invoice-id="{{invoice_details.invoice_id}}" onclick="saveEdit(this)">Save</button>
+            <button class="btn btn-primary mt-2 w-100" invoice-id="{{invoice_details.invoice_id}}" onclick="addTransfer(this)">Add Transfer</button>
+            <button class="btn btn-secondary mt-2 w-100" invoice-id="{{invoice_details.invoice_id}}" onclick="cancelEdit(this)">Cancel</button>
             {% else %}
             {{session_expires_card(invoice_details.session_expires) }}
             {% endif %}
@@ -173,6 +152,32 @@
         {{total_card(invoice_details.hotel_fees,invoice_details.transfer_fees,invoice_details.tour_fees,invoice_details.grand_total)}}        
     </div>
 </div>
+<script src="/assets/tourism_portal/js/autocomplete_location.js" ></script>
+
+
+<!-- Transfer Modal -->
+<div class="modal fade" id="transferSearchModal" tabindex="-1" role="dialog" aria-labelledby="transferSearchModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="transferSearchModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         {% include "templates/includes/transfer_search_add_template.html" %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="newTransferSearchClicked(this)">Search</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include "templates/includes/pax_template_container.html" %}
+{% include "templates/includes/children_template_container.html" %}
 {% endblock %}
 
 {% macro hotel_details_card(hotel_details, booking_details, rooms) %}

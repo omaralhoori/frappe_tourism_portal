@@ -1,0 +1,464 @@
+<html>
+    <head>
+     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .pdf-header{
+            display: table-header-group;
+        }
+        .page-break {
+            page-break-after: always;
+        }
+        .txt-center{
+            text-align: center;
+        }
+        .gray-row td{
+            background-color: rgb(184, 184, 185);
+        }
+        td {
+            padding: 5px;
+        }
+        table{
+             width: 100%;
+             border: none;
+             margin-bottom: 15px;
+        }
+        .w-2{
+            width: 20%;
+        }
+        .w-3{
+            width: 30%;
+        }
+        .w-6{
+            width: 60%;
+        }
+        .w-4{
+            width: 40%;
+        }
+        .w-7{
+            width: 70%;
+        }
+        .p-4{
+            padding: 40px;
+        }
+        .p-2{
+            padding: 20px;
+        }
+        .p-1{
+            padding: 10px;
+        }
+        .p-0{
+            padding: 0px;
+        }
+        .m-4{
+            margin: 40px;
+        }
+        .m-2{
+            margin: 20px;
+        }
+        .m-1{
+            margin: 10px;
+        } 
+        .border-bottom td{
+            border-bottom: 1px solid black;
+        }
+        .price-container{
+            width: 80%;
+            margin: auto;
+        }
+        .double-border td{
+            border-bottom: 1px solid black;
+            border-top: 1px solid black;
+        }
+    </style>
+    </head>
+    <body>
+        <div id="header-html" >
+        <table>
+            <tr>
+                <td style="width: 25%"><img src="{{frappe.utils.get_url(get_print_settings('company_logo'))}}" style="height: 80px;"></td>
+                <td style="width: 50%">
+                    <div class="txt-center" style="height: 100px;">
+                        <h3>{{get_print_settings('company_name')}}</h3>
+                        <h4>SALE INVOICE</h4>
+                    </div>
+                </td>
+                <td style="width: 25%">
+                    <table style="font-size: 3mm;">
+                        <tr><td>Print Date</td><td>: {{frappe.utils.nowdate()}}</td></tr>
+                        <tr><td>Time</td><td>: {{frappe.utils.nowtime().split('.')[0]}}</td></tr>
+                        <tr><td>Page</td><td>: <span class="page"></span> of <span class="topage"></span></td></tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </div>
+        {% set invoice_details = doc.get_invoice_print_details() %}
+        {% set room_groups = doc.get_invoice_room_and_group() %}
+        {% set first_page = [false] %}
+        {% for room_name in room_groups %}
+            {% set room = room_groups[room_name] %}
+            {% if first_page[0] == false %}
+            {% set _ = first_page.append(first_page.pop() or true) %}
+            {% else %}
+            {# <div class="page-break"></div> #}
+            {% endif %}
+
+            <table >
+                <tr>
+                <td style="width: 35%">
+                    <table style="font-size: 3mm;">
+                        <tr>
+                            <td>
+                                Hotel
+                            </td>
+                            <td>
+                                : {{room.hotel}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Tour Operator
+                            </td>
+                            <td>
+                                : {{invoice_details.operator}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Voucher</td>
+                            <td>: {{invoice_details.voucher_no}}</td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width: 37%;">
+                    <table style="font-size: 3mm;">
+                        <tr>
+                            <td>Inv.Nr</td>
+                            <td>: {{invoice_details.invoice_no}}</td>
+                            <td>Res.No:{{loop.index}}</td>
+                        </tr>
+                        <tr>
+                            <td>Accomodation</td>
+                            <td colspan="2">: {{room.check_in}}~{{room.check_out}}</td>
+                        </tr>
+                        <tr>
+                            <td>Nights</td>
+                            <td colspan="2">: {{frappe.utils.date_diff(room.check_out, room.check_in)}}</td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width: 28%;">
+                    <table style="font-size: 3mm;">
+                        <tr>
+                            <td>
+                                Room
+                            </td>
+                            <td>
+                                : {{room.acmd_type}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Type</td>
+                            <td>: {{room.room_type}}</td>
+                        </tr>
+                        <tr>
+                            <td>Brd</td>
+                            <td>: {{room.board}}</td>
+                        </tr>
+                    </table>
+                </td>
+                </tr>
+            </table>
+            <div class="price-container">
+            <table>
+            {% set customer_count = [0] %}
+            {% for customer in room.adults %}
+            {% set _ = customer_count.append(customer_count.pop() + 1) %}
+            <tr>
+                <td>
+                    {{customer_count[0]}}- {{customer}}
+                </td>
+            </tr>
+            {% endfor%}
+            {% for customer in room.childs %}
+            {% set _ = customer_count.append(customer_count.pop() + 1) %}
+            <tr>
+                <td>
+                    {{customer_count[0]}}- {{customer}}
+                </td>
+            </tr>
+            {% endfor%}
+            </table>
+            <table>
+                <tr class="border-bottom">
+                    <td>Pax</td>
+                    <td>Price</td>
+                    <td>Accom.</td>
+                    <td>Room</td>
+                    <td>Amount</td>
+                </tr>
+                {% set grand_total = [0] %}
+                {% for selling_details in room.selling_details %}
+                <tr>
+                    <td>{{room.adults|length + room.childs|length}}</td>
+                    <td>{{frappe.utils.fmt_money(selling_details.selling_price)}} USD</td>
+                    <td>{{frappe.utils.date_diff(selling_details.to_date, selling_details.from_date) + 1}} Nights</td>
+                    <td>{{room.qty}} Room</td>
+                    <td>{{frappe.utils.fmt_money(selling_details.total_selling_price)}} USD</td>
+                    {% set _ = grand_total.append(grand_total.pop() + selling_details.total_selling_price) %}
+                </tr>
+                {% endfor %}
+                {% for extra in room.extras %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2">{{extra.extra}}</td>
+                    <td>{{frappe.utils.fmt_money(extra.extra_price)}} USD</td>
+                    {% set _ = grand_total.append(grand_total.pop() + extra.extra_price) %}
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="3"></td>
+                    <td>Grand Total: </td>
+                    <td style="border-top: 1px dotted;">{{frappe.utils.fmt_money(grand_total[0])}} USD</td>
+                </tr>
+            </table>
+            </div>
+        {% endfor %}
+
+        {% set transfer_groups = doc.get_invoice_transfer_groups() %}
+        {% for transfer_name in transfer_groups %}
+            {% set transfer_group = transfer_groups[transfer_name] %}
+            {% if first_page[0] == false %}
+            {% set _ = first_page.append(first_page.pop() or true) %}
+            {% else %}
+            {# <div class="page-break"></div> #}
+            {% endif %}
+            
+            <table >
+                <tr>
+                <td style="width: 35%">
+                    <table style="font-size: 3mm;">
+                        <tr>
+                            <td>
+                                Transfer
+                            </td>
+                            <td>
+                                : {{transfer_group.transfer}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Tour Operator
+                            </td>
+                            <td>
+                                : {{invoice_details.operator}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Voucher</td>
+                            <td>: {{invoice_details.voucher_no}}</td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width: 65%;">
+                    <table style="font-size: 3mm;">
+                        <tr>
+                            <td>Inv.Nr</td>
+                            <td>: {{invoice_details.invoice_no}}</td>
+                            <td>Res.No:{{loop.index}}</td>
+                            <td>
+                                Transfer Date
+                            </td>
+                            <td>
+                                : {{transfer_group.transfer_date}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>From</td>
+                            <td colspan="4">: {{transfer_group.pickup}}</td>
+                        </tr>
+                        <tr>
+                            <td>To</td>
+                            <td colspan="4">: {{transfer_group.drop_off}}</td>
+                        </tr>
+                    </table>
+                </td>
+                </tr>
+            </table>
+            <div class="price-container">
+            <table>
+            {% set customer_count = [0] %}
+            {% for customer in transfer_group.adults %}
+            {% set _ = customer_count.append(customer_count.pop() + 1) %}
+            <tr>
+                <td>
+                    {{customer_count[0]}}- {{customer}}
+                </td>
+            </tr>
+            {% endfor%}
+            {% for customer in transfer_group.childs %}
+            {% set _ = customer_count.append(customer_count.pop() + 1) %}
+            <tr>
+                <td>
+                    {{customer_count[0]}}- {{customer}}
+                </td>
+            </tr>
+            {% endfor%}
+            </table>
+            <table>
+                <tr class="border-bottom">
+                    <td>Pax</td>
+                    <td>Price</td>
+                    <td>Qty</td>
+                    <td>Amount</td>
+                </tr>
+                {% set grand_total = [0] %}
+                <tr>
+                    <td>{{transfer_group.adults|length + transfer_group.childs|length}}</td>
+                    <td>{{frappe.utils.fmt_money(transfer_group.selling_price)}} USD</td>
+                    <td>{{transfer_group.qty}}</td>
+                    <td>{{frappe.utils.fmt_money(transfer_group.selling_price)}} USD</td>
+                    {% set _ = grand_total.append(grand_total.pop() + transfer_group.selling_price) %}
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td>Grand Total: </td>
+                    <td style="border-top: 1px dotted;">{{frappe.utils.fmt_money(grand_total[0])}} USD</td>
+                </tr>
+            </table>
+            </div>
+        {% endfor %}
+
+        {% set tour_groups = doc.get_invoice_tour_groups() %}
+        {% for tour_name in tour_groups %}
+            {% set tour_group = tour_groups[tour_name] %}
+            {% if first_page[0] == false %}
+            {% set _ = first_page.append(first_page.pop() or true) %}
+            {% else %}
+            {# <div class="page-break"></div> #}
+            {% endif %}
+            
+            <table >
+                <tr>
+                <td style="width: 35%">
+                    <table style="font-size: 3mm;">
+                        <tr>
+                            <td>
+                                Tour Type
+                            </td>
+                            <td>
+                                : {{tour_group.tour_type}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Tour Operator
+                            </td>
+                            <td>
+                                : {{invoice_details.operator}}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width: 65%;">
+                    <table style="font-size: 3mm;">
+                        <tr>
+                            <td>Inv.Nr</td>
+                            <td>: {{invoice_details.invoice_no}}</td>
+                            <td>Res.No:{{loop.index}}</td>
+                            <td>
+                                Voucher
+                            </td>
+                            <td>
+                                <td>: {{invoice_details.voucher_no}}</td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Pick Up</td>
+                            <td colspan="4">: {{tour_group.pickup}}</td>
+                        </tr>
+                    </table>
+                </td>
+                </tr>
+            </table>
+             <div class="price-container">
+            <table>
+            {% set customer_count = [0] %}
+            {% for customer in tour_group.adults %}
+            {% set _ = customer_count.append(customer_count.pop() + 1) %}
+            <tr>
+                <td>
+                    {{customer_count[0]}}- {{customer}}
+                </td>
+            </tr>
+            {% endfor%}
+            {% for customer in tour_group.childs %}
+            {% set _ = customer_count.append(customer_count.pop() + 1) %}
+            <tr>
+                <td>
+                    {{customer_count[0]}}- {{customer}}
+                </td>
+            </tr>
+            {% endfor%}
+            </table>
+            <table>
+                <tr class="border-bottom">
+                    <td>Pax</td>
+                    <td>Tour</td>
+                    <td>Tour Date</td>
+                    <td>Amount</td>
+                </tr>
+                {% set grand_total = [0] %}
+                {% for tour in tour_group.tours %}
+                <tr>
+                    <td>{{tour_group.adults|length + tour_group.childs|length}}</td>
+                    <td>{{tour.tour_name}}</td>
+                    <td>{{tour.tour_date}}</td>
+                    <td>{{frappe.utils.fmt_money(tour.selling_price)}} USD</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="2"></td>
+                    <td>Grand Total: </td>
+                    <td style="border-top: 1px dotted;">{{frappe.utils.fmt_money(tour_group.selling_price)}} USD</td>
+                </tr>
+            </table>
+            </div>
+        {% endfor %}
+
+        <div class="txt-center"><h3>GRAND TOTALS</h3></div>
+        <table>
+            <tr class="double-border">
+                <td>
+                    Accomodation
+                </td>
+                <td>
+                    Transfer
+                </td>
+                <td>
+                    Tour Packages
+                </td>
+                <td>
+                    Grand Total
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {{frappe.utils.fmt_money(doc.hotel_fees)}} USD
+                </td>
+                <td>
+                    {{frappe.utils.fmt_money(doc.transfer_fees)}} USD
+                </td>
+                <td>
+                    {{frappe.utils.fmt_money(doc.tour_fees)}} USD
+                </td>
+                <td>
+                    {{frappe.utils.fmt_money(doc.grand_total)}} USD
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

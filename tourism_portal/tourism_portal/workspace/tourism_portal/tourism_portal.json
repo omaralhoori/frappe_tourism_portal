@@ -15,24 +15,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Settings",
-   "link_count": 1,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Tourism Portal Settings",
-   "link_count": 0,
-   "link_to": "Tourism Portal Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Hotels",
    "link_count": 4,
    "onboard": 0,
@@ -511,9 +493,37 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Settings",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tourism Portal Settings",
+   "link_count": 0,
+   "link_to": "Tourism Portal Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Invoice Print Settings",
+   "link_count": 0,
+   "link_to": "Invoice Print Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2024-01-02 16:38:31.040933",
+ "modified": "2024-01-17 13:25:16.924418",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal",

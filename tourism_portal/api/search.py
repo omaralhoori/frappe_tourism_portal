@@ -598,3 +598,13 @@ def get_room_price_with_children(pax, selling_price, hotel_child_rate_policy):
 						room_price += ((adult_price * plc.get('adult_price_percentage')) / 100)
 						break
 	return room_price
+
+@frappe.whitelist()
+def get_transfer_search_results(invoiceId, transfer_params):
+	if type(transfer_params) == str:
+		transfer_params = json.loads(transfer_params)
+	available_transfers = {}
+	for tt in transfer_params:
+		transfer = transfer_params[tt]
+		available_transfers[tt] = get_available_transfers(transfer)
+	return available_transfers

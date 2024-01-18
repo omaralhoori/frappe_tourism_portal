@@ -1,0 +1,166 @@
+.room-extra-list, .room-bed-list {
+    max-height: 200px;
+    margin-bottom: 10px;
+    overflow-y:auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.room-extra-list .list-group-item,
+.room-bed-list  .list-group-item{
+    padding-left: 35px;
+}
+.room-board-list{
+    max-height: 200px;
+    margin-bottom: 10px;
+    overflow-y:auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.room-board-list .list-group-item{
+    padding-left: 35px;
+}
+
+.filters-container{
+}
+
+.search-results{
+}
+
+.room-image{
+  padding: 5px;
+}
+.room-image img {
+    object-fit: cover;
+    height: 200px;
+    width: 100%;
+    border-radius: 5px;
+}
+.room-title{
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.hotel-title{
+    font-size: 1.1em;
+    font-weight: bold;
+}
+.checked{
+    color: rgb(255, 208, 0);
+}
+
+.room-total-nights{
+    font-weight: bold;
+    margin-right: 5px;
+    color: rgb(112, 111, 111);
+}
+.room-total-price{
+    font-size: 1.4em;
+    color: rgb(192, 24, 24);
+    font-weight: bold;
+}
+
+.room-detail-container{
+    border-right: 1px solid #6666663b;
+}
+
+.room-price{
+    color: rgb(80, 80, 80);
+}
+
+.room-count{
+    border: 1px solid #555;
+    color: #555;
+    padding: 3px;
+}
+.room-details{
+    margin-top: 10px;
+    display: flex;
+    position: relative;
+    flex-wrap: wrap;
+}
+
+.room-details-item{
+    width: 50%;
+    padding: 10px;
+}
+
+.price-summary{
+    padding: 20px;
+}
+
+.price-total-calculator{
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.price-total-calculator td{
+    padding: 5px;
+}
+
+
+.html-template{
+    display: none;
+}
+
+
+.pax-image img{
+    height: 20px;
+}
+
+.transfer-search{
+    display: flex;
+}
+
+.tour-search-card{
+    display: flex;
+}
+
+.hotel-rooms-details{
+    max-height: 0;
+    overflow: hidden;
+}
+
+.pop-details{
+    display: none;
+    position: absolute;
+    border: 1px solid #ccc  ;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 10px;
+    z-index: 10000;
+    box-shadow: 0px 0px 5px 0px #ccc;
+}
+.pop-container{
+    position: relative;
+}
+.pop-container:hover .pop-details{
+    display: block;
+}
+
+.select2-container--bootstrap-5 .select2-dropdown{
+    z-index: 1000000 !important;
+}
+
+.autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+}
+
+.autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    top: 100%;
+    left: 0;
+    right: 0;
+}
+
+/* @media (min-width: 576px){
+    .modal-dialog {
+        max-width: 600px;
+        margin: 30px auto;
+    }
+} */
