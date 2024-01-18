@@ -449,7 +449,7 @@ class SalesInvoice(Document):
 					if room_pax.guest_type == "Adult":
 						room_groups[room_key]['adults'].append(room_pax.guest_salutation + ". " + room_pax.guest_name)
 					elif room_pax.guest_type == "Child":
-						room_groups[room_key]['childs'].append(room_pax.guest_name + ", " + str(room_pax.guest_age))
+						room_groups[room_key]['childs'].append(room_pax.guest_name + ", Age: " + str(room_pax.guest_age))
 			
 			for room_price in self.room_price:
 				if room_price.hotel_search == room.hotel_search and room_price.room_name == room.room_name:
@@ -494,7 +494,7 @@ class SalesInvoice(Document):
 					if room_pax.guest_type == "Adult":
 						room_groups[room_key]['adults'].append(room_pax.guest_salutation + ". " + room_pax.guest_name)
 					elif room_pax.guest_type == "Child":
-						room_groups[room_key]['childs'].append(room_pax.guest_name + ", " + str(room_pax.guest_age))
+						room_groups[room_key]['childs'].append(room_pax.guest_name + ", Age: " + str(room_pax.guest_age))
 			
 			
 		return room_groups
@@ -521,7 +521,7 @@ class SalesInvoice(Document):
 					if transfer_pax.guest_type == "Adult":
 						transfer_groups[transfer_key]['adults'].append(transfer_pax.guest_salutation + ". " + transfer_pax.guest_name)
 					elif transfer_pax.guest_type == "Child":
-						transfer_groups[transfer_key]['childs'].append(transfer_pax.guest_name)
+						transfer_groups[transfer_key]['childs'].append(transfer_pax.guest_name + ", Age: " + str(transfer_pax.guest_age))
 
 		return transfer_groups
 	
@@ -547,7 +547,7 @@ class SalesInvoice(Document):
 					if transfer_pax.guest_type == "Adult":
 						transfer_groups[transfer_key]['adults'].append(transfer_pax.guest_salutation + ". " + transfer_pax.guest_name)
 					elif transfer_pax.guest_type == "Child":
-						transfer_groups[transfer_key]['childs'].append(transfer_pax.guest_name)
+						transfer_groups[transfer_key]['childs'].append(transfer_pax.guest_name + ", Age: " + str(transfer_pax.guest_age))	
 
 		return transfer_groups
 	
@@ -580,7 +580,7 @@ class SalesInvoice(Document):
 					if tour_pax.guest_type == "Adult":
 						tour_groups[tour_key]['adults'].append(tour_pax.guest_salutation + ". " + tour_pax.guest_name)
 					elif tour_pax.guest_type == "Child":
-						tour_groups[tour_key]['childs'].append(tour_pax.guest_name)
+						tour_groups[tour_key]['childs'].append(tour_pax.guest_name + ", Age: " + str(tour_pax.guest_age))
 		return tour_groups
 	def get_tour_groups(self):
 		tour_groups = {}
@@ -609,7 +609,7 @@ class SalesInvoice(Document):
 					if tour_pax.guest_type == "Adult":
 						tour_groups[tour_key]['adults'].append(tour_pax.guest_salutation + ". " + tour_pax.guest_name)
 					elif tour_pax.guest_type == "Child":
-						tour_groups[tour_key]['childs'].append(tour_pax.guest_name)
+						tour_groups[tour_key]['childs'].append(tour_pax.guest_name + ", Age: " + str(tour_pax.guest_age))
 		return tour_groups
 def get_location_name(location, location_type):
 	if location_type == 'hotel':

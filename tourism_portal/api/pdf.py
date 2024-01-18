@@ -31,6 +31,15 @@ def print_invoice_voucher(invoice_no):
     user_type = frappe.db.get_value("User", frappe.session.user, "user_type", cache=True)
     if user_type != "System User":
         return "You are not allowed to print invoice voucher"
-    print(invoice_no)
+
     invoice = frappe.get_doc("Sales Invoice", invoice_no)
     return get_voucher_pdf(invoice)
+
+@frappe.whitelist()
+def print_invoice_invoice(invoice_no):
+    user_type = frappe.db.get_value("User", frappe.session.user, "user_type", cache=True)
+    if user_type != "System User":
+        return "You are not allowed to print invoice voucher"
+    
+    invoice = frappe.get_doc("Sales Invoice", invoice_no)
+    return get_invoice_pdf(invoice)
