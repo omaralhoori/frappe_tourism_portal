@@ -96,7 +96,7 @@ def get_room_contracts(room, hotel_params, roomPax, company_class):
 	for contract in all_room_contracts:
 		contract['child_rate_contract'] = frappe.db.get_value("Hotel", room.get('hotel'), "hotel_child_rate_policy", cache=True)
 		contract['cancellation_policy_description'] = frappe.db.get_value("Cancellation Policy", contract.get('hotel_cancellation_policy'), "policy_description", cache=True)
-		get_room_contract_price(contract, room.get('room_accommodation_type'), hotel_params.get('nationality'), company_class, roomPax)
+		get_room_contract_price(contract, room.get('room_accommodation_type'), hotel_params.get('nationality'), company_class, roomPax, room.get('min_pax'))
 	room['contracts'] = all_room_contracts
 	for contract in room['contracts']:
 		contract['remain_qty'] = get_contract_availabilities(contract.get('contract_id'), contract.get('from_date'), contract.get('to_date'))
@@ -204,7 +204,7 @@ def get_hotel_contracts(hotel, checkin, checkout):
 	contracts = filter_contracts(contracts, checkin, checkout)
 	return contracts
 
-def get_room_contract_price(contract, room_acmnd_type, nationality, company_class, roomPax):
+def get_room_contract_price(contract, room_acmnd_type, nationality, company_class, roomPax, min_pax):
 	contract['prices'] = get_contract_prices(contract, room_acmnd_type, nationality)
 	contract['prices'] = restart_price_dates(contract['prices'], contract['from_date'], contract['to_date'])
 	for price in contract['prices']:
@@ -212,7 +212,7 @@ def get_room_contract_price(contract, room_acmnd_type, nationality, company_clas
 			get_selling_price_profit_margin_based(contract, price, room_acmnd_type)
 		del price['buying_price']
 		price['selling_price'] = get_room_selling_price_based_on_class(price['selling_price'], price['item_price_name'], company_class)
-		price['selling_price_with_childs'] = get_room_price_with_children(roomPax, price['selling_price'], contract.get('child_rate_contract'))
+		price['selling_price_with_childs'] = get_room_price_with_children(roomPax, price['selling_price'], contract.get('child_rate_contract'), min_pax)
 		# Child Company Price
 		price['child_company_price'] = get_child_company_hotel_price(price['selling_price_with_childs'])
 
@@ -444,6 +444,7 @@ def filter_hotel_rooms_by_pax(all_rooms, roomPax, room_accommodation_type):
 			if room_type.room_type == room.get('room_accommodation_type'):
 				if is_room_suitable_for_pax(room_type, roomPax):
 					# return room
+					room['min_pax'] = room_type.get('min_pax')
 					available_rooms.append(room)
 	return available_rooms
 def get_available_amnd_hotel_room_by_pax(amnd_rule, roomPax):
@@ -582,13 +583,18 @@ def set_new_search_results(search, hotel_params=None, transfer_params=None, tour
 	search_doc.save(ignore_permissions=True)
 	return search
 
-def get_room_price_with_children(pax, selling_price, hotel_child_rate_policy):
+def get_room_price_with_children(pax, selling_price, hotel_child_rate_policy, min_pax):
 	room_price = selling_price
 	child_policy = frappe.get_cached_doc("Child Rate Policy", hotel_child_rate_policy)
+	adults = int(pax.get('adults'))
 	if pax:
-		adult_price = selling_price / float(pax.get('adults'))
 		child_ages = [int(child) for  child in pax.get('childrenInfo')]
 		child_ages.sort()
+		if adults < min_pax:
+			while adults < min_pax and len(child_ages) > 0:
+				adults += 1
+				child_ages.pop()
+		adult_price = selling_price / float(adults)
 		child_order = 0
 		for child in child_ages:
 			child_order += 1
