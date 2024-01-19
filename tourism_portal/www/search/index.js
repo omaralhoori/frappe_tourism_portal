@@ -616,7 +616,7 @@ function roomSelectChanged(e){
     var selectedRooms = 0;
     var requiredRoomsToSelect = rooms.split('-').length
     // get other selects with same rooms
-    var roomSelects = document.querySelectorAll(`select[rooms='${rooms}'][hotel='${hotel}']`)
+    var roomSelects = document.querySelectorAll(`.hotel-search-results[hotel-result="${hotel_search}"] select[rooms='${rooms}'][hotel='${hotel}']`)
     for (var ss of roomSelects){
         selectedRooms += Number(ss.value || 0)
     }

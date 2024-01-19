@@ -48,7 +48,7 @@
                                         class="select2-select">
                                         <option value=""></option>
                                         {% for nationality in nationalities %}
-                                            <option value="{{nationality.get('name')}}">{{nationality.get('name')}}</option>
+                                            <option value="{{nationality.get('name')}}" {% if default_nationality == nationality.get('name') %} selected     {% endif %}>{{nationality.get('name')}}</option>
                                         {% endfor %}
                                     </select>
                                 </div>

@@ -10,7 +10,8 @@ def get_context(context):
 	context.no_cache=1
 	if frappe.session.user == "Guest":
 		frappe.throw(_("Log in to access this page."), frappe.PermissionError)
-	
+	company = frappe.db.get_value("User", frappe.session.user, "company", cache=True)
+	context.default_nationality = frappe.db.get_value("Company", company, 'default_nationality', cache=True)
 	context.locations = get_locations()
 	context.nationalities = frappe.db.get_all("Nationality")
 	context.max_rooms = get_portal_setting("max_hotel_rooms_selected")
