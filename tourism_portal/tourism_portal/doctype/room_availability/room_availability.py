@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-
+import json
 class RoomAvailability(Document):
 	def on_update(self):
 		if self.available_qty < 0:
@@ -38,3 +38,14 @@ def free_room(contract_id, check_in, check_out):
 		qty_doc.available_qty = qty_doc.available_qty + 1
 		qty_doc.save(ignore_permissions=True)
 	return True
+
+@frappe.whitelist()
+def add_availability(rooms, qty):
+	if type(rooms) == str:
+		rooms = json.loads(rooms)
+	for room in rooms:
+		room_doc = frappe.get_doc("Room Availability", room)
+		room_doc.available_qty = room_doc.available_qty + int(qty)
+		room_doc.save(ignore_permissions=True)
+	return "Rooms Updated Successfully"
+		
