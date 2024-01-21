@@ -1,6 +1,11 @@
 {% extends "templates/website_base.html" %}
 
 {% block page_content %}
+{% if invoice_details.docstatus == 0%}
+{% set editable = true %}
+{% else %}
+{% set editable = false %}
+{% endif%}
 <div class="row" style="margin-top: 150px;">
     <div class="col-lg-9">
         {# <div class="tm-search-form tm-section-pad-2 card p-3">
@@ -43,7 +48,7 @@
             {% if adultCnt.append(adultCnt.pop() + 1) %}{% endif %} 
             <div class="form-row tm-search-form-row pax-container adult-pax" adult-pax="{{adultCnt[0]}}"  row-id="{{adult.row_id}}">
                     <div class="form-group tm-form-element tm-form-element-2">
-                        <select class="form-control  tm-select " name="pax-salut"  onchange="adultSalutChanged(this)">
+                        <select class="form-control  tm-select " name="pax-salut" {% if not editable %} disabled {% endif %} onchange="adultSalutChanged(this)">
                             <option value="">Salutation</option>
                             <option value="Mr" {%if adult.guest_salutation == 'Mr'%} selected{%endif %}>Mr</option>
                             <option value="Ms" {%if adult.guest_salutation == 'Ms'%} selected{%endif %}>Ms</option>
@@ -52,11 +57,11 @@
                     </div>
         
                     <div class="form-group tm-form-element tm-form-element-50">
-                        <input class="form-control" placeholder="Guest Name" name="pax-name" onchange="adultPaxChanged(this)" value="{{adult.guest_name or ''}}" />
+                        <input class="form-control" placeholder="Guest Name" {% if not editable %} disabled {% endif %}  name="pax-name" onchange="adultPaxChanged(this)" value="{{adult.guest_name or ''}}" />
                         <i class="fa fa-2x fa-user tm-form-element-icon"></i>
                     </div>
                     <div class="form-group tm-form-element tm-form-element-2 phone-container d-none">
-                    <input class="form-control" placeholder="Phone Number" name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
+                    <input class="form-control" placeholder="Phone Number" {% if not editable %} disabled {% endif %}  name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
                     <i class="fa fa-2x fa-phone tm-form-element-icon"></i>
                 </div>
             </div>
@@ -69,7 +74,7 @@
                     </div>
         
                     <div class="form-group tm-form-element tm-form-element-50">
-                        <input class="form-control" placeholder="Child Name" name="pax-name" onchange="childPaxChanged(this)" value="{{child.guest_name or ''}}"/>
+                        <input class="form-control" placeholder="Child Name" name="pax-name" {% if not editable %} disabled {% endif %}  onchange="childPaxChanged(this)" value="{{child.guest_name or ''}}"/>
                         <i class="fa fa-x fa-user tm-form-element-icon"></i>
                     </div>
             </div>
@@ -265,7 +270,7 @@
         </div>
         
     <div class="form-group tm-form-element tm-form-element-50">
-        <input class="form-control" placeholder="Flight No" name="flight-no"  value="{{flight_no or ''}}"/>
+        <input class="form-control" placeholder="Flight No" name="flight-no" {% if not editable %} disabled {% endif %}  value="{{flight_no or ''}}"/>
         <i class="fa fa-2x fa-plane tm-form-element-icon"></i>
     </div>
 </div>
@@ -288,7 +293,7 @@
       {% for adult in adult_paxes %}
             <div class="form-row tm-search-form-row pax-container adult-pax" adult-pax="{{loop.index}}" row-id="{{adult.row_id}}">
                     <div class="form-group tm-form-element tm-form-element-2">
-                        <select class="form-control  tm-select " name="pax-salut"  onchange="adultSalutChanged(this)">
+                        <select class="form-control  tm-select " {% if not editable %} disabled {% endif %}  name="pax-salut"  onchange="adultSalutChanged(this)">
                             <option value="">Salutation</option>
                             <option value="Mr" {%if adult.guest_salutation == 'Mr'%} selected{%endif %}>Mr</option>
                             <option value="Ms" {%if adult.guest_salutation == 'Ms'%} selected{%endif %}>Ms</option>
@@ -297,11 +302,11 @@
                     </div>
         
                     <div class="form-group tm-form-element tm-form-element-50">
-                        <input class="form-control" placeholder="Guest Name" name="pax-name" onchange="adultPaxChanged(this)" value="{{adult.guest_name or ''}}" />
+                        <input class="form-control" placeholder="Guest Name" {% if not editable %} disabled {% endif %}  name="pax-name" onchange="adultPaxChanged(this)" value="{{adult.guest_name or ''}}" />
                         <i class="fa fa-2x fa-user tm-form-element-icon"></i>
                     </div>
                     <div class="form-group tm-form-element tm-form-element-2 phone-container d-none">
-                    <input class="form-control" placeholder="Phone Number" name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
+                    <input class="form-control" placeholder="Phone Number" {% if not editable %} disabled {% endif %}  name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
                     <i class="fa fa-2x fa-phone tm-form-element-icon"></i>
                 </div>
             </div>
@@ -313,7 +318,7 @@
                     </div>
         
                     <div class="form-group tm-form-element tm-form-element-50">
-                        <input class="form-control" placeholder="Child Name" name="pax-name" onchange="childPaxChanged(this)" value="{{child.guest_name or ''}}"/>
+                        <input class="form-control" placeholder="Child Name" {% if not editable %} disabled {% endif %}  name="pax-name" onchange="childPaxChanged(this)" value="{{child.guest_name or ''}}"/>
                         <i class="fa fa-x fa-user tm-form-element-icon"></i>
                     </div>
             </div>
@@ -349,7 +354,7 @@
       {% for adult in adult_paxes %}
             <div class="form-row tm-search-form-row pax-container adult-pax" adult-pax="{{loop.index}}" row-id="{{adult.row_id}}">
                     <div class="form-group tm-form-element tm-form-element-2">
-                        <select class="form-control  tm-select " name="pax-salut" onchange="adultSalutChanged(this)">
+                        <select class="form-control  tm-select " {% if not editable %} disabled {% endif %}  name="pax-salut" onchange="adultSalutChanged(this)">
                             <option value="">Salutation</option>
                             <option value="Mr" {%if adult.guest_salutation == 'Mr'%} selected{%endif %}>Mr</option>
                             <option value="Ms" {%if adult.guest_salutation == 'Ms'%} selected{%endif %}>Ms</option>
@@ -357,23 +362,23 @@
                         <i class="fa fa-2x fa-check tm-form-element-icon"></i>
                     </div>
                     <div class="form-group tm-form-element tm-form-element-50">
-                        <input class="form-control" placeholder="Guest Name" onchange="adultPaxChanged(this)" name="pax-name" value="{{adult.guest_name or ''}}" />
+                        <input class="form-control" placeholder="Guest Name" {% if not editable %} disabled {% endif %}  onchange="adultPaxChanged(this)" name="pax-name" value="{{adult.guest_name or ''}}" />
                         <i class="fa fa-2x fa-user tm-form-element-icon"></i>
                     </div>
                     <div class="form-group tm-form-element tm-form-element-2 phone-container d-none">
-                    <input class="form-control" placeholder="Phone Number" name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
+                    <input class="form-control" placeholder="Phone Number" {% if not editable %} disabled {% endif %}  name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
                     <i class="fa fa-2x fa-phone tm-form-element-icon"></i>
                 </div>
             </div>
             {% endfor %}
             {% for child in child_paxes %}
-            <div class="form-row tm-search-form-row pax-container child-pax" child-pax="{{loop.index}}" row-id="{{child.row_id}}">
+            <div class="form-row tm-search-form-row pax-container child-pax"  child-pax="{{loop.index}}" row-id="{{child.row_id}}">
                     <div class="form-group tm-form-element tm-form-element-2">
                         <label for="">Child Age {{child.guest_age}}</label>
                     </div>
         
                     <div class="form-group tm-form-element tm-form-element-50">
-                        <input class="form-control" placeholder="Child Name" onchange="childPaxChanged(this)" name="pax-name" value="{{child.guest_name or ''}}"/>
+                        <input class="form-control" placeholder="Child Name" {% if not editable %} disabled {% endif %}  onchange="childPaxChanged(this)" name="pax-name" value="{{child.guest_name or ''}}"/>
                         <i class="fa fa-x fa-user tm-form-element-icon"></i>
                     </div>
             </div>

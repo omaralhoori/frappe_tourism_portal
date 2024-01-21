@@ -155,3 +155,26 @@ class TestEvent(FrappeTestCase):
 
 def get_subagency_extra_price(price, subagency_margin):
     return price + (price * subagency_margin) / 100
+
+
+def parse_transfer_date(transfer_date: any) -> datetime.datetime:
+    if type(transfer_date) == str:
+        transfer_date = frappe.utils.get_datetime(transfer_date)
+    transfer_hour = 10
+    transfer_date = transfer_date.replace(hour=transfer_hour, minute=0, second=0)
+    return transfer_date
+
+def parse_invoice_checkout_date(checkout_date):
+    if type(checkout_date) == str:
+        checkout_date = frappe.utils.get_datetime(checkout_date)
+    elif type(checkout_date) == datetime.date:
+        checkout_date = frappe.utils.get_datetime(checkout_date.strftime("%Y-%m-%d"))
+    checkout_date = checkout_date.replace(hour=10, minute=0, second=0)
+    return checkout_date
+
+def parse_date(date):
+    if type(date) == str:
+        date = frappe.utils.get_datetime(date)
+    elif type(date) == datetime.date:
+        date = frappe.utils.get_datetime(date.strftime("%Y-%m-%d"))
+    return date.date()

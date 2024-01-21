@@ -11,7 +11,7 @@ from tourism_portal.tourism_portal.doctype.room_availability.room_availability i
 from tourism_portal.tourism_portal.doctype.sales_invoice.reserve import add_transfers_to_invoice
 from tourism_portal.tourism_portal.doctype.tour_price.tour_price import get_tour_price_with_child_prices
 from tourism_portal.tourism_portal.doctype.tour_schedule_order.tour_schedule_order import schedule_tours_dates
-from tourism_portal.utils import get_cancellation_refund, get_hotel_total_nights, get_location_city
+from tourism_portal.utils import get_cancellation_refund, get_hotel_total_nights, get_location_city, parse_date, parse_invoice_checkout_date, parse_transfer_date
 class SalesInvoice(Document):
 	def after_insert(self):
 		session_expires_in = frappe.db.get_single_value("Tourism Portal Settings", "session_expires_in")
@@ -24,7 +24,7 @@ class SalesInvoice(Document):
 		if self.status == "Cancelled":
 			frappe.throw(_("Invoice is already cancelled"))
 	def validate_invoice_check_out(self):
-		if self.invoice_check_out and self.invoice_check_out < frappe.utils.nowdate():
+		if self.invoice_check_out and parse_date(self.invoice_check_out) < parse_date(frappe.utils.now()):
 			frappe.throw(_("Invoice is already expired"))
 	def on_update(self):
 		self.calculate_total_hotel_fees()
@@ -41,13 +41,17 @@ class SalesInvoice(Document):
 		self.calculate_total_fees()
 		
 	def set_invoice_check_out(self):
-		check_out = None
+		check_out = self.invoice_check_out
+		if check_out:
+			check_out = parse_date(check_out)
 		for room in self.rooms:
-			if not check_out or check_out < room.check_out:
-				check_out = room.check_out
+			room_date = parse_date(room.check_out)
+			if not check_out or check_out < room_date:
+				check_out = room_date
 		for transfer in self.transfers:
-			if not check_out or check_out < transfer.transfer_date:
-				check_out = transfer.transfer_date
+			transfer_date = parse_date(transfer.transfer_date)
+			if not check_out or check_out < transfer_date:
+				check_out = transfer_date
 		for tour in self.tours:
 			if not check_out or check_out < tour.to_date:
 				check_out = tour.to_date
@@ -143,7 +147,36 @@ class SalesInvoice(Document):
 		tour_type.tour_price= discount_price
 		tour_type.tour_price_company= discount_price
 		return True
-
+	def update_transfers(self, transfer_infos):
+		print("xxxxxxxxxxxxxxxxxxxxxxxx")
+		for search_name in transfer_infos:
+			print("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq")
+			for transfer_name in transfer_infos[search_name]:
+				print("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+				transfer_info = transfer_infos[search_name][transfer_name]
+				print(transfer_info)
+				print(transfer_info.get('paxes'))
+				print(type(transfer_info))
+				if transfer_info.get('paxes'):
+					print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+					for pax_row in transfer_info['paxes']:
+						print("ccccccccccccccccccccccccccccccccccc")
+						pax = transfer_info['paxes'][pax_row]
+						for transfer_pax in self.transfer_pax_info:
+							print(transfer_pax)
+							print(pax)
+							if pax.get('row_id') == transfer_pax.name:
+								transfer_pax.guest_salutation = pax.get('salut')
+								transfer_pax.guest_name = pax.get('guest_name')
+								break
+				if transfer_info.get('flight_no'):
+					print("pppppppppppppppppppppppppppppppppppppppp")
+					for transfer in self.transfers:
+						if transfer.transfer_name == transfer_name and transfer.transfer_search == search_name:
+							print("llllllllllllllllllllllllllllllllllllllllllllll")
+							transfer.flight_no = transfer_info['flight_no']
+							break
+		print("sdssdds")
 	def get_tour_price(self, tour_type, adults, childs, child_ages):
 		tour_price = None
 		adult_price = 0
@@ -273,9 +306,46 @@ class SalesInvoice(Document):
 	def on_trash(self):
 		print("On Trash")
 		self.free_rooms()
+	def allowed_to_add_transfers(self, transfers):
+		if self.status == "Cancelled":
+			return "Invoice is already cancelled"
+		# if self.invoice_check_out and parse_invoice_checkout_date(self.invoice_check_out) < frappe.utils.now_datetime():
+		# 	return "Invoice is already expired"
+		for transferName in transfers:
+			transfer = transfers[transferName]
+			if 	parse_transfer_date(transfer['transfer_date']) < frappe.utils.now_datetime() + frappe.utils.datetime.timedelta(hours=24) :
+				return "You cannot add transfer with date less than 24 hours from now"
+		return None
+	def add_transfers(self, transfers):
+		if msg:= self.allowed_to_add_transfers(transfers):
+			frappe.throw(msg)
+		search_name = self.get_search_name('transfers')
+		total_amounts = add_transfers_to_invoice(self, {
+			search_name: transfers
+		}, 0)
+		if total_amounts:
+			total_amount, total_company_amount = total_amounts
+			if total_amount > 0:
+				self.create_additional_payment(total_amount, total_company_amount)
+		self.save(ignore_permissions=True)
+		return search_name
 
-	def add_transfer(self, transfer):
-		add_transfers_to_invoice(self, [transfer])
+	def get_search_name(self, table):
+		search_name = None
+		if table == 'transfers':
+			search_name = "Transfer Search "
+			searches = set([ transfer.transfer_search for transfer in self.transfers])
+			search_name += str(len(searches) + 1)
+		elif table == 'tours':
+			search_name = "Tour Search "
+			searches = set([ tour.search_name for tour in self.tours])
+			search_name += str(len(searches) + 1)
+		elif table == 'rooms':
+			search_name = "Hotel Search "
+			searches = set([ room.hotel_search for room in self.rooms])
+			search_name += str(len(searches) + 1)
+
+		return search_name
 	def add_nights(self, row_id, check_in=None, check_out=None):
 		if not check_out and not check_in:
 			frappe.throw("Please enter new checkin or checkout")
@@ -391,6 +461,13 @@ class SalesInvoice(Document):
 				commission_refund = get_commission_refund(self.hotel_fees_company, self.hotel_fees, total_refunds)
 				create_payment(self.company, commission_refund,'Reserve', remarks="Reserve for "+self.child_company)
 				add_child_company_refund( company=self.child_company, parent_company=self.company, refund=commission_refund,parent_refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype, remarks="Hotel Refund for voucher "+self.voucher_no)
+	
+	def create_additional_payment(self, amount, company_amount):
+		if self.child_company:
+			create_child_company_payment(self.child_company, self.company, amount, company_amount,'Payment',against_doctype= 'Sales Invoice', against_docname=self.name)
+			create_payment(self.company, company_amount,'Pay',against_doctype= 'Sales Invoice', against_docname=self.name, remarks="Payment for "+self.child_company)
+		else:
+			create_payment(self.company, amount,'Pay',against_doctype= 'Sales Invoice', against_docname=self.name)
 	def on_submit(self):
 		if self.child_company:
 			create_child_company_payment(self.child_company, self.company, self.grand_total, self.grand_total_company,'Payment',against_doctype= 'Sales Invoice', against_docname=self.name)

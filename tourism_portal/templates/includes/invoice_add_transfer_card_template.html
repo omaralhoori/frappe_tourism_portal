@@ -1,0 +1,30 @@
+<script type="text/template" id="transfer-card-template">
+<div class="card m-2 transfer-card" style="width: 18rem;" 
+        transfer-type="{transfer_transfer_type}"
+        transfer-price="{transfer_transfer_price}"
+        transfer-price-company="{transfer_transfer_price_company}"
+        from-postal-code="{search_params_from_postal_code}"
+            to-postal-code="{search_params_to_postal_code}"
+            transfer-name="{transferName}"
+            flight-no="{params_flight-no}"
+        >
+    <img class="card-img-top" src="{transfer_details_transfer_image}" alt="Card image cap">
+    <div class="card-body">
+        <h5 class="card-title">{transfer_details_transfer_type}</h5>
+        <p class="card-text transfer-description">{transfer_details_transfer_description}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+    <select onchange="transferSelectedNewType(this)">
+       {options}
+    </select></li>
+        <li class="list-group-item">Pickup: {params_from-location-name}</li>
+        <li class="list-group-item">Dropoff: {params_to-location-name}</li>
+        <li class="list-group-item">Transfer Date: {params_transfer-date}</li>
+        <li class="list-group-item">Flight No: {params_flight-no}</li>
+        <li class="list-group-item transfer-price" transfer-price="{transfer_transfer_price}" transfer-price-company="{transfer_transfer_price_company}">Price: {transfer_transfer_price}</li>
+        <li class="list-group-item">Total Pax: {total_pax} <small>(Adults: {paxes_adults}, Children: {paxes_children})</small></li>
+    </ul>
+</div>
+
+</script>

@@ -10,7 +10,6 @@
          <div class="reservation_details hotel-reservation_details mt-4 card p-3 card-details" total-nights="{{get_hotel_total_nights(hotel['booking_details']['check_in'], hotel['booking_details']['check_out'])}}">
             <div class="row">
                 <div class="col-sm-9"><strong>{{hotel['details'].get('hotel_name')}}</strong></div>
-                <div class="col-sm-3"><label>Different Names</label> <input type="checkbox" onchange="different_names_clicked(this)"/></div>
             </div>
         {% set adultCnt = [0] %}
         {% set childCnt = [0] %}
@@ -23,7 +22,7 @@
             {% if adultCnt.append(adultCnt.pop() + 1) %}{% endif %} 
             <div class="form-row tm-search-form-row pax-container adult-pax" adult-pax="{{adultCnt[0]}}"  row-id="{{adult.row_id}}">
                     <div class="form-group tm-form-element tm-form-element-2">
-                        <select class="form-control  tm-select " name="pax-salut"  onchange="adultSalutChanged(this)">
+                        <select class="form-control  tm-select " {%if adult.guest_salutation %} disabled {% endif %} name="pax-salut"  >
                             <option value="">Salutation</option>
                             <option value="Mr" {%if adult.guest_salutation == 'Mr'%} selected{%endif %}>Mr</option>
                             <option value="Ms" {%if adult.guest_salutation == 'Ms'%} selected{%endif %}>Ms</option>
@@ -32,11 +31,11 @@
                     </div>
         
                     <div class="form-group tm-form-element tm-form-element-50">
-                        <input class="form-control" placeholder="Guest Name" name="pax-name" onchange="adultPaxChanged(this)" value="{{adult.guest_name or ''}}" />
+                        <input class="form-control" placeholder="Guest Name" {%if adult.guest_name %} disabled {% endif %} name="pax-name"  value="{{adult.guest_name or ''}}" />
                         <i class="fa fa-2x fa-user tm-form-element-icon"></i>
                     </div>
                     <div class="form-group tm-form-element tm-form-element-2 phone-container d-none">
-                    <input class="form-control" placeholder="Phone Number" name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
+                    <input class="form-control" placeholder="Phone Number" name="phone-number" {%if adult.mobile_no %} disabled {% endif %} value="{{adult.get('mobile_no') or ''}}" />
                     <i class="fa fa-2x fa-phone tm-form-element-icon"></i>
                 </div>
             </div>
@@ -49,7 +48,7 @@
                     </div>
         
                     <div class="form-group tm-form-element tm-form-element-50">
-                        <input class="form-control" placeholder="Child Name" name="pax-name" onchange="childPaxChanged(this)" value="{{child.guest_name or ''}}"/>
+                        <input class="form-control" placeholder="Child Name" name="pax-name" {%if child.guest_name %} disabled {% endif %} value="{{child.guest_name or ''}}"/>
                         <i class="fa fa-x fa-user tm-form-element-icon"></i>
                     </div>
             </div>
@@ -137,7 +136,7 @@
             {% if invoice_details.docstatus == 1 and invoice_details.status=='Submitted'%}
             <button class="btn btn-primary w-100" invoice-id="{{invoice_details.invoice_id}}" onclick="saveEdit(this)">Save</button>
             <button class="btn btn-primary mt-2 w-100" invoice-id="{{invoice_details.invoice_id}}" onclick="addTransfer(this)">Add Transfer</button>
-            <button class="btn btn-secondary mt-2 w-100" invoice-id="{{invoice_details.invoice_id}}" onclick="cancelEdit(this)">Cancel</button>
+            <button class="btn btn-secondary mt-2 w-100" invoice-id="{{invoice_details.invoice_id}}" onclick="cancelEdit(this)">Back</button>
             {% else %}
             {{session_expires_card(invoice_details.session_expires) }}
             {% endif %}
@@ -166,11 +165,17 @@
         </button>
       </div>
       <div class="modal-body">
+        <div class="transfer_search_card">
          {% include "templates/includes/transfer_search_add_template.html" %}
+        </div>
+        <div class="trasnfer_results d-none">
+        
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="newTransferSearchClicked(this)">Search</button>
+        <button type="button" class="btn btn-secondary" onclick="closeTransferModal(this)">Close</button>
+        <button type="button" class="btn btn-primary search-transfer-btn" onclick="newTransferSearchClicked(this)">Search</button>
+        <button type="button" class="btn btn-primary add-transfer-btn d-none" onclick="addNewTransferClicked(this)">Add</button>
       </div>
     </div>
   </div>
@@ -178,6 +183,7 @@
 
 {% include "templates/includes/pax_template_container.html" %}
 {% include "templates/includes/children_template_container.html" %}
+{% include "templates/includes/invoice_add_transfer_card_template.html" %}
 {% endblock %}
 
 {% macro hotel_details_card(hotel_details, booking_details, rooms) %}
@@ -237,14 +243,14 @@
 
 {%macro room_extra_item(room_name, extra_name, extra_price, disable)%}
 <label class="list-group-item">
-    <input class="form-check-input me-1 extra-price-input" {% if disable == 1 %} checked disabled {% endif %} onchange="roomExtraChanged(this)" type="checkbox" room-name="{{room_name}}" extra-price="{{extra_price}}" value="{{extra_name}}">
+    <input class="form-check-input me-1 extra-price-input" {% if disable == 1 %} checked disabled {% endif %} type="checkbox" room-name="{{room_name}}" extra-price="{{extra_price}}" value="{{extra_name}}">
         {{extra_name}} +{{extra_price}}$
     </label>
 {% endmacro %}
 
 {%macro room_board_item(search, room_name, board_name, extra_price, selected)%}
 <label class="list-group-item">
-    <input class="form-check-input me-1 board-input" {% if selected == 1 %} checked disabled {% endif %} onchange="roomBoardChanged(this)" type="radio" name="{{search}}-{{room_name}}-board" room-name="{{room_name}}" extra-price="{{extra_price}}" value="{{board_name}}">
+    <input class="form-check-input me-1 board-input" {% if selected == 1 %} checked disabled {% endif %}  type="radio" name="{{search}}-{{room_name}}-board" room-name="{{room_name}}" extra-price="{{extra_price}}" value="{{board_name}}">
         {{board_name}} +{{extra_price}}$
     </label>
 {% endmacro %}
@@ -269,8 +275,9 @@
             <label for="">Flight No:</label>
         </div>
         
-    <div class="form-group tm-form-element tm-form-element-50">
-        <input class="form-control" placeholder="Flight No" name="flight-no"  value="{{flight_no or ''}}"/>
+    <div class="form-group tm-form-element tm-form-element-50"> 
+    {# {%if flight_no %} disabled {% endif %} #}
+        <input class="form-control"  placeholder="Flight No" name="flight-no"  value="{{flight_no or ''}}"/>
         <i class="fa fa-2x fa-plane tm-form-element-icon"></i>
     </div>
 </div>
@@ -293,7 +300,8 @@
       {% for adult in adult_paxes %}
             <div class="form-row tm-search-form-row pax-container adult-pax" adult-pax="{{loop.index}}" row-id="{{adult.row_id}}">
                     <div class="form-group tm-form-element tm-form-element-2">
-                        <select class="form-control  tm-select " name="pax-salut"  onchange="adultSalutChanged(this)">
+                    {# {%if adult.guest_salutation %} disabled {% endif %}  #}
+                        <select class="form-control  tm-select "  name="pax-salut"  >
                             <option value="">Salutation</option>
                             <option value="Mr" {%if adult.guest_salutation == 'Mr'%} selected{%endif %}>Mr</option>
                             <option value="Ms" {%if adult.guest_salutation == 'Ms'%} selected{%endif %}>Ms</option>
@@ -302,11 +310,12 @@
                     </div>
         
                     <div class="form-group tm-form-element tm-form-element-50">
-                        <input class="form-control" placeholder="Guest Name" name="pax-name" onchange="adultPaxChanged(this)" value="{{adult.guest_name or ''}}" />
+                    {# {%if adult.guest_name %} disabled {% endif %} #}
+                        <input class="form-control" placeholder="Guest Name"  name="pax-name"  value="{{adult.guest_name or ''}}" />
                         <i class="fa fa-2x fa-user tm-form-element-icon"></i>
                     </div>
                     <div class="form-group tm-form-element tm-form-element-2 phone-container d-none">
-                    <input class="form-control" placeholder="Phone Number" name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
+                    <input class="form-control" placeholder="Phone Number" {%if adult.mobile_no %} disabled {% endif %} name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
                     <i class="fa fa-2x fa-phone tm-form-element-icon"></i>
                 </div>
             </div>
@@ -316,9 +325,9 @@
                     <div class="form-group tm-form-element tm-form-element-2">
                         <label for="">Child Age {{child.guest_age}}</label>
                     </div>
-        
+                
                     <div class="form-group tm-form-element tm-form-element-50">
-                        <input class="form-control" placeholder="Child Name" name="pax-name" onchange="childPaxChanged(this)" value="{{child.guest_name or ''}}"/>
+                        <input class="form-control" placeholder="Child Name"  name="pax-name" value="{{child.guest_name or ''}}"/>
                         <i class="fa fa-x fa-user tm-form-element-icon"></i>
                     </div>
             </div>
@@ -354,7 +363,7 @@
       {% for adult in adult_paxes %}
             <div class="form-row tm-search-form-row pax-container adult-pax" adult-pax="{{loop.index}}" row-id="{{adult.row_id}}">
                     <div class="form-group tm-form-element tm-form-element-2">
-                        <select class="form-control  tm-select " name="pax-salut" onchange="adultSalutChanged(this)">
+                        <select class="form-control  tm-select " {%if adult.guest_salutation %} disabled {% endif %} name="pax-salut" >
                             <option value="">Salutation</option>
                             <option value="Mr" {%if adult.guest_salutation == 'Mr'%} selected{%endif %}>Mr</option>
                             <option value="Ms" {%if adult.guest_salutation == 'Ms'%} selected{%endif %}>Ms</option>
@@ -362,11 +371,11 @@
                         <i class="fa fa-2x fa-check tm-form-element-icon"></i>
                     </div>
                     <div class="form-group tm-form-element tm-form-element-50">
-                        <input class="form-control" placeholder="Guest Name" onchange="adultPaxChanged(this)" name="pax-name" value="{{adult.guest_name or ''}}" />
+                        <input class="form-control" placeholder="Guest Name" {%if adult.guest_name %} disabled {% endif %}  name="pax-name" value="{{adult.guest_name or ''}}" />
                         <i class="fa fa-2x fa-user tm-form-element-icon"></i>
                     </div>
                     <div class="form-group tm-form-element tm-form-element-2 phone-container d-none">
-                    <input class="form-control" placeholder="Phone Number" name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
+                    <input class="form-control" placeholder="Phone Number" {%if adult.mobile_no %} disabled {% endif %} name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
                     <i class="fa fa-2x fa-phone tm-form-element-icon"></i>
                 </div>
             </div>
@@ -378,7 +387,7 @@
                     </div>
         
                     <div class="form-group tm-form-element tm-form-element-50">
-                        <input class="form-control" placeholder="Child Name" onchange="childPaxChanged(this)" name="pax-name" value="{{child.guest_name or ''}}"/>
+                        <input class="form-control" placeholder="Child Name"  {%if child.guest_name %} disabled {% endif %} name="pax-name" value="{{child.guest_name or ''}}"/>
                         <i class="fa fa-x fa-user tm-form-element-icon"></i>
                     </div>
             </div>

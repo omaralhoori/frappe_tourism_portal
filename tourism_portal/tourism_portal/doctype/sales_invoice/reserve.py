@@ -60,6 +60,8 @@ def add_rooms_to_invoice(invoice, rooms, hotel_margin):
     
 
 def add_transfers_to_invoice(invoice, transfers, transfer_margin):
+    total_amount = 0
+    total_company_amount = 0
     for searchName in transfers:
         search = transfers[searchName]
         for transferName in search:
@@ -71,6 +73,8 @@ def add_transfers_to_invoice(invoice, transfers, transfer_margin):
             invc_transfer.transfer = transfer['transfer_id']
             invc_transfer.transfer_price = float(transfer['transfer_price'])
             invc_transfer.transfer_price_company = float(transfer['transfer_price_company'])
+            total_amount += float(transfer['transfer_price'])
+            total_company_amount += float(transfer['transfer_price_company'])
             invc_transfer.adults = transfer['pax_info'].get('adults')
             invc_transfer.children = transfer['pax_info'].get('children')
             invc_transfer.pick_up = transfer['pick_up']
@@ -92,7 +96,7 @@ def add_transfers_to_invoice(invoice, transfers, transfer_margin):
                 guest.transfer_search = searchName
                 guest.transfer_name = transferName
                 guest.guest_age = int(child_age)
-    
+    return total_amount, total_company_amount
 
 def add_tours_to_invoice(invoice, tours, tour_margin):
     for searchName in tours:

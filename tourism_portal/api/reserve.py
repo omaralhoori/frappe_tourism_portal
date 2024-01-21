@@ -406,3 +406,50 @@ def delete_reservation():
         invoice = frappe.get_doc("Sales Invoice", {"name": sales_invoice, "company": company_details.get('company')})
     if invoice.docstatus == 0:
         invoice.delete()
+
+@frappe.whitelist()
+def add_transfers_to_completed_invoice():
+    invoice_id = frappe.form_dict.invoice_id
+    selected_transfers = frappe.form_dict.selected_transfers
+    print(selected_transfers)
+    if type(selected_transfers) == str:
+        selected_transfers = json.loads(selected_transfers)
+    company_details = get_company_details()
+    try:
+        if company_details.get('is_child_company'):
+            invoice = frappe.get_doc("Sales Invoice", {"name": invoice_id, "company": company_details.get('company'), "child_company": company_details.get('child_company')})
+        else:
+            invoice = frappe.get_doc("Sales Invoice", {"name": invoice_id, "company": company_details.get('company')})
+    except:
+        return {"success_key": 0, "message": "Invoice not found"}
+    res = invoice.add_transfers(selected_transfers)
+    if res:
+        return {"success_key": 1, "message": ""}
+    else:
+        return {"success_key": 0, "message": "Unable to add transfers"}
+    
+
+@frappe.whitelist()
+def update_reservation():
+    print(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
+    invoice_id = frappe.form_dict.invoice_id
+    transfers_info = frappe.form_dict.transfers_info
+    tours_info = frappe.form_dict.tours_info
+    print(transfers_info)
+
+    if type(transfers_info) == str:
+        transfers_info  = json.loads(transfers_info)
+    if type(tours_info) == str:
+        tours_info = json.loads(tours_info)
+    company_details = get_company_details()
+    try:
+        if company_details.get('is_child_company'):
+            invoice = frappe.get_doc("Sales Invoice", {"name": invoice_id, "company": company_details.get('company'), "child_company": company_details.get('child_company')})
+        else:
+            invoice = frappe.get_doc("Sales Invoice", {"name": invoice_id, "company": company_details.get('company')})
+    except:
+        return {"success_key": 0, "message": "Invoice not found"}
+    invoice.update_transfers(transfers_info)
+    # invoice.update_tours(tours_info)
+    invoice.save(ignore_permissions=True)
+    return {"success_key": 1, "message": ""}
