@@ -213,6 +213,9 @@
                     </td>
                 </tr>
         </table>
+        {% if room.bed_type %}
+        Bed Type: {{room.bed_type}}
+        {% endif %}
         {% if room.extras | length > 0 %}
         Extra Services: 
         {% for extra in room.extras %}

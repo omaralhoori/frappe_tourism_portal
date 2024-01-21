@@ -545,7 +545,7 @@ class SalesInvoice(Document):
 			for room_extra in self.room_extras:
 				if room_extra.hotel_search == room.hotel_search and room_extra.room_name == room.room_name:
 					extras.append(room_extra.extra)
-			room_key = room.hotel_search + room.room + room.board 
+			room_key = room.hotel_search + room.room + room.board + str(room.bed_type)
 			if len(extras) > 0:
 				room_key += str(extras_cnt)
 				extras_cnt += 1
@@ -557,6 +557,7 @@ class SalesInvoice(Document):
 					"acmd_type": frappe.db.get_value("Room Accommodation Type", acmd_type, "accommodation_type_name", cache=True),
 					"board": frappe.db.get_value("Hotel Boarding Type", room.board, "boarding_type_name", cache=True),
 					"hotel": frappe.db.get_value("Hotel", room.hotel, "hotel_name", cache=True),
+					"bed_type": frappe.db.get_value("Room Bed Type", room.bed_type, "bed_type", cache=True),
 					"address": frappe.db.get_value("Hotel", room.hotel, "address", cache=True),
 					"check_in": room.check_in,
 					"check_out": room.check_out,

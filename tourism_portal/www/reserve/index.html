@@ -132,21 +132,21 @@
         {% for transfer_search in invoice_details.get('transfers')%}
             {% for transfer_name in invoice_details['transfers'][transfer_search] %}
             {% set transfer = invoice_details['transfers'][transfer_search][transfer_name] %}
-                {{render_transfer(transfer)}}
+                {{render_transfer(transfer, editable)}}
             {% endfor %}
         {% endfor %}
         {% for tour_rsv in invoice_details.get('tours') %}
         {% set tourSearch = invoice_details['tours'][tour_rsv] %}
         
-        <div class="reservation_details mt-4 card p-3 tour-search-container" search-name="{{tour_rsv}}">
+        <div class="reservation_details mt-4 card p-3 tour-search-container card-details" search-name="{{tour_rsv}}">
             {{render_tour_details(tourSearch)}}
             <div class="row">
                 {% for tour in tourSearch['tours'] %}
                     {{render_tour_card(tour)}}
                 {% endfor %}
             </div>
-                
-            {{render_tour_pax(tourSearch['adult_paxes'], tourSearch['child_paxes'])}}
+
+            {{render_tour_pax(tourSearch['adult_paxes'], tourSearch['child_paxes'], editable)}}
         </div>
         {% endfor %}
         {% if invoice_details.docstatus == 0%}
@@ -255,14 +255,14 @@
         {{bed_type}}
     </label>
 {% endmacro %}
-{% macro render_transfer(transfer_search) %}
- <div class="mt-3 card p-3 transfer-search-container" search-name="{{transfer_search['transfer_search']}}" transfer-name="{{transfer_search['transfer_name']}}">
+{% macro render_transfer(transfer_search, editable) %}
+ <div class="mt-3 card p-3 transfer-search-container card-details" search-name="{{transfer_search['transfer_search']}}" transfer-name="{{transfer_search['transfer_name']}}">
     {{render_transfer_details(transfer_search)}}
-    {{render_transfer_pax(transfer_search['adult_paxes'], transfer_search['child_paxes'])}}
-    {{render_transfer_flight_no(transfer_search['flight_no'])}}
+    {{render_transfer_pax(transfer_search['adult_paxes'], transfer_search['child_paxes'], editable)}}
+    {{render_transfer_flight_no(transfer_search['flight_no'], editable)}}
  </div>
 {% endmacro %}
-{% macro render_transfer_flight_no(flight_no) %}
+{% macro render_transfer_flight_no(flight_no, editable) %}
     <div class="tm-search-form row p-2">
 <div class="form-row tm-search-form-row ">
         <div class="form-group tm-form-element tm-form-element-2">
@@ -278,18 +278,26 @@
 {% endmacro %}
 {% macro render_transfer_details(transfer_search) %}
 <div class="row">
-    <div class="col-lg-4 pb-2 "><strong>{{transfer_search['transfer_search']}}</strong></div>
-    <div class="col-lg-4 pb-2 ">PickUp: {{transfer_search['pickup_name']}}</div>
-    <div class="col-lg-4 pb-2 ">Drop Off: {{transfer_search['dropoff_name']}}</div>
-    <div class="col-lg-4 pb-2 ">Transfer Date: {{transfer_search['transfer_date']}}</div>
-    <div class="col-lg-4 pb-2 ">Adults: {{transfer_search['pax_info']['adults']}}</div>
-    <div class="col-lg-4 pb-2 ">Children: {{transfer_search['pax_info']['children']}}</div>
+    <div class="col-lg-9">
+        <div class="row">
+         <div class="col-lg-4 pb-2 "><strong>{{transfer_search['transfer_search']}}</strong></div>
+        <div class="col-lg-4 pb-2 ">PickUp: {{transfer_search['pickup_name']}}</div>
+        <div class="col-lg-4 pb-2 ">Drop Off: {{transfer_search['dropoff_name']}}</div>
+        <div class="col-lg-4 pb-2 ">Transfer Date: {{transfer_search['transfer_date']}}</div>
+        <div class="col-lg-4 pb-2 ">Adults: {{transfer_search['pax_info']['adults']}}</div>
+        <div class="col-lg-4 pb-2 ">Children: {{transfer_search['pax_info']['children']}}</div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+    <label>Different Names</label> <input type="checkbox" onchange="different_names_clicked(this)"/>
+    </div>
+   
 </div>
 {% endmacro %}
 
-{% macro render_transfer_pax(adult_paxes, child_paxes) %}
+{% macro render_transfer_pax(adult_paxes, child_paxes, editable) %}
     <div class="tm-search-form row p-2">
-<div class="col-lg-4"><strong>Guests</strong></div>
+<div class="col-lg-4"><strong>Guests {{editable}}</strong></div>
       {% for adult in adult_paxes %}
             <div class="form-row tm-search-form-row pax-container adult-pax" adult-pax="{{loop.index}}" row-id="{{adult.row_id}}">
                     <div class="form-group tm-form-element tm-form-element-2">
@@ -348,7 +356,7 @@
   </div>
 {% endmacro %}
 
-{% macro render_tour_pax(adult_paxes, child_paxes)%}
+{% macro render_tour_pax(adult_paxes, child_paxes, editable)%}
 <div class="tm-search-form row p-2">
 <div class="col-lg-4"><strong>Guests</strong></div>
       {% for adult in adult_paxes %}
