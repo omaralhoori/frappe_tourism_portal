@@ -343,6 +343,7 @@
     {% if not tour %}
         <div class="p-3">{{tour_id}} price is not available</div>
     {%else%}
+    <img class="card-img-top" src="{{tour.get('tour_image')}}" alt="Card image cap">
   <div class="card-body">
     <h5 class="card-title tour-item" tour-id="{{tour.get('tour_id')}}">{{tour.get('tour_name')}}</h5>
     <p class="card-text">{{tour.get('tour_description') or ''}}</p>
@@ -383,6 +384,8 @@
 
     {% else %}
     <div class="card m-2 tour-card" style="width: 18rem;">
+    <img class="card-img-top" src="{{tourPackage.get('tour_image')}}" alt="Card image cap">
+
     <div class="card-body">
         <h5 class="card-title">Tour Package</h5>
     </div>

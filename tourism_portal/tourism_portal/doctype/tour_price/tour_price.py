@@ -29,6 +29,7 @@ def get_available_tours_and_prices(params):
 					"tour_description": tour_details['search_params']['tour_description'],
 					"tour_type": "vip",
 					"tour_date": params['tour-date'],
+					"tour_image": frappe.db.get_value("Tour Type", tour, "tour_image", cache=True),
 					"paxes": paxes,
 				})
 		else:
@@ -44,16 +45,22 @@ def get_available_tours_and_prices(params):
 				"tour_date": params['tour-date'],
 				"paxes": paxes,
 			})
+			if params['tour-type'] == 'package':
+				available_tours[-1]['tour_image'] = frappe.db.get_value("Tour Package", tour, "package_image", cache=True)
+			else:
+				available_tours[-1]['tour_image'] = frappe.db.get_value("Tour Type", tour, "tour_image", cache=True)
 	available_tours = sorted(available_tours, key=lambda x: x['tour_date'])
 	if params['tour-type'] in ('group-premium', 'group-economic', 'package'):
 		for adultPax in range(int(paxes['adults'])):
 			tour_packages.append({
 				"tour_type": "package",
 				"pickup": available_tours[0]['pickup'],
+				'tour_image': available_tours[0]['tour_image'],
 				"paxes": paxes,
 				"tours": [ {
 					"tour_date": avT['tour_date'], 
 					"tour_id": avT['tour_id'],
+					'tour_image': avT['tour_image'],
 					"pickup": avT['pickup'],
 					"tour_name": avT['tour_name'],
 					"tour_description": avT['tour_description'],

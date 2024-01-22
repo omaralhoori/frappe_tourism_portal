@@ -25,8 +25,7 @@ function saveEdit(e){
     var invoiceId = new URLSearchParams(window.location.search).get('invoice');
     var transfersInfo = getTransferInfo();
     var toursInfo = getToursInfo();
-    console.log(transfersInfo)
-    console.log(toursInfo)
+
     frappe.call({
         "method": "tourism_portal.api.reserve.update_reservation",
         "args": {
