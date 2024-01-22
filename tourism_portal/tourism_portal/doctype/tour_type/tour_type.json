@@ -20,7 +20,8 @@
   "column_break_wd4xy",
   "tour_time",
   "section_break_uknln",
-  "tour_description"
+  "tour_description",
+  "tour_image"
  ],
  "fields": [
   {
@@ -90,11 +91,18 @@
   {
    "fieldname": "section_break_bal9s",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "tour_image",
+   "fieldtype": "Attach Image",
+   "label": "Tour Image"
   }
  ],
+ "image_field": "tour_image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-02 16:44:03.535374",
+ "make_attachments_public": 1,
+ "modified": "2024-01-22 16:53:13.500994",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour Type",

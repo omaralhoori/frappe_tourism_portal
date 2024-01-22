@@ -22,7 +22,8 @@
   "section_break_wer4l",
   "description",
   "section_break_zczoc",
-  "tours"
+  "tours",
+  "package_image"
  ],
  "fields": [
   {
@@ -106,11 +107,17 @@
    "fieldname": "is_premium",
    "fieldtype": "Check",
    "label": "Premium Package"
+  },
+  {
+   "fieldname": "package_image",
+   "fieldtype": "Attach Image",
+   "label": "Package Image"
   }
  ],
+ "image_field": "package_image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-19 11:26:17.703013",
+ "modified": "2024-01-22 16:53:48.545631",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour Package",
