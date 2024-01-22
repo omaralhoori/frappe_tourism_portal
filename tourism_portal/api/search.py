@@ -1,7 +1,7 @@
 import frappe
 from frappe import _
 from tourism_portal.api.company import get_company_details
-from tourism_portal.tourism_portal.doctype.tour_price.tour_price import get_available_tours
+from tourism_portal.tourism_portal.doctype.tour_price.tour_price import get_available_tours, get_available_tours_and_prices
 # from tourism_portal.www.search.index import get_available_hotel_rooms
 from tourism_portal.tourism_portal.doctype.transfer_price.transfer_price import get_available_transfers
 import json
@@ -614,3 +614,10 @@ def get_transfer_search_results(invoiceId, transfer_params):
 		transfer = transfer_params[tt]
 		available_transfers[tt] = get_available_transfers(transfer)
 	return available_transfers
+
+@frappe.whitelist()
+def get_tour_search_results(invoiceId, tour_params):
+	if type(tour_params) == str:
+		tour_params = json.loads(tour_params)
+	available_tours = {}
+	return  get_available_tours_and_prices(tour_params)

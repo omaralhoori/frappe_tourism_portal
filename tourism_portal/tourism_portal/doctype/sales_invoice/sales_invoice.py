@@ -8,7 +8,7 @@ from frappe.model.naming import make_autoname
 from frappe.tests.utils import FrappeTestCase
 from tourism_portal.tourism_portal.doctype.company_payment.company_payment import add_child_company_refund, add_company_refund, create_child_company_payment, create_payment
 from tourism_portal.tourism_portal.doctype.room_availability.room_availability import free_room, reserve_room
-from tourism_portal.tourism_portal.doctype.sales_invoice.reserve import add_transfers_to_invoice
+from tourism_portal.tourism_portal.doctype.sales_invoice.reserve import add_tours_to_invoice, add_transfers_to_invoice
 from tourism_portal.tourism_portal.doctype.tour_price.tour_price import get_tour_price_with_child_prices
 from tourism_portal.tourism_portal.doctype.tour_schedule_order.tour_schedule_order import schedule_tours_dates
 from tourism_portal.utils import get_cancellation_refund, get_hotel_total_nights, get_location_city, parse_date, parse_invoice_checkout_date, parse_transfer_date
@@ -53,8 +53,9 @@ class SalesInvoice(Document):
 			if not check_out or check_out < transfer_date:
 				check_out = transfer_date
 		for tour in self.tours:
-			if not check_out or check_out < tour.to_date:
-				check_out = tour.to_date
+			tour_date = parse_date(tour.to_date)
+			if not check_out or check_out < tour_date:
+				check_out = tour_date
 		self.invoice_check_out = check_out
 		self.db_set('invoice_check_out', check_out)
 	def add_free_tours(self):
@@ -148,35 +149,33 @@ class SalesInvoice(Document):
 		tour_type.tour_price_company= discount_price
 		return True
 	def update_transfers(self, transfer_infos):
-		print("xxxxxxxxxxxxxxxxxxxxxxxx")
 		for search_name in transfer_infos:
-			print("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq")
 			for transfer_name in transfer_infos[search_name]:
-				print("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
 				transfer_info = transfer_infos[search_name][transfer_name]
-				print(transfer_info)
-				print(transfer_info.get('paxes'))
-				print(type(transfer_info))
 				if transfer_info.get('paxes'):
-					print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
 					for pax_row in transfer_info['paxes']:
-						print("ccccccccccccccccccccccccccccccccccc")
 						pax = transfer_info['paxes'][pax_row]
 						for transfer_pax in self.transfer_pax_info:
-							print(transfer_pax)
-							print(pax)
 							if pax.get('row_id') == transfer_pax.name:
 								transfer_pax.guest_salutation = pax.get('salut')
 								transfer_pax.guest_name = pax.get('guest_name')
 								break
 				if transfer_info.get('flight_no'):
-					print("pppppppppppppppppppppppppppppppppppppppp")
 					for transfer in self.transfers:
 						if transfer.transfer_name == transfer_name and transfer.transfer_search == search_name:
-							print("llllllllllllllllllllllllllllllllllllllllllllll")
 							transfer.flight_no = transfer_info['flight_no']
 							break
-		print("sdssdds")
+	def update_tours(self, tour_infos):
+		print(tour_infos)
+		for search_name in tour_infos:
+			tour_info = tour_infos[search_name]
+			for pax_row in tour_info:
+				pax = tour_info[pax_row]
+				for tour_pax in self.tour_pax_info:
+					if pax.get('row_id') == tour_pax.name:
+						tour_pax.guest_salutation = pax.get('salut')
+						tour_pax.guest_name = pax.get('guest_name')
+						break
 	def get_tour_price(self, tour_type, adults, childs, child_ages):
 		tour_price = None
 		adult_price = 0
@@ -195,31 +194,49 @@ class SalesInvoice(Document):
 			"Premium": "group-premium",
 			"Economic": "group-economic",
 		}.get(tour_type)
-	def schedule_tours(self):
+	def schedule_tours(self, search=None):
 		all_tours = {}
-		for tour_search in self.tours:
-			search_name = tour_search.search_name
-			check_in = tour_search.from_date
-			check_out = tour_search.to_date
-			tour_type = tour_search.tour_type
-			if not all_tours.get(search_name):
-				all_tours[search_name] = {
-					"check_in": check_in,
-					"check_out": check_out,
-					"tours": [],
-					"tour_type": tour_type,
-					"pickup": tour_search.pick_up,
-					"pickup_type": tour_search.pick_up_type,
-				}
+		if search:
+			for tour_search in self.tours:
+				if search == tour_search.search_name:
+					search_name = tour_search.search_name
+					check_in = tour_search.from_date
+					check_out = tour_search.to_date
+					tour_type = tour_search.tour_type
+					if not all_tours.get(search_name):
+						all_tours[search_name] = {
+							"check_in": check_in,
+							"check_out": check_out,
+							"tours": [],
+							"tour_type": tour_type,
+							"pickup": tour_search.pick_up,
+							"pickup_type": tour_search.pick_up_type,
+						}
+		else:
+			for tour_search in self.tours:
+				search_name = tour_search.search_name
+				check_in = tour_search.from_date
+				check_out = tour_search.to_date
+				tour_type = tour_search.tour_type
+				if not all_tours.get(search_name):
+					all_tours[search_name] = {
+						"check_in": check_in,
+						"check_out": check_out,
+						"tours": [],
+						"tour_type": tour_type,
+						"pickup": tour_search.pick_up,
+						"pickup_type": tour_search.pick_up_type,
+					}
 
 		for tour in self.tour_types:
 			search_name = tour.search_name
-			all_tours[search_name]['tours'].append({
-				"tour_type": tour.tour_type,
-				"tour": tour.tour_name,
-				"tour_date": tour.tour_date,
-				"package": tour.package_id,
-			})
+			if all_tours.get(search_name):
+				all_tours[search_name]['tours'].append({
+					"tour_type": tour.tour_type,
+					"tour": tour.tour_name,
+					"tour_date": tour.tour_date,
+					"package": tour.package_id,
+				})
 		for search_name in all_tours:
 			tour_search = all_tours[search_name]
 			schedule_dates = schedule_tours_dates( tour_search)
@@ -316,6 +333,15 @@ class SalesInvoice(Document):
 			if 	parse_transfer_date(transfer['transfer_date']) < frappe.utils.now_datetime() + frappe.utils.datetime.timedelta(hours=24) :
 				return "You cannot add transfer with date less than 24 hours from now"
 		return None
+	def allowed_to_add_tours(self, tourSearch):
+		if self.status == "Cancelled":
+			return "Invoice is already cancelled"
+		# if self.invoice_check_out and parse_invoice_checkout_date(self.invoice_check_out) < frappe.utils.now_datetime():
+		# 	return "Invoice is already expired"
+
+		if 	parse_transfer_date(tourSearch['check_in']) < frappe.utils.now_datetime() + frappe.utils.datetime.timedelta(hours=24) :
+			return "You cannot add tour with date less than 24 hours from now"
+		return None
 	def add_transfers(self, transfers):
 		if msg:= self.allowed_to_add_transfers(transfers):
 			frappe.throw(msg)
@@ -327,6 +353,20 @@ class SalesInvoice(Document):
 			total_amount, total_company_amount = total_amounts
 			if total_amount > 0:
 				self.create_additional_payment(total_amount, total_company_amount)
+		self.save(ignore_permissions=True)
+		return search_name
+	def add_tours(self, tours):
+		if msg:= self.allowed_to_add_tours(tours):
+			frappe.throw(msg)
+		search_name = self.get_search_name('tours')
+		total_amounts = add_tours_to_invoice(self, {
+			search_name: tours
+		}, 0)
+		if total_amounts:
+			total_amount, total_company_amount = total_amounts
+			if total_amount > 0:
+				self.create_additional_payment(total_amount, total_company_amount)
+		self.schedule_tours(search_name)
 		self.save(ignore_permissions=True)
 		return search_name
 

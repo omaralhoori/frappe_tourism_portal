@@ -136,6 +136,7 @@
             {% if invoice_details.docstatus == 1 and invoice_details.status=='Submitted'%}
             <button class="btn btn-primary w-100" invoice-id="{{invoice_details.invoice_id}}" onclick="saveEdit(this)">Save</button>
             <button class="btn btn-primary mt-2 w-100" invoice-id="{{invoice_details.invoice_id}}" onclick="addTransfer(this)">Add Transfer</button>
+            <button class="btn btn-primary mt-2 w-100" invoice-id="{{invoice_details.invoice_id}}" onclick="addTour(this)">Add Tour</button>
             <button class="btn btn-secondary mt-2 w-100" invoice-id="{{invoice_details.invoice_id}}" onclick="cancelEdit(this)">Back</button>
             {% else %}
             {{session_expires_card(invoice_details.session_expires) }}
@@ -181,9 +182,37 @@
   </div>
 </div>
 
+<!-- Tour Modal -->
+<div class="modal fade" id="tourSearchModal" tabindex="-1" role="dialog" aria-labelledby="tourSearchModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tourSearchModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="tour_search_card">
+         {% include "templates/includes/tour_search_add_template.html" %}
+        </div>
+        <div class="tour_results d-none">
+        
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeTourModal(this)">Close</button>
+        <button type="button" class="btn btn-primary search-tour-btn" onclick="newTourSearchClicked(this)">Search</button>
+        <button type="button" class="btn btn-primary add-tour-btn d-none" onclick="addNewTourClicked(this)">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% include "templates/includes/pax_template_container.html" %}
 {% include "templates/includes/children_template_container.html" %}
 {% include "templates/includes/invoice_add_transfer_card_template.html" %}
+{% include "templates/includes/invoice_add_tour_card_template.html" %}
 {% endblock %}
 
 {% macro hotel_details_card(hotel_details, booking_details, rooms) %}

@@ -1,3 +1,4 @@
+var selectedTours = {};
 $(document).ready(function () {
     autocompleteLocations(document.querySelector('.transfer-pickup-1'), 'tourism_portal.api.query.get_transfer_locations', (element) => {
         checkRegularFlights(element, 'arrival')
@@ -11,6 +12,10 @@ $(document).ready(function () {
     autocompleteLocations(document.querySelector('.transfer-dropoff-2'), 'tourism_portal.api.query.get_transfer_locations',(element) => {
         checkRegularFlights(element, 'departure')
     });
+    var locationInput = document.querySelector('#tour-pickup');
+    autocompleteLocations(locationInput, 'tourism_portal.api.query.get_tour_locations', (element)=> {
+        tourTypeChanged(locationInput)
+    });
     formatSelect2()
     formatDataPicker()
 });
@@ -21,6 +26,7 @@ function saveEdit(e){
     var transfersInfo = getTransferInfo();
     var toursInfo = getToursInfo();
     console.log(transfersInfo)
+    console.log(toursInfo)
     frappe.call({
         "method": "tourism_portal.api.reserve.update_reservation",
         "args": {
@@ -47,6 +53,12 @@ function addTransfer(e){
     var $modal = $('#transferSearchModal');
     $modal.find('.transfer-search-card').removeClass('d-none');
     $modal.find('.trasnfer_results').addClass('d-none');
+    $modal.modal('show');
+}
+function addTour(e){
+    var $modal = $('#tourSearchModal');
+    $modal.find('.tour-search-card').removeClass('d-none');
+    $modal.find('.tour_results').addClass('d-none');
     $modal.modal('show');
 }
 
@@ -287,6 +299,111 @@ function newTransferSearchClicked(e){
 
 }
 
+function newTourSearchClicked(e){
+    var searchCard = e.closest('.modal-content').querySelector('.tour-search-card')
+
+    var newParams = getTourData(searchCard, true);
+    //toggleLoadingIndicator(true);
+    // var searchParams = new URLSearchParams(window.location.search);
+    // transferSearchParams[transferSearch] = newParams;
+    frappe.call({
+        method: "tourism_portal.api.search.get_tour_search_results",
+        args: {
+            invoiceId: e.getAttribute("invoice-id"),
+            tour_params: newParams,
+        },
+        callback: res => {
+            console.log(res)
+            if (res.message){
+                var  html = format_tour_search_results(res.message)
+                var modalContent = e.closest('.modal-content')
+                modalContent.querySelector('.modal-body .tour_search_card').classList.add('d-none');
+                var resultsContainer = modalContent.querySelector('.modal-body .tour_results')
+                resultsContainer.innerHTML = html;
+                resultsContainer.classList.remove('d-none');
+                modalContent.querySelector('.search-tour-btn').classList.add('d-none');
+                modalContent.querySelector('.add-tour-btn').classList.remove('d-none');
+            }
+            toggleLoadingIndicator(false);
+            //window.location.reload();
+        }
+    })
+
+}
+
+function format_tour_search_results(results){
+    var html = '';
+    var packages = [];
+    for (var searchResult in results){
+        var result = results[searchResult];
+        if (result.tour_type == 'package'){
+            packages.push(result);
+        }else{
+            html += format_vip_tour_search_one_result(result);
+        }
+    }
+    if (packages.length > 0){
+        html += format_package_tour_search_results(packages);
+    }
+
+    return html;
+
+}
+function format_package_tour_search_results(results){
+    html = '';
+    var options = '';
+    var tourPackage = results[0];
+    var totalPrice = 0;
+    var totalPriceCompany = 0;
+    var $template = $('#tour-card-template');
+    for (var package of results){
+        totalPrice += Number(package.package_price);
+        totalPriceCompany += Number(package.package_price_company);
+    }
+    for (var tour of tourPackage.tours){
+        options += `<li class="list-group-item tour-item" 
+        tour-indv-price="${tour.tour_price}"
+            tour-id="${tour.tour_id}">${tour.tour_name}</li>`
+    }
+    var resultHtml = $template.html();
+    var totalPax = Number(tourPackage.paxes.adults) + Number(tourPackage.paxes.children);
+    resultHtml = resultHtml.replaceAll('{Tour Name}', 'Tour Package');
+    resultHtml = resultHtml.replaceAll('{PickUp}', tourPackage.pickup)
+        .replaceAll('{TotalPriceCompany}', totalPriceCompany)
+        .replaceAll('{TotalPrice}', totalPrice)
+        .replaceAll('{TotalPax}', totalPax)
+        .replaceAll('{Adults}', tourPackage.paxes.adults)
+        .replaceAll('{Children}', tourPackage.paxes.children)
+        .replaceAll('{Tour Options}', options)
+        .replaceAll('{TourClass}', '');
+    html += resultHtml;
+    return html;
+}
+function format_vip_tour_search_one_result(result){
+    html = '';
+    var options = '';
+
+    var $template = $('#tour-card-template');
+    var tourPackage = result;
+    var totalPrice = result.tour_price;
+    var totalPriceCompany = result.tour_price_company;
+    $template.find('.card-title').addClass()
+    $template.find('.card-title').attr('tour-id', result.tour_id)
+    var resultHtml = $template.html();
+    var totalPax = Number(tourPackage.paxes.adults) + Number(tourPackage.paxes.children);
+    resultHtml = resultHtml.replaceAll('{Tour Name}', tourPackage.tour_name);
+    resultHtml = resultHtml.replaceAll('{PickUp}', tourPackage.pickup)
+        .replaceAll('{TotalPriceCompany}', totalPriceCompany)
+        .replaceAll('{TotalPrice}', totalPrice)
+        .replaceAll('{TotalPax}', totalPax)
+        .replaceAll('{Adults}', tourPackage.paxes.adults)
+        .replaceAll('{Children}', tourPackage.paxes.children)
+        .replaceAll('{Tour Options}', options)
+        .replaceAll('{TourClass}', 'tour-item')
+        .replaceAll('{TourId}', tourPackage.tour_id)
+    html += resultHtml;
+    return html;
+}
 function closeTransferModal(e){
     var modalContent = e.closest('.modal-content')
     modalContent.querySelector('.modal-body .transfer_search_card').classList.remove('d-none');
@@ -300,9 +417,13 @@ function addNewTransferClicked(e){
     frappe.confirm("Are you sure you want to add these transfers to the invoice?", ()=> confirmAddTransfer(e))
 }
 
+function addNewTourClicked(e){
+    frappe.confirm("Are you sure you want to add these tours to the invoice?", ()=> confirmAddTour(e))
+}
+
 function confirmAddTransfer(e){
     var selectedTransfers = getSelectedTransfers(e);
-    // toggleLoadingIndicator(true);
+    toggleLoadingIndicator(true);
     var invoiceId= new URLSearchParams(window.location.search).get('invoice');
     frappe.call({
         method: "tourism_portal.api.reserve.add_transfers_to_completed_invoice",
@@ -324,6 +445,97 @@ function confirmAddTransfer(e){
         }
     })
 }
+
+function confirmAddTour(e){
+    var selectedTours = getSelectedTours(e);
+    // toggleLoadingIndicator(true);
+    var invoiceId= new URLSearchParams(window.location.search).get('invoice');
+    console.log(selectedTours)
+    frappe.call({
+        method: "tourism_portal.api.reserve.add_tours_to_completed_invoice",
+        args: {
+            invoice_id: invoiceId,
+            selected_tours: selectedTours,
+        },
+        callback: res => {
+            console.log(res)
+            toggleLoadingIndicator(false);
+            if (res.message && res.message.success_key){
+                window.location.reload();
+            }else if (res.message && !res.message.success_key){
+                frappe.throw(res.message.message)
+            }else{
+                frappe.throw("Something went wrong")
+            }
+            
+        }
+    })
+}
+function checkAvailablePackageDates(e) {
+    var selectedTourElements = e.closest('form').querySelectorAll('input[name="tours"]:checked');
+    var tourSelectContainer = e.closest('form').querySelector('.tours-html-container');
+    var totalDays = Number(tourSelectContainer.getAttribute('total-days')) + 1;
+    var tourTime = e.getAttribute('tour-time');
+    for (var selectedTour of selectedTourElements) {
+        var tourMinDate = Number(selectedTour.getAttribute('tour-time'));
+        totalDays -= tourMinDate;
+    }
+
+    var tours = tourSelectContainer.querySelectorAll('input[name="tours"]:not(:checked)')
+    for (var tour of tours) {
+        if (Number(tour.getAttribute('tour-time')) > totalDays) {
+            tour.disabled = true;
+        } else {
+            tour.disabled = false;
+        }
+
+    }
+}
+function getSelectedTours(e){
+    var params = getTourData(e.closest('.modal-content').querySelector('.tour-search-card'), true);
+    var selectedTours = [];
+    var tourSearchModal = e.closest('.modal-content').querySelector('.tour_results')
+    var tourResults = tourSearchModal.querySelectorAll('.tour-card')
+    for (var tourResult of tourResults){
+        var tourPrice = tourResult.querySelector('.tour-price').getAttribute('tour-price')
+        var tourPriceCompany = tourResult.querySelector('.tour-price').getAttribute('tour-price-company')
+        var tourPickup = tourResult.querySelector('.tour-pickup').getAttribute('tour-pickup')
+        var tours = []
+        var toursPrice = {}
+        var toursPriceCompany = {}
+        for (var tourItem of tourResult.querySelectorAll('.tour-item')){
+            tours.push(tourItem.getAttribute('tour-id'))
+            toursPrice[tourItem.getAttribute('tour-id')] = tourItem.getAttribute('tour-indv-price')
+            toursPriceCompany[tourItem.getAttribute('tour-id')] = tourItem.getAttribute('tour-indv-price')
+        }
+        selectedTours.push({
+            "tours": tours,
+            "price": tourPrice,
+            "pickup": tourPickup,
+            "toursPrice": toursPrice,
+            "toursPriceCompany": toursPriceCompany,
+            "priceCompany": tourPriceCompany,
+        })
+    }
+    
+
+    var tours = {
+        'check_in': params['checkin'],
+        'check_out': params['checkout'],
+        'pickup': params['location'],
+        'pickup_type': params['location-type'],
+        'pickup_name': params['location-name'],
+        'paxes': {
+            'adults': params['paxes']['adults'],
+            'children': params['paxes']['children'],
+            'child-ages': params['paxes']['child-ages'],
+        },
+        'selected_tours': selectedTours,
+        'tour_type': params['tour-type'],
+    }
+    return tours;
+}
+
 
 function transferTypeChanged(e) {
     if (e.value == 'group') {
@@ -546,3 +758,232 @@ function getTransferInfo(){
     }
     return toursInfo;
   }
+  function validateTourSearchData(tourData) {
+    if (!tourData['location']) {
+        return false;
+    }
+    if (!tourData['checkin']) {
+        return false;
+    }
+    if (!tourData['checkout']) {
+        return false;
+    }
+    if (!tourData['tour-type']) {
+        return false;
+    }
+    return true;
+}
+
+function getTourData(form, validate) {
+    var params = {};
+    var locationInput = form.querySelector('input[name="location"]');
+    params['location-name'] = locationInput.value
+    params['location'] = locationInput.getAttribute('location-id')
+    params['location-type'] = locationInput.getAttribute('location-type')//form.querySelector('select[name="location"]').options[form.querySelector('select[name="location"]').selectedIndex].getAttribute('doc-type');
+    params['checkin'] = form.querySelector('input[name="check-in"]').value
+    params['checkout'] = form.querySelector('input[name="check-out"]').value
+    if (isDateBefore( params['checkout'], params['checkin']) ){
+        frappe.throw("Please check selected dates for " +  params['location-name'] )
+    }
+    params['paxes'] = {}
+    params['paxes']['adults'] = form.querySelector('select[name="adult"]').value
+    params['paxes']['children'] = form.querySelector('select[name="children"]').value
+    params['paxes']['child-ages'] = []
+    var ages = form.querySelectorAll('select[name="child-age"]');
+    ages.forEach(age => {
+        params['paxes']['child-ages'].push(age.value)
+    })
+    params['tour-type'] = form.querySelector('select[name="tour-type"]').value
+    params['tours'] = []
+    form.querySelectorAll('input[name="tours"]:checked').forEach(tour => {
+        params['tours'].push(tour.value)
+    })
+    if (validate){
+        validateCardTourSearchData(params)
+    }
+
+    // params['tour-name'] = form.querySelector('select[name="tour-name"]').value
+    return params;
+}
+
+
+function isDateBefore(dateString1, dateString2) {
+    // Convert date strings to Date objects
+    const date1 = new Date(dateString1);
+    const date2 = new Date(dateString2);
+  
+    // Compare the dates
+    return date1 < date2;
+  }
+  
+
+function validateCardTourSearchData(params) {
+    if (!params['location']) {
+        frappe.throw("Please select tour location")
+    }
+    if (!params['checkin']) {
+        frappe.throw("Please select tour checkin date")
+    }
+    if (!params['checkout']) {
+        frappe.throw("Please select tour checkout date")
+    }
+    if (!params['paxes']) {
+        frappe.throw("Please select tour paxes")
+    }
+    if (!params['paxes']['adults']) {
+        frappe.throw("Please select tour adults count")
+    }
+    if (!params['tour-type']) {
+        frappe.throw("Please select tour type")
+    }
+    if (params['tours'].length == 0) {
+        frappe.throw("Please select tour")
+    }
+    return true;
+}
+
+  function tourTypeChanged(e) {
+    var tourData = getTourData(e.closest('form'));
+    if (!validateTourSearchData(tourData)) {
+        return;
+    }
+    var tourCard = e.closest('.tour-search-card').querySelector('input[name="tour-card"]').value;
+    selectedTours[tourCard] = {}
+    frappe.call({
+        method: "tourism_portal.api.home.get_available_tours",
+        args: {
+            "tourData": tourData
+        },
+        callback: function (r) {
+            var tourSelect = e.closest('form').querySelector('.tours-html-container');
+            var totalDays = getTotalDays(tourData.checkin, tourData.checkout);
+            tourSelect.innerHTML = '';
+            tourSelect.setAttribute('total-days', totalDays);
+            if (!r.message || Object.keys(r.message).length === 0) {
+                tourSelect.innerHTML = '<li class="list-group-item">No Tours Found</li>'
+            }
+            for (var tourId in r.message) {
+                var tour = r.message[tourId];
+                var listElement = document.createElement("li");
+                listElement.classList.add('list-group-item');
+                listElement.classList.add('tour-list-item');
+                var checkboxElement = document.createElement("input");
+                checkboxElement.setAttribute('type', 'checkbox');
+                checkboxElement.setAttribute('name', 'tours');
+                checkboxElement.setAttribute('value', tour.tour_id);
+                checkboxElement.setAttribute('onclick', 'onTourSelectChange(this)');
+                checkboxElement.setAttribute('tour-time', tour.tour_time)
+                checkboxElement.setAttribute('tour-dates', JSON.stringify(tour.tour_dates));
+                var labelElement = document.createElement("label");
+                labelElement.innerText = tour.tour_name;
+                listElement.appendChild(checkboxElement);
+                listElement.appendChild(labelElement);
+                // listElement.innerHTML = `<input type="checkbox" onclick="onTourSelectChange(this)" name="tours" value="${tour.tour_id}"> <label>${tour.tour_name} </label>`;
+
+                listElement.setAttribute('data-toggle', 'tooltip');
+                listElement.setAttribute('data-placement', 'top');
+                listElement.setAttribute('title', tour.tour_description);
+                listElement.addEventListener('click', function (e) {
+                    var checkbox = e.currentTarget.querySelector('input[type="checkbox"]');
+                    checkbox.click();
+                    // checkbox.checked = !checkbox.checked;
+                    // onTourSelectChange(checkbox);
+                });
+                tourSelect.appendChild(listElement);
+            }
+
+
+        }
+
+    })
+}
+
+function getTotalDays(checkin, checkout) {
+    var checkinDate = new Date(checkin);
+    var checkoutDate = new Date(checkout);
+    var timeDiff = Math.abs(checkoutDate.getTime() - checkinDate.getTime());
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    return diffDays;
+
+}
+
+function onTourSelectChange(e) {
+    var tourCard = e.closest('.tour-search-card').querySelector('input[name="tour-card"]').value;
+
+
+    var tourType = e.closest('form').querySelector('select[name="tour-type"]').value;
+
+    if (tourType == 'package') {
+        checkAvailablePackageDates(e)
+    } else {
+        checkAvailableIndividualDates(e)
+    }
+
+    var tourDates = JSON.parse(e.getAttribute('tour-dates'))
+    // if (e.checked) {
+    //     selectedTours[tourCard][e.value] = true;
+
+    // }
+    // else {
+    //     delete selectedTours[tourCard][e.value];
+
+    // }
+    // if(e.closest('form').querySelector('select[name="tour-type"]').value != 'vip'){
+    //     checkOverlappingTours(selectedTours[tourCard], tourSelectContainer);
+    // }
+}
+
+function checkAvailableIndividualDates(e) {
+    var selectedTourElements = e.closest('form').querySelectorAll('input[name="tours"]:checked');
+    var tourSelectContainer = e.closest('form').querySelector('.tours-html-container');
+    var totalDays = Number(tourSelectContainer.getAttribute('total-days')) + 1;
+    var tourTimes = {
+        "morning": [],
+        "evening": [],
+    }
+
+    for (var selected of selectedTourElements) {
+        if (selected.getAttribute('tour-time') == 'Half Day Morning') {
+            if (tourTimes['evening'].length > 0) {
+                tourTimes['evening'].pop()
+                totalDays += 1;
+            } else {
+                tourTimes['morning'].push(selected.value)
+            }
+
+        } else if (selected.getAttribute('tour-time') == 'Half Day Evening') {
+            if (tourTimes['morning'].length > 0) {
+                tourTimes['morning'].pop()
+                totalDays += 1;
+            }
+            else {
+                tourTimes['evening'].push(selected.value)
+            }
+        }
+
+    }
+    if (selectedTourElements.length >= totalDays) {
+        var tours = tourSelectContainer.querySelectorAll('input[name="tours"]:not(:checked)')
+        
+        for (var tour of tours) {
+            if (tour.getAttribute('tour-time')== 'Half Day Morning' && tourTimes['evening'].length == 0) {
+                tour.disabled = true;
+            } else if (tour.getAttribute('tour-time')== 'Half Day Evening' && tourTimes['morning'].length == 0) {
+                tour.disabled = true;
+            }
+            else if (tour.getAttribute('tour-time')== 'Half Day Morning' && tourTimes['evening'].length > 0) {
+                tour.disabled = false;
+            } else if (tour.getAttribute('tour-time')== 'Half Day Evening' && tourTimes['morning'].length > 0) {
+                tour.disabled = false;
+            }else{
+                tour.disabled = true;
+            }
+            
+        }
+    } else {
+        var tours = tourSelectContainer.querySelectorAll('input[name="tours"]:not(:checked)')
+        for (var tour of tours) {
+            tour.disabled = false;
+        }
+    }
+}

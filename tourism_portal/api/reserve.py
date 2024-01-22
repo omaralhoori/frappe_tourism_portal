@@ -427,6 +427,27 @@ def add_transfers_to_completed_invoice():
         return {"success_key": 1, "message": ""}
     else:
         return {"success_key": 0, "message": "Unable to add transfers"}
+
+@frappe.whitelist()
+def add_tours_to_completed_invoice():
+    invoice_id = frappe.form_dict.invoice_id
+    selected_tours = frappe.form_dict.selected_tours
+    print(selected_tours)
+    if type(selected_tours) == str:
+        selected_tours = json.loads(selected_tours)
+    company_details = get_company_details()
+    try:
+        if company_details.get('is_child_company'):
+            invoice = frappe.get_doc("Sales Invoice", {"name": invoice_id, "company": company_details.get('company'), "child_company": company_details.get('child_company')})
+        else:
+            invoice = frappe.get_doc("Sales Invoice", {"name": invoice_id, "company": company_details.get('company')})
+    except:
+        return {"success_key": 0, "message": "Invoice not found"}
+    res = invoice.add_tours(selected_tours)
+    if res:
+        return {"success_key": 1, "message": ""}
+    else:
+        return {"success_key": 0, "message": "Unable to add tours"}
     
 
 @frappe.whitelist()
@@ -450,6 +471,6 @@ def update_reservation():
     except:
         return {"success_key": 0, "message": "Invoice not found"}
     invoice.update_transfers(transfers_info)
-    # invoice.update_tours(tours_info)
+    invoice.update_tours(tours_info)
     invoice.save(ignore_permissions=True)
     return {"success_key": 1, "message": ""}

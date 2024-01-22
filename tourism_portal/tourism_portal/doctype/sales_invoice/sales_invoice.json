@@ -216,18 +216,21 @@
    "label": "Tours"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "tours",
    "fieldtype": "Table",
    "label": "Tours",
    "options": "Sales Invoice Tour Item"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "tour_types",
    "fieldtype": "Table",
    "label": "Tour Types",
    "options": "Sales Invoice Tour"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "tour_pax_info",
    "fieldtype": "Table",
    "label": "Tour Pax Info",
@@ -321,7 +324,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-16 17:50:33.722529",
+ "modified": "2024-01-22 16:24:02.795076",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice",

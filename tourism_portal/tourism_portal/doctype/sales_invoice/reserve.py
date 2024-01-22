@@ -99,6 +99,8 @@ def add_transfers_to_invoice(invoice, transfers, transfer_margin):
     return total_amount, total_company_amount
 
 def add_tours_to_invoice(invoice, tours, tour_margin):
+    total_amount = 0
+    total_company_amount = 0
     for searchName in tours:
         total_price = 0
         total_price_company = 0
@@ -148,6 +150,9 @@ def add_tours_to_invoice(invoice, tours, tour_margin):
             guest.guest_age = int(child_age)
         tour_search.tour_price = total_price
         tour_search.tour_price_company = total_price_company
+        total_amount += total_price
+        total_company_amount += total_price_company
+    return total_amount, total_company_amount
 
 def get_tour_doctype(tour_type):
     doctype = "single"

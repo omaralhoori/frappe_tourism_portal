@@ -1,0 +1,14 @@
+<script type="text/template" id="tour-card-template">
+<div class="card m-2 tour-card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title {TourClass}" tour-id="{TourId}">{Tour Name}</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item tour-pickup" tour-pickup="{PickUp}">Pickup: {PickUp}</li>
+        {Tour Options}
+        <li class="list-group-item tour-price" tour-price-company="{TotalPriceCompany}" tour-price="{TotalPrice}">Total Price: {TotalPrice}</li>
+        <li class="list-group-item">Total Pax: {TotalPax} <small>(Adults: {Adults}, Children: {Children})</small></li>
+    </ul>
+    </div>
+
+</script>
