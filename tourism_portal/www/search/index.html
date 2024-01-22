@@ -294,7 +294,7 @@
 {% endfor %}
 {% if transfers|length > 0%}
     {% set transfer = transfers[0]%}
-        <div class="card m-2 transfer-card" style="width: 18rem;" 
+        <div class="card m-2 transfer-card" style="width: 16rem;" 
         transfer-type="{{transfer.transfer_type}}"
         transfer-price="{{transfer.transfer_price}}"
         transfer-price-company="{{transfer.transfer_price_company}}"
@@ -339,7 +339,7 @@
 {%endmacro%}
 
 {%macro vip_tour_card(tour, tour_id)%}
-    <div class="card m-2 tour-card" style="width: 18rem;">
+    <div class="card m-2 tour-card" style="width: 16rem;">
     {% if not tour %}
         <div class="p-3">{{tour_id}} price is not available</div>
     {%else%}
@@ -383,7 +383,7 @@
     {% if not totalPrice or totalPrice <= 0 %}
 
     {% else %}
-    <div class="card m-2 tour-card" style="width: 18rem;">
+    <div class="card m-2 tour-card" style="width: 16rem;">
     <img class="card-img-top" src="{{tourPackage.get('tour_image')}}" alt="Card image cap">
 
     <div class="card-body">
