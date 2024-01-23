@@ -39,6 +39,12 @@ def delete_expired_invoices():
         frappe.delete_doc("Sales Invoice", invoice['name'], ignore_permissions=True)
         # frappe.db.commit()
 
+def get_absolute_path(file_name):
+	if(file_name.startswith('/files/')):
+		file_path = f'{frappe.utils.get_bench_path()}/sites/{frappe.utils.get_site_base_path()[2:]}/public{file_name}'
+	if(file_name.startswith('/private/')):
+		file_path = f'{frappe.utils.get_bench_path()}/sites/{frappe.utils.get_site_base_path()[2:]}{file_name}'
+	return file_path
 
 def get_location_postal_code(location_type, location):
     area = None

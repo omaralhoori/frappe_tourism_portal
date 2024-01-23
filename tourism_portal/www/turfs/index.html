@@ -46,49 +46,32 @@
                         </form> #}
 
                         <div class="filter-result">
-                            <p class="mb-30 ff-montserrat">Total Transactions : {{transactions|length}}</p>
-                        {%for trx in transactions %}
-                            <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
+                        {% if turfs|length > 0 %}
+                        {%for trf in turfs %}
+                            <div class="job-box d-md-flex align-items-center justify-content-between m-3">
                                 <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
-                                
-                                    <div class="img-holder mr-md-4 mb-md-0 mb-4 mx-auto mx-md-0 d-md-none d-lg-flex">
-                                        {{trx.payment_type}}
-                                    </div>
                                     <div class="job-content">
-                                        <h5 class="text-center text-md-left">{{trx.name}}</h5>
                                         <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
                                             <li class="mr-md-4">
-                                                <i class="zmdi zmdi-time mr-2"></i> {{trx.post_date}}
+                                                <i class="zmdi zmdi-time mr-2"></i> {{trf.turf.turf_from_date}} - {{trf.turf.turf_to_date}}
                                             </li>
                                             <li class="mr-md-4">
-                                                <i class="zmdi zmdi-money mr-2"></i>{% if trx.payment_type == 'Pay'%} -{%endif%} {{frappe.utils.fmt_money(trx.amount)}}
+                                                <i class="fa fa-map-marker mr-2"></i> {{trf.city}}
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
+                                <div class="job-right my-4 flex-shrink-0">
+                                    <a target="_blank" href="/api/method/tourism_portal.api.pdf.view_turf?turf={{trf.turf.name}}" class="btn d-block w-100 d-sm-inline-block m-1 btn-light">View</a>
+                                    <a target="_blank" href="/api/method/tourism_portal.api.pdf.download_turf?turf={{trf.turf.name}}" class="btn d-block w-100 d-sm-inline-block m-1 btn-success">Download</a>
+                                </div>
                             </div>
                         {%endfor%}
+                        {% else %}
+                        <div class="alert alert-info mt-4" role="alert">No results found</div>
+                        {% endif %}
                         </div>
                     </div>
-
-                    <!-- START Pagination -->
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination pagination-reset justify-content-center">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                    <i class="zmdi zmdi-long-arrow-left"></i>
-                                </a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="/invoices?page=1">1</a></li>
-                            <li class="page-item d-none d-md-inline-block"><a class="page-link" href="/invoices?page=2">2</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">
-                                    <i class="zmdi zmdi-long-arrow-right"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                    <!-- END Pagination -->
                 </div>
             </div>
 

@@ -1,0 +1,103 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "prompt",
+ "creation": "2024-01-23 09:25:44.627573",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "city",
+  "published_from_date",
+  "turf_from_date",
+  "column_break_4ugw6",
+  "company_class",
+  "published_to_date",
+  "turf_to_date",
+  "section_break_y45ba",
+  "turf_file"
+ ],
+ "fields": [
+  {
+   "fieldname": "city",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "City",
+   "options": "City",
+   "reqd": 1
+  },
+  {
+   "fieldname": "published_from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Published From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "turf_from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Turf From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_4ugw6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company_class",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company Class",
+   "options": "Company Class",
+   "reqd": 1
+  },
+  {
+   "fieldname": "published_to_date",
+   "fieldtype": "Date",
+   "label": "Published To Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "turf_to_date",
+   "fieldtype": "Date",
+   "label": "Turf To Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_y45ba",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "turf_file",
+   "fieldtype": "Attach",
+   "label": "Turf File"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-01-23 09:25:44.627573",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Turf",
+ "naming_rule": "Set by user",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
