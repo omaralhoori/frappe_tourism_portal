@@ -8,6 +8,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "section_break_65grq",
   "city",
   "published_from_date",
   "turf_from_date",
@@ -73,11 +74,15 @@
    "fieldname": "turf_file",
    "fieldtype": "Attach",
    "label": "Turf File"
+  },
+  {
+   "fieldname": "section_break_65grq",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-23 09:25:44.627573",
+ "modified": "2024-01-23 12:01:17.459918",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Turf",

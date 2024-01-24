@@ -32,7 +32,12 @@
   "section_break_jqycl",
   "tour_cancellation_policy",
   "column_break_usmi5",
-  "transfer_cancellation_policy"
+  "transfer_cancellation_policy",
+  "landing_page_tab",
+  "site_logo",
+  "site_ico",
+  "column_break_ev9it",
+  "site_name"
  ],
  "fields": [
   {
@@ -185,13 +190,37 @@
    "label": "Transfer Cancellation Policy",
    "options": "Cancellation Policy",
    "reqd": 1
+  },
+  {
+   "fieldname": "landing_page_tab",
+   "fieldtype": "Tab Break",
+   "label": "Portal Website"
+  },
+  {
+   "fieldname": "site_logo",
+   "fieldtype": "Attach Image",
+   "label": "Site Logo"
+  },
+  {
+   "fieldname": "column_break_ev9it",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "site_name",
+   "fieldtype": "Data",
+   "label": "Site Name"
+  },
+  {
+   "fieldname": "site_ico",
+   "fieldtype": "Attach Image",
+   "label": "Site Ico"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-01-02 14:50:02.936702",
+ "modified": "2024-01-23 14:53:15.422981",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal Settings",

@@ -4,7 +4,7 @@
         <div class="row">
 
             <nav class="navbar navbar-expand-lg narbar-light">
-                <a class="navbar-brand mr-auto" href="#">
+                <a class="navbar-brand mr-auto" href="/">
                     {{get_site_logo()}}
                 </a>
                 <button type="button" id="nav-toggle" class="navbar-toggler collapsed" data-toggle="collapse"
@@ -14,8 +14,9 @@
                 <div id="mainNav" class="collapse navbar-collapse tm-bg-white">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="/">Home</a>
+                            <a class="nav-link" href="/home">Home</a>
                         </li>
+                        {% if frappe.session.user != 'Guest' %}
                         <li class="nav-item">
                             <a class="nav-link" href="/invoices">Vouchers</a>
                         </li>
@@ -25,7 +26,6 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/account">My Account</a>
                         </li>
-                        {% if frappe.session.user != 'Guest' %}
                         <li class="nav-item">
                             <span class="nav-link">Balance: <strong>{{frappe.utils.fmt_money(get_customer_balance())}}</strong></span>
                         </li>

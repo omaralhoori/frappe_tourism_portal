@@ -596,6 +596,7 @@ function tourTypeChanged(e) {
                 var listElement = document.createElement("li");
                 listElement.classList.add('list-group-item');
                 listElement.classList.add('tour-list-item');
+                var checkboxElementShow = document.createElement("div");
                 var checkboxElement = document.createElement("input");
                 checkboxElement.setAttribute('type', 'checkbox');
                 checkboxElement.setAttribute('name', 'tours');
@@ -603,9 +604,12 @@ function tourTypeChanged(e) {
                 checkboxElement.setAttribute('onclick', 'onTourSelectChange(this)');
                 checkboxElement.setAttribute('tour-time', tour.tour_time)
                 checkboxElement.setAttribute('tour-dates', JSON.stringify(tour.tour_dates));
+                checkboxElement.classList.add('d-none');
+                checkboxElementShow.classList.add('checkbox-show');
                 var labelElement = document.createElement("label");
                 labelElement.innerText = tour.tour_name;
                 listElement.appendChild(checkboxElement);
+                listElement.appendChild(checkboxElementShow);
                 listElement.appendChild(labelElement);
                 // listElement.innerHTML = `<input type="checkbox" onclick="onTourSelectChange(this)" name="tours" value="${tour.tour_id}"> <label>${tour.tour_name} </label>`;
 
@@ -614,9 +618,9 @@ function tourTypeChanged(e) {
                 listElement.setAttribute('title', tour.tour_description);
                 listElement.addEventListener('click', function (e) {
                     var checkbox = e.currentTarget.querySelector('input[type="checkbox"]');
-                    checkbox.click();
                     // checkbox.checked = !checkbox.checked;
-                    // onTourSelectChange(checkbox);
+                    checkbox.click();
+                    //onTourSelectChange(e);
                 });
                 tourSelect.appendChild(listElement);
             }
@@ -638,21 +642,33 @@ function getTotalDays(checkin, checkout) {
 function checkAvailablePackageDates(e) {
     var selectedTourElements = e.closest('form').querySelectorAll('input[name="tours"]:checked');
     var tourSelectContainer = e.closest('form').querySelector('.tours-html-container');
-    var totalDays = Number(tourSelectContainer.getAttribute('total-days')) + 1;
-    var tourTime = e.getAttribute('tour-time');
-    for (var selectedTour of selectedTourElements) {
-        var tourMinDate = Number(selectedTour.getAttribute('tour-time'));
-        totalDays -= tourMinDate;
-    }
+    // var totalDays = Number(tourSelectContainer.getAttribute('total-days')) + 1;
+    // var tourTime = e.getAttribute('tour-time');
+    // for (var selectedTour of selectedTourElements) {
+    //     var tourMinDate = Number(selectedTour.getAttribute('tour-time'));
+    //     totalDays -= tourMinDate;
+    // }
 
-    var tours = tourSelectContainer.querySelectorAll('input[name="tours"]:not(:checked)')
-    for (var tour of tours) {
-        if (Number(tour.getAttribute('tour-time')) > totalDays) {
+    // var tours = tourSelectContainer.querySelectorAll('input[name="tours"]:not(:checked)')
+    // for (var tour of tours) {
+    //     if (Number(tour.getAttribute('tour-time')) > totalDays) {
+    //         tour.disabled = true;
+    //     } else {
+    //         tour.disabled = false;
+    //     }
+
+    // }
+    if (selectedTourElements.length > 0) {
+        var tours = tourSelectContainer.querySelectorAll('input[name="tours"]:not(:checked)')
+        for (var tour of tours) {
             tour.disabled = true;
-        } else {
+        }
+    }
+    else {
+        var tours = tourSelectContainer.querySelectorAll('input[name="tours"]:not(:checked)')
+        for (var tour of tours) {
             tour.disabled = false;
         }
-
     }
 }
 function checkAvailableIndividualDates(e) {
@@ -709,6 +725,16 @@ function checkAvailableIndividualDates(e) {
         }
     }
 }
+function disableEnableCheckboxShow(e) {
+    e.closest('form').querySelectorAll('.tour-list-item').forEach(tour => {
+        var checkboxShow = tour.querySelector('.checkbox-show')
+        if (tour.querySelector('input[name="tours"]').disabled) {
+            checkboxShow.classList.add('disabled')
+        } else {
+            checkboxShow.classList.remove('disabled')
+        }
+    })
+}
 
 function onTourSelectChange(e) {
     var tourCard = e.closest('.tour-search-card').querySelector('input[name="tour-card"]').value;
@@ -721,7 +747,14 @@ function onTourSelectChange(e) {
     } else {
         checkAvailableIndividualDates(e)
     }
-
+    disableEnableCheckboxShow(e)
+    if (e.checked) {
+        var checkboxShow = e.closest('.tour-list-item').querySelector('.checkbox-show')
+        checkboxShow.setAttribute('checked', 'checked');
+    }else{
+        var checkboxShow = e.closest('.tour-list-item').querySelector('.checkbox-show')
+        checkboxShow.removeAttribute('checked');
+    }
     var tourDates = JSON.parse(e.getAttribute('tour-dates'))
     // if (e.checked) {
     //     selectedTours[tourCard][e.value] = true;

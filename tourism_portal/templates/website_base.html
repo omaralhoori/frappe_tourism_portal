@@ -60,7 +60,75 @@
         .hidden{
             display: none;
         }
-
+        .panel-heading{
+            border-radius: 5px;
+            background-color: #312C6F;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        i.tm-color-primary, i.tm-form-element-icon{
+            color: #5c50c5;
+        }
+        .tm-btn-search{
+            background-color: #F39717;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .tm-btn-search:hover, .btn-primary:hover{
+            background-color: #352D83;
+            color: #fff;
+        }
+        .tm-btn-search:active, .btn-primary:active,
+        .tm-btn-search:focus, .btn-primary:focus{
+            background-color: #F39717;
+            color: #fff;
+        }
+        .btn-primary{
+            background-color: #F39717;
+            color: #fff;
+            border: none;
+            border-radius: 5px;   
+        }
+        body{
+            padding-bottom: 20px;
+        }
+        .nav-link.active, .nav-link:hover{
+            background-color: #383383;
+            color: #fff;
+        }
+         .nav-link {
+            font-weight: 500   ;
+            font-size: 1.1em;
+         }
+         .checkbox-show{
+            width: 18px;
+            height: 18px;
+            border-radius: 5px;
+            border: 1px solid #383383;
+            display: inline-block;
+            margin: 0 5px;
+         }
+       
+         .checkbox-show:hover{
+            cursor: pointer;
+            background-color: #5c50c5;
+         }
+         .checkbox-show[checked]{
+            background-color: #383383;
+         }
+           .checkbox-show.disabled{
+                background-color: #bbbbbb;
+                border: 1px solid #bbbbbb;
+         }
+         .checkbox-show.disabled:hover{
+                background-color: #bbbbbb;
+                border: 1px solid #bbbbbb;
+         }
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }

@@ -1,5 +1,5 @@
 body{
-    background-image: url('/assets/tourism_portal/images/bg-img-1.jpg');
+    background-color: #f1f6fa;
 }
 
 .html-template{
@@ -37,8 +37,18 @@ body{
 }
 
 .tours-html-container{
-    overflow-y: scroll;
+    overflow-y: auto;
     max-height: 250px;
+    width: 100%;
+}
+.tours-html-container li{
+    cursor: pointer;
+}
+.tours-html-container input{
+    margin-right: 5px;
+}
+.tours-html-container li:hover{
+    background-color: #f1f6fa;
 }
 
 .allowed-flights {

@@ -1,0 +1,68 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-01-24 11:59:01.858730",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "i_agree_to_the_terms_and_conditions",
+  "agency_name",
+  "agency_country",
+  "terms_and_conditions"
+ ],
+ "fields": [
+  {
+   "fieldname": "agency_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Agency Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "agency_country",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Agency Country",
+   "options": "Country",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "i_agree_to_the_terms_and_conditions",
+   "fieldtype": "Check",
+   "label": "I agree to the Terms and Conditions",
+   "reqd": 1
+  },
+  {
+   "fieldname": "terms_and_conditions",
+   "fieldtype": "HTML",
+   "label": "Terms And Conditions"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-01-24 12:20:49.291862",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Agency Join Request",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

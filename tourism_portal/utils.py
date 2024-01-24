@@ -11,7 +11,9 @@ def get_print_settings(fieldname):
 def format_file_link_print(file_url):
         return frappe.utils.get_url(file_url)
 
-def get_site_logo():
+def get_site_logo(src=False):
+    if src:
+         get_portal_setting("site_logo")
     return frappe.db.get_single_value("Website Settings", "brand_html")
 
 def get_site_name():

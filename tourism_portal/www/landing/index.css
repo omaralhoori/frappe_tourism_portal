@@ -1,0 +1,74 @@
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  
+  .swiper-button-next, .swiper-button-prev {
+    top: 35%;
+  }
+  
+  .swiper-button-next {
+    width: 110px;
+    height: 110px;
+    right: -2.25%;
+  }
+  .swiper-button-next::after {
+    width: 100%;
+    height: 100%;
+    background-image: url('/assets/tourism_portal/images/landing/next-button.svg') !important;
+    content: 'sa';
+  }
+  
+  .swiper-button-prev {
+    width: 110px;
+    height: 110px;
+    left: -2.25%;
+  }
+  
+  .swiper-button-prev::after {
+    width: 100%;
+    height: 100%;
+    background-image: url('/assets/tourism_portal/images/landing/prev-button.svg') !important;
+    content: 'sa';
+  }
+  
+  .swiper-pagination-bullet-active {
+    background-color: #3d60fc;
+  }
+  
+  @media (max-width: 768px){
+    .swiper-button-next {
+      right: -7%;
+    }
+  
+    .swiper-button-prev {
+      left: -7%;
+    }
+  }
+  
+  @media (max-width: 1023px){
+    .swiper-button-next {
+      right: -4%;
+    }
+  
+    .swiper-button-prev {
+      left: -4%;
+    }
+  }
+  
+  @media (max-width: 1279px){
+    .swiper-button-next {
+      right: -3%;
+    }
+  
+    .swiper-button-prev {
+      left: -3%;
+    }
+  }
+
+
+  /******************Colors******************************1 */
+
+.btn-1-color{
+    background-color: #3d60fc !important;
+    color: #fff !important;
+}
