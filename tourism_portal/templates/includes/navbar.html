@@ -20,9 +20,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/invoices">Vouchers</a>
                         </li>
+                        {% if has_user_tariff() %}
                         <li class="nav-item">
-                            <a class="nav-link" href="/turfs">Turfs</a>
+                            <a class="nav-link" href="/tariffs">Tariffs</a>
                         </li>
+                        {% endif %}
                         <li class="nav-item">
                             <a class="nav-link" href="/account">My Account</a>
                         </li>

@@ -11,13 +11,13 @@
   "section_break_65grq",
   "city",
   "published_from_date",
-  "turf_from_date",
+  "tariff_from_date",
   "column_break_4ugw6",
   "company_class",
   "published_to_date",
-  "turf_to_date",
+  "tariff_to_date",
   "section_break_y45ba",
-  "turf_file"
+  "tariff_file"
  ],
  "fields": [
   {
@@ -33,13 +33,6 @@
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Published From Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "turf_from_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Turf From Date",
    "reqd": 1
   },
   {
@@ -61,31 +54,38 @@
    "reqd": 1
   },
   {
-   "fieldname": "turf_to_date",
-   "fieldtype": "Date",
-   "label": "Turf To Date",
-   "reqd": 1
-  },
-  {
    "fieldname": "section_break_y45ba",
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "turf_file",
-   "fieldtype": "Attach",
-   "label": "Turf File"
-  },
-  {
    "fieldname": "section_break_65grq",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "tariff_from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Tariff From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tariff_to_date",
+   "fieldtype": "Date",
+   "label": "Tariff To Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tariff_file",
+   "fieldtype": "Attach",
+   "label": "Tariff File"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-23 12:01:17.459918",
+ "modified": "2024-01-24 17:10:44.183264",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
- "name": "Turf",
+ "name": "Tariff",
  "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [

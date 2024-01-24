@@ -16,6 +16,13 @@ def get_site_logo(src=False):
          get_portal_setting("site_logo")
     return frappe.db.get_single_value("Website Settings", "brand_html")
 
+def has_user_tariff():
+    company = frappe.db.get_value("User", frappe.session.user, "company", cache=True)
+    if not company:
+         return False
+    return frappe.db.get_value("Company", company, "has_tariff", cache=True)
+
+
 def get_site_name():
     return frappe.db.get_single_value("")
 

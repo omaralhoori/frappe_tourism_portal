@@ -525,7 +525,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Turf",
+   "label": "Tariff",
    "link_count": 0,
    "link_to": "Turf",
    "link_type": "DocType",
@@ -533,7 +533,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-01-23 09:26:14.263429",
+ "modified": "2024-01-24 17:09:41.155423",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal",

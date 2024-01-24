@@ -1,3 +1,12 @@
+body{
+    background-image: url('/assets/tourism_portal/images/background/3.jpg');
+    background-color: #f1f6fa;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
 .filters-container{
 }
 

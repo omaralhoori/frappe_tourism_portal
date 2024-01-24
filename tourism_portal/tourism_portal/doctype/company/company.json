@@ -15,6 +15,7 @@
   "default_nationality",
   "column_break_ajuyi",
   "is_child_company",
+  "has_tariff",
   "parent_company",
   "company_logo",
   "balance_and_payments_section",
@@ -166,6 +167,12 @@
    "fieldtype": "Link",
    "label": "Default Nationality",
    "options": "Nationality"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_tariff",
+   "fieldtype": "Check",
+   "label": "Has Tariff"
   }
  ],
  "image_field": "company_logo",
@@ -189,7 +196,7 @@
   }
  ],
  "make_attachments_public": 1,
- "modified": "2024-01-19 09:42:58.269160",
+ "modified": "2024-01-24 17:09:25.798032",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Company",

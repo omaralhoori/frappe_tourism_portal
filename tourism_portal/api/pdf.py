@@ -1,7 +1,7 @@
 import frappe
 from tourism_portal.api.company import get_company_details
 from tourism_portal.pdf import get_voucher_pdf, get_invoice_pdf
-from tourism_portal.tourism_portal.doctype.turf.turf import get_company_turfs
+from tourism_portal.tourism_portal.doctype.tariff.tariff import get_company_tariffs
 from tourism_portal.utils import get_absolute_path
 
 
@@ -48,14 +48,14 @@ def print_invoice_invoice(invoice_no):
 
 @frappe.whitelist()
 def view_turf(turf):
-    turfs = get_company_turfs()
+    turfs = get_company_tariffs()
     turf_link = None
     turf_name = None
     for t in turfs:
         print(t)
-        if t.get("turf").get('name') == turf:
-            turf_link = t.get("turf").get("turf_file")
-            turf_name = t.get("turf").get("name")
+        if t.get("tariff").get('name') == turf:
+            turf_link = t.get("tariff").get("tariff_file")
+            turf_name = t.get("tariff").get("name")
             break
     if not turf_link:
         frappe.throw("Turf not found")
@@ -70,17 +70,17 @@ def view_turf(turf):
 
 @frappe.whitelist()
 def download_turf(turf):
-    turfs = get_company_turfs()
+    turfs = get_company_tariffs()
     turf_link = None
     turf_name = None
     for t in turfs:
         print(t)
-        if t.get("turf").get('name') == turf:
-            turf_link = t.get("turf").get("turf_file")
-            turf_name = t.get("turf").get("name")
+        if t.get("tariff").get('name') == turf:
+            turf_link = t.get("tariff").get("tariff_file")
+            turf_name = t.get("tariff").get("name")
             break
     if not turf_link:
-        frappe.throw("Turf not found")
+        frappe.throw("Tariff not found")
     
     file_path = get_absolute_path(turf_link)
     file_content = None

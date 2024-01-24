@@ -46,14 +46,14 @@
                         </form> #}
 
                         <div class="filter-result">
-                        {% if turfs|length > 0 %}
-                        {%for trf in turfs %}
+                        {% if tariffs|length > 0 %}
+                        {%for trf in tariffs %}
                             <div class="job-box d-md-flex align-items-center justify-content-between m-3">
                                 <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
                                     <div class="job-content">
                                         <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
                                             <li class="mr-md-4">
-                                                <i class="zmdi zmdi-time mr-2"></i> {{trf.turf.turf_from_date}} - {{trf.turf.turf_to_date}}
+                                                <i class="zmdi zmdi-time mr-2"></i> {{trf.tariff.tariff_from_date}} - {{trf.tariff.tariff_to_date}}
                                             </li>
                                             <li class="mr-md-4">
                                                 <i class="fa fa-map-marker mr-2"></i> {{trf.city}}
@@ -62,8 +62,8 @@
                                     </div>
                                 </div>
                                 <div class="job-right my-4 flex-shrink-0">
-                                    <a target="_blank" href="/api/method/tourism_portal.api.pdf.view_turf?turf={{trf.turf.name}}" class="btn d-block w-100 d-sm-inline-block m-1 btn-light">View</a>
-                                    <a target="_blank" href="/api/method/tourism_portal.api.pdf.download_turf?turf={{trf.turf.name}}" class="btn d-block w-100 d-sm-inline-block m-1 btn-success">Download</a>
+                                    <a target="_blank" href="/api/method/tourism_portal.api.pdf.view_turf?turf={{trf.tariff.name}}" class="btn d-block w-100 d-sm-inline-block m-1 btn-light">View</a>
+                                    <a target="_blank" href="/api/method/tourism_portal.api.pdf.download_turf?turf={{trf.tariff.name}}" class="btn d-block w-100 d-sm-inline-block m-1 btn-success">Download</a>
                                 </div>
                             </div>
                         {%endfor%}

@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestTurf(FrappeTestCase):
+class TestTariff(FrappeTestCase):
 	pass

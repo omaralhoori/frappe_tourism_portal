@@ -66,6 +66,7 @@ jinja = {
         "tourism_portal.utils.get_site_name",
         "tourism_portal.utils.get_room_extras",
         "tourism_portal.utils.get_room_boards",
+        "tourism_portal.utils.has_user_tariff",
         "tourism_portal.utils.get_room_beds",
         "tourism_portal.utils.get_hotel_total_nights",
         "tourism_portal.utils.get_portal_setting",
