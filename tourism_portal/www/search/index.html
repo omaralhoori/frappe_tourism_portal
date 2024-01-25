@@ -103,7 +103,7 @@
                 <div class="row tour-search-card" tour-search="{{search}}">
                 {{render_tour_search_header(search)}}
                 {% set packages = [] %}
-                 <div class="col-12 flex-wrap">
+                 <div class="col-12 d-flex">
                 {% for tour in tours[search]%}
                     {% if tour['tour_type'] == 'vip'%}
                             {{vip_tour_card(tour, search)}}
