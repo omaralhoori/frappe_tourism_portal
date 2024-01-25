@@ -367,10 +367,10 @@ function dropoffTransferChanged(e) {
     // checkRegularFlights(e, 'arrival');
 }
 function searchBtnClicked(e) {
-    toggleLoadingIndicator(true);
     var hotelParams = getHotelParams();
     var transferParams = getTransferParams();
     var toursParams = getToursParams();
+    toggleLoadingIndicator(true);
     var searchParams = {
         "hotelParams": hotelParams,
         "transferParams": transferParams,

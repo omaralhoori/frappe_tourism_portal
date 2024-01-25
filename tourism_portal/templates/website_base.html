@@ -220,6 +220,7 @@
     <img src="/assets/tourism_portal/images/loading.gif" alt="">
 </div>
 </div>
+{% include "templates/includes/success_modal.html" %}
 
             <!-- load JS files -->
             <script src="/assets/tourism_portal/js/jquery-1.11.3.min.js"></script>
@@ -244,7 +245,7 @@
                    
                 }
             </script>
-
+            {% include 'templates/includes/base_javascript.html' %}
             {% block base_scripts %}
             <!-- js should be loaded in body! -->
             <script>
