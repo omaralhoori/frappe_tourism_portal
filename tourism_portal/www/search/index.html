@@ -98,13 +98,12 @@
     </div>
   </div>
   <div class="row tour-resutls">
-    {% if tours %}
-        <div class="col-12"><strong>Tours</strong></div>
-    {%endif%}
         <div class="col-12">
             {% for search in tours%}
                 <div class="row tour-search-card" tour-search="{{search}}">
+                {{render_tour_search_header(search)}}
                 {% set packages = [] %}
+                 <div class="col-12 flex-wrap">
                 {% for tour in tours[search]%}
                     {% if tour['tour_type'] == 'vip'%}
                             {{vip_tour_card(tour, search)}}
@@ -114,6 +113,7 @@
                     {% endif %}
             {% endfor %}
             {{package_tour_card(packages) }}
+            </div>
             </div>
             {% endfor %}
         </div>
@@ -151,8 +151,7 @@
                 <div class="hotel-card-top">
                     <div class="hotel-title">{Hotel Name}</div>
                 <div class='hotel-stars' star-rating="{Hotel Stars}">
-                        {Hotel Stars}
-                    </div>
+                </div>
                 </div>
                 <div class="hotel-details mt-3">
                     <div >{Hotel Address}</div>
@@ -163,7 +162,7 @@
                 <div class="d-flex justify-content-center align-items-center flex-column h-100">
 
                     <div class="hotel-price-container">
-                        Strats from <span class="hotel-price">{Hotel Price}</span>
+                        Strat from <span class="hotel-price">{Hotel Price}</span>
                     </div>
                     <div class="container ask-button-container mt-3">
                         <button onclick="seeHotelMoreDetails(this)" style="font-size: .8em;" class="btn btn-primary tm-btn-search p-2">See Details</button>
@@ -404,7 +403,22 @@
 
 {% macro render_transfer_search_header(search) %}
 <div class="col-12">
-        <div class="card p-3 mt-3" >
+        <div class="card p-3 mt-3 card-primary-color" >
+        <div class="d-flex justify-content-between">
+            <div class="transfer-search-label">{{search}}</div>
+            <div class="transfer-search-buttons">
+                {# <button class="btn btn-sm" search-results="{{search}}"
+                 onclick="editTransferSearchResults(this)">Edit <i class="fa fa-pencil"></i></button> #}
+            </div>
+        </div>
+
+        </div>
+</div>
+{% endmacro %}
+
+{% macro render_tour_search_header(search) %}
+<div class="col-12">
+        <div class="card p-3 mt-3 card-primary-color" >
         <div class="d-flex justify-content-between">
             <div class="transfer-search-label">{{search}}</div>
             <div class="transfer-search-buttons">

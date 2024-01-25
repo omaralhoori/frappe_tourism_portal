@@ -367,6 +367,7 @@ function dropoffTransferChanged(e) {
     // checkRegularFlights(e, 'arrival');
 }
 function searchBtnClicked(e) {
+    toggleLoadingIndicator(true);
     var hotelParams = getHotelParams();
     var transferParams = getTransferParams();
     var toursParams = getToursParams();
@@ -386,6 +387,7 @@ function searchBtnClicked(e) {
             if (r.message && r.message.is_success){
                 window.open(`search?search=${r.message.search_name}`, '_self');
             }else{
+                toggleLoadingIndicator(false);
                 frappe.throw(r.message.message)
             }
         }

@@ -176,7 +176,11 @@ function formatResults(allResults, returnHtml = false){
         //     hotelReuslts = `<div id="accordion"> ${hotelReuslts}</div>`
         // }
         //if (multipleResults){
-            hotelReuslts = `<div class="card p-3 mt-3" >${renderHotelSearchBar(resultLabel, accordion)}</div> <div class="hotel-list-results">${hotelReuslts}</div> ${loadMoreBtn}`
+        var notFoundMessage = '';
+        if (hotelReuslts == ""){
+            notFoundMessage = `<div class="alert alert-warning text-center my-3">No Hotels Found</div>`
+        }
+            hotelReuslts = `<div class="card p-3 mt-3 card-primary-color" >${renderHotelSearchBar(resultLabel, accordion)}</div> <div class="hotel-list-results">${hotelReuslts}</div> ${notFoundMessage} ${loadMoreBtn}`
         //}
         hotelReuslts = `<div class='hotel-search-results' hotel-result="${resultLabel}"> ${hotelReuslts}</div>`
         allHotelResults += hotelReuslts
