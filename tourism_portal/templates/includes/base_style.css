@@ -92,7 +92,7 @@ body{
     color: #fff;
 }
  .nav-link {
-    font-weight: 500   ;
+    font-weight: bold;
     font-size: 1.1em;
  }
  .checkbox-show{

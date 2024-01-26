@@ -423,14 +423,44 @@ function sortHotelResults(a, b) {
 function formatHotelResults(hotelResults){
     hotelResults['rooms'].sort(sortHotelResults)
     var roomResultsFormated = "";
+    var roomTypeResults = {}
     for(var roomResult of hotelResults['rooms']){
+        var roomKey = roomResult.rooms.join('-')
+        if (! roomTypeResults[roomKey] ){
+            var roomResultHeader = formatRoomResultHeader(roomResult.rooms);
+
+            roomTypeResults[roomKey]  = {
+                "header": roomResultHeader,
+                "results": []
+            }
+        }
         var resultFormatted = formatRoomResult(roomResult)
         resultFormatted = resultFormatted.replace('{Hotel Name}', hotelResults['details']['hotel_name'])
-        roomResultsFormated +=`<div class="room-result-container pax-${roomResult.details.pax}" room-id="${roomResult.details.room_id}" pax="${roomResult.details.pax}">
-            ${resultFormatted}
+        roomResultsFormated =`<div class="room-result-container pax-${roomResult.details.pax}" room-id="${roomResult.details.room_id}" pax="${roomResult.details.pax}"> 
+        ${resultFormatted}
+        </div>`;
+        roomTypeResults[roomKey]['results'].push(roomResultsFormated)
+    }
+    var htmlResult = ""
+    for (var roomType in roomTypeResults){
+        console.log(roomType)
+        var roomTypeResult = roomTypeResults[roomType]
+        console.log(roomTypeResult)
+        htmlResult += `<div class="room-type-result-container">
+        ${roomTypeResult['header']}
+        ${roomTypeResult['results'].join('')}
         </div>`
     }
-    return roomResultsFormated;
+    return htmlResult;
+}
+function formatRoomResultHeader(rooms){
+    var roomResultHeader = "";
+    for (var room of rooms){
+        roomResultHeader += `<span class="room-header-label">
+            <i class="fa fa-bed"></i> ${room}  
+        </span>`;
+    }
+    return `<div class="room-header">${roomResultHeader}</div>`
 }
 function nightCalculator(checkin, checkout){
     var checkinDate = new Date(checkin);
@@ -1109,8 +1139,8 @@ function encodeHotelRoomSeearch(hotelParams, selected_rooms){
         var rooms = {};
         for (var room in selected_rooms[search]){
             var roomNames = room.split('-')
-            for (var ss in selected_rooms[search][room]){
-                var selectedIndexes = 0;
+            var selectedIndexes = 0;
+            for (var ss in selected_rooms[search][room]){                
                 for (var i=0; i<selected_rooms[search][room][ss]['qty']; i++){
                     var paxInfo = hotelParams[search]['paxInfo'].find(obj => obj.roomName == roomNames[selectedIndexes])
                     var encodedRoom = {
