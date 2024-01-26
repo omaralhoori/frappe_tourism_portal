@@ -18,18 +18,30 @@
                         </li>
                         {% if frappe.session.user != 'Guest' %}
                         <li class="nav-item">
-                            <a class="nav-link" href="/invoices">Vouchers</a>
+                            <a class="nav-link" href="/invoices">My Bookings</a>
                         </li>
-                        {% if has_user_tariff() %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="/tariffs">Tariffs</a>
-                        </li>
-                        {% endif %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="/account">My Account</a>
-                        </li>
-                        <li class="nav-item">
-                            <span class="nav-link">Balance: <strong>{{frappe.utils.fmt_money(get_customer_balance())}}</strong></span>
+                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                             My Account
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            
+                            <a class="dropdown-item">Balance: <strong>{{frappe.utils.fmt_money(get_customer_balance())}}</strong></a>
+                            <div class="dropdown-divider"></div>
+
+                            <a class="dropdown-item" href="/account/statement">Statement of Account</a>
+                            <a class="dropdown-item" href="/account/users">Users</a>
+                            {% if user_has_subagency() %}
+                            <a class="dropdown-item" href="/account/agency_account">Subagency Account</a>
+                            {% endif %}
+                            {% if has_user_tariff() %}
+                                <a class="dropdown-item" href="/tariffs">Tariffs</a>
+                            {% endif %}
+                            <a class="dropdown-item" href="/account/settings">Settings</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/?cmd=web_logout">Log Out</a>
+                            </div>
                         </li>
                         {% endif %}
                     </ul>

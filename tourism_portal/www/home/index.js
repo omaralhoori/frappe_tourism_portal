@@ -29,7 +29,20 @@ $(document).ready(function () {
 
         }
     })
+    addDefaultAdults(document.querySelector('.hotel-search-card'), true);
+    hideOneCardDeleteBtn();
 });
+
+function hideOneCardDeleteBtn() {
+    var deleteBtns = document.querySelectorAll('.remove-card-btn');
+    if (deleteBtns.length == 1) {
+        deleteBtns[0].style.display = 'none';
+    }else{
+        for (var deleteBtn of deleteBtns){
+            deleteBtn.style.display = 'block';
+        }
+    }
+}
 
 function checkToDateClass(checkInName){
     if (checkInName == "check-in"){
@@ -157,10 +170,10 @@ function childCountChanged(e) {
 function collapseBtnPressed(e) {
     var deleteBtn = e.parentNode.querySelector('.remove-card-btn');
     if (e.parentNode.querySelector('.panel-collapse').classList.toggle('show')) {
-        e.innerHTML = `<i class="fa fa-chevron-down" aria-hidden="true"></i>`
+        e.innerHTML = `<span class="material-symbols-rounded">expand_less</span> `//`<i class="fa fa-chevron-down" aria-hidden="true"></i>`
         deleteBtn.style.display = 'block';
     } else {
-        e.innerHTML = `<i class="fa fa-chevron-up" aria-hidden="true"></i>`
+        e.innerHTML = `<span class="material-symbols-rounded">expand_more</span> `
         deleteBtn.style.display = 'none';
     }
 
@@ -245,6 +258,7 @@ function addTransferClicked(e) {
 
     //childrenContainer.querySelector('.round-trip').bootstrapToggle()
     e.style.display = 'none';
+    hideOneCardDeleteBtn();
 
 }
 function addTourClicked(e) {
@@ -305,6 +319,7 @@ function addTourClicked(e) {
     e.style.display = 'none';
     formatSelect2()
     selectedTours[tourCardName] = {}
+    hideOneCardDeleteBtn();
 }
 function addDays(date, days) {
     var result = new Date(date);
@@ -331,6 +346,8 @@ function addHotelClicked(e) {
     // html += document.querySelector('.transfer-search-template').innerHTML;
     // childrenContainer.innerHTML = html;
     // e.style.display = 'none';
+    addDefaultAdults(allHotelSearchCards[allHotelSearchCards.length - 1], true);
+    hideOneCardDeleteBtn();
 
 }
 function pickupTransferChanged(e) {
@@ -419,6 +436,19 @@ function getHotelParams() {
         hotelParams[hotelCardNumber] = getHotelSearchInfo(hotel, true);
     })
     return hotelParams;
+}
+
+function addDefaultAdults(e, isHotel){
+    if (isHotel){
+        var roomSelectInput = e.querySelector('select[name="room"]')
+        roomSelectInput.value = 1;
+        var event = new Event('change');
+        roomSelectInput.dispatchEvent(event);
+        var adultsSelectInput = e.querySelector('select[name="adult"]')
+        adultsSelectInput.value = 2;
+        var event = new Event('change');
+        adultsSelectInput.dispatchEvent(event);
+    }
 }
 
 function getTransferParams() {
@@ -969,14 +999,14 @@ function onWayTransfer(e){
     if (dataWay == 'one-way'){
         // transferCard.querySelector('.return-transfer').style.display = 'none';
         transferCard.querySelector('.return-transfer').classList.add('d-none');
-        e.setAttribute("data-way", "two-way")
-        e.innerHTML = `<i class="fa fa-exchange" aria-hidden="true"></i> Two Way`
+        //e.setAttribute("data-way", "two-way")
+        //e.innerHTML = `<i class="fa fa-exchange" aria-hidden="true"></i> Two Way`
 
     }else{
         // transferCard.querySelector('.return-transfer').style.display = 'block';
         transferCard.querySelector('.return-transfer').classList.remove('d-none');
-        e.setAttribute("data-way", "one-way")
-        e.innerHTML = `<i class="fa fa-exchange" aria-hidden="true"></i> One Way`
+        //e.setAttribute("data-way", "one-way")
+        //e.innerHTML = `<i class="fa fa-exchange" aria-hidden="true"></i> One Way`
     }
 }
 
@@ -1059,6 +1089,7 @@ function deleteCard(e){
         card.remove();
     }
     renumberCards();
+    hideOneCardDeleteBtn();
 }
 
 function renumberCards(){

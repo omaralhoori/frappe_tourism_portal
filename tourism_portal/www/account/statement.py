@@ -15,7 +15,6 @@ def get_context(context):
         context.from_date = frappe.utils.today()
     if not context.to_date:
         context.to_date = frappe.utils.today()
-    context.include_sidebar = True
     if company_details['is_child_company']:
         context.transactions = get_child_company_transactions(company_details['child_company'],company_details['company'], context.from_date, context.to_date)
     else:

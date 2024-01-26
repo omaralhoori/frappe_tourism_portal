@@ -7,10 +7,12 @@
         class="btn btn-danger remove-card-btn">
         <i class="fa fa-times"></i>
     </button>
-    <button onclick="collapseBtnPressed(this)"
-        class="btn btn-primary collapse-btn">
-        <i class="fa fa-chevron-up" aria-hidden="true"></i>
-    </button>
+   <button onclick="collapseBtnPressed(this)"
+        class="btn collapse-btn">
+<span class="material-symbols-rounded">
+expand_less
+</span> 
+</button>
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="px-3 py-2 panel-heading d-flex justify-content-between">
@@ -18,7 +20,8 @@
                     <a >Transfer</a>
                 </h4>
                 <div>
-                    <button class="btn btn-primary" data-way="one-way" onclick="onWayTransfer(this)"><i class="fa fa-exchange" aria-hidden="true"></i> One Way</button>
+                    <button class="btn btn-primary font-weight-bold" data-way="one-way" onclick="onWayTransfer(this)"><i class="fa fa-long-arrow-right" aria-hidden="true"></i> One Way</button>
+                    <button class="btn btn-primary font-weight-bold" data-way="two-way" onclick="onWayTransfer(this)"><i class="fa fa-exchange" aria-hidden="true"></i> Two Way</button>
                 </div>
             </div>
             <div class="panel-collapse tm-bg-white collapse show container ie-h-align-center-fix">
@@ -241,7 +244,7 @@
                     <button onclick="searchBtnClicked(this)" type="button"  class="btn btn-primary tm-btn-search">Search</button>
                                 </div>
                                 <div class="form-group tm-form-element tm-form-element-2">
-                                    <button class="btn btn-primary tm-btn-search" type="button" onclick="transferAddTransferClicked(this)">Add Transfer</button>
+                                    <button class="btn btn-primary tm-btn-search" type="button" onclick="transferAddTransferClicked(this)">Add Another Transfer</button>
                                 </div>
                             </div>
                     </div>

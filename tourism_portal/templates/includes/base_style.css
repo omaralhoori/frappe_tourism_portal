@@ -1,0 +1,176 @@
+.loading-progress{
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(50, 50, 50, 0.5);
+    z-index: 99999;
+    top: 0;
+    left: 0;
+    display: none;
+    background-color: white;
+}
+.loader {
+border: 16px solid #f3f3f3; /* Light grey */
+border-top: 16px solid var(--primary-color); /* Blue */
+border-radius: 50%;
+width: 120px;
+height: 120px;
+animation: spin 2s linear infinite;
+}
+.loader-container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+button.close{
+    display: none;
+}
+.modal.fade{
+    z-index: 20000 !important;
+}
+.hidden{
+    display: none;
+}
+.panel-heading{
+    border-radius: 5px;
+    background-color: #312C6F;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+i.tm-color-primary, i.tm-form-element-icon{
+    color: #5c50c5;
+}
+.tm-btn-search{
+    background-color: #F39717;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+.tm-btn-search:hover, .btn-primary:hover{
+    background-color: #352D83;
+    color: #fff;
+}
+.tm-btn-search:active, .btn-primary:active,
+.tm-btn-search:focus, .btn-primary:focus{
+    background-color: #F39717;
+    color: #fff;
+}
+.btn-primary{
+    background-color: #F39717;
+    color: #fff;
+    border: none;
+    border-radius: 5px;   
+}
+.collapse-btn {
+    position: absolute;
+    right: -80px;
+    bottom: 0;
+    cursor: pointer;
+    background-color: #F39717;
+    color: #fff;
+    
+}
+.collapse-btn:hover{
+    background-color: #352D83;
+    color: #fff;
+}
+.collapse-btn .material-symbols-rounded{
+    font-weight: bold;
+    font-size: 2em;
+}
+body{
+    padding-bottom: 20px;
+}
+.nav-link.active, .nav-link:hover{
+    background-color: #383383;
+    color: #fff;
+}
+ .nav-link {
+    font-weight: 500   ;
+    font-size: 1.1em;
+ }
+ .checkbox-show{
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    border: 1px solid #383383;
+    display: inline-block;
+    margin: 0 5px;
+ }
+
+ .checkbox-show:hover{
+    cursor: pointer;
+    background-color: #5c50c5;
+ }
+ .checkbox-show[checked]{
+    background-color: #383383;
+ }
+   .checkbox-show.disabled{
+        background-color: #bbbbbb;
+        border: 1px solid #bbbbbb;
+ }
+ .checkbox-show.disabled:hover{
+        background-color: #bbbbbb;
+        border: 1px solid #bbbbbb;
+ }
+
+ .card-primary-color{
+    background-color: #5c50c5;
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: bold;
+ }
+ .dropdown-item.active, .dropdown-item:active {
+color: #fff;
+text-decoration: none;
+background-color: #5c50c5;
+}
+ .room-image img{
+    box-shadow: 0px 0px 4px 2px #ccc;
+-webkit-box-shadow: 0px 0px 4px 2px #ccc;
+-moz-box-shadow: 0px 0px 4px 2px #ccc;
+ }
+ .hotel-image img{
+        box-shadow: 0px 0px 4px 2px #ccc;
+        -webkit-box-shadow: 0px 0px 4px 2px #ccc;
+        -moz-box-shadow: 0px 0px 4px 2px #ccc;
+        border-radius: 5px;
+ }
+ 
+ .tm-top-bar{
+    height: auto;
+ }
+.tm-top-bar .navbar-expand-lg .navbar-nav .nav-link {
+padding: 25px;
+}
+.hotel-stars{
+background-repeat: no-repeat;
+background-size: cover;
+height: 20px;
+width: 100px;
+}
+div[star-rating="One Star"]{
+background-image: url('/assets/tourism_portal/images/star-rating/1-star.png');
+}
+div[star-rating="Two-Star"]{
+background-image: url('/assets/tourism_portal/images/star-rating/2-stars.png');
+}
+div[star-rating="Three-Star"]{
+background-image: url('/assets/tourism_portal/images/star-rating/3-stars.png');
+}
+div[star-rating="Four-Star"]{
+background-image: url('/assets/tourism_portal/images/star-rating/4-stars.png');
+}
+div[star-rating="Five-Star"]{
+background-image: url('/assets/tourism_portal/images/star-rating/5-stars.png');
+}
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}

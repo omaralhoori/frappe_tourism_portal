@@ -1,5 +1,9 @@
 <script>
-    function showSuccessModal(message){
+    function showSuccessModal(title, message, onclose){
+        if (onclose) {
+            $('#successModal').on('hidden.bs.modal', onclose);
+        }
+        $('#successModal .modal-title').html(title);
         $('#successModal .modal-body').html(message);
         $('#successModal').modal('show');
     }

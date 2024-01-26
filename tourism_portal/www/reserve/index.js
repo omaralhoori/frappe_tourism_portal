@@ -183,7 +183,10 @@ function confirmReservationButtonClicked(e){
     },
     callback: (res) =>{
       if(res.message && res.message.success_key){
-        window.location.reload()
+        showSuccessModal("Reservation Completed", "Your reservation has been completed successfully", () =>{
+            window.location.reload()
+        })
+        
       }else{
         msgprint(res.message.message)
       }

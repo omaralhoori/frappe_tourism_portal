@@ -103,7 +103,12 @@
                 <div class="row tour-search-card" tour-search="{{search}}">
                 {{render_tour_search_header(search)}}
                 {% set packages = [] %}
-                 <div class="col-12 d-flex">
+                {% if tours[search] | length == 0%}
+                <div class="col-12 mt-2">
+                    <div class="alert alert-warning">No available tours found</div>
+                </div>
+                {% else%}
+                 <div class="col-12 d-flex flex-wrap">
                 {% for tour in tours[search]%}
                     {% if tour['tour_type'] == 'vip'%}
                             {{vip_tour_card(tour, search)}}
@@ -111,9 +116,10 @@
                         {% set packages = packages.append(tour) %}
                             
                     {% endif %}
-            {% endfor %}
-            {{package_tour_card(packages) }}
-            </div>
+                {% endfor %}
+                {{package_tour_card(packages) }}
+                     </div>
+            {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -338,7 +344,7 @@
 {%endmacro%}
 
 {%macro vip_tour_card(tour, tour_id)%}
-    <div class="card m-2 tour-card" style="width: 16rem;">
+    <div class="card m-2 tour-card" style="width: 45%;">
     {% if not tour %}
         <div class="p-3">{{tour_id}} price is not available</div>
     {%else%}
@@ -382,7 +388,7 @@
     {% if not totalPrice or totalPrice <= 0 %}
 
     {% else %}
-    <div class="card m-2 tour-card" style="width: 16rem;">
+    <div class="card m-2 tour-card" style="width: 45%;">
     <img class="card-img-top" src="{{tourPackage.get('tour_image')}}" alt="Card image cap">
 
     <div class="card-body">

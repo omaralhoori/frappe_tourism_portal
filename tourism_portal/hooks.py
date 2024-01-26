@@ -68,6 +68,7 @@ jinja = {
         "tourism_portal.utils.get_room_boards",
         "tourism_portal.utils.has_user_tariff",
         "tourism_portal.utils.get_room_beds",
+        "tourism_portal.utils.user_has_subagency",
         "tourism_portal.utils.get_hotel_total_nights",
         "tourism_portal.utils.get_portal_setting",
         "tourism_portal.utils.get_print_settings",

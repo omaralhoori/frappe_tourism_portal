@@ -11,6 +11,9 @@ def get_print_settings(fieldname):
 def format_file_link_print(file_url):
         return frappe.utils.get_url(file_url)
 
+def user_has_subagency():
+    return True
+
 def get_site_logo(src=False):
     if src:
          get_portal_setting("site_logo")

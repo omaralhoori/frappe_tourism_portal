@@ -538,7 +538,6 @@ class SalesInvoice(Document):
 						"extra": room_extra.extra,
 						"extra_price": room_extra.extra_price,
 					})
-			print(extras)
 			room_key = room.hotel_search + room.room + room.board 
 			if len(extras) > 0:
 				room_key += str(extras_cnt)
@@ -570,7 +569,14 @@ class SalesInvoice(Document):
 			
 			for room_price in self.room_price:
 				if room_price.hotel_search == room.hotel_search and room_price.room_name == room.room_name:
-					room_groups[room_key]['selling_details'].append({
+					comulated = False
+					for selling_details in room_groups[room_key]['selling_details']:
+						if selling_details['from_date'] == room_price.check_in and selling_details['to_date'] == room_price.check_out and selling_details['selling_price'] == room_price.selling_price:
+							selling_details['total_selling_price'] += room_price.total_selling_price
+							comulated = True
+							break
+					if not comulated:
+						room_groups[room_key]['selling_details'].append({
 						"from_date": room_price.check_in, 
 						"to_date": room_price.check_out,
 						"selling_price": room_price.selling_price,
