@@ -89,8 +89,11 @@
         <div class="col-12 flex-wrap transfer-search" transfer-search="{{search}}">
         {% for transferName in transfers[search] %}
             {% set all_transfers = transfers[search][transferName]%}
+            {% if all_transfers |length > 0 %}
              {{transfer_card(all_transfers, transferName)}} 
-            
+            {% else %}
+            <div class="alert alert-warning w-100 mt-2">No available transfers found</div>
+            {% endif %}
         {%endfor%}
         </div>
         </div>

@@ -31,7 +31,9 @@
   "child_company_margins_section",
   "hotel_margin",
   "transfer_margin",
-  "tour_margin"
+  "tour_margin",
+  "contact_info_tab",
+  "contact_email"
  ],
  "fields": [
   {
@@ -173,6 +175,17 @@
    "fieldname": "has_tariff",
    "fieldtype": "Check",
    "label": "Has Tariff"
+  },
+  {
+   "fieldname": "contact_info_tab",
+   "fieldtype": "Tab Break",
+   "label": "Contact Info"
+  },
+  {
+   "fieldname": "contact_email",
+   "fieldtype": "Data",
+   "label": "Contact Email",
+   "options": "Email"
   }
  ],
  "image_field": "company_logo",
@@ -196,7 +209,7 @@
   }
  ],
  "make_attachments_public": 1,
- "modified": "2024-01-24 17:09:25.798032",
+ "modified": "2024-01-26 17:38:52.647665",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Company",
