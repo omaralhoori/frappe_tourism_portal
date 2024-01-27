@@ -1,8 +1,5 @@
-{% if subagency_bookings['bookings'] > 0 %}
 {% extends "www/invoices/subagency_page.html" %}
-{% else %}
-{% extends "www/invoices/agency_page.html" %}
-{% endif %}
+
 {% block agency_content %}
 <div class="container">
             <div class="row">
@@ -61,6 +58,9 @@
                                         <h5 class="text-center text-md-left">{% if invoice.voucher_no %}{{invoice.voucher_no.split('-')[-1]}} {% endif %}</h5>
                                         <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
                                             <li class="mr-md-4">
+                                                <i class="zmdi zmdi-pin-account mr-2"></i> {{invoice.child_company}}
+                                            </li>
+                                            <li class="mr-md-4">
                                                 <i class="zmdi zmdi-pin mr-2"></i> {{invoice.post_date}} {{frappe.utils.format_time(invoice.post_time)}}
                                             </li>
                                             <li class="mr-md-4">
@@ -87,17 +87,17 @@
                         <ul class="pagination pagination-reset justify-content-center">
                             {% if current_page > 1%}
                             <li class="page-item">
-                                <a class="page-link" href="/invoices?page={{current_page - 1}}" tabindex="-1" aria-disabled="true">
+                                <a class="page-link" href="/invoices/subagency?page={{current_page - 1}}" tabindex="-1" aria-disabled="true">
                                     <i class="zmdi zmdi-long-arrow-left"></i>
                                 </a>
                             </li>
                             {% endif %}
                             {% for page in range(pages) %}
-                            <li class="page-item"><a class="page-link {% if current_page == page + 1 %} active {% endif %}" href="/invoices?page={{page + 1}}">{{page + 1}}</a></li>
+                            <li class="page-item"><a class="page-link {% if current_page == page + 1 %} active {% endif %}" href="/invoices/subagency?page={{page + 1}}">{{page + 1}}</a></li>
                             {% endfor %}
                             {% if current_page < pages %}
                             <li class="page-item">
-                                <a class="page-link" href="/invoices?page={{current_page + 1}}">
+                                <a class="page-link" href="/invoices/subagency?page={{current_page + 1}}">
                                     <i class="zmdi zmdi-long-arrow-right"></i>
                                 </a>
                             </li>

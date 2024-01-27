@@ -289,7 +289,7 @@ def get_location_name(location, location_type):
         return location
 
 @frappe.whitelist()
-def get_all_invoices(voucher_no=None, start=0, limit=20):
+def get_all_invoices(voucher_no='', start=0, limit=20):
     #company = frappe.db.get_value("User", frappe.session.user, "company")
     company_details = get_company_details()
     if company_details.get('is_child_company'):
@@ -302,14 +302,83 @@ def get_all_invoices(voucher_no=None, start=0, limit=20):
                 "name","voucher_no", "grand_total", "post_date", "status",
                 "post_time", "session_expires", "docstatus"], order_by="creation DESC" ,limit=limit, start=start)
     else:
+        voucher_search = ''
         if voucher_no:
-            return frappe.db.get_all("Sales Invoice", {"company": company_details.get('company'), "status": ["!=", "Cancelled"], "voucher_no": ["like", "%"+ voucher_no +"%"]}, [
-                "name", "voucher_no", "grand_total", "post_date", "status",
-                "post_time", "session_expires", "docstatus"], order_by="creation DESC" ,limit=limit, start=start)
+            voucher_search = "and si.voucher_no like %(voucher_no)s"
+
+        bookings =  frappe.db.sql("""
+            SELECT si.name, si.voucher_no, si.grand_total, si.post_date, si.status, si.post_time, si.session_expires, si.docstatus, si.child_company, si.company
+                                FROM `tabSales Invoice` si
+                                WHERE si.docstatus = 1
+                                AND si.company = %(company)s and si.child_company is null and si.status != 'Cancelled' {voucher_search}
+                             ORDER BY si.creation DESC LIMIT %(limit)s OFFSET %(start)s
+""".format(voucher_search=voucher_search), {"voucher_no": "%%%s%%" % voucher_no, "company": company_details.get('company'),
+        "limit": limit, "start": start
+      }, as_dict=True)
+        print(bookings)
+        return bookings
+
+@frappe.whitelist()
+def get_all_invoices_subagency(voucher_no='', start=0, limit=20):
+    #company = frappe.db.get_value("User", frappe.session.user, "company")
+    company_details = get_company_details()
+    if company_details.get('is_child_company'):
+        frappe.throw("You are not allowed to access this page")
+    else:
+        voucher_search = ''
+        if voucher_no:
+            voucher_search = "and si.voucher_no like %(voucher_no)s"
+        return frappe.db.sql("""
+            SELECT si.name, si.voucher_no, si.grand_total, si.post_date, si.status, si.post_time, si.session_expires, si.docstatus, si.child_company, 
+                             cmp.company_name as child_company 
+                                FROM `tabSales Invoice` si
+                             INNER JOIN `tabCompany` as cmp ON cmp.name = si.child_company
+                                WHERE si.docstatus = 1
+                                AND si.company = %(company)s and si.child_company is not null and si.status != 'Cancelled' {voucher_search}
+                                ORDER BY si.creation DESC LIMIT %(limit)s OFFSET %(start)s
+    """.format(voucher_search=voucher_search), {"voucher_no": "%%%s%%" % voucher_no, "company": company_details.get('company'),
+          "limit": limit, "start": start
+          }, as_dict=True) 
+
+def get_bookings_detials(voucher_no=''):
+    company_details = get_company_details()
+    if company_details.get('is_child_company'):
+        return {"agency_bookings": frappe.db.sql("""
+        SELECT count(si.name) as bookings, sum(si.grand_total) as total
+        FROM `tabSales Invoice` si
+        WHERE si.docstatus = 1 and si.status != 'Cancelled'
+        AND si.child_company = %(child_company)s AND si.company = %(company)s
+    """, {"voucher_no": "%%%s%%" % voucher_no, "child_company": company_details.get('child_company'), "company": company_details.get('company')}, as_dict=True)[0],
+    "subagency_bookings": {
+        "bookings": 0,
+        "total": 0
+    }}
+    else:
+
+        agency_bookings = frappe.db.sql("""
+        SELECT count(si.name) as bookings, sum(si.grand_total) as total
+        FROM `tabSales Invoice` si
+        WHERE si.docstatus = 1  and si.status != 'Cancelled'
+        AND si.company = %(company)s and si.child_company is null
+    """, {"voucher_no": "%%%s%%" % voucher_no, "company": company_details.get('company')}, as_dict=True)
+        if len(agency_bookings) > 0:
+            agency_bookings = agency_bookings[0]
         else:
-            return frappe.db.get_all("Sales Invoice", {"company": company_details.get('company'), "status": ["!=", "Cancelled"]}, [
-                "name","voucher_no", "grand_total", "post_date", "status",
-                "post_time", "session_expires", "docstatus"], order_by="creation DESC" ,limit=limit, start=start)
+            agency_bookings = {"bookings": 0, "total": 0}
+        subagency_bookings = frappe.db.sql("""
+            SELECT count(si.name) as bookings, sum(si.grand_total) as total
+            FROM `tabSales Invoice` si
+            WHERE si.docstatus = 1 and si.status != 'Cancelled'
+            AND si.company = %(company)s and si.child_company is not null   """,
+            { "company": company_details.get('company')}, as_dict=True) 
+        if len(subagency_bookings) > 0:
+            subagency_bookings = subagency_bookings[0]
+        else:
+            subagency_bookings = {"bookings": 0, "total": 0}
+        return {
+            "subagency_bookings": subagency_bookings,
+            "agency_bookings": agency_bookings,
+        }
 @frappe.whitelist()
 def complete_reservation():
     invoice = frappe.get_doc("Sales Invoice", {"name": frappe.form_dict.sales_invoice, "customer": frappe.session.user})
