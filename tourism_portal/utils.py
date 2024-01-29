@@ -1,6 +1,5 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
-from tourism_portal.api.company import get_company_details
 
 
 def get_portal_setting(fieldname):
@@ -14,7 +13,7 @@ def format_file_link_print(file_url):
 
 def user_has_subagency():
     user_roles = frappe.get_roles()
-    company_details = get_company_details()
+    company_details = get_utils_company_details()
     if company_details['is_child_company']:
         return False
     if 'Agency Creator' in user_roles:
@@ -25,7 +24,7 @@ def can_add_user():
     if 'Agency User Creator' in user_roles:
         return True
     return False
-    # company_details = get_company_details()
+    # company_details = get_utils_company_details()
     # return not company_details['is_child_company']
 
 def get_site_logo(src=False):
@@ -215,3 +214,20 @@ def parse_date(date):
     elif type(date) == datetime.date:
         date = frappe.utils.get_datetime(date.strftime("%Y-%m-%d"))
     return date.date()
+
+def get_utils_company_details():
+    company = frappe.db.get_value("User", frappe.session.user, "company")
+    company_doc = frappe.get_cached_doc("Company", company)
+    company_details = {
+    }
+    if company_doc.is_child_company:
+        company_details['is_child_company'] = True
+        company_details['company'] = company_doc.parent_company
+        company_details['child_company'] = company_doc.name
+        company_details['hotel_margin'] = company_doc.hotel_margin
+        company_details['tour_margin'] = company_doc.tour_margin
+        company_details['transfer_margin'] = company_doc.transfer_margin
+    else:
+        company_details['is_child_company'] = False
+        company_details['company'] = company_doc.name
+    return company_details

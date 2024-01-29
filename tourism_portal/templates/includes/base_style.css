@@ -158,6 +158,7 @@ background-color: #5c50c5;
  
  .tm-top-bar{
     height: auto;
+    box-shadow: 6px 0px 8px rgba(0,0,0,0.5);
  }
 .tm-top-bar .navbar-expand-lg .navbar-nav .nav-link {
 padding: 25px;

@@ -11,6 +11,9 @@ def get_context(context):
     context.update_agency = can_update_agency()
     if context.update_agency:
         context.agency_info = get_agency_info()
+        context.countries = frappe.db.get_all("Country", fields=["name", "country_name"])
+        context.cities = frappe.db.get_all("City", fields=["name", "city_name", "country"])
+    
     return context
 
 

@@ -11,7 +11,7 @@
             <div class="col">
                 <div class="form-group">
                     <label for="agencyEmail">Agency Email</label>
-                    <input type="data" class="form-control" id="agencyEmail" disabled required="" value="{{agency_info.company_email}}">
+                    <input type="data" class="form-control" id="agencyEmail" disabled required="" value="{{agency_info.agency_email or ''}}">
                 </div>
             </div>
         </div>
@@ -19,13 +19,54 @@
         <div class="col">
             <div class="form-group">
                 <label for="agnecyFirstName">First Name</label>
-                <input type="data" class="form-control" id="agencyFirstName" required="" value="{{agency_info.agent_first_name}}">
+                <input type="data" class="form-control" id="agencyFirstName" required="" value="{{agency_info.agent_first_name or ''}}">
             </div>
         </div>
         <div class="col">
             <div class="form-group">
                 <label for="agencyLastName">Last Name</label>
-                <input type="data" class="form-control" id="agencyLastName" value="{{agency_info.agent_last_name}}">
+                <input type="data" class="form-control" id="agencyLastName" value="{{agency_info.agent_last_name or ''}}">
+            </div>
+        </div>
+        </div>
+        <div class="form-row">
+        <div class="col">
+        <div class="form-group">
+                <label for="agencyContry">Country</label>
+                <select type="data" class="form-control" id="agencyContry">
+                    <option value="">Select Country</option>
+                    {% for country in countries %}
+                    <option value="{{country.name}}"
+                    {% if country.name == agency_info.agency_country %}
+                    selected
+                    {% endif %}
+                    >
+                        {{country.country_name}}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="agencyCity">City</label>
+                <select type="data" class="form-control" id="agencyCity">
+                    <option value="">Select City</option>
+                    {% for city in cities %}
+                    <option value="{{city.name}}"
+                    {% if city.name == agency_info.agency_city %}
+                    selected
+                    {% endif %}
+                    >
+                        {{city.city_name}}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label for="agencyAddress">Address</label>
+                <textarea  type="data" class="form-control" id="agencyAddress" rows="4">{{agency_info.agency_address or ''}}</textarea>
             </div>
         </div>
         </div>
@@ -34,3 +75,39 @@
         </div>
     </form>
     <!-- /form card change password -->
+
+<script>
+    function onUpdateAgencyFormSubmit(e){
+        var form = $(e).closest('form');
+        var agency_info = getAgencyInfo(form);
+        frappe.call({
+            "method": "tourism_portal.api.company.update_agency_info",
+            args: {
+                agency_info: agency_info
+            },
+            callback: function (response) {
+                if(response.message){
+                    showSuccessModal("Success","Agency Info Updated Successfully");
+                }else{
+                    frappe.throw("Something went wrong");
+                }
+            }
+        })
+    }
+
+    function getAgencyInfo(form){
+        var agent_first_name = $('#agencyFirstName').val();
+        var agent_last_name = $('#agencyLastName').val();
+        var agency_country = $('#agencyContry').val();
+        var agency_city = $('#agencyCity').val();
+        var agency_address = $('#agencyAddress').val();
+        var agency_info = {
+            agent_first_name: agent_first_name,
+            agent_last_name: agent_last_name,
+            agency_country: agency_country,
+            agency_city: agency_city,
+            agency_address: agency_address
+        }
+        return agency_info;
+    }
+</script>

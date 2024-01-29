@@ -35,9 +35,12 @@
   "agency_info_tab",
   "agency_email",
   "agent_first_name",
+  "agency_country",
+  "agency_city",
   "column_break_ogudp",
   "agency_mobile_number",
   "agent_last_name",
+  "agency_address",
   "contact_info_tab",
   "contact_email"
  ],
@@ -222,6 +225,23 @@
    "fieldname": "agent_last_name",
    "fieldtype": "Data",
    "label": "Agent Last Name"
+  },
+  {
+   "fieldname": "agency_country",
+   "fieldtype": "Link",
+   "label": "Agency Country",
+   "options": "Country"
+  },
+  {
+   "fieldname": "agency_city",
+   "fieldtype": "Link",
+   "label": "Agency City",
+   "options": "City"
+  },
+  {
+   "fieldname": "agency_address",
+   "fieldtype": "Small Text",
+   "label": "Agency Address"
   }
  ],
  "image_field": "company_logo",
@@ -245,7 +265,7 @@
   }
  ],
  "make_attachments_public": 1,
- "modified": "2024-01-29 12:35:13.680379",
+ "modified": "2024-01-29 13:09:05.955527",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Company",

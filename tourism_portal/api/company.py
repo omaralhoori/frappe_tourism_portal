@@ -4,6 +4,7 @@ import json
 from tourism_portal.tourism_portal.doctype.company.company import get_account_settings
 
 from tourism_portal.tourism_portal.doctype.company_payment.company_payment import add_child_company_deposit, get_child_company_balance, get_company_balance, get_company_transactions
+from tourism_portal.utils import can_update_agency, get_utils_company_details
 
 
 @frappe.whitelist()
@@ -32,21 +33,7 @@ def get_account_transactions(start=0, limit=20):
 
 @frappe.whitelist()
 def get_company_details():
-    company = frappe.db.get_value("User", frappe.session.user, "company")
-    company_doc = frappe.get_cached_doc("Company", company)
-    company_details = {
-    }
-    if company_doc.is_child_company:
-        company_details['is_child_company'] = True
-        company_details['company'] = company_doc.parent_company
-        company_details['child_company'] = company_doc.name
-        company_details['hotel_margin'] = company_doc.hotel_margin
-        company_details['tour_margin'] = company_doc.tour_margin
-        company_details['transfer_margin'] = company_doc.transfer_margin
-    else:
-        company_details['is_child_company'] = False
-        company_details['company'] = company_doc.name
-    return company_details
+    return get_utils_company_details()
 
 @frappe.whitelist()
 def create_agency():
@@ -60,7 +47,7 @@ def create_agency():
         frappe.throw(_("You are not allowed to access this page."), frappe.PermissionError)
     agency = frappe.new_doc("Company")
     agency.company_name = agency_data.get('agency_name')
-    agency.company_code = agency_data.get('agency_code')
+    # agency.company_code = agency_data.get('agency_code')
     agency.is_child_company = 1
     agency.parent_company = company_details['company']
     agency.country = frappe.db.get_value("Company", company_details['company'], "country")
@@ -151,4 +138,18 @@ def enable_user(user):
         frappe.throw(_("You are not allowed to access this page."), frappe.PermissionError)
 
     frappe.db.set_value("User", {"company": company_details['company'], "name": user}, "enabled", 1)
+    return "success"
+
+
+@frappe.whitelist()
+def update_agency_info():
+    if not can_update_agency():
+        frappe.throw(_("You are not allowed to access this page."), frappe.PermissionError)
+    agency_info = frappe.form_dict.agency_info
+    if type(agency_info) == str:
+        agency_info = json.loads(agency_info)
+    company = frappe.db.get_value("User", frappe.session.user, "company")
+    agency = frappe.get_doc("Company",company)
+    agency.update(agency_info)
+    agency.save()
     return "success"

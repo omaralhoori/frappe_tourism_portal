@@ -1,6 +1,6 @@
 function agencyModalSubmitted(e){
     var agencyData = getAgencyData(e)
-    var errors = getAgencyData(agencyData);
+    var errors = validateAgencyData(agencyData);
     if (errors.length > 0){
         frappe.throw(errors.join("\n"));
         return;
@@ -36,9 +36,9 @@ function getAgencyData(e){
 function validateAgencyData(agencyData){
     var errors = [];
     if (agencyData.action_type == "create"){
-    if (agencyData.agency_code == ""){
-        errors.push("Agency Code cannot be empty");
-    }
+    // if (agencyData.agency_code == ""){
+    //     errors.push("Agency Code cannot be empty");
+    // }
     if (agencyData.agency_name == ""){
         errors.push("Agency name cannot be empty");
     }

@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.model.naming import make_autoname
 from frappe.utils.password import update_password
 from tourism_portal.tourism_portal.doctype.company_payment.company_payment import get_company_balance
 
@@ -26,8 +27,13 @@ class Company(Document):
 		user.append_roles(('Customer'))
 		user.save(ignore_permissions=True)
 		update_password(user=user.name, pwd=password)
-
-
+	def get_agency_naming_series(self):
+		format_ser =  "AGN.#######"
+		prg_serial = make_autoname(format_ser, "Sales Invoice")
+		return prg_serial
+	def before_insert(self):
+		if not self.company_code:
+			self.company_code = self.get_agency_naming_series()
 def get_account_settings(company=None):
 	if not company:
 		company = frappe.db.get_value("User", frappe.session.user, "company")
