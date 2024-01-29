@@ -34,6 +34,7 @@ $(document).ready(function () {
 });
 
 function hideOneCardDeleteBtn() {
+    hideSearchBtn();
     var deleteBtns = document.querySelectorAll('.remove-card-btn');
     if (deleteBtns.length == 1) {
         deleteBtns[0].style.display = 'none';
@@ -177,6 +178,18 @@ function collapseBtnPressed(e) {
         deleteBtn.style.display = 'none';
     }
 
+}
+
+function hideSearchBtn() {
+    var searchBtns = document.querySelectorAll('.search-btn-container')
+    for (var searchBtnIndex =0;searchBtnIndex < searchBtns.length; searchBtnIndex++) {
+        if (searchBtnIndex < searchBtns.length - 1) {
+            searchBtns[searchBtnIndex].style.display = 'none';
+        
+        }else{
+            searchBtns[searchBtnIndex].style.display = 'block';
+        }
+    }
 }
 
 function addTransferClicked(e) {
@@ -991,6 +1004,7 @@ function tourAddTourClicked(e) {
         tourTypeChanged(locationInput)
     })
     e.style.display = 'none';
+    hideOneCardDeleteBtn();
 }
 
 function onWayTransfer(e){
@@ -1062,6 +1076,7 @@ function transferAddTransferClicked(e){
     }
 
     e.style.display = 'none';
+    hideOneCardDeleteBtn();
 }
 
 
