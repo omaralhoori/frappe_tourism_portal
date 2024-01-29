@@ -53,3 +53,36 @@ function validateUserData(userData){
     }
     return errors;
 }
+
+function enableUserClicked(e){
+    var user = e.getAttribute("user-id");
+    frappe.call({
+        "method": "tourism_portal.api.company.enable_user",
+        "args": {
+            "user": user
+        },
+        "callback": function(response){
+            if (response.message){
+                frappe.msgprint(response.message);
+                window.location.reload();
+            }
+        }
+    })
+}
+
+function disableUserClicked(e){
+    
+    var user = e.getAttribute("user-id");
+    frappe.call({
+        "method": "tourism_portal.api.company.disable_user",
+        "args": {
+            "user": user
+        },
+        "callback": function(response){
+            if (response.message){
+                frappe.msgprint(response.message);
+                window.location.reload();
+            }
+        }
+    })
+}

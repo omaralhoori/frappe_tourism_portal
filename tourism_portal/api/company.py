@@ -134,3 +134,21 @@ def enable_agency(agency_id):
     agency_doc.save()
     frappe.db.set_value("User", {"company": agency_id}, "enabled", 1)
     return "success"
+
+@frappe.whitelist()
+def disable_user(user):
+    company_details = get_company_details()
+    if company_details['is_child_company']:
+        frappe.throw(_("You are not allowed to access this page."), frappe.PermissionError)
+
+    frappe.db.set_value("User", {"company": company_details['company'], "name": user}, "enabled", 0)
+    return "success"
+
+@frappe.whitelist()
+def enable_user(user):
+    company_details = get_company_details()
+    if company_details['is_child_company']:
+        frappe.throw(_("You are not allowed to access this page."), frappe.PermissionError)
+
+    frappe.db.set_value("User", {"company": company_details['company'], "name": user}, "enabled", 1)
+    return "success"

@@ -11,7 +11,6 @@ def get_context(context):
     company_details = get_company_details()
     if company_details['is_child_company']:
         frappe.throw(_("You are not allowed to access this page."), frappe.PermissionError)
-    context.include_sidebar = True
     agencies = frappe.db.sql("""
     SELECT 
     name, company_code as agency_code, 

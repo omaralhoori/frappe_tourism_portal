@@ -32,6 +32,12 @@
   "hotel_margin",
   "transfer_margin",
   "tour_margin",
+  "agency_info_tab",
+  "agency_email",
+  "agent_first_name",
+  "column_break_ogudp",
+  "agency_mobile_number",
+  "agent_last_name",
   "contact_info_tab",
   "contact_email"
  ],
@@ -186,6 +192,36 @@
    "fieldtype": "Data",
    "label": "Contact Email",
    "options": "Email"
+  },
+  {
+   "fieldname": "agency_info_tab",
+   "fieldtype": "Tab Break",
+   "label": "Agency Info"
+  },
+  {
+   "fieldname": "agency_email",
+   "fieldtype": "Data",
+   "label": "Agency Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "agent_first_name",
+   "fieldtype": "Data",
+   "label": "Agent First Name"
+  },
+  {
+   "fieldname": "column_break_ogudp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "agency_mobile_number",
+   "fieldtype": "Phone",
+   "label": "Agency Mobile Number"
+  },
+  {
+   "fieldname": "agent_last_name",
+   "fieldtype": "Data",
+   "label": "Agent Last Name"
   }
  ],
  "image_field": "company_logo",
@@ -209,7 +245,7 @@
   }
  ],
  "make_attachments_public": 1,
- "modified": "2024-01-26 17:38:52.647665",
+ "modified": "2024-01-29 12:35:13.680379",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Company",

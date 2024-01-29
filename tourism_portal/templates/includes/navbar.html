@@ -31,8 +31,11 @@
                             <div class="dropdown-divider"></div>
 
                             <a class="dropdown-item" href="/account/statement">Statement of Account</a>
+                            {% if can_add_user() %}
                             <a class="dropdown-item" href="/account/users">Users</a>
+                            {% endif %}
                             {% if user_has_subagency() %}
+                            <a class="dropdown-item" href="/account/agencies">Subagencies</a>
                             <a class="dropdown-item" href="/account/agency_account">Subagency Account</a>
                             {% endif %}
                             {% if has_user_tariff() %}

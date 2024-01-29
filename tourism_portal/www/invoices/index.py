@@ -13,7 +13,7 @@ def get_context(context):
     page_size = 20
     page = frappe.form_dict.page or 1
     start = (int(page) - 1) * page_size
-    voucher_no = frappe.form_dict.voucher_no
+    voucher_no = frappe.form_dict.voucher_no or ''
     booking_details = get_bookings_detials(voucher_no=voucher_no or '')
     context.booking_details = booking_details['agency_bookings']
     context.subagency_bookings = booking_details['subagency_bookings']

@@ -1,7 +1,6 @@
 {% extends "templates/website_base.html" %}
 
 {% block page_content %}
-<h1>AGENCY ACCOUNT</h1>
 <div class="row m-3">
     <div class="col">
         <div class="input-group"> 
@@ -33,9 +32,7 @@
         <thead>
             <th scope="col">#</th>
             <th scope="col">{{_('Date')}}</th>
-            <th scope="col">{{_('Debit')}}</th>
-            <th scope="col">{{_('Credit')}}</th>
-            <th scope="col">{{_('Balance')}}</th>
+            <th scope="col">{{_('Amount')}}</th>
             <th scope="col">{{_('Commission')}}</th>
             <th scope="col">{{_('Voucher')}}</th>
             <th scope="col">{{_('Remarks')}}</th>
@@ -52,8 +49,6 @@
                 {% if gl_entry.get('voucher_type') %}{{gl_entry.get('voucher_type')}} {% endif %}
             </td>
             <td> {% if gl_entry.get('voucher_no') %}{{gl_entry.get('voucher_no')}} {% endif %}</td> #}
-            <td>{{gl_entry.get('debit')}}</td>
-            <td>{{gl_entry.get('credit')}}</td>
             <td>{{gl_entry.get('balance')}}</td>
             <td>
             {% if gl_entry.get('parent_amount') %}
@@ -75,7 +70,7 @@
             {% endfor %}
 
             <tr>
-                <td colspan="4"></td>
+                <td colspan="2"></td>
                 <td>{{frappe.utils.fmt_money(total_balance[0])}}</td>
                 <td>{{frappe.utils.fmt_money(total_commission[0])}}</td>
                 

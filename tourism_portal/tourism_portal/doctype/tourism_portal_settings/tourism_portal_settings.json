@@ -33,6 +33,8 @@
   "tour_cancellation_policy",
   "column_break_usmi5",
   "transfer_cancellation_policy",
+  "terms_and_conditions_section",
+  "agency_terms_and_conditions",
   "landing_page_tab",
   "site_logo",
   "site_ico",
@@ -214,13 +216,24 @@
    "fieldname": "site_ico",
    "fieldtype": "Attach Image",
    "label": "Site Ico"
+  },
+  {
+   "fieldname": "terms_and_conditions_section",
+   "fieldtype": "Section Break",
+   "label": "Terms and Conditions"
+  },
+  {
+   "fieldname": "agency_terms_and_conditions",
+   "fieldtype": "Attach",
+   "label": "Agency Terms and Conditions",
+   "reqd": 1
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-01-23 14:53:15.422981",
+ "modified": "2024-01-27 16:29:05.865994",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal Settings",

@@ -1,5 +1,6 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
+from tourism_portal.api.company import get_company_details
 
 
 def get_portal_setting(fieldname):
@@ -12,7 +13,20 @@ def format_file_link_print(file_url):
         return frappe.utils.get_url(file_url)
 
 def user_has_subagency():
-    return True
+    user_roles = frappe.get_roles()
+    company_details = get_company_details()
+    if company_details['is_child_company']:
+        return False
+    if 'Agency Creator' in user_roles:
+        return True
+    return False
+def can_add_user():
+    user_roles = frappe.get_roles()
+    if 'Agency User Creator' in user_roles:
+        return True
+    return False
+    # company_details = get_company_details()
+    # return not company_details['is_child_company']
 
 def get_site_logo(src=False):
     if src:
@@ -25,6 +39,11 @@ def has_user_tariff():
          return False
     return frappe.db.get_value("Company", company, "has_tariff", cache=True)
 
+def can_update_agency():
+    user_roles = frappe.get_roles()
+    if 'Agency Profile Editor' in user_roles:
+        return True
+    return False
 
 def get_site_name():
     return frappe.db.get_single_value("")

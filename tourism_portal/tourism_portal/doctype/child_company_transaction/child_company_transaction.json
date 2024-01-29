@@ -104,13 +104,14 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-13 17:45:47.368443",
+ "modified": "2024-01-29 12:37:30.801151",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Child Company Transaction",
  "owner": "Administrator",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -120,6 +121,7 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "submit": 1,
    "write": 1
   },
   {

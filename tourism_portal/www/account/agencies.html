@@ -1,7 +1,6 @@
 {% extends "templates/website_base.html" %}
 
 {% block page_content %}
-<h1>AGENCIES</h1>
 <div class="mb-2 d-flex flex-row-reverse">
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addagency-modal">Add Agency</button>
     <div class="mx-2"><span class="badge badge-info p-2"><h6>BALANCE: {{frappe.utils.fmt_money(company_balance)}}</h6></span></div>

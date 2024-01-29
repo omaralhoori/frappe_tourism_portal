@@ -130,10 +130,14 @@ body{
  }
 
  .card-primary-color{
-    background-color: #5c50c5;
+    background-color: #383383;
     color: #fff;
     font-size: 1.1em;
     font-weight: bold;
+ }
+ .card-primary-color a,
+ .card-primary-color .btn-link{
+    color: #fff;
  }
  .dropdown-item.active, .dropdown-item:active {
 color: #fff;

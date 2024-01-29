@@ -21,8 +21,15 @@
                 {{ user.email }}
             </td>
             <td>
-                <button user-id="{{user.id}}" class="btn btn-small btn-info">Edit</button>
-                <button user-id="{{  user.id}}" class="btn btn-small btn-danger">Delete</button>
+            {% if user.name == frappe.session.user %}
+            {% else %}
+              {% if user.enabled %}
+                <button user-id="{{user.name}}" class="btn btn-small btn-info">Edit</button>
+                <button user-id="{{user.name}}" onclick="disableUserClicked(this)" class="btn btn-small btn-danger">Disable</button>
+              {% else %}
+                <button user-id="{{user.name}}" onclick="enableUserClicked(this)" class="btn btn-small btn-success">Enable</button>
+              {% endif %}
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

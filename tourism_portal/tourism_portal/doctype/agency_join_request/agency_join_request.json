@@ -9,8 +9,21 @@
  "field_order": [
   "i_agree_to_the_terms_and_conditions",
   "agency_name",
-  "agency_country",
-  "terms_and_conditions"
+  "country",
+  "city",
+  "first_name",
+  "last_name",
+  "column_break_kqz3s",
+  "nature_of_business",
+  "business_type",
+  "address",
+  "postcode",
+  "column_break_ul28t",
+  "agency_email",
+  "mobile_number",
+  "fax",
+  "website",
+  "agency_official_documents"
  ],
  "fields": [
   {
@@ -21,14 +34,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "agency_country",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Agency Country",
-   "options": "Country",
-   "reqd": 1
-  },
-  {
    "default": "0",
    "fieldname": "i_agree_to_the_terms_and_conditions",
    "fieldtype": "Check",
@@ -36,14 +41,99 @@
    "reqd": 1
   },
   {
-   "fieldname": "terms_and_conditions",
-   "fieldtype": "HTML",
-   "label": "Terms And Conditions"
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Country",
+   "options": "Country",
+   "reqd": 1
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Link",
+   "label": "City",
+   "options": "City",
+   "reqd": 1
+  },
+  {
+   "fieldname": "first_name",
+   "fieldtype": "Data",
+   "label": "First Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "label": "Last Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_kqz3s",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "nature_of_business",
+   "fieldtype": "Link",
+   "label": "Nature of Business",
+   "options": "Nature of Business",
+   "reqd": 1
+  },
+  {
+   "fieldname": "business_type",
+   "fieldtype": "Link",
+   "label": "Business Type",
+   "options": "Business Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address",
+   "reqd": 1
+  },
+  {
+   "fieldname": "postcode",
+   "fieldtype": "Data",
+   "label": "Pincode/Zipcode/Postcode",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ul28t",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mobile_number",
+   "fieldtype": "Phone",
+   "label": "Mobile Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "agency_email",
+   "fieldtype": "Data",
+   "label": "Agency Email",
+   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "fax",
+   "fieldtype": "Data",
+   "label": "Fax"
+  },
+  {
+   "fieldname": "website",
+   "fieldtype": "Data",
+   "label": "Website"
+  },
+  {
+   "fieldname": "agency_official_documents",
+   "fieldtype": "Attach",
+   "label": "Agency Official Documents",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-24 12:20:49.291862",
+ "modified": "2024-01-27 17:28:14.768790",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Agency Join Request",

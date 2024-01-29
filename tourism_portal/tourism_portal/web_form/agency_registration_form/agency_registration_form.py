@@ -1,5 +1,5 @@
 import frappe
 
 def get_context(context):
-	# do your magic here
-	pass
+	context.no_cache = True
+	context.terms_and_conditions = frappe.db.get_single_value("Tourism Portal Settings", "agency_terms_and_conditions")
