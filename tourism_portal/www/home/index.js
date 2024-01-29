@@ -657,7 +657,8 @@ function tourTypeChanged(e) {
                 listElement.appendChild(checkboxElementShow);
                 listElement.appendChild(labelElement);
                 // listElement.innerHTML = `<input type="checkbox" onclick="onTourSelectChange(this)" name="tours" value="${tour.tour_id}"> <label>${tour.tour_name} </label>`;
-
+                var tourInfoElement = getTourInfoElement(tour.tour_id, tourData['tour-type']);
+                // listElement.appendChild(tourInfoElement);
                 listElement.setAttribute('data-toggle', 'tooltip');
                 listElement.setAttribute('data-placement', 'top');
                 listElement.setAttribute('title', tour.tour_description);
@@ -667,13 +668,77 @@ function tourTypeChanged(e) {
                     checkbox.click();
                     //onTourSelectChange(e);
                 });
-                tourSelect.appendChild(listElement);
+                var elementContainer = document.createElement("div");
+                elementContainer.classList.add('d-flex');
+                elementContainer.classList.add('align-items-center');
+                listElement.classList.add('mr-auto');
+                listElement.classList.add('w-100');
+                tourInfoElement.classList.add('m-2');
+                elementContainer.appendChild(listElement);
+                elementContainer.appendChild(tourInfoElement);
+                tourSelect.appendChild(elementContainer);
             }
 
 
         }
 
     })
+}
+
+function getTourInfoElement(tourId, tourType) {
+    var tourInfoElement = document.createElement("button");
+    tourInfoElement.classList.add('tour-info');
+    tourInfoElement.classList.add('btn');
+    tourInfoElement.classList.add('btn-sm');
+    tourInfoElement.classList.add('btn-outline-primary');
+    tourInfoElement.classList.add('float-end');
+    tourInfoElement.setAttribute('type', 'button');
+    tourInfoElement.setAttribute('data-target', '#tourInfoModal');
+    tourInfoElement.setAttribute('onclick', 'getTourInfo(this)');
+    tourInfoElement.innerHTML = `<i class="fa fa-info-circle" aria-hidden="true"></i>`;
+    tourInfoElement.setAttribute('tour-id', tourId);
+    tourInfoElement.setAttribute('tour-type', tourType);
+    return tourInfoElement;
+}
+
+function getTourInfo(e){
+    var tourId = e.getAttribute('tour-id');
+    var tourType = e.getAttribute('tour-type');
+    var tourInfoModal = $('#tourInfoModal');
+    tourInfoModal.find('.modal-header').html('')
+    tourInfoModal.find('.modal-body').html(getLoadingSpinner());
+    frappe.call({
+        "method": "tourism_portal.api.home.get_tour_info",
+        "args": {
+            "tour_id": tourId,
+            "tour_type": tourType
+        },
+        callback: function (r) {
+            var tour = r.message;
+            var html = '';
+            console.log(r.message)
+            html += `
+                <h5>${tour.tour_info.tour_name}</h5>
+                <p>${tour.tour_info.tour_description}</p>
+            `;
+            var images = []
+            for (var image of tour.attachments){
+                images.push(image.file_url)
+            }
+            var carousel = $('#tourCarouselTemplate');
+            var carouselHtml = carousel.html();
+            tourInfoModal.find('.modal-body').html(html);
+            tourInfoModal.find('.modal-header').html(carouselHtml);
+            loadCarousel(images);
+        }
+    })
+    tourInfoModal.modal('show');
+}
+
+function getLoadingSpinner(){
+    return `<div class="spinner-border spinner-border-sm" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>`;
 }
 
 function getTotalDays(checkin, checkout) {

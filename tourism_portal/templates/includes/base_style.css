@@ -128,7 +128,32 @@ body{
         background-color: #bbbbbb;
         border: 1px solid #bbbbbb;
  }
-
+ .btn-outline-primary{
+    border: 1px solid #5c50c5;
+    color: #5c50c5;
+    font-weight: bold;
+    font-size: 1.1em;
+ }
+ .tour-modal .modal-content{
+    padding: 0 !important;
+ }
+ .tour-modal .modal-header{
+    padding: 0 !important;
+ }
+ .tour-modal img {
+    border-radius: 5px;
+ }
+ .tour-modal h5{
+    text-align: center;
+ }
+ .float-end{
+    float: inline-end
+ }
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus{
+        background-color: #5c50c5;
+        color: #fff;
+    }
  .card-primary-color{
     background-color: #383383;
     color: #fff;

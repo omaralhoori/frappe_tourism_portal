@@ -1,4 +1,5 @@
 import frappe
+from frappe.desk.form.load import get_attachments
 from tourism_portal.utils import get_location_city, get_location_postal_code, get_postal_code_transfer_area
 import json
 
@@ -120,4 +121,21 @@ def create_search(hotelParams, transferParams, tourParams):
 	return {
 		"is_success": True,
 		"search_name": search_doc.name
+	}
+
+
+@frappe.whitelist()
+def get_tour_info(tour_id, tour_type):
+	print(tour_type)
+	doctype = "Tour Type"
+	fields = ["tour_name", "tour_description", "tour_image"]
+	if tour_type == 'package':
+		doctype = "Tour Package"
+		fields = ["package_name as tour_name", "description as tour_description", "package_image as tour_image"]
+	tour_info = frappe.db.get_value(doctype, tour_id, fields, as_dict=True)
+	attachments = get_attachments(doctype, tour_id)
+	
+	return {
+		"tour_info": tour_info,
+		"attachments": attachments
 	}
