@@ -169,6 +169,21 @@ color: #fff;
 text-decoration: none;
 background-color: #5c50c5;
 }
+.btn-link{
+    color: #5c50c5;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+.btn-link:hover{
+    color: #312C6F;
+}
+.border-card{
+    border: 1px solid #383383;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #fff;
+}
  .room-image img{
     box-shadow: 0px 0px 4px 2px #ccc;
 -webkit-box-shadow: 0px 0px 4px 2px #ccc;

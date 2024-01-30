@@ -1,6 +1,11 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
+from uuid import uuid4
 
+
+def create_uuid():
+    unique_id = str(uuid4())
+    return unique_id
 
 def get_portal_setting(fieldname):
     return frappe.db.get_single_value("Tourism Portal Settings", fieldname)

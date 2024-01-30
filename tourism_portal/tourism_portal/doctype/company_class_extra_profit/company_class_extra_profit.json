@@ -1,0 +1,42 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-01-30 14:10:04.522930",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "company_class",
+  "extra_profit"
+ ],
+ "fields": [
+  {
+   "fieldname": "company_class",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company Class",
+   "options": "Company Class",
+   "reqd": 1
+  },
+  {
+   "fieldname": "extra_profit",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Extra Profit",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-01-30 14:10:04.522930",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Company Class Extra Profit",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -346,6 +346,29 @@
 {% endif %}
 {%endmacro%}
 
+{%macro vip_tour_card_old(tour, tour_id)%}
+    <div class="border-card m-2 tour-card" style="width: 100%;">
+    {% if not tour %}
+        <div class="p-3">{{tour_id}} price is not available</div>
+    {%else%}
+    {% set uuid = create_uuid() %}
+    <div class="d-flex justify-content-between">
+        <a class="btn-link" data-toggle="collapse" href="#{{uuid}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+        {{tour.get('tour_name')}}
+        </a>
+        <div class="tour-details d-flex">
+        <div class="mr-2"><small> Adults: {{tour['paxes']['adults']}}, Children: {{tour['paxes']['children']}}</small></div>
+        <div class="tour-price"><strong>{{tour.get('tour_price')}} USD</strong></div>
+        </div>
+    </div>
+    <div class="collapse" id="{{uuid}}">
+    <div class="card card-body">
+        Loading...
+    </div>
+    </div>
+  {%endif%}
+</div>
+{%endmacro%}
 {%macro vip_tour_card(tour, tour_id)%}
     <div class="card m-2 tour-card" style="width: 45%;">
     {% if not tour %}

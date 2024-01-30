@@ -17,7 +17,9 @@
   "adult_economic_price",
   "adult_premium_price",
   "column_break_m6asz",
-  "tour_child_policy"
+  "tour_child_policy",
+  "company_classes_extra_profit_section",
+  "company_classes"
  ],
  "fields": [
   {
@@ -77,11 +79,22 @@
    "fieldtype": "Data",
    "label": "To Date",
    "reqd": 1
+  },
+  {
+   "fieldname": "company_classes_extra_profit_section",
+   "fieldtype": "Section Break",
+   "label": "Company Classes Extra Profit"
+  },
+  {
+   "fieldname": "company_classes",
+   "fieldtype": "Table",
+   "label": "Company Classes",
+   "options": "Company Class Extra Profit"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-30 10:52:19.725567",
+ "modified": "2024-01-30 14:11:50.038218",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour Price",
