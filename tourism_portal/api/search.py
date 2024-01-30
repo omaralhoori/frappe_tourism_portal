@@ -6,7 +6,7 @@ from tourism_portal.tourism_portal.doctype.tour_price.tour_price import get_avai
 from tourism_portal.tourism_portal.doctype.transfer_price.transfer_price import get_available_transfers
 import json
 
-from tourism_portal.utils import calculate_extra_price, get_location_city, get_portal_setting, get_subagency_extra_price
+from tourism_portal.utils import calculate_extra_price, get_company_class, get_location_city, get_portal_setting, get_subagency_extra_price
 """
 	search_params: [
 		{
@@ -186,18 +186,6 @@ def search_for_available_hotel_by_hotel_old(hotel_params):
 
 
 	# return available_rooms
-def get_company_class(search_params):
-	location_type = search_params.get('location-type')
-	location = search_params.get('location')
-	city = get_location_city(location_type, location)
-	company = frappe.db.get_value("User", frappe.session.user, "company", cache=True)
-	company_class= frappe.db.get_value("Company Assigned Class", {
-		"company": company, "city": city, 
-		"from_date": ["<=", frappe.utils.nowdate()], 
-		"to_date": [">=", frappe.utils.nowdate()]},
-		["company_class", "extra_price_type", "extra_price"], as_dict=True
-		) or {}
-	return company_class
 
 def get_hotel_contracts(hotel, checkin, checkout):
 	contracts = get_hotel_availabilities(hotel, checkin, checkout)

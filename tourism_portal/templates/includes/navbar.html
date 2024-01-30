@@ -29,7 +29,9 @@
                             
                             <a class="dropdown-item">Balance: <strong>{{frappe.utils.fmt_money(get_customer_balance())}}</strong></a>
                             <div class="dropdown-divider"></div>
-
+                            {% if user_has_desk_access() %}
+                            <a class="dropdown-item" href="/app">Switch to Desk</a>
+                            {% endif %}
                             <a class="dropdown-item" href="/account/statement">Statement of Account</a>
                             {% if can_add_user() %}
                             <a class="dropdown-item" href="/account/users">Users</a>

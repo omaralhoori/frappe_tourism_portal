@@ -16,18 +16,15 @@
   "package_name",
   "package_city",
   "column_break_wmlf1",
-  "package_price",
   "min_days",
   "tour_child_policy",
-  "section_break_fv7f9",
-  "from_date",
-  "column_break_ee8zv",
-  "to_date",
   "section_break_wer4l",
   "description",
   "section_break_zczoc",
   "tours",
   "package_image",
+  "section_break_qe7zy",
+  "prices",
   "company_classes_extra_profit_section",
   "company_classes"
  ],
@@ -60,12 +57,6 @@
    "fieldtype": "Table",
    "label": "Tours",
    "options": "Tour Package Item",
-   "reqd": 1
-  },
-  {
-   "fieldname": "package_price",
-   "fieldtype": "Currency",
-   "label": "Package Price",
    "reqd": 1
   },
   {
@@ -120,26 +111,6 @@
    "label": "Package Image"
   },
   {
-   "fieldname": "section_break_fv7f9",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "from_date",
-   "fieldtype": "Date",
-   "label": "From Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_ee8zv",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "to_date",
-   "fieldtype": "Date",
-   "label": "To Date",
-   "reqd": 1
-  },
-  {
    "fieldname": "company_classes_extra_profit_section",
    "fieldtype": "Section Break",
    "label": "Company Classes Extra Profit"
@@ -149,12 +120,23 @@
    "fieldtype": "Table",
    "label": "Company Classes",
    "options": "Company Class Extra Profit"
+  },
+  {
+   "fieldname": "section_break_qe7zy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "prices",
+   "fieldtype": "Table",
+   "label": "Prices",
+   "options": "Tour Item Price",
+   "reqd": 1
   }
  ],
  "image_field": "package_image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-30 14:10:29.793741",
+ "modified": "2024-01-30 15:59:32.680224",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour Package",

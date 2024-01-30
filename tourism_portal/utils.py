@@ -36,7 +36,11 @@ def get_site_logo(src=False):
     if src:
          get_portal_setting("site_logo")
     return frappe.db.get_single_value("Website Settings", "brand_html")
-
+def user_has_desk_access():
+    #frappe.local.cookie_manager.init_cookies()
+    if frappe.db.get_value("User", frappe.session.user, "user_type") == "System User":
+        return True
+    return False
 def has_user_tariff():
     company = frappe.db.get_value("User", frappe.session.user, "company", cache=True)
     if not company:
@@ -236,3 +240,18 @@ def get_utils_company_details():
         company_details['is_child_company'] = False
         company_details['company'] = company_doc.name
     return company_details
+
+def get_company_class(search_params):
+    location_type = search_params.get('location-type')
+    location = search_params.get('location')
+    city = get_location_city(location_type, location)
+    #company = frappe.db.get_value("User", frappe.session.user, "company", cache=True)
+    company_details = get_utils_company_details()
+    company = company_details['company']
+    company_class= frappe.db.get_value("Company Assigned Class", {
+        "company": company, "city": city, 
+        "from_date": ["<=", frappe.utils.nowdate()], 
+        "to_date": [">=", frappe.utils.nowdate()]},
+        ["company_class", "extra_price_type", "extra_price"], as_dict=True
+        ) or {}
+    return company_class

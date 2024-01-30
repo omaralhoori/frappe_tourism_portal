@@ -4,7 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from tourism_portal.api.company import get_company_details
-from tourism_portal.utils import calculate_discount_price, calculate_extra_price, get_location_postal_code, get_postal_code_transfer_area, get_subagency_extra_price
+from tourism_portal.utils import calculate_discount_price, calculate_extra_price, get_company_class, get_location_postal_code, get_postal_code_transfer_area, get_subagency_extra_price
 
 class TourPrice(Document):
 	pass
@@ -14,6 +14,7 @@ def get_available_tours_and_prices(params):
 	available_tours = []
 	tour_packages = []
 	paxes = params['paxes']
+	print(params)
 	for tour in params.get('tours'):
 		params['tour-id'] = tour#params['tours'][tour]
 		params['tour-date'] = params['checkin']
@@ -34,22 +35,26 @@ def get_available_tours_and_prices(params):
 				})
 		else:
 			tour_details = get_available_tours(params)
-			available_tours.append({
-				"tour_id":tour,# params['tours'][tour],
-				"pickup": tour_details['search_params']['params']['location'],
-				"adult_price": tour_details['adult_price'],
-				"children_prices": tour_details['children_prices'],
-				"tour_name": tour_details['search_params']['tour_name'],
-				"tour_description": tour_details['search_params']['tour_description'],
-				"tour_type": "package",
-				"tour_date": params['tour-date'],
-				"paxes": paxes,
-			})
-			if params['tour-type'] == 'package':
-				available_tours[-1]['tour_image'] = frappe.db.get_value("Tour Package", tour, "package_image", cache=True)
-			else:
-				available_tours[-1]['tour_image'] = frappe.db.get_value("Tour Type", tour, "tour_image", cache=True)
+			print(tour_details)
+			if tour_details:
+				available_tours.append({
+					"tour_id":tour,# params['tours'][tour],
+					"pickup": tour_details['search_params']['params']['location'],
+					"adult_price": tour_details['adult_price'],
+					"children_prices": tour_details['children_prices'],
+					"tour_name": tour_details['search_params']['tour_name'],
+					"tour_description": tour_details['search_params']['tour_description'],
+					"tour_type": "package",
+					"tour_date": params['tour-date'],
+					"paxes": paxes,
+				})
+				if params['tour-type'] == 'package':
+					available_tours[-1]['tour_image'] = frappe.db.get_value("Tour Package", tour, "package_image", cache=True)
+				else:
+					available_tours[-1]['tour_image'] = frappe.db.get_value("Tour Type", tour, "tour_image", cache=True)
 	available_tours = sorted(available_tours, key=lambda x: x['tour_date'])
+	if len(available_tours) == 0:
+		return []
 	if params['tour-type'] in ('group-premium', 'group-economic', 'package'):
 		for adultPax in range(int(paxes['adults'])):
 			tour_packages.append({
@@ -127,6 +132,8 @@ def get_available_tours(params):
 	check_tour_params(params)
 	from_postal_code = get_location_postal_code(params['location-type'], params['location'])
 	from_area = get_postal_code_transfer_area(from_postal_code)
+	company_class = get_company_class(params)
+	
 	tour_id = params['tour-id']
 	where_stmt = ""
 	if params['tour-type'] == "vip":
@@ -137,16 +144,25 @@ def get_available_tours(params):
 	elif params['tour-type'] == "group-premium":
 		search_columns = "tp.adult_premium_price as group_adult_price, tp.tour_child_policy"
 		join_table = ""
+		if company_class.get('company_class'):
+			search_columns = "tp.adult_premium_price as group_adult_price, tp.tour_child_policy, ccep.extra_profit"
+			join_table = "INNER JOIN `tabCompany Class Extra Profit` ccep ON ccep.parent=tp.name AND ccep.parenttype='Tour Price' AND ccep.company_class=%(company_class)s"
 		parenttype = "Tour Price"
 		where_stmt = "WHERE tour_type=%(tour_id)s AND tp.from_date <= %(tour_date)s AND tp.to_date >= %(tour_date)s"
 	elif params['tour-type'] == "group-economic":
 		search_columns = "tp.adult_economic_price as group_adult_price, tp.tour_child_policy"
 		join_table = ""
+		if company_class.get('company_class'):
+			search_columns = "tp.adult_economic_price as group_adult_price, tp.tour_child_policy, ccep.extra_profit"
+			join_table = "INNER JOIN `tabCompany Class Extra Profit` ccep ON ccep.parent=tp.name AND ccep.parenttype='Tour Price' AND ccep.company_class=%(company_class)s"
 		parenttype = "Tour Price"
 		where_stmt = "WHERE tour_type=%(tour_id)s AND tp.from_date <= %(tour_date)s AND tp.to_date >= %(tour_date)s"
 	elif params['tour-type'] == "package":
 		search_columns = "tp.package_price as group_adult_price, tp.tour_child_policy"
 		join_table = ""
+		if company_class.get('company_class'):
+			search_columns = "tp.package_price as group_adult_price, tp.tour_child_policy, ccep.extra_profit"
+			join_table = "INNER JOIN `tabCompany Class Extra Profit` ccep ON ccep.parent=tp.name AND ccep.parenttype='Tour Package' AND ccep.company_class=%(company_class)s"
 		parenttype = "Tour Package"
 		where_stmt = "WHERE tp.name=%(tour_id)s AND tp.from_date <= %(tour_date)s AND tp.to_date >= %(tour_date)s"
 	available_transfers = frappe.db.sql("""
@@ -155,7 +171,7 @@ def get_available_tours(params):
 	{where_stmt}
 	""".format(where_stmt=where_stmt, search_columns=search_columns, join_table=join_table, parenttype=parenttype),
 	{"from_postal_code": from_area, "tour_id": tour_id,
-	 "tour_date": params['tour-date']}, as_dict=True)    
+	 "tour_date": params['tour-date'], "company_class": company_class.get('company_class')}, as_dict=True)    
 	transfer_price = 0
 	trasfers = []
 	if params['tour-type'] == "package":
@@ -213,6 +229,8 @@ def get_group_transfer_price(paxes, available_transfers):
 	if not child_policy:
 		return None
 	adult_price = available_transfers[0]['group_adult_price']
+	if available_transfers[0].get('extra_profit'):
+		adult_price = calculate_extra_price(adult_price, 'Amount',available_transfers[0]['extra_profit'])
 	policies = frappe.db.get_all("Transfer Child Price", {"parent": child_policy},
 	 ["child_order", "from_age", "to_age", "adult_price_percentage"], order_by="idx, child_order")
 	transfer_price = 0
