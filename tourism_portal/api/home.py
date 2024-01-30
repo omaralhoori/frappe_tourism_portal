@@ -75,8 +75,8 @@ def get_available_tours():
 		pacages = frappe.db.sql("""
 	SELECT tbl1.name as tour_id, tbl1.package_name as tour_name, tbl1.description as tour_description, tbl1.min_days as tour_time
 						  FROM `tabTour Package` as tbl1
-	WHERE tbl1.disabled=0 AND tbl1.package_city=%(city)s AND tbl1.min_days<={total_days}
-	""".format(total_days=total_days), {"city": city}, as_dict=True)
+	WHERE tbl1.disabled=0 AND tbl1.package_city=%(city)s AND tbl1.min_days<={total_days} AND tbl1.from_date <= %(tour_date)s AND tbl1.to_date >= %(tour_date)s
+	""".format(total_days=total_days), {"city": city, "tour_date": params.get('checkin')}, as_dict=True)
 	else:
 		tours = frappe.db.sql("""
 			   SELECT tbl1.name as tour_id, tbl1.tour_name as tour_name, tbl1.tour_description as tour_description, tbl1.tour_time as tour_time

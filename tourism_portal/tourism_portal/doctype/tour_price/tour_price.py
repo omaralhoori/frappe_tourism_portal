@@ -133,22 +133,22 @@ def get_available_tours(params):
 		search_columns = "vip.transfer_type, vip.transfer_price"
 		join_table = "INNER JOIN `tabVIP Transfer Price` vip ON vip.parent=tp.name and vip.parenttype='Tour VIP Price'"
 		parenttype = "Tour VIP Price"
-		where_stmt = "WHERE tour_type=%(tour_id)s AND tp.pickup_postal_code=%(from_postal_code)s"
+		where_stmt = "WHERE tour_type=%(tour_id)s AND tp.pickup_postal_code=%(from_postal_code)s AND tp.from_date <= %(tour_date)s AND tp.to_date >= %(tour_date)s"
 	elif params['tour-type'] == "group-premium":
 		search_columns = "tp.adult_premium_price as group_adult_price, tp.tour_child_policy"
 		join_table = ""
 		parenttype = "Tour Price"
-		where_stmt = "WHERE tour_type=%(tour_id)s"
+		where_stmt = "WHERE tour_type=%(tour_id)s AND tp.from_date <= %(tour_date)s AND tp.to_date >= %(tour_date)s"
 	elif params['tour-type'] == "group-economic":
 		search_columns = "tp.adult_economic_price as group_adult_price, tp.tour_child_policy"
 		join_table = ""
 		parenttype = "Tour Price"
-		where_stmt = "WHERE tour_type=%(tour_id)s"
+		where_stmt = "WHERE tour_type=%(tour_id)s AND tp.from_date <= %(tour_date)s AND tp.to_date >= %(tour_date)s"
 	elif params['tour-type'] == "package":
 		search_columns = "tp.package_price as group_adult_price, tp.tour_child_policy"
 		join_table = ""
 		parenttype = "Tour Package"
-		where_stmt = "WHERE tp.name=%(tour_id)s"
+		where_stmt = "WHERE tp.name=%(tour_id)s AND tp.from_date <= %(tour_date)s AND tp.to_date >= %(tour_date)s"
 	available_transfers = frappe.db.sql("""
 	SELECT {search_columns} FROM `tab{parenttype}` tp
 	{join_table}

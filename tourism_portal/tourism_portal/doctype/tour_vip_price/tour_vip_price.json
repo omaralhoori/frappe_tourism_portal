@@ -11,6 +11,10 @@
   "tour_type",
   "column_break_y4nb6",
   "pickup_postal_code",
+  "section_break_rmzlm",
+  "from_date",
+  "column_break_exyxm",
+  "to_date",
   "section_break_z7riq",
   "vip_transfer_price"
  ],
@@ -45,11 +49,31 @@
    "label": "VIP Transfer Price",
    "options": "VIP Transfer Price",
    "reqd": 1
+  },
+  {
+   "fieldname": "section_break_rmzlm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_exyxm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-30 17:44:28.482836",
+ "modified": "2024-01-30 10:51:00.183432",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour VIP Price",

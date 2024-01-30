@@ -19,6 +19,10 @@
   "package_price",
   "min_days",
   "tour_child_policy",
+  "section_break_fv7f9",
+  "from_date",
+  "column_break_ee8zv",
+  "to_date",
   "section_break_wer4l",
   "description",
   "section_break_zczoc",
@@ -112,12 +116,32 @@
    "fieldname": "package_image",
    "fieldtype": "Attach Image",
    "label": "Package Image"
+  },
+  {
+   "fieldname": "section_break_fv7f9",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ee8zv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date",
+   "reqd": 1
   }
  ],
  "image_field": "package_image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-22 16:53:48.545631",
+ "modified": "2024-01-30 11:09:26.488724",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour Package",

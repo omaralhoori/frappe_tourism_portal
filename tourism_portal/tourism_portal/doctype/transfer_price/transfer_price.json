@@ -56,7 +56,8 @@
   {
    "fieldname": "from_date",
    "fieldtype": "Date",
-   "label": "From Date"
+   "label": "From Date",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_hvzcf",
@@ -65,7 +66,8 @@
   {
    "fieldname": "to_date",
    "fieldtype": "Date",
-   "label": "To Date"
+   "label": "To Date",
+   "reqd": 1
   },
   {
    "fieldname": "vip_prices",
@@ -95,7 +97,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-30 14:04:49.150087",
+ "modified": "2024-01-30 10:51:19.988748",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Transfer Price",

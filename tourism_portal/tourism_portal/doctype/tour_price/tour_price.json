@@ -9,6 +9,10 @@
  "engine": "InnoDB",
  "field_order": [
   "tour_type",
+  "section_break_ebpqq",
+  "from_date",
+  "column_break_fz3ma",
+  "to_date",
   "section_break_ul1wt",
   "adult_economic_price",
   "adult_premium_price",
@@ -53,11 +57,31 @@
    "label": "Tour Child Policy",
    "options": "Transfer Child Policy",
    "reqd": 1
+  },
+  {
+   "fieldname": "section_break_ebpqq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_fz3ma",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Data",
+   "label": "To Date",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-19 11:26:23.812125",
+ "modified": "2024-01-30 10:52:19.725567",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour Price",
