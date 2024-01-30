@@ -158,13 +158,16 @@ def get_available_tours(params):
 		parenttype = "Tour Price"
 		where_stmt = "WHERE tour_type=%(tour_id)s AND tp.from_date <= %(tour_date)s AND tp.to_date >= %(tour_date)s"
 	elif params['tour-type'] == "package":
-		search_columns = "tp.package_price as group_adult_price, tp.tour_child_policy"
-		join_table = ""
+		search_columns = "tp.price as group_adult_price, pkg.tour_child_policy"
+		join_table = "INNER JOIN `tabTour Package` pkg ON pkg.parent=tp.name AND pkg.parenttype='Tour Package'"
 		if company_class.get('company_class'):
-			search_columns = "tp.package_price as group_adult_price, tp.tour_child_policy, ccep.extra_profit"
-			join_table = "INNER JOIN `tabCompany Class Extra Profit` ccep ON ccep.parent=tp.name AND ccep.parenttype='Tour Package' AND ccep.company_class=%(company_class)s"
-		parenttype = "Tour Package"
-		where_stmt = "WHERE tp.name=%(tour_id)s AND tp.from_date <= %(tour_date)s AND tp.to_date >= %(tour_date)s"
+			search_columns = "tp.price as group_adult_price, pkg.tour_child_policy, ccep.extra_profit"
+			join_table = """
+			INNER JOIN `tabTour Package` pkg ON pkg.name=tp.parent
+			INNER JOIN `tabCompany Class Extra Profit` ccep ON ccep.parent=%(tour_id)s AND ccep.parenttype='Tour Package' AND ccep.company_class=%(company_class)s
+				"""
+		parenttype = "Tour Item Price"
+		where_stmt = "WHERE tp.parent=%(tour_id)s AND tp.parenttype='Tour Package' AND tp.from_date <= %(tour_date)s AND tp.to_date >= %(tour_date)s"
 	available_transfers = frappe.db.sql("""
 	SELECT {search_columns} FROM `tab{parenttype}` tp
 	{join_table}
