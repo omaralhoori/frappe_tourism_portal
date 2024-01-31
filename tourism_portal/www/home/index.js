@@ -115,7 +115,7 @@ function formatDataPicker(template, onchange) {
                 },
                 onSelect:  onchange,
                 
-                minDate: new Date()
+                //minDate: new Date()
             });
             datepickers[uniqueId] = initDatepicker;
 
@@ -131,7 +131,7 @@ function formatDataPicker(template, onchange) {
                 input.value = value // => '1/1/2099'
             },
             onSelect:  onchange,
-            minDate: new Date()
+            //minDate: new Date()
         });
         datepickers[uniqueId] = initDatepicker;
     })

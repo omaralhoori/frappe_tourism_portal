@@ -353,7 +353,8 @@
     {%else%}
     {% set uuid = create_uuid() %}
     <div class="d-flex justify-content-between">
-        <a class="btn-link" data-toggle="collapse" href="#{{uuid}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <a class="btn-link" onclick="expandTourClicked(this)" href="#{{uuid}}" 
+        role="button" aria-expanded="false" aria-controls="{{uuid}}">
         {{tour.get('tour_name')}}
         </a>
         <div class="tour-details d-flex">

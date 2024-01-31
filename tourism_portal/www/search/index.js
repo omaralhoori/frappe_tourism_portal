@@ -1481,3 +1481,50 @@ function transferSelectedNewType(e){
     transferCard.setAttribute('transfer-price-company', selectedOption.getAttribute('transfer_price_company'));
     calculate_total_transfers()
 }
+
+function expandTourClicked(e){
+    var target = e.getAttribute('href')
+    $(target).collapse('toggle')
+    getTourInfo(e)
+}
+
+
+function getTourInfo(e){
+    var tourId = e.getAttribute('tour-id');
+    var tourType = e.getAttribute('tour-type');
+    // var tourInfoModal = $('#tourInfoModal');
+    // tourInfoModal.find('.modal-header').html('')
+    // tourInfoModal.find('.modal-body').html(getLoadingSpinner());
+    frappe.call({
+        "method": "tourism_portal.api.home.get_tour_info",
+        "args": {
+            "tour_id": tourId,
+            "tour_type": tourType
+        },
+        callback: function (r) {
+            var tour = r.message;
+            var html = '';
+            console.log(r.message)
+            html += `
+                <h5>${tour.tour_info.tour_name}</h5>
+                <p>${tour.tour_info.tour_description}</p>
+            `;
+            var images = []
+            for (var image of tour.attachments){
+                images.push(image.file_url)
+            }
+            var carousel = $('#tourCarouselTemplate');
+            var carouselHtml = carousel.html();
+            tourInfoModal.find('.modal-body').html(html);
+            tourInfoModal.find('.modal-header').html(carouselHtml);
+            loadCarousel(images);
+        }
+    })
+    tourInfoModal.modal('show');
+}
+
+function getLoadingSpinner(){
+    return `<div class="spinner-border spinner-border-sm" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>`;
+}
