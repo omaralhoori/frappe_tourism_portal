@@ -14,7 +14,9 @@ body{
 .search-card-container {
     position: relative;
 }
-
+.tour-modal .modal-dialog{
+    width: 500px;
+}
 
 .remove-card-btn {
     position: absolute;

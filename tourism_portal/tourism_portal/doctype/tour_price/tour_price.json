@@ -76,7 +76,7 @@
   },
   {
    "fieldname": "to_date",
-   "fieldtype": "Data",
+   "fieldtype": "Date",
    "label": "To Date",
    "reqd": 1
   },
@@ -94,7 +94,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-30 14:11:50.038218",
+ "modified": "2024-01-31 12:55:05.042578",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour Price",
