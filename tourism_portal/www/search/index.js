@@ -1537,7 +1537,7 @@ function getPackageTourInfo(e){
     for (var tour of tours){
         toursIds.push(tour.getAttribute('tour-id'));
     }
-    tourCard.querySelector('.card-body').innerHTML = getLoadingSpinner();
+    tourCard.querySelector('.card-body-details').innerHTML = getLoadingSpinner();
     frappe.call({
         "method": "tourism_portal.api.home.get_packge_tour_info",
         "args": {
@@ -1548,17 +1548,18 @@ function getPackageTourInfo(e){
             var html = '';
             console.log(r.message)
             for (var tourRes of r.message){
-                html += `<div class="row">
+                html += `<div class="row mb-2 border-bottom">
                 <div class="col-md-3">
                     <img src="${tourRes.tour_info.tour_image}" class="img-fluid">
                 </div>
                 <div class="col-md-9">
+                    <strong>${tourRes.tour_info.tour_name}</strong>
                     <div>${tourRes.tour_info.tour_description}</div>
                 </div>
             </div>`;
             }
-            
-            tourCard.querySelector('.card-body').innerHTML = html;
+            console.log(html)
+            tourCard.querySelector('.card-body-details').innerHTML = html;
         }
     })
 }

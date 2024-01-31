@@ -415,7 +415,6 @@
 {% set  totalPrice   = total[0] %}
 {% set  totalPriceCompany   = total_company[0] %}
  {% set tourPackage = tourPackages[0] %}
- {{tourPackage}}
     {% if not totalPrice or totalPrice <= 0 %}
 
     {% else %}
@@ -451,7 +450,7 @@
             </div>
         </div>
         <div class="collapse" id="{{uuid}}">
-            <div class="card card-body">
+            <div class="card card-body card-body-details">
                 Loading...
             </div>
         </div>
