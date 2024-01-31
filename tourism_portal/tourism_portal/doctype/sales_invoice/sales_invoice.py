@@ -35,11 +35,28 @@ class SalesInvoice(Document):
 	def on_update_after_submit(self):
 		self.set_invoice_check_out()
 		self.validate_invoice_check_out()
+		self.calculate_room_fees()
 		self.calculate_total_hotel_fees()
 		self.calculate_total_transfer_fees()
 		self.calculate_total_tour_fees()
 		self.calculate_total_fees()
 		
+	def calculate_room_fees(self):
+		prices = {}
+		for room_price in self.room_price:
+			room_key = room_price.hotel_search + "-" + room_price.room_name
+			if not prices.get(room_key):
+				prices[room_key] = {
+					"selling_price": 0,
+					"selling_price_company": 0,
+				}
+			prices[room_key]['selling_price'] += room_price.total_selling_price
+			prices[room_key]['selling_price_company'] += room_price.total_selling_price_company
+		for room in self.rooms:
+			room_key = room.hotel_search + "-" + room.room_name
+			room.total_price = prices[room_key]['selling_price']
+			room.total_price_company = prices[room_key]['selling_price_company']
+			
 	def set_invoice_check_out(self):
 		check_out = self.invoice_check_out
 		if check_out:

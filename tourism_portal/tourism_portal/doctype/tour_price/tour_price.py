@@ -14,7 +14,6 @@ def get_available_tours_and_prices(params):
 	available_tours = []
 	tour_packages = []
 	paxes = params['paxes']
-	print(params)
 	for tour in params.get('tours'):
 		params['tour-id'] = tour#params['tours'][tour]
 		params['tour-date'] = params['checkin']
@@ -35,7 +34,6 @@ def get_available_tours_and_prices(params):
 				})
 		else:
 			tour_details = get_available_tours(params)
-			print(tour_details)
 			if tour_details:
 				available_tours.append({
 					"tour_id":tour,# params['tours'][tour],
@@ -59,6 +57,7 @@ def get_available_tours_and_prices(params):
 		for adultPax in range(int(paxes['adults'])):
 			tour_packages.append({
 				"tour_type": "package",
+				"package_type": params['tour-type'],
 				"pickup": available_tours[0]['pickup'],
 				'tour_image': available_tours[0]['tour_image'],
 				"paxes": paxes,
@@ -77,9 +76,7 @@ def get_available_tours_and_prices(params):
 			})
 			for tt in tour_packages[-1]['tours']:
 				tour_packages[-1]['package_price'] += tt['tour_price']
-		print(paxes)
 		for childAge in range(int(paxes['children'])):
-			print(childAge)
 			pp = []
 			for avT in available_tours:
 				print(avT['children_prices'])

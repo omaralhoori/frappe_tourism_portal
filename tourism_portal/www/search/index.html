@@ -279,6 +279,7 @@
 
 {% include "templates/includes/pax_template_container.html" %}
 {% include "templates/includes/children_template_container.html" %}
+{% include "templates/includes/carousel.html" %}
 {% endblock %}
 
 {%macro transfer_card(transfers, transferName)%}
@@ -297,7 +298,6 @@
         "from_location": transfer['search_params']['params']['from-location'],
         "to_location": transfer['search_params']['params']['to-location'],
         "transfer_date": transfer['search_params']['params']['transfer-date'],
-
         }) %}
 {% endfor %}
 {% if transfers|length > 0%}
@@ -354,6 +354,9 @@
     {% set uuid = create_uuid() %}
     <div class="d-flex justify-content-between">
         <a class="btn-link" onclick="expandTourClicked(this)" href="#{{uuid}}" 
+        tour-id="{{tour.get('tour_id')}}"
+        tour-type="{{tour.get('tour_type')}}"
+        tour-pickup="{{tour['pickup']}}"
         role="button" aria-expanded="false" aria-controls="{{uuid}}">
         {{tour.get('tour_name')}}
         </a>
@@ -390,6 +393,73 @@
   {%endif%}
 </div>
 {%endmacro%}
+
+{%macro package_tour_card_old(tourPackages)%}
+{% if tourPackages|length > 0 %}
+{% set  total   = [0] %}
+{% set  total_company   = [0] %}
+{% set tour_prices = {} %}
+{% set tour_prices_company = {} %}
+{% for tour in tourPackages%}
+    {% set _ = total.append(total.pop() + tour['package_price']) %}
+    {% set _ = total_company.append(total_company.pop() + tour['package_price_company']) %}
+    {% for _tr in tour['tours']%}
+        {% if not tour_prices.get(_tr['tour_id']) %}
+            {% set _ = tour_prices.update({_tr['tour_id']:  0}) %}
+            {% set _ = tour_prices_company.update({_tr['tour_id']:  0}) %}
+        {% endif %}
+        {% set  _ = tour_prices.update({_tr['tour_id']:  tour_prices[_tr['tour_id']] + _tr['tour_price']}) %}
+        {# {% set  _ = tour_prices_company.update({_tr['tour_id']:  tour_prices_company[_tr['tour_id']] + _tr['tour_price_company']}) %} #}
+    {% endfor %}
+{% endfor %}
+{% set  totalPrice   = total[0] %}
+{% set  totalPriceCompany   = total_company[0] %}
+ {% set tourPackage = tourPackages[0] %}
+ {{tourPackage}}
+    {% if not totalPrice or totalPrice <= 0 %}
+
+    {% else %}
+    <div class="border-card m-2 tour-card" style="width: 100%;">
+        <div class=" d-none">
+            <div class="card-body">
+                <h5 class="card-title">Tour Package</h5>
+            </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item tour-pickup" tour-pickup="{{tourPackage['pickup']}}">Pickup: {{tourPackage['pickup']}}</li>
+                    {% for tour in tourPackage['tours'] %}
+                        <li class="list-group-item tour-item" tour-id="{{tour.get('tour_id')}}" tour-indv-price="{{tour_prices.get(tour.get('tour_id'))}}">{{tour['tour_name']}}</li>
+                    {% endfor %}
+                    <li class="list-group-item tour-price" tour-price-company="{{totalPriceCompany}}" tour-price="{{totalPrice}}">Total Price: {{totalPrice}}</li>
+                    <li class="list-group-item">Total Pax: {{tourPackage['paxes']['adults'] | int + tourPackage['paxes']['children'] | int}} <small>(Adults: {{tourPackage['paxes']['adults']}}, Children: {{tourPackage['paxes']['children']}})</small></li>
+                </ul>
+        </div>
+        {% set uuid = create_uuid() %}
+        <div class="d-flex justify-content-between">
+            <a class="btn-link" onclick="expandPackageTourClicked(this)" href="#{{uuid}}" 
+            role="button" aria-expanded="false" aria-controls="{{uuid}}"
+            package-type="{{tourPackage['package_type']}}"
+            >
+            <span class="multiple-tours-names">
+            {% for tour in tourPackage['tours'] %}
+                {% if loop.index > 1 %}, {%endif %}<span class="tour-id-container" tour-id="{{tour.get('tour_id')}}">{{tour['tour_name']}}</span>
+            {% endfor %}    
+            </span>        
+            </a>
+            <div class="tour-details d-flex" style="width: 170px;">
+            <div class="mr-2"><small> Adults: {{tourPackage['paxes']['adults']}}, Children: {{tourPackage['paxes']['children']}}</small></div>
+            <div class="tour-price"><strong>{{totalPrice}} USD</strong></div>
+            </div>
+        </div>
+        <div class="collapse" id="{{uuid}}">
+            <div class="card card-body">
+                Loading...
+            </div>
+        </div>
+    </div>
+  {%endif%}
+{% endif %}
+{%endmacro%}
+
 
 {%macro package_tour_card(tourPackages)%}
 {% if tourPackages|length > 0 %}

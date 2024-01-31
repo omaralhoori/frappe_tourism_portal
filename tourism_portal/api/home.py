@@ -126,7 +126,6 @@ def create_search(hotelParams, transferParams, tourParams):
 
 @frappe.whitelist()
 def get_tour_info(tour_id, tour_type):
-	print(tour_type)
 	doctype = "Tour Type"
 	fields = ["tour_name", "tour_description", "tour_image"]
 	if tour_type == 'package':
@@ -139,3 +138,20 @@ def get_tour_info(tour_id, tour_type):
 		"tour_info": tour_info,
 		"attachments": attachments
 	}
+@frappe.whitelist()
+def get_packge_tour_info(tours, tour_type):
+	return {}
+	# doctype = "Tour Type"
+	# fields = ["tour_name", "tour_description", "tour_image"]
+	# if tour_type == 'package':
+	# 	doctype = "Tour Package"
+	# 	fields = ["package_name as tour_name", "description as tour_description", "package_image as tour_image"]
+	# result = []
+	# tour_info = frappe.db.get_value(doctype, tour_id, fields, as_dict=True)
+	
+	# #attachments = get_attachments(doctype, tour_id)
+	
+	# return {
+	# 	"tour_info": tour_info,
+	# #	"attachments": attachments
+	# }

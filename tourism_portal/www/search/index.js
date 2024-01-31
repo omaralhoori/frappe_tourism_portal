@@ -1488,6 +1488,12 @@ function expandTourClicked(e){
     getTourInfo(e)
 }
 
+function expandPackageTourClicked(e){
+    var target = e.getAttribute('href')
+    $(target).collapse('toggle')
+    getPackageTourInfo(e)
+}
+
 
 function getTourInfo(e){
     var tourId = e.getAttribute('tour-id');
@@ -1495,6 +1501,8 @@ function getTourInfo(e){
     // var tourInfoModal = $('#tourInfoModal');
     // tourInfoModal.find('.modal-header').html('')
     // tourInfoModal.find('.modal-body').html(getLoadingSpinner());
+    var tourCard = e.closest('.tour-card');
+    tourCard.querySelector('.card-body').innerHTML = getLoadingSpinner();
     frappe.call({
         "method": "tourism_portal.api.home.get_tour_info",
         "args": {
@@ -1504,23 +1512,54 @@ function getTourInfo(e){
         callback: function (r) {
             var tour = r.message;
             var html = '';
-            console.log(r.message)
-            html += `
-                <h5>${tour.tour_info.tour_name}</h5>
-                <p>${tour.tour_info.tour_description}</p>
-            `;
-            var images = []
-            for (var image of tour.attachments){
-                images.push(image.file_url)
-            }
-            var carousel = $('#tourCarouselTemplate');
-            var carouselHtml = carousel.html();
-            tourInfoModal.find('.modal-body').html(html);
-            tourInfoModal.find('.modal-header').html(carouselHtml);
-            loadCarousel(images);
+            html = `<div class="row">
+            <div class="col-md-3">
+                <img src="${tour.tour_info.tour_image}" class="img-fluid">
+            </div>
+            <div class="col-md-9">
+                <div>${tour.tour_info.tour_description}</div>
+            </div>
+        </div>`;
+            tourCard.querySelector('.card-body').innerHTML = html;
         }
     })
-    tourInfoModal.modal('show');
+}
+
+function getPackageTourInfo(e){
+    var tourId = e.getAttribute('tour-id');
+    var tourType = e.getAttribute('package-type');
+    // var tourInfoModal = $('#tourInfoModal');
+    // tourInfoModal.find('.modal-header').html('')
+    // tourInfoModal.find('.modal-body').html(getLoadingSpinner());
+    var tourCard = e.closest('.tour-card');
+    var tours = tourCard.querySelectorAll('.tour-id-container');
+    var toursIds = [];
+    for (var tour of tours){
+        toursIds.push(tour.getAttribute('tour-id'));
+    }
+    tourCard.querySelector('.card-body').innerHTML = getLoadingSpinner();
+    frappe.call({
+        "method": "tourism_portal.api.home.get_packge_tour_info",
+        "args": {
+            "tours": toursIds,
+            "tour_type": tourType
+        },
+        callback: function (r) {
+            var html = '';
+            for (var tourRes of r.message){
+                html += `<div class="row">
+                <div class="col-md-3">
+                    <img src="${tourRes.tour_info.tour_image}" class="img-fluid">
+                </div>
+                <div class="col-md-9">
+                    <div>${tourRes.tour_info.tour_description}</div>
+                </div>
+            </div>`;
+            }
+            
+            tourCard.querySelector('.card-body').innerHTML = html;
+        }
+    })
 }
 
 function getLoadingSpinner(){
