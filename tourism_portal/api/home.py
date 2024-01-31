@@ -140,16 +140,22 @@ def get_tour_info(tour_id, tour_type):
 	}
 @frappe.whitelist()
 def get_packge_tour_info(tours, tour_type):
-	return {}
-	# doctype = "Tour Type"
-	# fields = ["tour_name", "tour_description", "tour_image"]
-	# if tour_type == 'package':
-	# 	doctype = "Tour Package"
-	# 	fields = ["package_name as tour_name", "description as tour_description", "package_image as tour_image"]
-	# result = []
-	# tour_info = frappe.db.get_value(doctype, tour_id, fields, as_dict=True)
+	doctype = "Tour Type"
+	fields = ["tour_name", "tour_description", "tour_image"]
+	if tour_type == 'package':
+		doctype = "Tour Package"
+		fields = ["package_name as tour_name", "description as tour_description", "package_image as tour_image"]
+	result = []
+	if type(tours) == str:
+		tours = json.loads(tours)
+	for tour in tours:
+		tour_info = frappe.db.get_value(doctype, tour, fields, as_dict=True)
+		result.append({
+			"tour_info": tour_info,
+		})
+	return result
 	
-	# #attachments = get_attachments(doctype, tour_id)
+	#attachments = get_attachments(doctype, tour_id)
 	
 	# return {
 	# 	"tour_info": tour_info,

@@ -394,7 +394,7 @@
 </div>
 {%endmacro%}
 
-{%macro package_tour_card_old(tourPackages)%}
+{%macro package_tour_card(tourPackages)%}
 {% if tourPackages|length > 0 %}
 {% set  total   = [0] %}
 {% set  total_company   = [0] %}
@@ -461,7 +461,7 @@
 {%endmacro%}
 
 
-{%macro package_tour_card(tourPackages)%}
+{%macro package_tour_card_old(tourPackages)%}
 {% if tourPackages|length > 0 %}
 {% set  total   = [0] %}
 {% set  total_company   = [0] %}

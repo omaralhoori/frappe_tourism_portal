@@ -1546,6 +1546,7 @@ function getPackageTourInfo(e){
         },
         callback: function (r) {
             var html = '';
+            console.log(r.message)
             for (var tourRes of r.message){
                 html += `<div class="row">
                 <div class="col-md-3">
