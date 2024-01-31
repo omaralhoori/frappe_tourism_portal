@@ -156,7 +156,7 @@ def get_available_tours(params):
 		where_stmt = "WHERE tour_type=%(tour_id)s AND tp.from_date <= %(tour_date)s AND tp.to_date >= %(tour_date)s"
 	elif params['tour-type'] == "package":
 		search_columns = "tp.price as group_adult_price, pkg.tour_child_policy"
-		join_table = "INNER JOIN `tabTour Package` pkg ON pkg.parent=tp.name AND pkg.parenttype='Tour Package'"
+		join_table = "INNER JOIN `tabTour Package` pkg ON pkg.name=tp.parent AND pkg.parenttype='Tour Package'"
 		if company_class.get('company_class'):
 			search_columns = "tp.price as group_adult_price, pkg.tour_child_policy, ccep.extra_profit"
 			join_table = """
