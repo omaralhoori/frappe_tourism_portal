@@ -64,7 +64,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-04 16:30:00.872606",
+ "modified": "2024-01-31 15:10:57.680716",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Area",
@@ -85,7 +85,7 @@
   }
  ],
  "quick_entry": 1,
- "search_fields": "area_name,town",
+ "search_fields": "area_name,town,city",
  "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
