@@ -346,11 +346,23 @@
 {% endif %}
 {%endmacro%}
 
-{%macro vip_tour_card_old(tour, tour_id)%}
+{%macro vip_tour_card(tour, tour_id)%}
     <div class="border-card m-2 tour-card" style="width: 100%;">
     {% if not tour %}
         <div class="p-3">{{tour_id}} price is not available</div>
     {%else%}
+    <div class="d-none">
+    <div>
+    <h5 class="card-title tour-item" tour-id="{{tour.get('tour_id')}}">{{tour.get('tour_name')}}</h5>
+    <p class="card-text">{{tour.get('tour_description') or ''}}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item tour-pickup" tour-pickup="{{tour['pickup']}}">Pickup: {{tour['pickup']}}</li>
+    {# <li class="list-group-item">Tour Date: {{tour['tour_date']}}</li> #}
+    <li class="list-group-item tour-price" tour-price-company="{{tour['tour_price_company']}}" tour-price="{{tour['tour_price']}}">Price: {{tour['tour_price']}}</li>
+            <li class="list-group-item">Total Pax: {{tour['paxes']['adults'] | int + tour['paxes']['children'] | int}} <small>(Adults: {{tour['paxes']['adults']}}, Children: {{tour['paxes']['children']}})</small></li>
+  </ul>
+  </div>
     {% set uuid = create_uuid() %}
     <div class="d-flex justify-content-between">
         <a class="btn-link" onclick="expandTourClicked(this)" href="#{{uuid}}" 
@@ -373,7 +385,7 @@
   {%endif%}
 </div>
 {%endmacro%}
-{%macro vip_tour_card(tour, tour_id)%}
+{%macro vip_tour_card_old(tour, tour_id)%}
     <div class="card m-2 tour-card" style="width: 45%;">
     {% if not tour %}
         <div class="p-3">{{tour_id}} price is not available</div>
