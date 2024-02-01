@@ -48,6 +48,17 @@
                             <a class="dropdown-item" href="/?cmd=web_logout">Log Out</a>
                             </div>
                         </li>
+                        <li  class="nav-item dropdown" id="notificationsDropDownNavItem">
+                            <a class="nav-link dropdown-toggle" href="#" id="notificationsDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-bell" aria-hidden="true"></i>
+                                <span class="red-dot d-none"></span>
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="notificationsDropDown">
+                                <span class="dropdown-item">No New notifications</span>
+                            </div>
+                            
+                        </li>
                         {% endif %}
                     </ul>
                 </div>
@@ -55,3 +66,62 @@
         </div>
     </div>
 </div>
+<script>
+
+function renderNotificationItem(notification) {
+    var notificationItem = document.createElement("a");
+    notificationItem.classList.add("dropdown-item");
+    notificationItem.href = "#";
+    notificationItem.innerHTML = `
+        <div class="d-flex ">
+            <div>
+                <div class="notification-subject">${notification.subject}</div>
+                <p class="notification-content">${notification.email_content || '' }</p>
+            </div>
+        </div>
+    `;
+    notificationItem.addEventListener("click", function(){
+        dismissNotification(this,notification.name);
+    })
+    return notificationItem; 
+}
+
+function dismissNotification(e,notification){
+    e.parentElement.removeChild(e);
+    frappe.call({
+        "method": "frappe.desk.doctype.notification_log.notification_log.dismiss_notification",
+        "args": {
+            "docname": notification
+        },
+    })
+    if (document.querySelectorAll("#notificationsDropDownNavItem .dropdown-item").length == 0){
+        document.querySelector("#notificationsDropDownNavItem .dropdown-menu").innerHTML = `
+            <span class="dropdown-item">No New notifications</span>
+        `;
+        document.querySelector("#notificationsDropDownNavItem .red-dot").classList.add("d-none");
+    }
+}
+document.addEventListener("DOMContentLoaded", function(event) {
+    frappe.call({
+            "method": "frappe.desk.doctype.notification_log.notification_log.get_notification_logs",
+            "callback": res => {
+                if (res.message && res.message.notification_logs && res.message.notification_logs.length > 0){
+                    var notifications = res.message.notification_logs;
+                var notificationsDropDown = document.getElementById("notificationsDropDown");
+                var notificationsDropDownMenu = notificationsDropDown.parentElement.querySelector(".dropdown-menu");
+                notificationsDropDownMenu.innerHTML = ""
+                notifications.forEach(notification => {
+                    notificationsDropDownMenu.appendChild(renderNotificationItem(notification), notificationsDropDown);
+                });
+                if (notifications.length > 0) {
+                    notificationsDropDown.querySelector(".red-dot").classList.remove("d-none");
+                }else{
+                    notificationsDropDown.querySelector(".red-dot").classList.add("d-none");
+                }
+                
+            }
+            }
+        })
+});
+
+</script>
