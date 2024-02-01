@@ -1,6 +1,12 @@
 body{
-    background:#f5f5f5;
-    margin-top:20px;}
+  background-image: url('/assets/tourism_portal/images/background/13.jpg');
+  background-color: #f1f6fa;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
 
 /* ===== Career ===== */
 .career-form {
