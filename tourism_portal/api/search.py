@@ -334,11 +334,42 @@ def convert_date_to_object(date):
 def restart_price_dates(prices, checkin, checkout):
 	checkin_date = convert_date_to_object(checkin)
 	checkout_date = convert_date_to_object(checkout) 
-
 	for price in prices:
 		price['from_date'] = str(max([checkin_date, convert_date_to_object(price['from_date'])]))
 		price['to_date'] = str(min([checkout_date, convert_date_to_object(price['to_date'])]))
-	return prices
+	prices = filter_prices_overlapping_dates(prices)
+	all_dates_covered = is_prices_cover_all_dates(prices, checkin_date, checkout_date)
+	if all_dates_covered:
+		return prices
+	else:
+		return []
+
+def filter_prices_overlapping_dates(prices):
+	prices = sorted(prices, key=lambda x: convert_date_to_object(x["from_date"]))
+	filtered_prices = []
+	for price in prices:
+		if len(filtered_prices) == 0:
+			filtered_prices.append(price)
+		else:
+			last_price = filtered_prices[-1]
+			if convert_date_to_object(price['from_date']) <= convert_date_to_object(last_price['to_date']):
+				last_price['to_date'] = price['to_date']
+			else:
+				filtered_prices.append(price)
+	return filtered_prices
+
+def is_prices_cover_all_dates(prices, checkin_date, checkout_date):
+	current_date = checkin_date
+	for price in prices:
+		from_date = convert_date_to_object(price['from_date'])
+		to_date = convert_date_to_object(price['to_date'])
+		if current_date < from_date:
+			return False
+		if from_date <= current_date <= to_date:
+			current_date = to_date + timedelta(days=1)
+		if current_date > checkout_date:
+			return True
+	return False
 
 def filter_contracts_by_dates(contracts, checkin_date, checkout_date):
 	checkin_date = convert_date_to_object(checkin_date)
