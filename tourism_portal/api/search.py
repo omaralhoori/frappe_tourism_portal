@@ -92,7 +92,9 @@ def search_for_available_hotel_by_hotel(hotel_params):
 def get_room_contracts(room, hotel_params, roomPax, company_class):
 	room['contracts'] = []
 	all_room_contracts = get_all_room_contracts(room, hotel_params)
+	print(all_room_contracts)
 	all_room_contracts = filter_contracts(all_room_contracts, hotel_params.get('checkin'), hotel_params.get('checkout'))
+	print(all_room_contracts)
 	for contract in all_room_contracts:
 		contract['child_rate_contract'] = frappe.db.get_value("Hotel", room.get('hotel'), "hotel_child_rate_policy", cache=True)
 		contract['cancellation_policy_description'] = frappe.db.get_value("Cancellation Policy", contract.get('hotel_cancellation_policy'), "policy_description", cache=True)
@@ -107,9 +109,11 @@ def get_room_contracts(room, hotel_params, roomPax, company_class):
 		room['remain_qty'] = min(remains)
 
 def get_all_room_contracts(room, hotel_params):
+	company_details = get_company_details()
 	contracts = frappe.db.sql("""
 		SELECT 
 		cntrct.name as contract_id, 
+		cntrct.agency,
 		contract_type, qty, release_days,
 		check_in_from_date as from_date, check_in_to_date as to_date,
 		accommodation_type_rule as hotel_accommodation_type_rule, 
@@ -120,8 +124,10 @@ def get_all_room_contracts(room, hotel_params):
 		AND (cntrct.release_days =0 or DATEDIFF(%(checkin)s, now()) > cntrct.release_days )
 		AND ((%(checkin)s >= cntrct.check_in_from_date and %(checkin)s <= cntrct.check_in_to_date)
 			OR ( %(checkout)s >= cntrct.check_in_from_date and  %(checkout)s <= cntrct.check_in_to_date))
+		AND (cntrct.agency IS NULL OR cntrct.agency ='' OR cntrct.agency=%(agency)s)
 		AND cntrct.docstatus=1
 	""", {"hotel": room.get('hotel'), 'room_type': room.get('room_type'),
+	   "agency": company_details.get('company'),
        'checkin': hotel_params.get('checkin'), 'checkout': hotel_params.get('checkout')
 	   }, as_dict=True)
 	
@@ -311,7 +317,13 @@ def concat_contracts(contracts, checkin, checkout):
 	# 	room_contracts = filter_contracts_by_dates(room_type_contracts[room_type], checkin, checkout)
 	# 	if len(room_contracts) > 0:
 	# 		contracts[room_type] = room_contracts
-	contracts = filter_contracts_by_dates(contracts, checkin, checkout)
+	agency_contracts = [ contract for contract in contracts if contract.get('agency') ]
+	non_agency_contracts = [ contract for contract in contracts if not contract.get('agency') ]
+	if len(agency_contracts )> 0 :
+		contracts = filter_contracts_by_dates(agency_contracts, checkin, checkout)
+		if len(contracts) > 0:
+			return contracts
+	contracts = filter_contracts_by_dates(non_agency_contracts, checkin, checkout)
 	return contracts
 from datetime import datetime, timedelta
 def convert_date_to_object(date):

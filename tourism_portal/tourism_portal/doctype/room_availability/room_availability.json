@@ -17,7 +17,8 @@
   "available_qty",
   "selling_from_date",
   "selling_to_date",
-  "release_days"
+  "release_days",
+  "agency"
  ],
  "fields": [
   {
@@ -97,11 +98,18 @@
    "fieldname": "release_days",
    "fieldtype": "Int",
    "label": "Release Days"
+  },
+  {
+   "fetch_from": "contract_no.agency",
+   "fieldname": "agency",
+   "fieldtype": "Link",
+   "label": "Agency",
+   "options": "Company"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-27 17:37:21.165386",
+ "modified": "2024-02-01 13:43:20.717572",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Room Availability",

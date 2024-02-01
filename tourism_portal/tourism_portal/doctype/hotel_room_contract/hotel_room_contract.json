@@ -11,6 +11,7 @@
   "hotel",
   "room_type",
   "contract_no",
+  "agency",
   "column_break_webcn",
   "contract_type",
   "qty",
@@ -186,12 +187,18 @@
    "fieldtype": "Data",
    "label": "Contract No",
    "read_only": 1
+  },
+  {
+   "fieldname": "agency",
+   "fieldtype": "Link",
+   "label": "Agency",
+   "options": "Company"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-06 14:32:14.209184",
+ "modified": "2024-02-01 13:06:18.738804",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Room Contract",
