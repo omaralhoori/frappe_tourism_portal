@@ -82,6 +82,8 @@ def search_for_available_hotel_by_hotel(hotel_params):
 			room['room_type_name'] = frappe.db.get_value("Room Type", room.get('room_type'), "room_type")
 			room['room_accommodation_type_name'] = frappe.db.get_value("Room Accommodation Type", room['room_accommodation_type'], "accommodation_type_name", cache=True)
 			get_room_contracts(room, hotel_params, roomPax, company_class)
+			if len(room['contracts']) == 0:
+				return {}
 	return {
 		hotel.name:{
 			  "details":get_hotel_data(hotel),
@@ -92,13 +94,18 @@ def search_for_available_hotel_by_hotel(hotel_params):
 def get_room_contracts(room, hotel_params, roomPax, company_class):
 	room['contracts'] = []
 	all_room_contracts = get_all_room_contracts(room, hotel_params)
-	print(all_room_contracts)
 	all_room_contracts = filter_contracts(all_room_contracts, hotel_params.get('checkin'), hotel_params.get('checkout'))
-	print(all_room_contracts)
+	if len(all_room_contracts) == 0:
+		return
+	selling_price_found = None
 	for contract in all_room_contracts:
 		contract['child_rate_contract'] = frappe.db.get_value("Hotel", room.get('hotel'), "hotel_child_rate_policy", cache=True)
 		contract['cancellation_policy_description'] = frappe.db.get_value("Cancellation Policy", contract.get('hotel_cancellation_policy'), "policy_description", cache=True)
 		get_room_contract_price(contract, room.get('room_accommodation_type'), hotel_params.get('nationality'), company_class, roomPax, room.get('min_pax'))
+		if selling_price_found is not False and len(contract.get('prices')) > 0:
+			selling_price_found = True
+		else:
+			selling_price_found = False
 	room['contracts'] = all_room_contracts
 	for contract in room['contracts']:
 		contract['remain_qty'] = get_contract_availabilities(contract.get('contract_id'), contract.get('from_date'), contract.get('to_date'))
@@ -107,6 +114,49 @@ def get_room_contracts(room, hotel_params, roomPax, company_class):
 		room['remain_qty'] = 0
 	else:
 		room['remain_qty'] = min(remains)
+	if len(room['contracts']) > 0:
+		if not room['remain_qty'] or not selling_price_found:
+			room['room_inquiry'] = get_room_inquiry(room, hotel_params, roomPax, company_class)
+
+def get_room_inquiry(room, hotel_params, roomPax, company_class):
+	company_details = get_company_details()
+	inquiries = frappe.db.sql("""
+		select name from `tabHotel Inquiry Request`
+		WHERE 
+			company=%(company)s 
+			AND customer=%(customer)s 
+			AND room=%(room)s 
+			AND used=0 
+			AND valid_datetime > %(now_datetime)s 
+			AND docstatus=1
+			AND status='Available'
+	""", {
+		"company": company_details.get('company'),
+		  "customer": frappe.session.user, 
+		  "room": room.get('room_id'), 
+		  "now_datetime": frappe.utils.now_datetime()
+		  }, as_dict=True)
+	if len(inquiries) > 0:
+		inquiry = frappe.get_doc("Hotel Inquiry Request", inquiries[0].get('name'))
+		prices = []
+		for inquiry_price in inquiry.hotel_inquiry_buying_price:
+			price = {
+				"buying_currency": inquiry_price.buying_currency,
+				"buying_price": inquiry_price.buying_price,
+				"from_date": inquiry_price.from_date,
+				"to_date": inquiry_price.to_date,
+				"inquiry_price_name": inquiry_price.name, 
+			}
+			get_room_inquiry_price(price ,  room.get('room_accommodation_type'), hotel_params.get('nationality'), company_class, roomPax, room.get('min_pax'), room.get('hotel')) 
+			prices.append(price)
+		return {
+			"valid_datetime": inquiry.valid_datetime,
+			"qty": inquiry.qty,
+			"name": inquiry.name,
+			"prices": prices 
+		}
+	return None
+
 
 def get_all_room_contracts(room, hotel_params):
 	company_details = get_company_details()
@@ -210,6 +260,17 @@ def get_room_contract_price(contract, room_acmnd_type, nationality, company_clas
 		# Child Company Price
 		price['child_company_price'] = get_child_company_hotel_price(price['selling_price_with_childs'])
 
+def get_room_inquiry_price(price ,room_acmnd_type, nationality, company_class, roomPax, min_pax, hotel):
+		
+		if not price.get('selling_price'):
+			get_inquiry_price_profit_margin_based(hotel, price, room_acmnd_type)
+		del price['buying_price']
+		# price['selling_price'] = get_room_selling_price_based_on_class(price['selling_price'], price['item_price_name'], company_class)
+		child_rate_policy = frappe.db.get_value("Hotel", hotel, "hotel_child_rate_policy", cache=True)
+		price['selling_price_with_childs'] = get_room_price_with_children(roomPax, price['selling_price'], child_rate_policy, min_pax)
+		# Child Company Price
+		price['child_company_price'] = get_child_company_hotel_price(price['selling_price_with_childs'])
+
 def get_child_company_hotel_price(selling_price):
 	company_details = get_company_details()
 	if company_details.get('is_child_company'):
@@ -227,6 +288,24 @@ def get_selling_price_profit_margin_based(contract, room_price, room_acmnd_type)
 	selling_price = None
 	selling_currency = None
 	profit_margin_doc = frappe.get_cached_doc("Profit Margin", contract.get('profit_margin'))
+	profit_margin_item = None
+	for item in profit_margin_doc.profit_margins:
+		if item.room_type == room_acmnd_type:#contract.get('room_accommodation_type'):
+			profit_margin_item = item
+			break
+	if profit_margin_item:
+		selling_price, selling_currency = get_currency_based_price(room_price.get('buying_price'), room_price.get('buying_currency'))
+		if selling_price:
+			selling_price = calculate_extra_price(selling_price, profit_margin_item.get('margin_type'), profit_margin_item.get('profit_margin'))
+			room_price['selling_price'] = selling_price
+			room_price['selling_currency'] = selling_currency
+	return selling_price, selling_currency
+
+def get_inquiry_price_profit_margin_based(hotel, room_price, room_acmnd_type):
+	profit_margin = frappe.db.get_value("Hotel", hotel, "hotel_profit_margin", cache=True)
+	selling_price = None
+	selling_currency = None
+	profit_margin_doc = frappe.get_cached_doc("Profit Margin", profit_margin)
 	profit_margin_item = None
 	for item in profit_margin_doc.profit_margins:
 		if item.room_type == room_acmnd_type:#contract.get('room_accommodation_type'):

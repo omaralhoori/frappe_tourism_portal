@@ -1,5 +1,6 @@
 import frappe
 from frappe import _
+from tourism_portal.api.company import get_company_details
 from tourism_portal.api.search import get_available_hotel_rooms
 from tourism_portal.tourism_portal.doctype.tour_price.tour_price import apply_tour_discount, get_available_tours, get_available_tours_and_prices
 from tourism_portal.tourism_portal.doctype.transfer_price.transfer_price import get_available_transfers
@@ -442,26 +443,77 @@ def is_hotel_suitable(pax_info, hotel):
 	if adults < hotel_acmnd[0].get('min_adults') or adults > hotel_acmnd[0].get('max_adults'): return False
 	if children < hotel_acmnd[0].get('min_childs') or children > hotel_acmnd[0].get('max_childs'): return False
 	return True
-
+"""
+	args:
+		room_id: str,
+		hotel_search: str,
+		adults: int,
+		children: int,
+		requested_qty: int,
+		from_date: str,
+		to_date: str,
+		nationality: str,
+		contracts: list,
+		prices: list
+"""
 @frappe.whitelist()
-def ask_for_availability(room_id):
+def ask_for_availability():
+	args = frappe.form_dict
+	args = verify_ask_for_availability_args(args)
 	now_datetime = frappe.utils.now()
 	inquiries = frappe.db.sql("""
 		select name from `tabHotel Inquiry Request`
 		WHERE customer=%(customer)s AND room=%(room)s AND 
 		(docstatus=0 OR valid_datetime > %(now_datetime)s)
-	""", {"customer": frappe.session.user, "room": room_id, "now_datetime": now_datetime})
+		AND used=0
+	""", {"customer": frappe.session.user, "room": args.get('room_id'), "now_datetime": now_datetime})
 	if len(inquiries) > 0:
 		return {
 			"success_key": 0,
 			"error": _("You have asked for this room before.")
 		}
-	frappe.get_doc({
+	company_details = get_company_details()
+	ask_doc = frappe.get_doc({
 		"doctype": "Hotel Inquiry Request", 
 		"customer": frappe.session.user,
-		"room": room_id,
-	}).insert(ignore_permissions=True)
+		"company": company_details.get('company'),
+		"room": args.get('room_id'),
+		"hotel_search": args.get('hotel_search'),
+		"adults": args.get('adults'),
+		"children": args.get('children'),
+		"requested_qty": args.get('requested_qty'),
+		"from_date": args.get('from_date'),
+		"to_date": args.get('to_date'),
+		"nationality": args.get('nationality'),
+	})
+	ask_doc.insert(ignore_permissions=True)
+	ask_doc.update_buying_price(args.get('contracts'), args.get('prices'))
+	ask_doc.save(ignore_permissions=True)
 	return {
 		"success_key": 1,
 		"msg": _("The request has been submitted successfully")
 	}
+
+def verify_ask_for_availability_args(args):
+	args = {
+		"room_id": args.get('room_id'),
+		"hotel_search": args.get('hotel_search'),
+		"adults": int(args.get('adults')),
+		"children": int(args.get('children')),
+		"requested_qty": int(args.get('requested_qty')),
+		"from_date": args.get('from_date'),
+		"to_date": args.get('to_date'),
+		"nationality": args.get('nationality'),
+		"contracts": args.get('contracts'),
+		"prices": args.get('prices')
+	}
+	if type(args.get('contracts')) == str:
+		args['contracts'] = json.loads(args.get('contracts'))
+	if type(args.get('prices')) == str:
+		args['prices'] = json.loads(args.get('prices'))
+
+	print(args)
+	if not args.get('room_id') or not args.get('hotel_search') or not args.get('adults') or not args.get('requested_qty') or not args.get('from_date') or not args.get('to_date'):
+		frappe.throw(_("Invalid request"))
+	return args
+	

@@ -6,7 +6,6 @@ def add_rooms_to_invoice(invoice, rooms, hotel_margin):
         search = rooms[searchName]
         for roomName in search:
             room = rooms[searchName][roomName]
-            print(room)
             invc_room = invoice.append("rooms")
             invc_room.room = room['room_id']
             invc_room.hotel_search = searchName
@@ -43,18 +42,23 @@ def add_rooms_to_invoice(invoice, rooms, hotel_margin):
                 total_price += float(contract['total_price'])
                 total_price_company += float(contract['total_price_company'])
                 #room_price.contract_id = contract.get('contract_id')
-                room_price.contract_price = contract.get('price_id')
-                room_price.inquiry_id = contract.get('inquiry_id')
-                if room_price.contract_price:
+                room_price.contract_price = contract.get('price_id') if contract.get('price_id') and contract.get('price_id') != 'None' and contract.get('price_id') != 'null' and contract.get('price_id') != 'undefined' else None
+                room_price.inquiry_id = contract.get('inquiry_price_id') if contract.get('inquiry_price_id') and contract.get('inquiry_price_id') != 'None' and contract.get('inquiry_price_id') != 'null' and contract.get('inquiry_price_id') != 'undefined' else None
+                if room_price.inquiry_id:
+                    room_price.buying_currency,room_price.buying_price, inquiry = frappe.db.get_value("Hotel Inquiry Buying Price", room_price.inquiry_id,["buying_currency", "buying_price", "parent"])
+                    frappe.db.set_value("Hotel Inquiry Request", inquiry, "used", 1)
+                elif room_price.contract_price:
                     room_price.contract_id = frappe.db.get_value("Hotel Room Price", room_price.contract_price, "room_contract", cache=True)
                     room_price.buying_currency,room_price.buying_price = frappe.db.get_value("Hotel Room Price", room_price.contract_price,["buying_currency", "buying_price"])
-                elif room_price.inquiry_id:
-                    room_price.buying_currency,room_price.buying_price = frappe.db.get_value("Hotel Inquiry Request", room_price.inquiry_id,["buying_currency", "buying_price"])
+                if not room_price.buying_currency:
+                    frappe.throw("Check your request, there is missing information. Please contact your system administrator.")
                 if room_price.contract_id:
                     room_price.cancellation_policy = frappe.db.get_value("Hotel Room Contract",room_price.contract_id, "cancellation_policy", cache=True)
                 if not room_price.cancellation_policy:
                     hotel = frappe.db.get_value("Hotel Room",  room['room_id'], "hotel", cache=True)
                     room_price.cancellation_policy = frappe.db.get_value("Hotel", hotel, "hotel_cancellation_policy")
+            if total_price <= 0:
+                frappe.throw("Please check your request, there is missing information. Please contact your system administrator.")
             invc_room.total_price = total_price
             invc_room.total_price_company = total_price_company
     

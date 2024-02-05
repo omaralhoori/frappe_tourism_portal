@@ -10,25 +10,30 @@
  "engine": "InnoDB",
  "field_order": [
   "customer",
+  "status",
   "column_break_sun0r",
   "company",
   "amended_from",
   "section_break_ilhhw",
   "hotel",
+  "adults",
+  "from_date",
+  "nationality",
   "column_break_4ke16",
   "room",
+  "children",
+  "to_date",
+  "requested_qty",
   "inquiry_results_section",
   "selling_price_based_on",
   "valid_until",
+  "profit_margin",
   "column_break_qsrev",
   "qty",
   "valid_datetime",
+  "used",
   "section_break_aiy84",
-  "buying_currency",
-  "selling_currency",
-  "column_break_xv2nl",
-  "buying_price",
-  "selling_price"
+  "hotel_inquiry_buying_price"
  ],
  "fields": [
   {
@@ -46,12 +51,12 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "customer.company",
    "fieldname": "company",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Company",
-   "options": "Company"
+   "options": "Company",
+   "reqd": 1
   },
   {
    "fieldname": "amended_from",
@@ -71,6 +76,7 @@
    "fieldname": "hotel",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Hotel",
    "options": "Hotel",
    "reqd": 1,
@@ -97,43 +103,12 @@
    "fieldtype": "Select",
    "label": "Selling Price Based On",
    "options": "Profit Margin\nSelling Price",
+   "read_only": 1,
    "reqd": 1
   },
   {
    "fieldname": "section_break_aiy84",
    "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "buying_currency",
-   "fieldtype": "Link",
-   "label": "Buying Currency",
-   "options": "Currency"
-  },
-  {
-   "depends_on": "eval:doc.selling_price_based_on==\"Selling Price\"",
-   "fieldname": "selling_currency",
-   "fieldtype": "Link",
-   "label": "Selling Currency",
-   "mandatory_depends_on": "eval:doc.selling_price_based_on==\"Selling Price\"",
-   "options": "Currency"
-  },
-  {
-   "fieldname": "column_break_xv2nl",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "buying_price",
-   "fieldtype": "Currency",
-   "label": "Buying Price",
-   "options": "buying_currency"
-  },
-  {
-   "depends_on": "eval:doc.selling_price_based_on==\"Selling Price\"",
-   "fieldname": "selling_price",
-   "fieldtype": "Currency",
-   "label": "Selling Price",
-   "mandatory_depends_on": "eval:doc.selling_price_based_on==\"Selling Price\"",
-   "options": "selling_currency"
   },
   {
    "fieldname": "column_break_qsrev",
@@ -143,8 +118,7 @@
    "default": "5",
    "fieldname": "qty",
    "fieldtype": "Int",
-   "label": "Quantity",
-   "reqd": 1
+   "label": "Quantity"
   },
   {
    "fieldname": "valid_until",
@@ -156,12 +130,79 @@
    "fieldtype": "Datetime",
    "label": "Valid Datetime",
    "read_only": 1
+  },
+  {
+   "fieldname": "adults",
+   "fieldtype": "Int",
+   "label": "Adults",
+   "read_only": 1
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "nationality",
+   "fieldtype": "Link",
+   "label": "Nationality",
+   "options": "Nationality",
+   "read_only": 1
+  },
+  {
+   "fieldname": "children",
+   "fieldtype": "Int",
+   "label": "Children",
+   "read_only": 1
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "requested_qty",
+   "fieldtype": "Int",
+   "label": "Requested Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "\nAvailable\nNot Available"
+  },
+  {
+   "fieldname": "hotel_inquiry_buying_price",
+   "fieldtype": "Table",
+   "label": "Hotel Inquiry Buying Price",
+   "options": "Hotel Inquiry Buying Price"
+  },
+  {
+   "fetch_from": "hotel.hotel_profit_margin",
+   "fieldname": "profit_margin",
+   "fieldtype": "Link",
+   "label": "Profit Margin",
+   "options": "Profit Margin",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "used",
+   "fieldtype": "Check",
+   "label": "Used",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-19 11:26:27.041700",
+ "modified": "2024-02-05 08:34:01.885900",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Inquiry Request",

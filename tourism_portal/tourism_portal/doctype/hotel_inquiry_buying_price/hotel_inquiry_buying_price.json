@@ -1,0 +1,58 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-02-02 12:02:24.429887",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "buying_currency",
+  "buying_price",
+  "from_date",
+  "to_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "buying_currency",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Buying Currency",
+   "options": "Currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "buying_price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Buying Price",
+   "options": "buying_currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "To Date",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-02-02 12:02:24.429887",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Hotel Inquiry Buying Price",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
