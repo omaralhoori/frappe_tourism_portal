@@ -45,6 +45,7 @@
    "label": "Tour Date"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "tour_price",
    "fieldtype": "Currency",
    "label": "Tour Price"
@@ -57,6 +58,7 @@
    "options": "Tour Package"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "tour_price_company",
    "fieldtype": "Currency",
    "label": "Tour Price Company"
@@ -65,7 +67,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-01-12 14:25:48.266986",
+ "modified": "2024-02-05 16:26:39.906080",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice Tour",
