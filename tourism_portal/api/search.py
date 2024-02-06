@@ -82,8 +82,6 @@ def search_for_available_hotel_by_hotel(hotel_params):
 			room['room_type_name'] = frappe.db.get_value("Room Type", room.get('room_type'), "room_type")
 			room['room_accommodation_type_name'] = frappe.db.get_value("Room Accommodation Type", room['room_accommodation_type'], "accommodation_type_name", cache=True)
 			get_room_contracts(room, hotel_params, roomPax, company_class)
-			if len(room['contracts']) == 0:
-				return {}
 	return {
 		hotel.name:{
 			  "details":get_hotel_data(hotel),
