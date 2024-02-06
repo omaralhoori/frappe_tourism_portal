@@ -34,6 +34,7 @@ $(document).ready(function () {
 });
 
 function hideOneCardDeleteBtn() {
+    showHideGroupTransfer();
     hideSearchBtn();
     var deleteBtns = document.querySelectorAll('.remove-card-btn');
     if (deleteBtns.length == 1) {
@@ -55,6 +56,27 @@ function checkToDateClass(checkInName){
     return false;
 }
 
+function showHideGroupTransfer(e) {
+    var hotelCards = document.querySelectorAll('.hotel-search-card');
+    var transfers = document.querySelectorAll('select[name="transfer-type"]');
+        for (var transfer of transfers) {
+           for (var option of transfer.options){
+            if (hotelCards.length > 0){   
+            if (option.value == 'group'){
+                   option.disabled = false;
+               }
+           }
+              else{
+                if (option.value == 'group'){
+                     option.disabled = true;
+                }
+                if (transfer.value == 'group'){
+                    transfer.value = 'vip';
+              }
+        }
+    }
+}
+}
 function formatSelect2() {
     $('.select2-select').each(function (i, select) {
         var icons = $(this).siblings('i');
