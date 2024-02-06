@@ -39,7 +39,9 @@
   "site_logo",
   "site_ico",
   "column_break_ev9it",
-  "site_name"
+  "site_name",
+  "notification_settings_tab",
+  "send_price_change_notification"
  ],
  "fields": [
   {
@@ -227,13 +229,24 @@
    "fieldtype": "Attach",
    "label": "Agency Terms and Conditions",
    "reqd": 1
+  },
+  {
+   "fieldname": "notification_settings_tab",
+   "fieldtype": "Tab Break",
+   "label": "Notification Settings"
+  },
+  {
+   "default": "0",
+   "fieldname": "send_price_change_notification",
+   "fieldtype": "Check",
+   "label": "Send Notification On Room Price Update"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-01-27 16:29:05.865994",
+ "modified": "2024-02-06 14:52:05.972195",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal Settings",

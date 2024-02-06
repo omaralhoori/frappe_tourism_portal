@@ -195,6 +195,13 @@ background-color: #5c50c5;
         -moz-box-shadow: 0px 0px 4px 2px #ccc;
         border-radius: 5px;
  }
+
+.right-dropdown{
+    left: auto !important;
+    right: 0 !important;
+    max-height: 300px;
+    overflow-y: auto;
+}
  
  .tm-top-bar{
     height: auto;

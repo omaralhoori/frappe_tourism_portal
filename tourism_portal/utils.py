@@ -1,4 +1,5 @@
 import frappe
+from frappe.desk.doctype.notification_log.notification_log import enqueue_create_notification
 from frappe.tests.utils import FrappeTestCase
 from uuid import uuid4
 
@@ -255,3 +256,16 @@ def get_company_class(search_params):
         ["company_class", "extra_price_type", "extra_price"], as_dict=True
         ) or {}
     return company_class
+
+
+def publish_agency_notification(title, message, doctype, docname):
+    notification_doc = {
+		"type": "Share",
+		"document_type": doctype,
+		"subject": title,
+        "email_content": message,
+		"document_name": docname,
+		"from_user": frappe.session.user,
+	}
+    users = frappe.db.get_values("User", {"company":["!=", ""], "enabled": 1}, "email", pluck=True)
+    enqueue_create_notification(users, notification_doc)
