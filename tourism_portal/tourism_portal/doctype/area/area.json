@@ -14,7 +14,8 @@
   "town",
   "city",
   "postal_code",
-  "portal_disabled"
+  "portal_disabled",
+  "gps_location"
  ],
  "fields": [
   {
@@ -60,11 +61,16 @@
    "label": "City",
    "options": "City",
    "reqd": 1
+  },
+  {
+   "fieldname": "gps_location",
+   "fieldtype": "Data",
+   "label": "GPS Location"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-31 15:10:57.680716",
+ "modified": "2024-02-07 08:27:35.076026",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Area",
