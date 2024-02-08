@@ -137,7 +137,7 @@ function formatDataPicker(template, onchange) {
                 },
                 onSelect:  onchange,
                 
-                //minDate: new Date()
+                minDate: new Date()
             });
             datepickers[uniqueId] = initDatepicker;
 
@@ -216,7 +216,7 @@ function hideSearchBtn() {
 
 function addTransferClicked(e) {
     var childrenContainer = e.closest('.voucher-search').querySelector('.transfer-search-container');
-    if (childrenContainer.innerHTML.trim()) {
+    if (childrenContainer.querySelectorAll('.transfer-search-row').length > 1) {
         return;
     }
     var html = '';
@@ -296,9 +296,25 @@ function addTransferClicked(e) {
     hideOneCardDeleteBtn();
 
 }
+
+function reShowAddButtons(voucherSearch){
+    // var voucherSearch = e.closest('.voucher-search');
+    var tourCardsCount = voucherSearch.querySelectorAll('.tour-search-card').length;
+    var transferCardsCount = voucherSearch.querySelectorAll('.transfer-search-card').length;
+    var hotelCard = voucherSearch.querySelector('.hotel-search-card');
+    if (hotelCard){
+        if (tourCardsCount < 1){
+            voucherSearch.querySelector('.hotel-add-tour-btn').style.display = 'block';
+        }
+        if (transferCardsCount < 1){
+            voucherSearch.querySelector('.hotel-add-transfer-btn').style.display = 'block';
+        }
+    }
+}
+
 function addTourClicked(e) {
     var childrenContainer = e.closest('.voucher-search').querySelector('.tour-search-container');
-    if (childrenContainer.innerHTML.trim()) {
+    if (childrenContainer.querySelectorAll('.tour-search-card').length > 1) {
         return;
     }
     var hotelCard = e.closest('.voucher-search').querySelector('.hotel-search-card');
@@ -1181,6 +1197,7 @@ function deleteBtnPressed(e){
 }
 
 function deleteCard(e){
+    var voucherSearch = e.closest('.voucher-search');
     var card = e.closest('.search-card-container')
     var cardType = card.getAttribute('card-type');
     if (cardType == 'hotel'){
@@ -1192,6 +1209,7 @@ function deleteCard(e){
     }
     renumberCards();
     hideOneCardDeleteBtn();
+    reShowAddButtons(voucherSearch);
 }
 
 function renumberCards(){
