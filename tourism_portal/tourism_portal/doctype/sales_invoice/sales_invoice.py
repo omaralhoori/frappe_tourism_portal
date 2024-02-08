@@ -1,6 +1,7 @@
 # Copyright (c) 2023, omaralhoori and contributors
 # For license information, please see license.txt
 
+from tourism_portal.tourism_portal.doctype.sales_invoice.email_service import send_agency_invoice_email, send_agency_voucher_email
 import frappe
 from frappe.model.document import Document
 from frappe import _
@@ -536,6 +537,8 @@ class SalesInvoice(Document):
 		self.add_voucher_no()
 		self.add_invoice_no()
 		self.db_set("status", "Submitted")
+		self.notifiy_agency_invoice()
+		self.notifiy_agency_voucher()	
 	def get_invoice_print_details(self):
 		if self.child_company:
 			operator = frappe.db.get_value("Company", self.child_company, "company_name", cache=True)
@@ -754,6 +757,12 @@ class SalesInvoice(Document):
 					elif tour_pax.guest_type == "Child":
 						tour_groups[tour_key]['childs'].append(tour_pax.guest_name + ", Age: " + str(tour_pax.guest_age))
 		return tour_groups
+	def notifiy_agency_invoice(self):
+		if frappe.db.get_single_value("Tourism Portal Settings", "send_invoice_email"):
+			send_agency_invoice_email(self)
+	def notifiy_agency_voucher(self):
+		if frappe.db.get_single_value("Tourism Portal Settings", "send_voucher_email"):
+			send_agency_voucher_email(self)
 def get_location_name(location, location_type):
 	if location_type == 'hotel':
 		return frappe.db.get_value("Hotel", location, "hotel_name", cache=True)

@@ -42,7 +42,11 @@
   "agent_last_name",
   "agency_address",
   "contact_info_tab",
-  "contact_email"
+  "management_email",
+  "column_break_hmxyd",
+  "accounting_email",
+  "column_break_bkvhs",
+  "reservation_email"
  ],
  "fields": [
   {
@@ -191,12 +195,6 @@
    "label": "Contact Info"
   },
   {
-   "fieldname": "contact_email",
-   "fieldtype": "Data",
-   "label": "Contact Email",
-   "options": "Email"
-  },
-  {
    "fieldname": "agency_info_tab",
    "fieldtype": "Tab Break",
    "label": "Agency Info"
@@ -242,6 +240,32 @@
    "fieldname": "agency_address",
    "fieldtype": "Small Text",
    "label": "Agency Address"
+  },
+  {
+   "fieldname": "management_email",
+   "fieldtype": "Data",
+   "label": "Management Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "column_break_hmxyd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "accounting_email",
+   "fieldtype": "Data",
+   "label": "Accounting Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "column_break_bkvhs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reservation_email",
+   "fieldtype": "Data",
+   "label": "Reservation Email",
+   "options": "Email"
   }
  ],
  "image_field": "company_logo",
@@ -265,7 +289,7 @@
   }
  ],
  "make_attachments_public": 1,
- "modified": "2024-01-29 13:09:05.955527",
+ "modified": "2024-02-08 12:08:36.326732",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Company",

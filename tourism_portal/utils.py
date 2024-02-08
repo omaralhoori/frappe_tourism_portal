@@ -260,7 +260,7 @@ def get_company_class(search_params):
 
 def publish_agency_notification(title, message, doctype, docname):
     notification_doc = {
-		"type": "Share",
+		"type": "Alert",
 		"document_type": doctype,
 		"subject": title,
         "email_content": message,

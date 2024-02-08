@@ -41,7 +41,10 @@
   "column_break_ev9it",
   "site_name",
   "notification_settings_tab",
-  "send_price_change_notification"
+  "send_price_change_notification",
+  "email_settings_section",
+  "send_invoice_email",
+  "send_voucher_email"
  ],
  "fields": [
   {
@@ -240,13 +243,30 @@
    "fieldname": "send_price_change_notification",
    "fieldtype": "Check",
    "label": "Send Notification On Room Price Update"
+  },
+  {
+   "fieldname": "email_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Email Settings"
+  },
+  {
+   "default": "0",
+   "fieldname": "send_invoice_email",
+   "fieldtype": "Check",
+   "label": "Send Invoice Email"
+  },
+  {
+   "default": "0",
+   "fieldname": "send_voucher_email",
+   "fieldtype": "Check",
+   "label": "Send Voucher Email"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-02-06 14:52:05.972195",
+ "modified": "2024-02-08 14:01:04.033518",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal Settings",
