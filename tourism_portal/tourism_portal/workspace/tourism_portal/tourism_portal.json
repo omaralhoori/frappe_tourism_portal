@@ -498,7 +498,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Sales",
-   "link_count": 3,
+   "link_count": 4,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -527,13 +527,23 @@
    "is_query_report": 0,
    "label": "Tariff",
    "link_count": 0,
-   "link_to": "Turf",
+   "link_to": "Tariff",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Invoice Edit Requests",
+   "link_count": 0,
+   "link_to": "Customer Invoice Edit Request",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
   }
  ],
- "modified": "2024-01-24 17:09:41.155423",
+ "modified": "2024-02-08 18:04:40.896816",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal",

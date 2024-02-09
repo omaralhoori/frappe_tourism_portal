@@ -188,6 +188,7 @@
             href="/api/method/tourism_portal.api.pdf.print_invoice?voucher_no={{invoice_details.voucher_no}}">Print
             Invoice</a>
         <a class="btn btn-info mt-2 w-100" href="/reserve/edit?invoice={{invoice_details.invoice_id}}">Edit Invoice</a>
+        <a class="btn btn-info mt-2 w-100" href="/invoice-edit-request/new?sales_invoice={{invoice_details.invoice_id}}">Edit Request</a>
         <button class="btn btn-secondary mt-2 w-100" invoice-id="{{invoice_details.invoice_id}}"
             onclick="cancelReservation(this)">Cancel Reservation</button>
         {% else %}
@@ -368,7 +369,7 @@
 
 {% macro render_transfer_pax(adult_paxes, child_paxes, editable) %}
 <div class="tm-search-form row p-2">
-    <div class="col-lg-4"><strong>Guests {{editable}}</strong></div>
+    <div class="col-lg-4"><strong>Guests</strong></div>
     {% for adult in adult_paxes %}
     <div class="form-row tm-search-form-row pax-container adult-pax" adult-pax="{{loop.index}}"
         row-id="{{adult.row_id}}">
