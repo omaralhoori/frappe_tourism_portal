@@ -1,0 +1,51 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-02-12 12:58:42.124550",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "on_flight_update_email",
+  "operation_email"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "on_flight_update_email",
+   "fieldtype": "Check",
+   "label": "Send Email On Flight No Update"
+  },
+  {
+   "fieldname": "operation_email",
+   "fieldtype": "Data",
+   "label": "Operation Email",
+   "mandatory_depends_on": "eval:doc.on_flight_update_email",
+   "options": "Email"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-02-12 12:59:10.943532",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Portal Notification Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

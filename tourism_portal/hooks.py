@@ -153,13 +153,14 @@ scheduler_events = {
 	"all": [
 		"tourism_portal.utils.delete_expired_invoices"
 	],
+    "hourly": [
+		"tourism_portal.tourism_portal.doctype.sales_invoice.email_service.check_flight_entered",
+	],
 }
 #	"daily": [
 #		"tourism_portal.tasks.daily"
 #	],
-#	"hourly": [
-#		"tourism_portal.tasks.hourly"
-#	],
+
 #	"weekly": [
 #		"tourism_portal.tasks.weekly"
 #	],

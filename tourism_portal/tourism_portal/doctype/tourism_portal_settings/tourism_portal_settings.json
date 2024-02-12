@@ -44,7 +44,8 @@
   "send_price_change_notification",
   "email_settings_section",
   "send_invoice_email",
-  "send_voucher_email"
+  "send_voucher_email",
+  "enable_flight_notification"
  ],
  "fields": [
   {
@@ -260,13 +261,19 @@
    "fieldname": "send_voucher_email",
    "fieldtype": "Check",
    "label": "Send Voucher Email"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_flight_notification",
+   "fieldtype": "Check",
+   "label": "Enable Flight Notification"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-02-08 14:01:04.033518",
+ "modified": "2024-02-10 16:45:54.695357",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal Settings",

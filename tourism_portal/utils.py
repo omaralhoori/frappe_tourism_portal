@@ -269,3 +269,17 @@ def publish_agency_notification(title, message, doctype, docname):
 	}
     users = frappe.db.get_values("User", {"company":["!=", ""], "enabled": 1}, "email", pluck=True)
     enqueue_create_notification(users, notification_doc)
+
+def get_location_full_name(location, location_type):
+    if location_type == 'hotel':
+        return frappe.db.get_value("Hotel", location, "hotel_name", cache=True)
+    elif location_type == 'area':
+        return frappe.db.get_value("Area", location, "area_name", cache=True)
+    elif location_type == 'town':
+        return frappe.db.get_value("Town", location, "town_name", cache=True)
+    elif location_type == 'city':
+        return frappe.db.get_value("City", location, "city_name", cache=True)
+    elif location_type == 'airport':
+        return frappe.db.get_value("Airport", location, "airport_name", cache=True)
+    else:
+        return location

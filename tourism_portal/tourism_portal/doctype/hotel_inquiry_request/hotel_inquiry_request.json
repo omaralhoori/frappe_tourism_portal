@@ -202,7 +202,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-02-05 08:34:01.885900",
+ "modified": "2024-02-12 13:05:05.959739",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Inquiry Request",
@@ -225,5 +225,8 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "room"
+ "title_field": "room",
+ "track_changes": 1,
+ "track_seen": 1,
+ "track_views": 1
 }

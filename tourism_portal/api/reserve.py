@@ -1,4 +1,5 @@
 import json
+from tourism_portal.utils import get_location_full_name
 import frappe
 from frappe import _
 from tourism_portal.api.company import get_company_details
@@ -275,18 +276,7 @@ def get_invoice_data(sales_invoice):
     }
 
 def get_location_name(location, location_type):
-    if location_type == 'hotel':
-        return frappe.db.get_value("Hotel", location, "hotel_name", cache=True)
-    elif location_type == 'area':
-        return frappe.db.get_value("Area", location, "area_name", cache=True)
-    elif location_type == 'town':
-        return frappe.db.get_value("Town", location, "town_name", cache=True)
-    elif location_type == 'city':
-        return frappe.db.get_value("City", location, "city_name", cache=True)
-    elif location_type == 'airport':
-        return frappe.db.get_value("Airport", location, "airport_name", cache=True)
-    else:
-        return location
+    return get_location_full_name(location, location_type)
 
 @frappe.whitelist()
 def get_all_invoices(voucher_no='', start=0, limit=20):

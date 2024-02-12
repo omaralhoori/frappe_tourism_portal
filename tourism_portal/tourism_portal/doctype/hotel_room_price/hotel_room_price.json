@@ -169,7 +169,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-28 13:41:10.107910",
+ "modified": "2024-02-12 13:05:37.620270",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Room Price",
@@ -191,5 +191,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "hotel"
+ "title_field": "hotel",
+ "track_changes": 1
 }

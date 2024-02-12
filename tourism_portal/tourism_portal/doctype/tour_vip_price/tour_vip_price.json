@@ -73,7 +73,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-30 10:51:00.183432",
+ "modified": "2024-02-12 13:06:32.280520",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour VIP Price",
@@ -94,5 +94,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }

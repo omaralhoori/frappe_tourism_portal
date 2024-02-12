@@ -5,34 +5,34 @@ $(document).ready(function () {
     autocompleteLocations(document.querySelector('.hotel-location'), 'tourism_portal.api.query.get_locations');
 
     formatSelect2()
-    formatDataPicker(document, function(e) {
-        var toDateClass = checkToDateClass(e.el.getAttribute('name'))
-        if (toDateClass){
-            var parentContainer = e.parent.parentNode;
-            var toDateInput = parentContainer.querySelector(`input[name='${toDateClass["check_class"]}']`);
-            var selectedDate = new Date(e.el.value);
-            //console.log(e)
-            //selectedDate.setDate(selectedDate.getDate() + toDateClass["day_margin"]);
-            var toDateId = toDateInput.getAttribute('id')
-           datepickers[toDateId].minDate = selectedDate;
-        //    var toDate = datepickers[toDateId].getDate();
-        var toDate = new Date(toDateInput.value);
-        if (!toDate || toDateInput.value == "" || toDate <= selectedDate){
-            toDateInput.value = e.el.value;
-            var dates = new Date(e.el.value).getDate() + toDateClass["day_margin"]
-        var toDateObject = new Date(new Date().setDate(dates));
-
-        datepickers[toDateId].setDate(toDateObject);
-        }
-            //$(`#${toDateId}`).datepicker("option", "minDate", selectedDate);    
-            //toDateInput.minDate = selectedDate;
-
-        }
-    })
+    formatDataPicker(document, (e) => { formatToDate(e)})
     addDefaultAdults(document.querySelector('.hotel-search-card'), true);
     hideOneCardDeleteBtn();
 });
+function formatToDate(e) {
+    var toDateClass = checkToDateClass(e.el.getAttribute('name'))
+    if (toDateClass){
+        var parentContainer = e.parent.parentNode;
+        var toDateInput = parentContainer.querySelector(`input[name='${toDateClass["check_class"]}']`);
+        var selectedDate = new Date(e.el.value);
+        //console.log(e)
+        //selectedDate.setDate(selectedDate.getDate() + toDateClass["day_margin"]);
+        var toDateId = toDateInput.getAttribute('id')
+       datepickers[toDateId].minDate = selectedDate;
+    //    var toDate = datepickers[toDateId].getDate();
+    var toDate = new Date(toDateInput.value);
+    if (!toDate || toDateInput.value == "" || toDate <= selectedDate){
+        toDateInput.value = e.el.value;
+        var dates = new Date(e.el.value).getDate() + toDateClass["day_margin"]
+    var toDateObject = new Date(new Date().setDate(dates));
 
+    datepickers[toDateId].setDate(toDateObject);
+    }
+        //$(`#${toDateId}`).datepicker("option", "minDate", selectedDate);    
+        //toDateInput.minDate = selectedDate;
+
+    }
+}
 function hideOneCardDeleteBtn() {
     showHideGroupTransfer();
     hideSearchBtn();
@@ -365,6 +365,7 @@ function addTourClicked(e) {
         agesInput[i].value = childrenAges[i];
     }
     formatDataPicker(childrenContainer, (instance, date)=>{
+        formatToDate(instance)
         tourTypeChanged(locationInput)
     })
     e.style.display = 'none';
@@ -390,7 +391,7 @@ function addHotelClicked(e) {
     var cardName = `Hotel Search ${container.find('.hotel-search-card').length}`
     container.find('.hotel-search-card:last').find('input[name="hotel-card"]').val(cardName);
     var allHotelSearchCards = document.querySelectorAll('.hotel-search-card')
-    formatDataPicker(allHotelSearchCards[allHotelSearchCards.length - 1])
+    formatDataPicker(allHotelSearchCards[allHotelSearchCards.length - 1], (e) => { formatToDate(e) })
     formatSelect2()
     autocompleteLocations(allHotelSearchCards[allHotelSearchCards.length - 1].querySelector('.hotel-location'), 'tourism_portal.api.query.get_locations');
     // var html = '';

@@ -1,7 +1,7 @@
 # Copyright (c) 2023, omaralhoori and contributors
 # For license information, please see license.txt
 
-from tourism_portal.tourism_portal.doctype.sales_invoice.email_service import send_agency_invoice_email, send_agency_voucher_email
+from tourism_portal.tourism_portal.doctype.sales_invoice.email_service import notifiy_flight_changed, send_agency_invoice_email, send_agency_voucher_email
 import frappe
 from frappe.model.document import Document
 from frappe import _
@@ -43,7 +43,21 @@ class SalesInvoice(Document):
 		self.calculate_total_transfer_fees()
 		self.calculate_total_tour_fees()
 		self.calculate_total_fees()
+		self.notifiy_transfer_changes()
 		
+	def notifiy_transfer_changes(self):
+		print("1111111")
+		old_doc = self.get_doc_before_save()
+		for transfer in self.transfers:
+			for old_t in old_doc.transfers:
+				print(old_t.pick_up)
+				if transfer.name == old_t.name:
+					print("sffsfss")
+					if old_t.flight_no != transfer.flight_no:
+						print("ofkodkfdok")
+						notifiy_flight_changed(self, transfer)
+					break
+
 	def calculate_room_fees(self):
 		prices = {}
 		for room_price in self.room_price:
