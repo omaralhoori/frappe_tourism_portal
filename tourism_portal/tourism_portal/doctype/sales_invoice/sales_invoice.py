@@ -12,7 +12,7 @@ from tourism_portal.tourism_portal.doctype.room_availability.room_availability i
 from tourism_portal.tourism_portal.doctype.sales_invoice.reserve import add_tours_to_invoice, add_transfers_to_invoice
 from tourism_portal.tourism_portal.doctype.tour_price.tour_price import get_tour_price_with_child_prices
 from tourism_portal.tourism_portal.doctype.tour_schedule_order.tour_schedule_order import schedule_tours_dates
-from tourism_portal.utils import get_cancellation_refund, get_hotel_total_nights, get_location_city, parse_date, parse_invoice_checkout_date, parse_transfer_date
+from tourism_portal.utils import get_cancellation_refund, get_hotel_total_nights, get_location_city, is_time_passed, parse_date, parse_invoice_checkout_date, parse_transfer_date
 class SalesInvoice(Document):
 	def after_insert(self):
 		session_expires_in = frappe.db.get_single_value("Tourism Portal Settings", "session_expires_in")
@@ -183,6 +183,7 @@ class SalesInvoice(Document):
 		tour_type.tour_price_company= discount_price
 		return True
 	def update_transfers(self, transfer_infos):
+		allowed_hours = frappe.db.get_single_value("Tourism Portal Settings", "transfer_flight_no_last_update")
 		for search_name in transfer_infos:
 			for transfer_name in transfer_infos[search_name]:
 				transfer_info = transfer_infos[search_name][transfer_name]
@@ -197,10 +198,12 @@ class SalesInvoice(Document):
 				if transfer_info.get('flight_no'):
 					for transfer in self.transfers:
 						if transfer.transfer_name == transfer_name and transfer.transfer_search == search_name:
+							if transfer.flight_no != transfer_info['flight_no']:
+								if is_time_passed(transfer.transfer_date, allowed_hours):
+									frappe.throw("You cannot update filght no " + str(allowed_hours) + " hours before transfer date" )
 							transfer.flight_no = transfer_info['flight_no']
 							break
 	def update_tours(self, tour_infos):
-		print(tour_infos)
 		for search_name in tour_infos:
 			tour_info = tour_infos[search_name]
 			for pax_row in tour_info:

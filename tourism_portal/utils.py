@@ -283,3 +283,13 @@ def get_location_full_name(location, location_type):
         return frappe.db.get_value("Airport", location, "airport_name", cache=True)
     else:
         return location
+
+def is_time_passed(date, hours):
+    if type(date) == str:
+        date = frappe.utils.get_datetime(date)
+    elif type(date) == datetime.date:
+        date = frappe.utils.get_datetime(date.strftime("%Y-%m-%d"))
+    timedelta = date - frappe.utils.now_datetime()
+    if timedelta.total_seconds() > hours * 3600:
+        return False
+    return True

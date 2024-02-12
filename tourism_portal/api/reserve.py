@@ -511,11 +511,9 @@ def add_tours_to_completed_invoice():
 
 @frappe.whitelist()
 def update_reservation():
-    print(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;")
     invoice_id = frappe.form_dict.invoice_id
     transfers_info = frappe.form_dict.transfers_info
     tours_info = frappe.form_dict.tours_info
-    print(transfers_info)
 
     if type(transfers_info) == str:
         transfers_info  = json.loads(transfers_info)

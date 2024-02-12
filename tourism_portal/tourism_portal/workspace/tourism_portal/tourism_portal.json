@@ -469,34 +469,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Settings",
-   "link_count": 2,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Tourism Portal Settings",
-   "link_count": 0,
-   "link_to": "Tourism Portal Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Invoice Print Settings",
-   "link_count": 0,
-   "link_to": "Invoice Print Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Sales",
    "link_count": 4,
    "onboard": 0,
@@ -541,9 +513,47 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Settings",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tourism Portal Settings",
+   "link_count": 0,
+   "link_to": "Tourism Portal Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Invoice Print Settings",
+   "link_count": 0,
+   "link_to": "Invoice Print Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Portal Notification Settings",
+   "link_count": 0,
+   "link_to": "Portal Notification Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2024-02-08 18:04:40.896816",
+ "modified": "2024-02-12 14:44:40.408872",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal",
