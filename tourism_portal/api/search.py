@@ -145,14 +145,16 @@ def get_room_inquiry(room, hotel_params, roomPax, company_class):
 				"to_date": inquiry_price.to_date,
 				"inquiry_price_name": inquiry_price.name, 
 			}
-			get_room_inquiry_price(price ,  room.get('room_accommodation_type'), hotel_params.get('nationality'), company_class, roomPax, room.get('min_pax'), room.get('hotel')) 
-			prices.append(price)
-		return {
-			"valid_datetime": inquiry.valid_datetime,
-			"qty": inquiry.qty,
-			"name": inquiry.name,
-			"prices": prices 
-		}
+			get_room_inquiry_price(price ,  room.get('room_accommodation_type'), hotel_params.get('nationality'), company_class, roomPax, room.get('min_pax'), room.get('hotel'), {"from_date": hotel_params.get('checkin'), "to_date": hotel_params.get('checkout')}) 
+			if price:
+				prices.append(price)
+		if all_dates_selected := is_prices_cover_all_dates(prices, hotel_params.get('checkin'), hotel_params.get('checkout')):
+			return {
+				"valid_datetime": inquiry.valid_datetime,
+				"qty": inquiry.qty,
+				"name": inquiry.name,
+				"prices": prices 
+			}
 	return None
 
 
@@ -258,8 +260,10 @@ def get_room_contract_price(contract, room_acmnd_type, nationality, company_clas
 		# Child Company Price
 		price['child_company_price'] = get_child_company_hotel_price(price['selling_price_with_childs'])
 
-def get_room_inquiry_price(price ,room_acmnd_type, nationality, company_class, roomPax, min_pax, hotel):
-		
+def get_room_inquiry_price(price ,room_acmnd_type, nationality, company_class, roomPax, min_pax, hotel,contract):
+		price = restart_inquiry_price_dates(price, contract['from_date'], contract['to_date'])
+		if not price:
+			return
 		if not price.get('selling_price'):
 			get_inquiry_price_profit_margin_based(hotel, price, room_acmnd_type)
 		del price['buying_price']
@@ -421,6 +425,21 @@ def restart_price_dates(prices, checkin, checkout):
 	else:
 		return []
 
+def restart_inquiry_price_dates(price, checkin, checkout):
+	checkin_date = convert_date_to_object(checkin)
+	checkout_date = convert_date_to_object(frappe.utils.add_days(checkout, -1))
+	if convert_date_to_object(price['from_date']) > checkout_date or convert_date_to_object(price['to_date']) < checkin_date:
+		return None
+	price['from_date'] = str(max([checkin_date, convert_date_to_object(price['from_date'])]))
+	price['to_date'] = str(min([checkout_date, convert_date_to_object(price['to_date'])]))
+	# prices = filter_prices_overlapping_dates(prices)
+	# all_dates_covered = is_prices_cover_all_dates(prices, checkin_date, checkout_date)
+	# if all_dates_covered:
+	# 	return prices
+	# else:
+	# 	return []
+	return price
+
 def filter_prices_overlapping_dates(prices):
 	prices = sorted(prices, key=lambda x: convert_date_to_object(x["from_date"]))
 	filtered_prices = []
@@ -436,6 +455,10 @@ def filter_prices_overlapping_dates(prices):
 	return filtered_prices
 
 def is_prices_cover_all_dates(prices, checkin_date, checkout_date):
+	if type(checkin_date) is str:
+		checkin_date = convert_date_to_object(checkin_date)
+	if type(checkout_date) is str:
+		checkout_date = convert_date_to_object(checkout_date) + timedelta(days= - 1)
 	current_date = checkin_date
 	for price in prices:
 		from_date = convert_date_to_object(price['from_date'])

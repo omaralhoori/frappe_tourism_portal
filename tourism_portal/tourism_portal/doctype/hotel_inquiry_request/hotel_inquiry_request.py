@@ -8,6 +8,10 @@ from tourism_portal.utils import parse_date
 class HotelInquiryRequest(Document):
 	def before_insert(self):
 		self.qty = self.requested_qty
+		if len(self.hotel_inquiry_buying_price) == 0:
+			hotel_inquiry_row = self.append("hotel_inquiry_buying_price")
+			hotel_inquiry_row.from_date = self.from_date
+			hotel_inquiry_row.to_date = frappe.utils.add_days(self.to_date, -1)
 	def before_submit(self):
 		self.validate_required_fields()
 		self.valid_datetime = frappe.utils.now_datetime()+frappe.utils.datetime.timedelta(seconds=self.valid_until)
@@ -20,6 +24,15 @@ class HotelInquiryRequest(Document):
 			if len(self.hotel_inquiry_buying_price) == 0:
 				frappe.throw("Please enter Buying details")
 			self.validate_buying_price_dates()
+		for price in self.hotel_inquiry_buying_price:
+			if not price.buying_currency:
+				frappe.throw("Please enter Buying Currency")
+			if not price.buying_price:
+				frappe.throw("Please enter Buying Price")
+			if not price.from_date:
+				frappe.throw("Please enter From Date")
+			if not price.to_date:
+				frappe.throw("Please enter To Date")
 	def validate_buying_price_dates(self):
 		start_date = self.from_date
 		end_date = frappe.utils.add_days(self.to_date, -1)
