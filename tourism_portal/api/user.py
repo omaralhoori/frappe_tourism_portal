@@ -20,6 +20,10 @@ def create_user(user_data):
     user.email = user_data.get('email')
     user.first_name = user_data.get('fullname')
     user.company = company
-    user.append_roles(('Customer'))
-    user.save()
+    user.send_welcome_email = 0
+    user.user_type = 'Website User'
+    #user.append_roles(('Customer'))
+    user.role_profile_name = 'Agency Reservation User'
+    user.language = 'en'
+    user.save(ignore_permissions=True)
     update_password(user=user.name, pwd=user_data.get('password'))
