@@ -1,5 +1,6 @@
 var selectedTours = {};
 $(document).ready(function () {
+    toggleLoadingIndicator(true);
     autocompleteLocations(document.querySelector('.transfer-pickup-1'), 'tourism_portal.api.query.get_transfer_locations', (element) => {
         checkRegularFlights(element, 'arrival')
     });
@@ -18,7 +19,73 @@ $(document).ready(function () {
     });
     formatSelect2()
     formatDataPicker()
+    hideExtendHotelButtonForExpiredCheckout();
+    toggleLoadingIndicator(false);
 });
+
+function extendHotelClicked(e){
+    var invoice = e.getAttribute('invoice-id')
+    var hotelSearch = e.getAttribute('hotel-search')
+    if (!invoice || !hotelSearch){
+        frappe.throw("Something went wrong")
+    }
+    $('#extend-hotel-search').val(hotelSearch);
+    $('#extend-invoice').val(invoice);
+    var $modal = $('#extendHotelModal');
+    $modal.modal('show');
+}
+
+function extendAccommodationModalSubmitted(e){
+    var data = {
+        "invoice": $('#extend-invoice').val(),
+        "hotel_search": $('#extend-hotel-search').val(),
+        "nights": $('#accommodation-nights').val(),
+    }
+    toggleLoadingIndicator(true);
+    frappe.call({
+        "method": "tourism_portal.api.edit_invoice.extend_accommodation",
+        "args": data,
+        "callback": function (r) {
+            toggleLoadingIndicator(false);
+            console.log(r)
+            if (r.message){
+                $('#extendHotelModal').modal('hide');
+                handle_extend_accommodation_response(r.message)
+            }else{
+                frappe.throw("Something went wrong")
+            }
+        }
+    })
+}
+
+function handle_extend_accommodation_response(data){
+    var $modal = $('#extendHotelResultsModal');
+    if (!data.data){
+        $modal.find('.modal-body').html(data.message);
+    }else{
+        
+    }
+    $modal.modal('show');
+}
+
+function hideExtendHotelButtonForExpiredCheckout(){
+    //extend-btn
+    var buttons = document.querySelectorAll('.extend-btn');
+    for (var button of buttons){
+        var checkout = button.getAttribute('checkout');
+        if (!checkExpiredDate(checkout)){
+            button.classList.remove('d-none');
+        }
+    }
+}
+
+function checkExpiredDate(date){
+    var today = new Date();
+    var addedDays = 1;
+    today.setDate(today.getDate() + addedDays);
+    var checkout = new Date(date);
+    return today > checkout;
+}
 
 function saveEdit(e){
     validateReservationData();

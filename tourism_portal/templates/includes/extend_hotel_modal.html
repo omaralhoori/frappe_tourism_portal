@@ -1,0 +1,40 @@
+<div class="modal fade" id="extendHotelModal" tabindex="-1" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header card-primary-color">
+        <h5 class="modal-title" >Extend Accommodation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+        <input type="hidden" id="extend-hotel-search" />
+        <input type="hidden" id="extend-invoice" />
+          {# <div class="form-group">
+            <label for="agency-code" class="col-form-label">Agency Code</label>
+            <input type="text" class="form-control" id="agency-code">
+          </div> #}
+          <div class="form-group">
+            <label for="accommodation-nights" class="col-form-label">Nights</label>
+            <select class="form-control" id="accommodation-nights">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="extendAccommodationModalSubmitted(this)"  action="create">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

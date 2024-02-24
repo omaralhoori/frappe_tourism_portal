@@ -56,6 +56,11 @@ i.tm-color-primary, i.tm-form-element-icon{
     background-color: #352D83;
     color: #fff;
 }
+.btn-group-sm>.btn, .btn-sm {
+    padding: 0.25rem 0.5rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+}
 .tm-btn-search:active, .btn-primary:active,
 .tm-btn-search:focus, .btn-primary:focus{
     background-color: #F39717;

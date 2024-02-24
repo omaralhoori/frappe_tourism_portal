@@ -10,6 +10,13 @@
          <div class="reservation_details hotel-reservation_details mt-4 card p-3 card-details" total-nights="{{get_hotel_total_nights(hotel['booking_details']['check_in'], hotel['booking_details']['check_out'])}}">
             <div class="row">
                 <div class="col-sm-9"><strong>{{hotel['details'].get('hotel_name')}}</strong></div>
+                <div class="col-sm-3 d-flex flex-row-reverse">
+                    <button class="btn btn-sm btn-primary d-none extend-btn" 
+                            hotel-search="{{hotel_rsv}}"
+                            checkout="{{hotel['booking_details'].get('check_out')}}"
+                            invoice-id="{{invoice_details.get('invoice_id')}}"
+                            onclick="extendHotelClicked(this)">Extend</button>
+                </div>
             </div>
         {% set adultCnt = [0] %}
         {% set childCnt = [0] %}
@@ -213,6 +220,8 @@
 {% include "templates/includes/children_template_container.html" %}
 {% include "templates/includes/invoice_add_transfer_card_template.html" %}
 {% include "templates/includes/invoice_add_tour_card_template.html" %}
+{% include "templates/includes/extend_hotel_modal.html" %}
+{% include "templates/includes/extend_hotel_results_modal.html" %}
 {% endblock %}
 
 {% macro hotel_details_card(hotel_details, booking_details, rooms) %}

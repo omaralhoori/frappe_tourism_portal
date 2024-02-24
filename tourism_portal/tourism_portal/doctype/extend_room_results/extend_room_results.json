@@ -1,0 +1,98 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-02-21 18:12:50.484545",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "invoice",
+  "user",
+  "status",
+  "hotel_search",
+  "row_id",
+  "check_in",
+  "check_out",
+  "contracts"
+ ],
+ "fields": [
+  {
+   "fieldname": "invoice",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Invoice",
+   "options": "Sales Invoice",
+   "reqd": 1
+  },
+  {
+   "fieldname": "row_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Row ID",
+   "reqd": 1
+  },
+  {
+   "fieldname": "contracts",
+   "fieldtype": "Table",
+   "label": "Contracts",
+   "options": "Sales Invoice Room Contract",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hotel_search",
+   "fieldtype": "Data",
+   "label": "Hotel Search",
+   "reqd": 1
+  },
+  {
+   "fieldname": "check_in",
+   "fieldtype": "Date",
+   "label": "Check In",
+   "reqd": 1
+  },
+  {
+   "fieldname": "check_out",
+   "fieldtype": "Date",
+   "label": "Check Out"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nConfirmed",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-02-23 12:39:08.418878",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Extend Room Results",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
