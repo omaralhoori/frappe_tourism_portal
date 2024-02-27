@@ -1,0 +1,56 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-02-26 17:07:11.390106",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "background",
+  "offer_name",
+  "price",
+  "text",
+  "rating"
+ ],
+ "fields": [
+  {
+   "fieldname": "background",
+   "fieldtype": "Attach Image",
+   "label": "Background"
+  },
+  {
+   "fieldname": "offer_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Offer Name"
+  },
+  {
+   "fieldname": "price",
+   "fieldtype": "Data",
+   "label": "Price"
+  },
+  {
+   "fieldname": "text",
+   "fieldtype": "Data",
+   "label": "Text"
+  },
+  {
+   "fieldname": "rating",
+   "fieldtype": "Select",
+   "label": "Rating",
+   "options": "5\n4\n3\n2\n1"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-02-26 17:09:10.045473",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Website Offer Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

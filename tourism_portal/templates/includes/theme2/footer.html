@@ -1,0 +1,89 @@
+<!-- Footer -->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <!-- Footer Column -->
+                <div class="col-lg-3 footer_column">
+                    <div class="footer_col">
+                        <div class="footer_content footer_about">
+                            <div class="logo_container footer_logo">
+                                <div class="logo">
+                                    <a href="#"><img src="{{get_website_setting('website_logo')}}" class="w-50"
+                                            alt /></a>
+                                </div>
+                            </div>
+                            <p class="footer_about_text">
+                                {{get_website_setting('company_description')}}
+                            </p>
+                            <ul class="footer_social_list">
+                                <li class="footer_social_item">
+                                    <a href="{{get_website_setting('facebook')}}"><i class="fa fa-facebook-f"></i></a>
+                                </li>
+                                <li class="footer_social_item">
+                                    <a href="{{get_website_setting('instagram')}}"><i class="fa fa-instagram"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Footer Column -->
+                <div class="col-lg-6 footer_column">
+                    <div class="footer_col">
+                        <div class="footer_title">tags</div>
+                        <div class="footer_content footer_tags">
+                            <ul class="tags_list clearfix">
+                                <li class="tag_item"><a href="#">travel</a></li>
+                                <li class="tag_item"><a href="#">tour</a></li>
+                                <li class="tag_item"><a href="#">transfer</a></li>
+                                <li class="tag_item"><a href="#">packages</a></li>
+                                <li class="tag_item"><a href="#">airport</a></li>
+                                <li class="tag_item"><a href="#">travel</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Column -->
+                <div class="col-lg-3 footer_column">
+                    <div class="footer_col">
+                        <div class="footer_title">contact info</div>
+                        <div class="footer_content footer_contact">
+                            <ul class="contact_info_list">
+                                <li class="contact_info_item d-flex flex-row">
+                                    <div>
+                                        <div class="contact_info_icon">
+                                            <img src="/assets/tourism_portal/theme2/images/placeholder.svg" alt />
+                                        </div>
+                                    </div>
+                                    <div class="contact_info_text">{{get_website_setting('address')}}</div>
+                                </li>
+                                <li class="contact_info_item d-flex flex-row">
+                                    <div>
+                                        <div class="contact_info_icon">
+                                            <img src="/assets/tourism_portal/theme2/images/phone-call.svg" alt />
+                                        </div>
+                                    </div>
+                                    <div class="contact_info_text">{{get_website_setting('phone_number')}}</div>
+                                </li>
+                                <li class="contact_info_item d-flex flex-row">
+                                    <div>
+                                        <div class="contact_info_icon">
+                                            <img src="/assets/tourism_portal/theme2/images/message.svg" alt />
+                                        </div>
+                                    </div>
+                                    <div class="contact_info_text">
+                                        <a href="mailto:get_website_setting('email')?Subject=Hello"
+                                            target="_top">{{get_website_setting('email')}}</a>
+                                    </div>
+                                </li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>

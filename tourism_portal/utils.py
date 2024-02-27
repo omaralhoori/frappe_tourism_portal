@@ -293,3 +293,6 @@ def is_time_passed(date, hours):
     if timedelta.total_seconds() > hours * 3600:
         return False
     return True
+
+def get_website_setting(field_name):
+    return frappe.db.get_single_value("Tourism Website Settings", field_name)

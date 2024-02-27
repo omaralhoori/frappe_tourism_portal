@@ -70,3 +70,14 @@ def get_transfer_locations(search="", start=0, page_len=10):
 		LIMIT {page_len} OFFSET {start}
 	""".format(page_len=page_len, start=start),{"txt": "%%%s%%" % search}, as_dict=True)
 	return hotels
+
+
+@frappe.whitelist(allow_guest=True)
+def get_nationalities(search="", start=0, page_len=10):
+	hotels = frappe.db.sql("""
+		SELECT name, nationality_name as nationality
+        FROM `tabNationality`
+        WHERE nationality_name LIKE %(txt)s
+		LIMIT {page_len} OFFSET {start}
+	""".format(page_len=page_len, start=start),{"txt": "%%%s%%" % search}, as_dict=True)
+	return hotels

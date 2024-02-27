@@ -1,0 +1,1608 @@
+{% extends "templates/theme2/website_base.html" %}
+
+{% block page_content %}
+<!-- Home -->
+
+    <div class="home">
+      <!-- Home Slider -->
+
+      <div class="home_slider_container">
+        <div class="owl-carousel owl-theme home_slider">
+        {% for slider_item in settings.carousel %}
+          <!-- Slider Item -->
+          <div class="owl-item home_slider_item">
+            <!-- Image by https://unsplash.com/@anikindimitry -->
+            <div class="home_slider_background" style="background-image: url({{slider_item.image}})"></div>
+
+            <div class="home_slider_content text-center">
+              <div class="home_slider_content_inner" data-animation-in="flipInX"
+                data-animation-out="animate-out fadeOut">
+                <h1>{{slider_item.first_title}}</h1>
+                <h1>{{slider_item.second_title}}</h1>
+                <div class="button home_slider_button">
+                  <div class="button_bcg"></div>
+                  <a href="/book">Book now<span></span><span></span><span></span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+         
+        </div>
+
+        <!-- Home Slider Nav - Prev -->
+        <div class="home_slider_nav home_slider_prev">
+          <svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px" y="0px" width="28px" height="33px" viewBox="0 0 28 33" enable-background="new 0 0 28 33"
+            xml:space="preserve">
+            <defs>
+              <lineargradient id="home_grad_prev">
+                <stop offset="0%" stop-color="#fa9e1b" />
+                <stop offset="100%" stop-color="#8d4fff" />
+              </lineargradient>
+            </defs>
+            <path class="nav_path" fill="#F3F6F9" d="M19,0H9C4.029,0,0,4.029,0,9v15c0,4.971,4.029,9,9,9h10c4.97,0,9-4.029,9-9V9C28,4.029,23.97,0,19,0z
+					M26,23.091C26,27.459,22.545,31,18.285,31H9.714C5.454,31,2,27.459,2,23.091V9.909C2,5.541,5.454,2,9.714,2h8.571
+					C22.545,2,26,5.541,26,9.909V23.091z" />
+            <polygon class="nav_arrow" fill="#F3F6F9" points="15.044,22.222 16.377,20.888 12.374,16.885 16.377,12.882 15.044,11.55 9.708,16.885 11.04,18.219 
+					11.042,18.219 " />
+          </svg>
+        </div>
+
+        <!-- Home Slider Nav - Next -->
+        <div class="home_slider_nav home_slider_next">
+          <svg version="1.1" id="Layer_3" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px" y="0px" width="28px" height="33px" viewBox="0 0 28 33" enable-background="new 0 0 28 33"
+            xml:space="preserve">
+            <defs>
+              <lineargradient id="home_grad_next">
+                <stop offset="0%" stop-color="#fa9e1b" />
+                <stop offset="100%" stop-color="#8d4fff" />
+              </lineargradient>
+            </defs>
+            <path class="nav_path" fill="#F3F6F9" d="M19,0H9C4.029,0,0,4.029,0,9v15c0,4.971,4.029,9,9,9h10c4.97,0,9-4.029,9-9V9C28,4.029,23.97,0,19,0z
+				M26,23.091C26,27.459,22.545,31,18.285,31H9.714C5.454,31,2,27.459,2,23.091V9.909C2,5.541,5.454,2,9.714,2h8.571
+				C22.545,2,26,5.541,26,9.909V23.091z" />
+            <polygon class="nav_arrow" fill="#F3F6F9" points="13.044,11.551 11.71,12.885 15.714,16.888 11.71,20.891 13.044,22.224 18.379,16.888 17.048,15.554 
+				17.046,15.554 " />
+          </svg>
+        </div>
+
+        <!-- Home Slider Dots -->
+
+        <div class="home_slider_dots">
+          <ul id="home_slider_custom_dots" class="home_slider_custom_dots">
+            <li class="home_slider_custom_dot active">
+              <div></div>
+              01.
+            </li>
+            <li class="home_slider_custom_dot">
+              <div></div>
+              02.
+            </li>
+            <li class="home_slider_custom_dot">
+              <div></div>
+              03.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+<!-- Search -->
+
+<div class="search">
+    <!-- Search Contents -->
+
+    <div class="container fill_height max-wid-100">
+        <div class="row fill_height">
+            <div class="col fill_height">
+                <!-- Search Tabs -->
+
+                <div class="search_tabs_container" id="booking">
+                    <div
+                        class="search_tabs d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+                        <div
+                            class="search_tab active d-flex flex-row align-items-center justify-content-lg-center justify-content-start">
+                            <img src="/assets/tourism_portal/theme2/images/suitcase.png" alt /><span>Package</span>
+                        </div>
+
+                        <div
+                            class="search_tab d-flex flex-row align-items-center justify-content-lg-center justify-content-start">
+                            <img src="/assets/tourism_portal/theme2/images/suitcase.png" alt /><span>Hotels</span>
+                        </div>
+
+                        <div
+                            class="search_tab d-flex flex-row align-items-center justify-content-lg-center justify-content-start">
+                            <img src="/assets/tourism_portal/theme2/images/bus.png" alt />Transfer
+                        </div>
+                        <div
+                            class="search_tab d-flex flex-row align-items-center justify-content-lg-center justify-content-start">
+                            <img src="/assets/tourism_portal/theme2/images/island.png" alt />Tours
+                        </div>
+                        <!-- <div class="search_tab d-flex flex-row align-items-center justify-content-lg-center justify-content-start"><img src="/assets/tourism_portal/theme2/images/departure.png" alt="">flights</div>
+							<div class="search_tab d-flex flex-row align-items-center justify-content-lg-center justify-content-start"><img src="/assets/tourism_portal/theme2/images/cruise.png" alt="">cruises</div>
+							<div class="search_tab d-flex flex-row align-items-center justify-content-lg-center justify-content-start"><img src="/assets/tourism_portal/theme2/images/diving.png" alt="">activities</div> -->
+                    </div>
+                </div>
+
+
+
+
+
+                <!-- Package panel -->
+
+
+                <div class="search_panel active">
+                    <form action="results.html" id="package_form" class="search_panel_content py-3">
+                        <input type="hidden" name="type" value="package" />
+
+
+                        <div class="pd-120" id="hotelpd12">
+                            <h3 class="text-center w-100">Hotel</h3>
+
+
+                            <div class="arrows-cont d-none">
+                                <i
+                                    class="fa fa-chevron-left fa-1x ml--1 tm-form-element-icon tm-color-primary left_arrow_scrolle"></i>
+                                <i
+                                    class="fa fa-chevron-right fa-1x mr--1 tm-form-element-icon tm-color-primary right_arrow_scrolle"></i>
+                            </div>
+
+                            <div id="hotelsBacakge_cont" class="package-cont scrollabel">
+                                <div class="booking_cont col-lg-6">
+                                    <div id="hotel_booking1"
+                                        class="row justify-content-start align-items-center p-0 m-0 search_panel_content flex-row">
+
+                                        <div class="search_item col-lg-12">
+                                            <div class="modal-header p-0">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Hotel Booking
+                                                    <span class="hotelsBackageCounter">#1</span>
+                                                </h5>
+                                                <button type="button" class="close close-btn" aria-label="Close"
+                                                    data-cart="hotelBackage">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="search_item col-lg-5">
+                                            <div>
+                                                Location
+                                                <!-- <i class="fa fa-map-marker fa-2x tm-form-element-icon tm-color-primary"></i> -->
+                                            </div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                <i
+                                                    class="fa fa-map-marker fa-1x mx-1 tm-form-element-icon tm-color-primary"></i>
+                                                <select
+                                                    class="form-group tm-form-element tm-form-element-2 custom-input hotel_location_select location_select w-100"
+                                                    name="hotel[0][location]">
+                                                    <option value="" selected disabled>Select location</option>
+                                                </select>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="search_item mx-1 col-lg-5">
+                                            <div>Nationality</div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                <select
+                                                    class="form-group tm-form-element tm-form-element-2 custom-input nationality_select"
+                                                    name="hotel[0][nationality]">
+                                                    <option value="" selected disabled>Select nationality
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="search_item col-lg-5 ">
+                                            <div>check in</div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                <input type="date" class="search_input bg-none datepicker checkin"
+                                                    min="today" class="check_in search_input" placeholder="YYYY-MM-DD"
+                                                    name="hotel[0][check_in]" />
+                                            </div>
+                                        </div>
+
+                                        <div class="search_item mx-2 col-lg-5 ">
+                                            <div>check out</div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input ">
+                                                <input type="date" class="search_input bg-none datepicker checkout"
+                                                    min="today" placeholder="YYYY-MM-DD" name="hotel[0][check_out]" />
+                                            </div>
+                                        </div>
+
+                                        <div class="search_item col-lg-5">
+                                            <div>Room</div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input  p-1">
+                                                <select
+                                                    class="form-group tm-form-element tm-form-element-2 custom-input rooms_select p-1"
+                                                    name="hotel[0][rooms][0[count]" data-row="rooms1" data-hotel="0">
+                                                    <option selected disabled hidden>Rooms</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="rooms1 row px-3 w-100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-100 d-flex justify-content-center">
+                                <button type="button" id="add_hotel_package"
+                                    class="button search_button float-left btn btn-success btn-circle btn-xl rounded-pill d-flex  align-items-center add_booking"
+                                    data-target="hotelsBacakge_cont" data-button="hotelsBackage">
+                                    <i class="fa fa-plus fa-1x tm-form-element-icon tm-color-primary p-2"></i>
+                                    Add Another Hotel </button>
+                            </div>
+                        </div>
+
+
+
+                        <div class="pd-120" id="hotelpd12">
+                            <h3 class="text-center w-100">Transfer</h3>
+
+
+                            <div class="arrows-cont d-none">
+                                <i
+                                    class="fa fa-chevron-left fa-1x ml--1 tm-form-element-icon tm-color-primary left_arrow_scrolle"></i>
+
+                                <i
+                                    class="fa fa-chevron-right fa-1x mr--1 tm-form-element-icon tm-color-primary right_arrow_scrolle"></i>
+
+                            </div>
+
+                            <div class="package-cont scrollabel" id="transfersBacakge_cont">
+                                <div class="booking_cont col-lg-6">
+                                    <div
+                                        class="row justify-content-start align-items-center p-0 m-0 search_panel_content flex-row">
+
+                                        <div class="search_item col-lg-12">
+                                            <div class="modal-header p-0">
+                                                <h5 class="modal-title w-50" id="exampleModalLongTitle">Transfer
+                                                    Booking <span class="transfersBackageCounter">#1</span></h5>
+
+                                                <div class="ways">
+                                                    <div class="btn font-weight-bold one-way way-type" data-row="0"
+                                                        data-way="one-way"><i class="fa fa-long-arrow-right"
+                                                            aria-hidden="true"></i> One Way
+                                                    </div>
+                                                    <div class="btn btn-success font-weight-bold two-way way-type"
+                                                        data-row="0" data-way="two-way"><i class="fa fa-exchange"
+                                                            aria-hidden="true"></i> Two
+                                                        Way</div>
+                                                    <input type="hidden" name="transfer[0][type]" value="two_way" />
+                                                </div>
+                                                <button type="button" class="close close-btn" aria-label="Close"
+                                                    data-cart="transferBackage">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="search_item col-lg-5">
+                                            <div>
+                                                Pickup
+                                            </div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                <i
+                                                    class="fa fa-map-marker fa-1x mx-1 tm-form-element-icon tm-color-primary"></i>
+                                                <select
+                                                    class="form-group tm-form-element tm-form-element-2 custom-input  w-100 transfer_location_select transfer_pickup_select"
+                                                    name="transfer[0][pickup_location][0]" data-row="0" data-row2="0">
+                                                    <option value="" selected disabled>Select pickup</option>
+                                                    <option value="Istanbul" title="turkey">Istanbul</option>
+                                                    <option value="Adana" title="turkey">Adana</option>
+                                                    <option value="Antalya" title="turkey">Antalya</option>
+                                                </select>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="search_item col-lg-5">
+                                            <div>
+                                                Drop off
+                                                <!-- <i class="fa fa-map-marker fa-2x tm-form-element-icon tm-color-primary"></i> -->
+                                            </div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                <i
+                                                    class="fa fa-map-marker fa-1x mx-1 tm-form-element-icon tm-color-primary"></i>
+                                                <select
+                                                    class="form-group tm-form-element tm-form-element-2 custom-input  w-100 transfer_location_select transfer_dropoff_select"
+                                                    name="transfer[0][dropoff_location][0]" data-row="0" data-row2="0">
+                                                    <option value="" selected disabled>Select drop off</option>
+                                                    <option value="Istanbul" title="turkey">Istanbul</option>
+                                                    <option value="Adana" title="turkey">Adana</option>
+                                                    <option value="Antalya" title="turkey">Antalya</option>
+                                                </select>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="search_item col-lg-5 ">
+                                            <div>Date</div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                <input type="date"
+                                                    class="search_input bg-none datepicker checkin transfer_date check_in search_input"
+                                                    placeholder="YYYY-MM-DD" name="transfer[0][date][0]" data-row="0"
+                                                    data-row2="0" />
+                                            </div>
+                                        </div>
+
+
+                                        <div class="search_item mx-1 col-lg-5">
+                                            <div>Type</div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                <select
+                                                    class="form-group tm-form-element tm-form-element-2 custom-input transfer_type"
+                                                    data-row="0" data-row2="0" name="transfer[0][type][0]">
+                                                    <option value="" selected disabled>Select type</option>
+                                                    <option value="group">Group</option>
+                                                    <option value="vip">VIP</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="transfer_type_cont row px-3 w-100"></div>
+
+
+                                        <div class="search_item mx-2 col-lg-5 ">
+                                            <div>Flight No#</div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input ">
+                                                <input type="text" class="search_input bg-none" placeholder="Flight #"
+                                                    name="transfer[0][flight][0]" data-row="0" data-row2="0" />
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="search_item col-lg-3">
+                                            <div>Adults</div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                <select
+                                                    class="form-group tm-form-element tm-form-element-2 custom-input p-1"
+                                                    name="transfer[0][adults][0]" data-row="0" data-row2="0">
+                                                    <option selected disabled hidden>Adults</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="search_item col-lg-5">
+                                            <div>Children</div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input  p-1">
+                                                <select
+                                                    class="form-group tm-form-element tm-form-element-2 dropdown_item_select custom-input children-select"
+                                                    data-row="0" data-row2="0" data-type="transfer"
+                                                    name="transfer[0][children_count][0]">
+                                                    <option selected disabled hidden>
+                                                        Children
+                                                    </option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="ages0 row px-3 w-100"></div>
+
+                                        <div class="back row px-3 w-100">
+
+                                            <hr />
+
+                                            <div class="search_item col-lg-5">
+                                                <div>
+                                                    Pickup
+                                                </div>
+                                                <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                    <i
+                                                        class="fa fa-map-marker fa-1x mx-1 tm-form-element-icon tm-color-primary"></i>
+                                                    <select
+                                                        class="form-group tm-form-element tm-form-element-2 custom-input transfer_location_select transfer_pickup_select w-100"
+                                                        name="transfer[1][pickup_location][1]" data-row="0"
+                                                        data-row2="1">
+                                                        <option value="" selected disabled>Select pickup
+                                                        </option>
+                                                        <option value="Istanbul" title="turkey">Istanbul
+                                                        </option>
+                                                        <option value="Adana" title="turkey">Adana</option>
+                                                        <option value="Antalya" title="turkey">Antalya</option>
+                                                    </select>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="search_item col-lg-5">
+                                                <div>
+                                                    Drop off
+                                                    <!-- <i class="fa fa-map-marker fa-2x tm-form-element-icon tm-color-primary"></i> -->
+                                                </div>
+                                                <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                    <i
+                                                        class="fa fa-map-marker fa-1x mx-1 tm-form-element-icon tm-color-primary"></i>
+                                                    <select
+                                                        class="form-group tm-form-element tm-form-element-2 custom-input transfer_location_select transfer_dropoff_select w-100"
+                                                        name="transfer[1][dropoff_location][1]" data-row="0"
+                                                        data-row2="1">
+                                                        <option value="" selected disabled>Select drop off
+                                                        </option>
+                                                        <option value="Istanbul" title="turkey">Istanbul
+                                                        </option>
+                                                        <option value="Adana" title="turkey">Adana</option>
+                                                        <option value="Antalya" title="turkey">Antalya</option>
+                                                    </select>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="search_item col-lg-5 ">
+                                                <div>Date</div>
+                                                <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                    <input type="date" class="search_input bg-none datepicker checkin"
+                                                        min="today" class="check_in search_input"
+                                                        placeholder="YYYY-MM-DD" name="transfer[1][date][1]"
+                                                        data-row="0" data-row2="1" />
+                                                </div>
+                                            </div>
+
+
+                                            <div class="search_item mx-1 col-lg-5">
+                                                <div>Type</div>
+                                                <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                    <select
+                                                        class="form-group tm-form-element tm-form-element-2 custom-input transfer_type"
+                                                        data-row="0" data-row2="1" name="transfer[1][type][1]">
+                                                        <option value="" selected disabled>Select type</option>
+                                                        <option value="group">Group</option>
+                                                        <option value="vip">VIP</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="transfer_type_cont row px-3 w-100"></div>
+
+
+                                            <div class="search_item mx-2 col-lg-5 ">
+                                                <div>Flight No#</div>
+                                                <div class="form-group tm-form-element tm-form-element-2 custom-input ">
+                                                    <input type="text" class="search_input bg-none"
+                                                        placeholder="Flight #" name="transfer[1][flight][1]"
+                                                        data-row="0" data-row2="1" />
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="search_item col-lg-3">
+                                                <div>Adults</div>
+                                                <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                    <select
+                                                        class="form-group tm-form-element tm-form-element-2 custom-input p-1"
+                                                        name="transfer[1][adults][1]" data-row="0" data-row2="1">
+                                                        <option selected disabled hidden>Adults</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="search_item col-lg-5">
+                                                <div>Children</div>
+                                                <div
+                                                    class="form-group tm-form-element tm-form-element-2 custom-input  p-1">
+                                                    <select
+                                                        class="form-group tm-form-element tm-form-element-2 dropdown_item_select custom-input children-select"
+                                                        data-row="0" data-row2="1" data-type="transfer"
+                                                        name="transfer[1][children_count][1]">
+                                                        <option selected disabled hidden>
+                                                            Children
+                                                        </option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="ages1 row px-3 w-100"></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="w-100 d-flex justify-content-center">
+                                <button type="button"
+                                    class="button search_button float-left btn btn-success btn-circle btn-xl rounded-pill d-flex  align-items-center add_booking"
+                                    data-target="transfersBacakge_cont" data-button="transfersBackage">
+                                    <i class="fa fa-plus fa-1x tm-form-element-icon tm-color-primary p-2"></i>
+                                    Add Another Transfer </button>
+
+
+                            </div>
+                        </div>
+
+
+                        <div class="pd-120" id="hotelpd12">
+                            <h3 class="text-center w-100">Tour</h3>
+
+
+                            <div class="arrows-cont d-none">
+                                <i
+                                    class="fa fa-chevron-left fa-1x ml--1 tm-form-element-icon tm-color-primary left_arrow_scrolle"></i>
+
+                                <i
+                                    class="fa fa-chevron-right fa-1x mr--1 tm-form-element-icon tm-color-primary right_arrow_scrolle"></i>
+
+                            </div>
+
+                            <div class="package-cont scrollabel" id="toursBacakge_cont">
+                                <div class="booking_cont col-lg-6">
+                                    <div
+                                        class="row justify-content-start align-items-center p-0 m-0 search_panel_content flex-row">
+
+                                        <div class="search_item col-lg-12">
+                                            <div class="modal-header p-0">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Tour Booking
+                                                    <span class="toursBackageCounter">#1</span>
+                                                </h5>
+                                                <button type="button" class="close close-btn" aria-label="Close"
+                                                    data-cart="tourBackage">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="search_item mx-1 col-lg-5">
+                                            <div>Type</div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                <select
+                                                    class="form-group tm-form-element tm-form-element-2 custom-input tour_type_select"
+                                                    name="tour[0][type]">
+                                                    <option value="" selected disabled>Select type</option>
+                                                    <option value="vip">VIP</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="search_item col-lg-5">
+                                            <div>
+                                                Location
+                                            </div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                <i
+                                                    class="fa fa-map-marker fa-1x mx-1 tm-form-element-icon tm-color-primary"></i>
+                                                <select
+                                                    class="form-group tm-form-element tm-form-element-2 custom-input location_select w-100 tour_location_select"
+                                                    name="tour[0][location_location]">
+                                                    <option value="" selected disabled>Select location</option>
+                                                </select>
+
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="search_item col-lg-5 ">
+                                            <div>Start date</div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                <input type="date"
+                                                    class="search_input bg-none datepicker check_in search_input tour_check_in"
+                                                    placeholder="YYYY-MM-DD" name="tour[0][start_date]" />
+                                            </div>
+                                        </div>
+
+                                        <div class="search_item mx-2 col-lg-5 ">
+                                            <div>End date</div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input ">
+                                                <input type="date" class="search_input bg-none checkout tour_check_out "
+                                                    placeholder="YYYY-MM-DD" name="tour[0][end_date]" />
+                                            </div>
+                                        </div>
+
+
+
+
+
+
+
+
+                                        <div class="search_item col-lg-3">
+                                            <div>Adults</div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                                <select
+                                                    class="form-group tm-form-element tm-form-element-2 custom-input p-1"
+                                                    name="tour[0][adults]">
+                                                    <option selected disabled hidden>Adults</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="search_item col-lg-5">
+                                            <div>Children</div>
+                                            <div class="form-group tm-form-element tm-form-element-2 custom-input  p-1">
+                                                <select
+                                                    class="form-group tm-form-element tm-form-element-2 dropdown_item_select custom-input children-select"
+                                                    data-row="0" data-row2="0" data-type="tour"
+                                                    name="tour[0][children_count]">
+                                                    <option selected disabled hidden>
+                                                        Children
+                                                    </option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="ages0 row px-3 w-100"></div>
+
+
+
+
+
+                                        <div class="custom-check w-100" data-row="tourBackage-0">
+
+
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="w-100 d-flex justify-content-center">
+                                <button type="button"
+                                    class="button search_button float-left btn btn-success btn-circle btn-xl rounded-pill d-flex  align-items-center add_booking"
+                                    data-target="toursBacakge_cont" data-button="toursBackage">
+                                    <i class="fa fa-plus fa-1x tm-form-element-icon tm-color-primary p-2"></i>
+                                    Add Another Tour </button>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+                        <div class="row justify-content-lg-between align-items-center w-75 d-block p-4">
+                            <button type="submit" class="button search_button float-right">
+                                search<span></span><span></span><span></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- End package -->
+
+
+
+
+        <!-- Hotel panel -->
+        <div class="search_panel ">
+            <form action="results.html" id="hotel_form" class="search_panel_content py-3">
+
+                <input type="hidden" name="type" value="hotel" />
+
+
+                <div class="pd-120" id="hotelpd12">
+
+
+                    <div class="arrows-cont d-none">
+                        <i
+                            class="fa fa-chevron-left fa-1x ml--1 tm-form-element-icon tm-color-primary left_arrow_scrolle"></i>
+
+                        <i
+                            class="fa fa-chevron-right fa-1x mr--1 tm-form-element-icon tm-color-primary right_arrow_scrolle"></i>
+
+                    </div>
+
+                    <div id="hotels_cont" class="package-cont scrollabel">
+                        <div class="booking_cont col-lg-6">
+                            <div id="hotel_booking1"
+                                class="row justify-content-start align-items-center p-0 m-0 search_panel_content flex-row">
+
+                                <div class="search_item col-lg-12">
+                                    <div class="modal-header p-0">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Hotel Booking <span
+                                                class="hotelsCounter">#1</span></h5>
+                                        <button type="button" class="close close-btn" aria-label="Close"
+                                            data-cart="hotel">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="search_item col-lg-5">
+                                    <div>
+                                        Location
+                                    </div>
+                                    <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                        <i
+                                            class="fa fa-map-marker fa-1x mx-1 tm-form-element-icon tm-color-primary"></i>
+                                        <select
+                                            class="form-group tm-form-element tm-form-element-2 custom-input hotel_location_select location_select w-100"
+                                            name="hotel[0][location]">
+                                            <option value="" selected disabled>Select location</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+
+                                <div class="search_item mx-1 col-lg-5">
+                                    <div>Nationality</div>
+                                    <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                        <select
+                                            class="form-group tm-form-element tm-form-element-2 custom-input nationality_select"
+                                            name="hotel[0][nationality]">
+                                            <option value="" selected disabled>Select nationality</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="search_item col-lg-5 ">
+                                    <div>check in</div>
+                                    <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                        <input type="date" class="search_input bg-none datepicker checkin" min="today"
+                                            class="check_in search_input" placeholder="YYYY-MM-DD"
+                                            name="hotel[0][check_in]" />
+                                    </div>
+                                </div>
+
+                                <div class="search_item mx-2 col-lg-5 ">
+                                    <div>check out</div>
+                                    <div class="form-group tm-form-element tm-form-element-2 custom-input ">
+                                        <input type="date" class="search_input bg-none datepicker checkout" min="today"
+                                            placeholder="YYYY-MM-DD" name="hotel[0][check_out]" />
+                                    </div>
+                                </div>
+
+                                <div class="search_item col-lg-5">
+                                    <div>Room</div>
+                                    <div class="form-group tm-form-element tm-form-element-2 custom-input  p-1">
+                                        <select
+                                            class="form-group tm-form-element tm-form-element-2 custom-input rooms_select p-1"
+                                            name="hotel[0][rooms][0[count]" data-row="rooms1" data-hotel="0">
+                                            <option selected disabled hidden>Rooms</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="rooms1 row px-3 w-100"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100 d-flex justify-content-center">
+                        <button type="button" id="add_hotel_package"
+                            class="button search_button float-left btn btn-success btn-circle btn-xl rounded-pill d-flex  align-items-center add_booking"
+                            data-target="hotels_cont" data-button="hotel">
+                            <i class="fa fa-plus fa-1x tm-form-element-icon tm-color-primary p-2"></i>
+                            Add Another Hotel </button>
+                    </div>
+                </div>
+
+
+
+                <div class="row justify-content-lg-between align-items-center w-75 d-block p-4">
+                    <button type="submit" class="button search_button float-right">
+                        search<span></span><span></span><span></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- End hotel -->
+
+
+
+
+        <!-- transfer panel -->
+
+
+        <div class="search_panel ">
+            <form action="results.html" id="transfer_form" class="search_panel_content py-3">
+
+                <input type="hidden" name="type" value="transfer" />
+
+
+
+                <div class="pd-120" id="hotelpd12">
+
+
+                    <div class="arrows-cont d-none">
+                        <i
+                            class="fa fa-chevron-left fa-1x ml--1 tm-form-element-icon tm-color-primary left_arrow_scrolle"></i>
+
+                        <i
+                            class="fa fa-chevron-right fa-1x mr--1 tm-form-element-icon tm-color-primary right_arrow_scrolle"></i>
+
+                    </div>
+
+                    <div class="package-cont scrollabel" id="transfers_cont">
+                        <div class="booking_cont col-lg-6">
+                            <div
+                                class="row justify-content-start align-items-center p-0 m-0 search_panel_content flex-row">
+
+                                <div class="search_item col-lg-12">
+                                    <div class="modal-header p-0">
+                                        <h5 class="modal-title w-50" id="exampleModalLongTitle">Tranasfer
+                                            Booking <span class="transfersCounter">#1</span></h5>
+                                        <div class="ways">
+                                            <div class="btn  font-weight-bold one-way way-type" data-row="0"
+                                                data-way="one-way"><i class="fa fa-long-arrow-right"
+                                                    aria-hidden="true"></i> One Way
+                                            </div>
+                                            <div class="btn btn-success font-weight-bold two-way way-type" data-row="0"
+                                                data-way="two-way"><i class="fa fa-exchange" aria-hidden="true"></i> Two
+                                                Way</div>
+                                            <input type="hidden" name="transfer[0][type]" value="two_way" />
+                                        </div>
+
+                                        <button type="button" class="close close-btn" aria-label="Close"
+                                            data-cart="transfer">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+
+
+                                    </div>
+                                </div>
+
+
+
+                                <div class="search_item col-lg-5">
+                                    <div>
+                                        Pickup
+                                    </div>
+                                    <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                        <i
+                                            class="fa fa-map-marker fa-1x mx-1 tm-form-element-icon tm-color-primary"></i>
+                                        <select
+                                            class="form-group tm-form-element tm-form-element-2 custom-input  w-100 transfer_location_select transfer_pickup_select"
+                                            name="transfer[0][pickup_location][0]" data-row="0" data-row2="0">
+                                            <option value="" selected disabled>Select pickup</option>
+                                            <option value="Istanbul" title="turkey">Istanbul</option>
+                                            <option value="Adana" title="turkey">Adana</option>
+                                            <option value="Antalya" title="turkey">Antalya</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="search_item col-lg-5">
+                                    <div>
+                                        Drop off
+                                        <!-- <i class="fa fa-map-marker fa-2x tm-form-element-icon tm-color-primary"></i> -->
+                                    </div>
+                                    <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                        <i
+                                            class="fa fa-map-marker fa-1x mx-1 tm-form-element-icon tm-color-primary"></i>
+                                        <select
+                                            class="form-group tm-form-element tm-form-element-2 custom-input  w-100 transfer_location_select transfer_dropoff_select"
+                                            name="transfer[0][dropoff_location][0]" data-row="0" data-row2="0">
+                                            <option value="" selected disabled>Select drop off</option>
+                                            <option value="Istanbul" title="turkey">Istanbul</option>
+                                            <option value="Adana" title="turkey">Adana</option>
+                                            <option value="Antalya" title="turkey">Antalya</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="search_item col-lg-5 ">
+                                    <div>Date</div>
+                                    <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                        <input type="date"
+                                            class="search_input bg-none datepicker checkin transfer_date_select transfer_date"
+                                            min="today" class="check_in search_input" placeholder="YYYY-MM-DD"
+                                            name="transfer[0][date][0]" data-row="0" data-row2="0" />
+                                    </div>
+                                </div>
+
+
+                                <div class="search_item mx-1 col-lg-5">
+                                    <div>Type</div>
+                                    <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                        <select
+                                            class="form-group tm-form-element tm-form-element-2 custom-input transfer_type"
+                                            data-row="0" data-row2="0" name="transfer[0][type][0]" data-row="0"
+                                            data-row2="0">
+                                            <option value="" selected disabled>Select type</option>
+                                            <option value="group">Group</option>
+                                            <option value="vip">VIP</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="transfer_type_cont row px-3 w-100"></div>
+
+
+                                <div class="search_item mx-2 col-lg-5 ">
+                                    <div>Flight No#</div>
+                                    <div class="form-group tm-form-element tm-form-element-2 custom-input ">
+                                        <input type="text" class="search_input bg-none" placeholder="Flight #"
+                                            name="transfer[0][flight][0]" data-row="0" data-row2="0" />
+                                    </div>
+                                </div>
+
+
+
+                                <div class="search_item col-lg-3">
+                                    <div>Adults</div>
+                                    <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                        <select class="form-group tm-form-element tm-form-element-2 custom-input p-1"
+                                            name="transfer[0][adults][0]">
+                                            <option selected disabled hidden>Adults</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="search_item col-lg-5">
+                                    <div>Children</div>
+                                    <div class="form-group tm-form-element tm-form-element-2 custom-input  p-1">
+                                        <select
+                                            class="form-group tm-form-element tm-form-element-2 dropdown_item_select custom-input children-select"
+                                            data-row="0" data-row2="0" data-type="transfer"
+                                            name="transfer[0][children_count][0]">
+                                            <option selected disabled hidden>
+                                                Children
+                                            </option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="ages0 row px-3 w-100"></div>
+
+                                <div class="back row px-3 w-100">
+
+
+
+
+                                    <hr />
+
+                                    <div class="search_item col-lg-5">
+                                        <div>
+                                            Pickup
+                                        </div>
+                                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                            <i
+                                                class="fa fa-map-marker fa-1x mx-1 tm-form-element-icon tm-color-primary"></i>
+                                            <select
+                                                class="form-group tm-form-element tm-form-element-2 custom-input transfer_location_select transfer_pickup_select w-100"
+                                                name="transfer[0][pickup_location][1]" data-row="0" data-row2="1">
+                                                <option value="" selected disabled>Select pickup</option>
+                                                <option value="Istanbul" title="turkey">Istanbul</option>
+                                                <option value="Adana" title="turkey">Adana</option>
+                                                <option value="Antalya" title="turkey">Antalya</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="search_item col-lg-5">
+                                        <div>
+                                            Drop off
+                                            <!-- <i class="fa fa-map-marker fa-2x tm-form-element-icon tm-color-primary"></i> -->
+                                        </div>
+                                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                            <i
+                                                class="fa fa-map-marker fa-1x mx-1 tm-form-element-icon tm-color-primary"></i>
+                                            <select
+                                                class="form-group tm-form-element tm-form-element-2 custom-input transfer_location_select transfer_dropoff_select w-100"
+                                                name="transfer[0][dropoff_location][1]" data-row="0" data-row2="1">
+                                                <option value="" selected disabled>Select drop off</option>
+                                                <option value="Istanbul" title="turkey">Istanbul</option>
+                                                <option value="Adana" title="turkey">Adana</option>
+                                                <option value="Antalya" title="turkey">Antalya</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="search_item col-lg-5 ">
+                                        <div>Date</div>
+                                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                            <input type="date"
+                                                class="search_input bg-none datepicker checkin transfer_date check_in search_input"
+                                                placeholder="YYYY-MM-DD" name="transfer[0][date][1]" data-row="0"
+                                                data-row2="1" />
+                                        </div>
+                                    </div>
+
+
+                                    <div class="search_item mx-1 col-lg-5">
+                                        <div>Type</div>
+                                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                            <select
+                                                class="form-group tm-form-element tm-form-element-2 custom-input transfer_type"
+                                                data-row="0" data-row2="1" name="transfer[0][type][1]" data-row="0"
+                                                data-row2="1">
+                                                <option value="" selected disabled>Select type</option>
+                                                <option value="group">Group</option>
+                                                <option value="vip">VIP</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="transfer_type_cont row px-3 w-100"></div>
+
+
+                                    <div class="search_item mx-2 col-lg-5 ">
+                                        <div>Flight No#</div>
+                                        <div class="form-group tm-form-element tm-form-element-2 custom-input ">
+                                            <input type="text" class="search_input bg-none" placeholder="Flight #"
+                                                name="transfer[0][flight][1]" />
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="search_item col-lg-3">
+                                        <div>Adults</div>
+                                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                            <select
+                                                class="form-group tm-form-element tm-form-element-2 custom-input p-1"
+                                                name="transfer[0][adults][1]">
+                                                <option selected disabled hidden>Adults</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="search_item col-lg-5">
+                                        <div>Children</div>
+                                        <div class="form-group tm-form-element tm-form-element-2 custom-input  p-1">
+                                            <select
+                                                class="form-group tm-form-element tm-form-element-2 dropdown_item_select custom-input children-select"
+                                                data-row="0" data-row2="1" data-type="transfer"
+                                                name="transfer[0][children_count][1]">
+                                                <option selected disabled hidden>
+                                                    Children
+                                                </option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="ages1 row px-3 w-100"></div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="w-100 d-flex justify-content-center">
+                    <button type="button"
+                        class="button search_button float-left btn btn-success btn-circle btn-xl rounded-pill d-flex  align-items-center add_booking"
+                        data-target="transfers_cont" data-button="transfer">
+                        <i class="fa fa-plus fa-1x tm-form-element-icon tm-color-primary p-2"></i>
+                        Add Another Transfer </button>
+                </div>
+
+
+                <div class="row justify-content-lg-between align-items-center w-75 d-block p-4">
+                    <button type="submit" class="button search_button float-right">
+                        search<span></span><span></span><span></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- End trnasfer -->
+
+
+
+
+
+
+    <!-- tour panel -->
+
+
+    <div class="search_panel ">
+        <form action="results.html" id="tour_form" class="search_panel_content py-3">
+
+            <input type="hidden" name="type" value="tour" />
+            <div class="pd-120" id="hotelpd12">
+                <h3 class="text-center w-100">Tour</h3>
+
+
+                <div class="arrows-cont d-none">
+                    <i
+                        class="fa fa-chevron-left fa-1x ml--1 tm-form-element-icon tm-color-primary left_arrow_scrolle"></i>
+
+                    <i
+                        class="fa fa-chevron-right fa-1x mr--1 tm-form-element-icon tm-color-primary right_arrow_scrolle"></i>
+
+                </div>
+
+                <div class="package-cont scrollabel" id="tours_cont">
+                    <div class="booking_cont col-lg-6">
+                        <div class="row justify-content-start align-items-center p-0 m-0 search_panel_content flex-row">
+
+                            <div class="search_item col-lg-12">
+                                <div class="modal-header p-0">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Tour Booking <span
+                                            class="toursCounter">#1</span></h5>
+                                    <button type="button" class="close close-btn" aria-label="Close" data-cart="tour">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                            </div>
+
+
+                            <div class="search_item mx-1 col-lg-5">
+                                <div>Type</div>
+                                <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                    <select
+                                        class="form-group tm-form-element tm-form-element-2 custom-input tour_type_select"
+                                        name="tour[0][type]">
+                                        <option value="" selected disabled>Select type</option>
+                                        <option value="vip">VIP</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="search_item col-lg-5">
+                                <div>
+                                    Location
+                                </div>
+                                <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                    <i class="fa fa-map-marker fa-1x mx-1 tm-form-element-icon tm-color-primary"></i>
+                                    <select
+                                        class="form-group tm-form-element tm-form-element-2 custom-input location_select w-100 tour_location_select"
+                                        name="tour[0][location_location]">
+                                        <option value="" selected disabled>Select location</option>
+                                    </select>
+
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div class="search_item col-lg-5 ">
+                                <div>Start date</div>
+                                <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                    <input type="date"
+                                        class="search_input bg-none datepicker check_in search_input tour_check_in"
+                                        placeholder="YYYY-MM-DD" name="tour[0][start_date]" />
+                                </div>
+                            </div>
+
+                            <div class="search_item mx-2 col-lg-5 ">
+                                <div>End date</div>
+                                <div class="form-group tm-form-element tm-form-element-2 custom-input ">
+                                    <input type="date" class="search_input bg-none checkout tour_check_out "
+                                        placeholder="YYYY-MM-DD" name="tour[0][end_date]" />
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+                            <div class="search_item col-lg-3">
+                                <div>Adults</div>
+                                <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                                    <select class="form-group tm-form-element tm-form-element-2 custom-input p-1"
+                                        name="tour[0][adults]">
+                                        <option selected disabled hidden>Adults</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="search_item col-lg-5">
+                                <div>Children</div>
+                                <div class="form-group tm-form-element tm-form-element-2 custom-input  p-1">
+                                    <select
+                                        class="form-group tm-form-element tm-form-element-2 dropdown_item_select custom-input children-select"
+                                        data-row="0" data-row2="0" data-type="tour" name="tour[0][children_count]">
+                                        <option selected disabled hidden>
+                                            Children
+                                        </option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="ages0 row px-3 w-100"></div>
+
+                            <div class="custom-check w-100" data-row="tour-0">
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100 d-flex justify-content-center">
+                    <button type="button"
+                        class="button search_button float-left btn btn-success btn-circle btn-xl rounded-pill d-flex  align-items-center add_booking"
+                        data-target="tours_cont" data-button="tour">
+                        <i class="fa fa-plus fa-1x tm-form-element-icon tm-color-primary p-2"></i>
+                        Add Another Tour </button>
+                </div>
+            </div>
+
+
+
+
+
+
+
+            <div class="row justify-content-lg-between align-items-center w-75 d-block p-4">
+                <button type="submit" class="button search_button float-right">
+                    search<span></span><span></span><span></span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+
+    <!-- End tour -->
+</div>
+
+
+<!-- Search Panel -->
+
+<div class="search_panel">
+    <form action="#" id="search_form_2" class="search_panel_content py-5">
+        <div id="transfer_booking_cont" class="row justify-content-center align-items-center">
+            <div class="booking_cont">
+                <div id="transfer_booking1"
+                    class="row justify-content-start align-items-center py-5 search_panel_content flex-row">
+
+
+                    <div class="search_item col-lg-12">
+                        <div class="modal-header p-0">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Hotel Booking <span
+                                    class="hotelsCounter">#1</span></h5>
+                            <button type="button" class="close close-btn" aria-label="Close" data-cart="hotel">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                    </div>
+
+
+
+                    <div class="search_item col-lg-5">
+                        <div>
+                            Location
+                            <!-- <i class="fa fa-map-marker fa-2x tm-form-element-icon tm-color-primary"></i> -->
+                        </div>
+                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                            <input type="text" class="location search_input w-100 bg-none" placeholder="locations"
+                                list="list-locations" id="location" name="location[]" />
+                            <datalist id="location">
+                                <option>Istanbul</option>
+                                <option>Adana</option>
+                                <option>Antalya</option>
+                            </datalist>
+                        </div>
+                    </div>
+
+                    <div class="search_item mx-5 col-lg-5">
+                        <div>Nationality</div>
+                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                            <select class="form-group tm-form-element tm-form-element-2 custom-input"
+                                name="nationality[]">
+                                <option selected disabled hidden>
+                                    Select Nationality
+                                </option>
+                                <option value="Jordan">Jordan</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="search_item col-lg-5">
+                        <div>check in</div>
+                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                            <input type="date" class="search_input bg-none" class="check_in search_input"
+                                placeholder="YYYY-MM-DD" name="check_in[]" />
+                        </div>
+                    </div>
+
+                    <div class="search_item mx-5 col-lg-5">
+                        <div>check out</div>
+                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                            <input type="date" class="search_input bg-none" class="search_input"
+                                placeholder="YYYY-MM-DD" name="check_out[]" />
+                        </div>
+                    </div>
+
+                    <div class="search_item col-lg-4">
+                        <div>Room</div>
+                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                            <select class="form-group tm-form-element tm-form-element-2 custom-input" name="rooms[]">
+                                <option selected disabled hidden>
+                                    How Many Rooms
+                                </option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="search_item col-lg-4">
+                        <div>Adults</div>
+                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                            <select class="form-group tm-form-element tm-form-element-2 custom-input" name="adults[]">
+                                <option selected disabled hidden>
+                                    How Many Adults
+                                </option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="search_item col-lg-4">
+                        <div>Children</div>
+                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                            <select
+                                class="form-group tm-form-element tm-form-element-2 dropdown_item_select custom-input children-select"
+                                name="children[]">
+                                <option selected disabled hidden>
+                                    How Many Children
+                                </option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-lg-between align-items-center w-75">
+            <button type="button" id="add_transfer"
+                class="button search_button float-left btn btn-success btn-circle btn-xl rounded-circle">
+                <i class="fa fa-plus fa-2x tm-form-element-icon tm-color-primary"></i>
+            </button>
+
+            <button type="button" class="button search_button float-right">
+                search<span></span><span></span><span></span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="search_panel">
+    <form action="#" id="search_form_2" class="search_panel_content py-5">
+        <div id="tour_booking_cont" class="row justify-content-center align-items-center">
+            <div class="booking_cont">
+                <div id="tour_booking1"
+                    class="row justify-content-start align-items-center py-5 search_panel_content flex-row">
+
+
+
+                    <div class="search_item col-lg-12">
+                        <div class="modal-header p-0">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Tour Booking <span
+                                    class="toursCounter">#1</span></h5>
+                            <button type="button" class="close close-btn" aria-label="Close" data-cart="tour">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                    </div>
+
+
+
+                    <div class="search_item col-lg-12">
+                        <div class="modal-header p-0">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Transfer Booking <span>#1</span>
+                            </h5>
+                            <button type="button" class="close close-btn" aria-label="Close" data-cart="transfer">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                    </div>
+
+
+
+                    <div class="search_item col-lg-5">
+                        <div>
+                            Location
+                            <!-- <i class="fa fa-map-marker fa-2x tm-form-element-icon tm-color-primary"></i> -->
+                        </div>
+                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                            <input type="text" class="location search_input w-100 bg-none" placeholder="locations"
+                                list="list-locations" id="location" name="location[]" data-row="0" data-row2="0" />
+                            <datalist id="location">
+                                <option>Istanbul</option>
+                                <option>Adana</option>
+                                <option>Antalya</option>
+                            </datalist>
+                        </div>
+                    </div>
+
+                    <div class="search_item mx-5 col-lg-5">
+                        <div>Nationality</div>
+                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                            <select class="form-group tm-form-element tm-form-element-2 custom-input"
+                                name="nationality[]" data-row="0" data-row2="0">
+                                <option selected disabled hidden>
+                                    Select Nationality
+                                </option>
+                                <option value="Jordan">Jordan</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="search_item col-lg-5">
+                        <div>check in</div>
+                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                            <input type="date" class="search_input bg-none" class="check_in search_input"
+                                placeholder="YYYY-MM-DD" name="check_in[]" data-row="0" data-row2="0" />
+                        </div>
+                    </div>
+
+                    <div class="search_item mx-5 col-lg-5">
+                        <div>check out</div>
+                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                            <input type="date" class="search_input bg-none" class="search_input"
+                                placeholder="YYYY-MM-DD" name="check_out[]" data-row="0" data-row2="0" />
+                        </div>
+                    </div>
+
+                    <div class="search_item col-lg-4">
+                        <div>Room</div>
+                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                            <select class="form-group tm-form-element tm-form-element-2 custom-input" name="rooms[]"
+                                data-row="0" data-row2="0">
+                                <option selected disabled hidden>
+                                    How Many Rooms
+                                </option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="search_item col-lg-4">
+                        <div>Adults</div>
+                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                            <select class="form-group tm-form-element tm-form-element-2 custom-input" name="adults[]"
+                                data-row="0" data-row2="0">
+                                <option selected disabled hidden>
+                                    How Many Adults
+                                </option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="search_item col-lg-4">
+                        <div>Children</div>
+                        <div class="form-group tm-form-element tm-form-element-2 custom-input">
+                            <select
+                                class="form-group tm-form-element tm-form-element-2 dropdown_item_select custom-input children-select"
+                                name="children[]">
+                                <option selected disabled hidden>
+                                    How Many Children
+                                </option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-lg-between align-items-center w-75">
+            <button type="button" id="add_tour"
+                class="button search_button float-left btn btn-success btn-circle btn-xl rounded-circle">
+                <i class="fa fa-plus fa-2x tm-form-element-icon tm-color-primary"></i>
+            </button>
+
+            <button type="submit" class="button search_button float-right">
+                search<span></span><span></span><span></span>
+            </button>
+        </div>
+    </form>
+</div>
+
+
+<div class="search_panel">
+    <form action="#" id="search_form_6"
+        class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+        <div class="search_item">
+            <div>destination</div>
+            <input type="text" class="destination search_input" required="required" />
+        </div>
+        <div class="search_item">
+            <div>check in</div>
+            <input type="text" class="check_in search_input" placeholder="YYYY-MM-DD" />
+        </div>
+        <div class="search_item">
+            <div>check out</div>
+            <input type="text" class="check_out search_input" placeholder="YYYY-MM-DD" />
+        </div>
+        <div class="search_item">
+            <div>adults</div>
+            <select name="adults" id="adults_6" class="dropdown_item_select search_input">
+                <option>01</option>
+                <option>02</option>
+                <option>03</option>
+            </select>
+        </div>
+        <div class="search_item">
+            <div>children</div>
+            <select name="children" id="children_6" class="dropdown_item_select search_input">
+                <option>0</option>
+                <option>02</option>
+                <option>03</option>
+            </select>
+        </div>
+        <button class="button search_button">
+            search<span></span><span></span><span></span>
+        </button>
+    </form>
+</div>
+
+{% include 'templates/includes/theme2/modals/home_tour_modal.html' %}
+<script>
+console.log("test")
+
+</script>
+{% endblock %}

@@ -1,0 +1,62 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-02-26 16:58:07.395589",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "tour",
+  "price",
+  "image",
+  "rating"
+ ],
+ "fields": [
+  {
+   "fieldname": "date",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tour",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tour",
+   "reqd": 1
+  },
+  {
+   "fieldname": "price",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Price",
+   "reqd": 1
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "label": "Image",
+   "reqd": 1
+  },
+  {
+   "fieldname": "rating",
+   "fieldtype": "Select",
+   "label": "Rating",
+   "options": "5\n4\n3\n2\n1"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-02-26 17:30:55.156834",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Website Best Tour",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

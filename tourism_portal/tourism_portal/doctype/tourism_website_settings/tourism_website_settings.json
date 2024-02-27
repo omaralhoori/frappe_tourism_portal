@@ -1,0 +1,193 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-02-26 16:46:42.455950",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "connections_section",
+  "phone_number",
+  "email",
+  "column_break_vt5iu",
+  "facebook",
+  "address",
+  "column_break_onxcw",
+  "instagram",
+  "connect_background",
+  "carousel_settings_section",
+  "carousel",
+  "section_break_uly4z",
+  "enable_best_tours",
+  "best_tours_introduction",
+  "best_tours",
+  "cta_section_section",
+  "enable_cta",
+  "cta_backgorund",
+  "cta_items",
+  "offers_section_section",
+  "enable_offers",
+  "offer_items",
+  "footer_section",
+  "website_logo",
+  "company_description"
+ ],
+ "fields": [
+  {
+   "fieldname": "connections_section",
+   "fieldtype": "Section Break",
+   "label": "Connections"
+  },
+  {
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fieldname": "column_break_vt5iu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "facebook",
+   "fieldtype": "Data",
+   "label": "Facebook"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Data",
+   "label": "Address"
+  },
+  {
+   "fieldname": "column_break_onxcw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "instagram",
+   "fieldtype": "Data",
+   "label": "Instagram"
+  },
+  {
+   "fieldname": "carousel_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Carousel Settings"
+  },
+  {
+   "fieldname": "section_break_uly4z",
+   "fieldtype": "Section Break",
+   "label": "Best Tours Section"
+  },
+  {
+   "fieldname": "carousel",
+   "fieldtype": "Table",
+   "label": "Carousel",
+   "options": "Website Carousel Item"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_best_tours",
+   "fieldtype": "Check",
+   "label": "Enable Best Tours"
+  },
+  {
+   "fieldname": "best_tours_introduction",
+   "fieldtype": "Small Text",
+   "label": "Best Tours Introduction"
+  },
+  {
+   "fieldname": "best_tours",
+   "fieldtype": "Table",
+   "label": "Best Tours",
+   "options": "Website Best Tour"
+  },
+  {
+   "fieldname": "cta_section_section",
+   "fieldtype": "Section Break",
+   "label": "CTA Section"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_cta",
+   "fieldtype": "Check",
+   "label": "Enable CTA"
+  },
+  {
+   "fieldname": "cta_backgorund",
+   "fieldtype": "Attach Image",
+   "label": "CTA Backgorund"
+  },
+  {
+   "fieldname": "cta_items",
+   "fieldtype": "Table",
+   "label": "CTA Items",
+   "options": "Website CTA Item"
+  },
+  {
+   "fieldname": "offers_section_section",
+   "fieldtype": "Section Break",
+   "label": "Offers Section"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_offers",
+   "fieldtype": "Check",
+   "label": "Enable Offers"
+  },
+  {
+   "fieldname": "offer_items",
+   "fieldtype": "Table",
+   "label": "Offer Items",
+   "options": "Website Offer Item"
+  },
+  {
+   "fieldname": "connect_background",
+   "fieldtype": "Attach Image",
+   "label": "Connect Background"
+  },
+  {
+   "fieldname": "footer_section",
+   "fieldtype": "Section Break",
+   "label": "Footer"
+  },
+  {
+   "fieldname": "website_logo",
+   "fieldtype": "Attach Image",
+   "label": "Website Logo"
+  },
+  {
+   "fieldname": "company_description",
+   "fieldtype": "Data",
+   "label": "Company Description"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "make_attachments_public": 1,
+ "modified": "2024-02-26 20:40:22.081468",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Tourism Website Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
