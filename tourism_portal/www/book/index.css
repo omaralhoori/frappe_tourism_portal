@@ -1,0 +1,96 @@
+body{
+    background-image: url('/assets/tourism_portal/images/background/12.jpg');
+    background-color: #f1f6fa;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+.html-template{
+    display: none;
+}
+
+.search-card-container {
+    position: relative;
+}
+.tour-modal .modal-dialog{
+    width: 500px;
+}
+
+.remove-card-btn {
+    position: absolute;
+    right: -75px;
+    cursor: pointer;
+    top: 0;
+}
+
+.select2-container {
+    width: 100% !important;
+    padding: 0;
+    }
+
+.tm-section{
+    flex-direction: column;
+}
+
+.search-button{
+    margin-top: 20px;
+    float: right;
+}
+
+.tours-html-container{
+    overflow-y: auto;
+    max-height: 250px;
+    width: 100%;
+}
+.tours-html-container li{
+    cursor: pointer;
+}
+.tours-html-container input{
+    margin-right: 5px;
+}
+.tours-html-container li:hover{
+    background-color: #f1f6fa;
+}
+
+.allowed-flights {
+    display: none;
+    max-height: 100px;
+    overflow-y: scroll;
+}
+
+
+.autocomplete {
+    /*the container must be positioned relative:*/
+    position: relative;
+    display: inline-block;
+  }
+  .autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 300px;
+    overflow: auto;
+  }
+  .autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+  }
+  .autocomplete-items div:hover {
+    /*when hovering an item:*/
+    background-color: #e9e9e9;
+  }
+  .autocomplete-active {
+    /*when navigating through the items using the arrow keys:*/
+    background-color: DodgerBlue !important;
+    color: #ffffff;
+  }

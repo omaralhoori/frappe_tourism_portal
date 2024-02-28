@@ -1,0 +1,43 @@
+body{
+    background-image: url('/assets/tourism_portal/images/background/10.jpg');
+    background-color: #f1f6fa;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+
+.room-extra-list, .room-bed-list {
+    max-height: 200px;
+    margin-bottom: 10px;
+    overflow-y:auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.room-extra-list .list-group-item,
+.room-bed-list  .list-group-item{
+    padding-left: 35px;
+}
+.room-board-list{
+    max-height: 200px;
+    margin-bottom: 10px;
+    overflow-y:auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.room-board-list .list-group-item{
+    padding-left: 35px;
+}
+
+.search-param{
+    text-align: center;
+}
+.search-label{
+    font-size: 0.9em;
+    color: #999;
+}
+.search-value{
+    font-size: 0.9em;
+    font-weight: bold;
+}

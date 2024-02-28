@@ -1,0 +1,87 @@
+{% extends "templates/theme2/website_base.html" %}
+
+{% block page_content %}
+<div class="login_container">
+
+      <div class="login d-flex flex-column justify-content-center align-items-center">
+       
+
+        <div class="login-logo mb-4">
+
+          <img src="{{logo}}" width="90" alt="">
+                </div>
+
+                <h4 class="mb-5">Login to {{app_name}}</h4>
+        <form  class="form-signin form-login w-100" role="form">
+          <div class="form-column page-card-body align-items-center">
+            <div class="col-sm-12 my-1">
+              <label class="sr-only" for="email">Email</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text"><i class="fa fa-envelope "></i></div>
+                </div>
+                <input type="text" class="form-control" id="login_email" placeholder="Email">
+              </div>
+            </div>
+
+            <div class="col-sm-12 mt-3">
+              <label class="sr-only" for="password">Password</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">  <i class="fa fa-lock "></i> </div>
+                  </div>
+                <input type="password" class="form-control" id="login_password" placeholder="Password">
+              </div>
+            </div>
+
+            <div class="col-auto mt-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="autoSizingCheck2">
+                <label class="form-check-label" for="autoSizingCheck2">
+                  Remember me
+                </label>
+              </div>
+            </div>
+            <div class="col-auto mt-4 w-100 text-center  p-1r">
+              <button type="button" class="login-btn w-75 btn-login">Login</button>
+            </div>
+          </div>
+        </form>
+
+        {# <div class="login-footer">
+          <p>Don't  have an account? <a href="register.html">Register</a></p>
+        </div> #}
+
+      </div>
+
+
+    </div>
+    
+{% endblock %}
+
+{% block script %}
+<script>{% include "templates/includes/login/login.js" %}</script>
+<script>
+   $('.login-btn').click(function() {
+    console.log("Login button clicked")
+    var args = {};
+		args.cmd = "login";
+		args.usr = frappe.utils.xss_sanitise(($("#login_email").val() || "").trim());
+		args.pwd = $("#login_password").val();
+		args.device = "desktop";
+		if (!args.usr || !args.pwd) {
+			frappe.msgprint('{{ _("Both login and password required") }}');
+			return false;
+		}
+		login.call(args);
+});
+
+login.set_status = function (message, color) {
+	$('.login-btn').text(message)
+	if (color == "red") {
+		$('.page-card-body').addClass("invalid");
+	}
+}
+
+</script>
+{% endblock %}

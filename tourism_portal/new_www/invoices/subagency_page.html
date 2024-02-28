@@ -1,0 +1,23 @@
+{% extends "templates/website_base.html" %}
+
+
+{% block page_content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css" integrity="sha256-3sPp8BkKUE7QyPSl6VfBByBroQbKxKG7tsusY2mhbVY=" crossorigin="anonymous" />
+  <ul class="nav nav-tabs nav-fill mb-3" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link {% if agency_page %} active {% endif %}" id="agency-tab"
+         href="/invoices?page=1">{{_("My Agency's Bookings")}}</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link {% if subagency_page %} active {% endif %}" id="subagency-tab" 
+            href="/invoices/subagency?page=1" >{{_("My Subagencies' Bookings")}}</a>
+    </li>
+</ul>
+
+ <div class="tab-content">
+    {% block  agency_content %}
+
+    {% endblock %}
+</div>
+
+{% endblock %}

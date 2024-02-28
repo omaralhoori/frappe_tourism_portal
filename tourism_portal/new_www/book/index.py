@@ -8,6 +8,7 @@ from tourism_portal.utils import get_portal_setting
 no_cache=1
 def get_context(context):
 	context.no_cache=1
+	context.title = "Home"
 	if frappe.session.user == "Guest":
 		frappe.throw(_("Log in to access this page."), frappe.PermissionError)
 	company = frappe.db.get_value("User", frappe.session.user, "company", cache=True)
@@ -23,6 +24,7 @@ def get_context(context):
 	context.max_adults_per_tour = get_portal_setting("max_adults_per_tour")
 	context.max_children_per_tour = get_portal_setting("max_children_per_tour")
 	context.max_child_age = get_portal_setting("max_child_age")
+	context.settings = frappe.get_single("Tourism Website Settings")
 	return context
 
 def get_locations():

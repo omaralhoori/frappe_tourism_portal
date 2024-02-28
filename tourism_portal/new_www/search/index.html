@@ -1,0 +1,546 @@
+{% extends "templates/website_base.html" %}
+
+{% macro hotel_search_result(room, roomName, loopIndex) %}
+<div class="result-item room-result-item mt-3 card" >
+    <div class="row">
+    <div class="col-md-3">
+        <div class="room-image">
+            {% if room.get('room_image')%}
+            <img src="{{room.get('room_image')}}" alt="">
+            {%else%}
+            <img src="/assets/tourism_portal/images/no-image.jpg" alt="">
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-6 room-detail-container">
+        <div class="">
+            <div class="room-title mt-2">{{room.get('hotel_name')}}</div>
+        <div class="hotel-title">{{room.get('room_type')}}</div>
+        <div class="room-details">
+            <div class="room-details-item"><div class="badge badge-primary">Non Refundable</div></div>
+            <div class="room-details-item">Full Board</div>
+            <div class="room-details-item">Sea View</div>
+        </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="d-flex justify-content-center align-items-center flex-column h-100" onclick="roomSelected(this)">
+            {% if room.get('price')%}
+            <div class="room-total"><span class="room-total-nights">{{room.get('price')[1]}} Nights</span><span class="room-total-price">{{room.get('price')[0]}} USD</span></div>
+            <div class="room-price mt-1">(Per Room 500USD)</div>
+            {% else %}
+            
+            {% endif %}
+            <div class="container ask-button-container" {%if room.get('price') or room.get('qty') %} style="display: none;" {%endif%}>
+                <button onclick="confirmButtonClicked(this)" style="font-size: .8em;" class="btn btn-primary tm-btn-search p-2">Ask for availability</button>
+            </div>
+            <!-- <div class="room-count mt-2">3 Rooms</div> -->
+            <label class="room-available-label">Available 0</label>
+            <input class="form-control mt-2" {% if loopIndex==1 %} checked="checked" {% endif %} type="radio" 
+            data-value="{{room.get('room_id')}}" name="{{roomName}}" contract-id="{{room.contract_id}}" room-qty="{{room.qty}}"/>
+        </div>
+    </div>
+</div>
+</div>
+{% endmacro %}
+
+{% block page_content %}
+<script>
+    var searchResults = ''//`{rooms_}`
+    //searchResults = JSON.parse(searchResults);
+    var hotelSearchParams =  `{{hotel_search_params}}`;
+    var transferSearchParams = `{{transfer_search_params}}`;
+    var tourSearchParams = `{{tour_search_params}}`;
+    hotelSearchParams = JSON.parse(hotelSearchParams);
+    transferSearchParams = JSON.parse(transferSearchParams);
+    tourSearchParams = JSON.parse(tourSearchParams);
+</script>
+<div class="row pt-4 ">
+<div class="content col-lg-9">
+  <div class="row hotels-results">
+    
+    <div class="col">
+        <div class="search-results">
+            {# 
+            {% for search in rooms %}
+                {% for hotel in search %}
+                    {% for roomName in search[hotel] %}
+                    {{ roomName }}
+                        <div class="available-rooms">
+                        {% for room in search[hotel][roomName]%}
+                            {{hotel_search_result(room, roomName, loop.index)}}
+                        {% endfor %}
+                    </div>
+                    {%endfor %}
+                {% endfor %}
+            {% endfor %}
+            #}
+        </div>
+    </div>
+  </div>
+  <div class="row transfer-results">
+    {# {% if transfers %}
+        <div class="col-12"><strong>Transfers</strong></div>
+    {%endif%} #}
+    <div class="col-12">
+    {% for search in transfers%}
+        <div class="row">
+        {{render_transfer_search_header(search)}}
+        <div class="col-12 flex-wrap transfer-search" transfer-search="{{search}}">
+        {% for transferName in transfers[search] %}
+            {% set all_transfers = transfers[search][transferName]%}
+            {% if all_transfers |length > 0 %}
+             {{transfer_card(all_transfers, transferName)}} 
+            {% else %}
+            <div class="alert alert-warning w-100 mt-2">No available transfers found</div>
+            {% endif %}
+        {%endfor%}
+        </div>
+        </div>
+    {% endfor %}
+    </div>
+  </div>
+  <div class="row tour-resutls">
+        <div class="col-12">
+            {% for search in tours%}
+                <div class="row tour-search-card" tour-search="{{search}}">
+                {{render_tour_search_header(search)}}
+                {% set packages = [] %}
+                {% if tours[search] | length == 0%}
+                <div class="col-12 mt-2">
+                    <div class="alert alert-warning">No available tours found</div>
+                </div>
+                {% else%}
+                 <div class="col-12 d-flex flex-wrap">
+                {% for tour in tours[search]%}
+                    {% if tour['tour_type'] == 'vip'%}
+                            {{vip_tour_card(tour, search)}}
+                    {% else %}
+                        {% set packages = packages.append(tour) %}
+                            
+                    {% endif %}
+                {% endfor %}
+                {{package_tour_card(packages) }}
+                     </div>
+            {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+  </div>
+</div>
+ <div class="col-lg-3">
+        <div class="filters-container mt-3 card">
+            <div class="price-summary">
+                <div class="price-total-calculator">
+                    <table>
+                        <tr><td>Hotels:</td><td><span class="hotels-total">0 USD</span></td></tr>
+                        <tr><td>Transfers:</td><td><span class="transfers-total">0 USD</span></td></tr>
+                        <tr><td>Tours:</td><td><span class="tours-total">0 USD</span></td></tr>
+                        <tr><td>Total:</td><td><span class="grand-total-container">0 USD</span></td></tr>
+                    </table>
+                </div>
+                <div class="confirm-button-continer">
+                    <button onclick="confirmButtonClicked(this)" class="btn btn-primary tm-btn-search">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/tourism_portal/js/autocomplete_location.js" ></script>
+<script type="text/template" id="hotel-room-results-template">
+    <div class="card hotel-card mt-3">
+        <div class="card-header" id="{Hotel ID}-header">
+         <div class="row full-details">
+            <div class="col-md-3">
+                <div class="hotel-image" style="height: 150px">
+                    <img src="{Hotel Image}" alt="" style="height: 100%;width: 100%;">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="hotel-card-top">
+                    <div class="hotel-title">{Hotel Name}</div>
+                <div class='hotel-stars' star-rating="{Hotel Stars}">
+                </div>
+                </div>
+                <div class="hotel-details mt-3">
+                    <div >{Hotel Address}</div>
+                    <div class="mt-2">{Hotel Location}</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="d-flex justify-content-center align-items-center flex-column h-100">
+
+                    <div class="hotel-price-container">
+                        Strat from <span class="hotel-price">{Hotel Price}</span>
+                    </div>
+                    <div class="container ask-button-container mt-3">
+                        <button onclick="seeHotelMoreDetails(this)" style="font-size: .8em;" class="btn btn-primary tm-btn-search p-2">See Details</button>
+                    </div>
+                    
+                </div>
+            </div>
+         </div>
+         <div class="row short-details d-none">
+            <div class="col-md-12">
+                <div class="hotel-title">{Hotel Name}</div>
+            </div>
+         </div>
+        </div>
+    
+        <div class="hotel-rooms-details" aria-labelledby="{Hotel ID}-header" >
+          <div class="card-body">
+            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+          </div>
+        </div>
+      </div>
+      
+</script>
+<script type="text/template" id="room-result-item-template">
+    <div class="result-item room-result-item mt-3 card" >
+        <div class="row">
+        <div class="col-md-3">
+            <div class="room-image">
+                <img src="{Room Image}" alt="">
+            </div>
+        </div>
+        <div class="col-md-6 room-detail-container">
+            <div class="">
+                <div class="hotel-title mt-2">{Hotel Name}</div>
+            <div class="room-title">{Room Type}-{Room ACMND}<span class="pax-image"><img src="{PAX IMAGE}"/></span></div>
+            <div class="room-details">
+                <div class="room-details-item"><div class="badge badge-primary">Non Refundable</div></div>
+                <div class="room-details-item">Full Board</div>
+                <div class="room-details-item">Sea View</div>
+            </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="room-price-qty-details d-flex justify-content-center align-items-center flex-column h-100" >
+                <!-- if room.get('price') -->
+                <div class="room-contracts-container d-none">
+
+                </div>
+                <div class="room-price-container">
+                <div class="room-total"><span class="room-total-nights">{Nights} Nights</span><span class="room-total-price">{Room Price}</span></div>
+                <!-- <div class="room-price mt-1">(Per Room 500USD)</div> -->
+                </div>
+               <!--  -->
+               <!-- {#if room.get('price') or room.get('qty') %} style="display: none;" {%endif #} -->
+                <div class="container ask-button-container" >
+                    <button onclick="askButtonClicked(this)" style="font-size: .8em;" class="btn btn-primary tm-btn-search p-2">Ask for availability</button>
+                </div>
+                <!-- <div class="room-count mt-2">3 Rooms</div> -->
+                <label class="room-available-label">{Available QTY}</label>
+            </div>
+        </div>
+    </div>
+    </div>
+</script>
+<!-- Hotel Modal -->
+<div class="modal fade" id="hotelSearchModal" tabindex="-1" role="dialog" aria-labelledby="hotelSearchModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="hotelSearchModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         {% include "templates/includes/hotel_search_edit_template.html" %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="newHotelSearchClicked(this)">Search</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Transfer Modal -->
+<div class="modal fade" id="transferSearchModal" tabindex="-1" role="dialog" aria-labelledby="transferSearchModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="transferSearchModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         {% include "templates/includes/transfer_search_edit_template.html" %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="newTransferSearchClicked(this)">Search</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include "templates/includes/pax_template_container.html" %}
+{% include "templates/includes/children_template_container.html" %}
+{% include "templates/includes/carousel.html" %}
+{% endblock %}
+
+{%macro transfer_card(transfers, transferName)%}
+{% set options = [] %}
+{% for transfer in transfers%}
+    {% set _ = options.append({
+        "transfer_type_id": transfer['transfer_type'],
+        "transfer_type_name": transfer['transfer_details'].get('transfer_type'),
+        "transfer_price": transfer['transfer_price'],
+        "transfer_price_company": transfer['transfer_price_company'],
+        "from_postal_code": transfer.search_params['from_postal_code'],
+        "to_postal_code": transfer.search_params['to_postal_code'],
+        "flight_no": transfer.search_params['params']['flight-no'],
+        "transfer_image": transfer['transfer_details'].get('transfer_image'),
+        "transfer_description": transfer['transfer_details'].get('transfer_description'),
+        "from_location": transfer['search_params']['params']['from-location'],
+        "to_location": transfer['search_params']['params']['to-location'],
+        "transfer_date": transfer['search_params']['params']['transfer-date'],
+        }) %}
+{% endfor %}
+{% if transfers|length > 0%}
+    {% set transfer = transfers[0]%}
+        <div class="card m-2 transfer-card" style="width: 16rem;" 
+        transfer-type="{{transfer.transfer_type}}"
+        transfer-price="{{transfer.transfer_price}}"
+        transfer-price-company="{{transfer.transfer_price_company}}"
+        from-postal-code="{{transfer.search_params['from_postal_code']}}"
+            to-postal-code="{{transfer.search_params['to_postal_code']}}"
+            transfer-name="{{transferName}}"
+            flight-no="{{transfer.search_params['params']['flight-no']}}"
+        >
+    <img class="card-img-top" src="{{transfer['transfer_details'].get('transfer_image')}}" alt="Card image cap">
+    <div class="card-body">
+        <h5 class="card-title">{{transfer['transfer_details'].get('transfer_type')}}</h5>
+        <p class="card-text transfer-description">{{transfer['transfer_details'].get('transfer_description') or ''}}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+    <li class="list-group-item"><select onchange="transferSelectedNewType(this)">{% for option in options %}
+        <option {% if option.transfer_type_id == transfer.transfer_type %} selected {% endif %}
+            transfer_type_id="{{option.transfer_type_id}}"
+            transfer_type_name="{{option.transfer_type_name}}"
+            transfer_price="{{option.transfer_price}}"
+            transfer_price_company="{{option.transfer_price_company}}"
+            from_postal_code="{{option.from_postal_code}}"
+            to_postal_code="{{option.to_postal_code}}"
+            flight_no="{{option.flight_no}}"
+            transfer_image="{{option.transfer_image}}"
+            transfer_description="{{option.transfer_description}}"
+            from_location="{{option.from_location}}"
+            to_location="{{option.to_location}}"
+            transfer_date="{{option.transfer_date}}"
+        >{{option.transfer_type_name}} - {{option.transfer_price}}</option>
+    {%endfor%}</select></li>
+        <li class="list-group-item">Pickup: {{transfer['search_params']['params']['from-location-name']}}</li>
+        <li class="list-group-item">Dropoff: {{transfer['search_params']['params']['to-location-name']}}</li>
+        <li class="list-group-item">Transfer Date: {{transfer['search_params']['params']['transfer-date']}}</li>
+        {% if transfer['search_params']['params']['flight-no'] %}
+        <li class="list-group-item">Flight No: {{transfer['search_params']['params']['flight-no']}}</li>
+        {% endif %}
+        <li class="list-group-item transfer-price" transfer-price="{{transfer['transfer_price']}}" transfer-price-company="{{transfer['transfer_price_company']}}">Price: {{transfer['transfer_price']}}</li>
+        <li class="list-group-item">Total Pax: {{transfer['search_params']['params']['paxes']['adults'] | int + transfer['search_params']['params']['paxes']['children'] | int}} <small>(Adults: {{transfer['search_params']['params']['paxes']['adults']}}, Children: {{transfer['search_params']['params']['paxes']['children']}})</small></li>
+    </ul>
+    </div>
+{% endif %}
+{%endmacro%}
+
+{%macro vip_tour_card(tour, tour_id)%}
+    <div class="border-card m-2 tour-card" style="width: 100%;">
+    {% if not tour %}
+        <div class="p-3">{{tour_id}} price is not available</div>
+    {%else%}
+    <div class="d-none">
+    <div>
+    <h5 class="card-title tour-item" tour-id="{{tour.get('tour_id')}}">{{tour.get('tour_name')}}</h5>
+    <p class="card-text">{{tour.get('tour_description') or ''}}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item tour-pickup" tour-pickup="{{tour['pickup']}}">Pickup: {{tour['pickup']}}</li>
+    {# <li class="list-group-item">Tour Date: {{tour['tour_date']}}</li> #}
+    <li class="list-group-item tour-price" tour-price-company="{{tour['tour_price_company']}}" tour-price="{{tour['tour_price']}}">Price: {{tour['tour_price']}}</li>
+            <li class="list-group-item">Total Pax: {{tour['paxes']['adults'] | int + tour['paxes']['children'] | int}} <small>(Adults: {{tour['paxes']['adults']}}, Children: {{tour['paxes']['children']}})</small></li>
+  </ul>
+  </div>
+    {% set uuid = create_uuid() %}
+    <div class="d-flex justify-content-between">
+        <a class="btn-link" onclick="expandTourClicked(this)" href="#{{uuid}}" 
+        tour-id="{{tour.get('tour_id')}}"
+        tour-type="{{tour.get('tour_type')}}"
+        tour-pickup="{{tour['pickup']}}"
+        role="button" aria-expanded="false" aria-controls="{{uuid}}">
+        {{tour.get('tour_name')}}
+        </a>
+        <div class="tour-details d-flex">
+        <div class="mr-2"><small> Adults: {{tour['paxes']['adults']}}, Children: {{tour['paxes']['children']}}</small></div>
+        <div class="tour-price"><strong>{{tour.get('tour_price')}} USD</strong></div>
+        </div>
+    </div>
+    <div class="collapse" id="{{uuid}}">
+    <div class="card card-body">
+        Loading...
+    </div>
+    </div>
+  {%endif%}
+</div>
+{%endmacro%}
+{%macro vip_tour_card_old(tour, tour_id)%}
+    <div class="card m-2 tour-card" style="width: 45%;">
+    {% if not tour %}
+        <div class="p-3">{{tour_id}} price is not available</div>
+    {%else%}
+    <img class="card-img-top" src="{{tour.get('tour_image')}}" alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title tour-item" tour-id="{{tour.get('tour_id')}}">{{tour.get('tour_name')}}</h5>
+    <p class="card-text">{{tour.get('tour_description') or ''}}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item tour-pickup" tour-pickup="{{tour['pickup']}}">Pickup: {{tour['pickup']}}</li>
+    {# <li class="list-group-item">Tour Date: {{tour['tour_date']}}</li> #}
+    <li class="list-group-item tour-price" tour-price-company="{{tour['tour_price_company']}}" tour-price="{{tour['tour_price']}}">Price: {{tour['tour_price']}}</li>
+            <li class="list-group-item">Total Pax: {{tour['paxes']['adults'] | int + tour['paxes']['children'] | int}} <small>(Adults: {{tour['paxes']['adults']}}, Children: {{tour['paxes']['children']}})</small></li>
+
+  </ul>
+  {%endif%}
+</div>
+{%endmacro%}
+
+{%macro package_tour_card(tourPackages)%}
+{% if tourPackages|length > 0 %}
+{% set  total   = [0] %}
+{% set  total_company   = [0] %}
+{% set tour_prices = {} %}
+{% set tour_prices_company = {} %}
+{% for tour in tourPackages%}
+    {% set _ = total.append(total.pop() + tour['package_price']) %}
+    {% set _ = total_company.append(total_company.pop() + tour['package_price_company']) %}
+    {% for _tr in tour['tours']%}
+        {% if not tour_prices.get(_tr['tour_id']) %}
+            {% set _ = tour_prices.update({_tr['tour_id']:  0}) %}
+            {% set _ = tour_prices_company.update({_tr['tour_id']:  0}) %}
+        {% endif %}
+        {% set  _ = tour_prices.update({_tr['tour_id']:  tour_prices[_tr['tour_id']] + _tr['tour_price']}) %}
+        {# {% set  _ = tour_prices_company.update({_tr['tour_id']:  tour_prices_company[_tr['tour_id']] + _tr['tour_price_company']}) %} #}
+    {% endfor %}
+{% endfor %}
+{% set  totalPrice   = total[0] %}
+{% set  totalPriceCompany   = total_company[0] %}
+ {% set tourPackage = tourPackages[0] %}
+    {% if not totalPrice or totalPrice <= 0 %}
+
+    {% else %}
+    <div class="border-card m-2 tour-card" style="width: 100%;">
+        <div class=" d-none">
+            <div class="card-body">
+                <h5 class="card-title">Tour Package</h5>
+            </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item tour-pickup" tour-pickup="{{tourPackage['pickup']}}">Pickup: {{tourPackage['pickup']}}</li>
+                    {% for tour in tourPackage['tours'] %}
+                        <li class="list-group-item tour-item" tour-id="{{tour.get('tour_id')}}" tour-indv-price="{{tour_prices.get(tour.get('tour_id'))}}">{{tour['tour_name']}}</li>
+                    {% endfor %}
+                    <li class="list-group-item tour-price" tour-price-company="{{totalPriceCompany}}" tour-price="{{totalPrice}}">Total Price: {{totalPrice}}</li>
+                    <li class="list-group-item">Total Pax: {{tourPackage['paxes']['adults'] | int + tourPackage['paxes']['children'] | int}} <small>(Adults: {{tourPackage['paxes']['adults']}}, Children: {{tourPackage['paxes']['children']}})</small></li>
+                </ul>
+        </div>
+        {% set uuid = create_uuid() %}
+        <div class="d-flex justify-content-between">
+            <a class="btn-link" onclick="expandPackageTourClicked(this)" href="#{{uuid}}" 
+            role="button" aria-expanded="false" aria-controls="{{uuid}}"
+            package-type="{{tourPackage['package_type']}}"
+            >
+            <span class="multiple-tours-names">
+            {% for tour in tourPackage['tours'] %}
+                {% if loop.index > 1 %}, {%endif %}<span class="tour-id-container" tour-id="{{tour.get('tour_id')}}">{{tour['tour_name']}}</span>
+            {% endfor %}    
+            </span>        
+            </a>
+            <div class="tour-details d-flex" style="width: 170px;">
+            <div class="mr-2"><small> Adults: {{tourPackage['paxes']['adults']}}, Children: {{tourPackage['paxes']['children']}}</small></div>
+            <div class="tour-price"><strong>{{totalPrice}} USD</strong></div>
+            </div>
+        </div>
+        <div class="collapse" id="{{uuid}}">
+            <div class="card card-body card-body-details">
+                Loading...
+            </div>
+        </div>
+    </div>
+  {%endif%}
+{% endif %}
+{%endmacro%}
+
+
+{%macro package_tour_card_old(tourPackages)%}
+{% if tourPackages|length > 0 %}
+{% set  total   = [0] %}
+{% set  total_company   = [0] %}
+{% set tour_prices = {} %}
+{% set tour_prices_company = {} %}
+{% for tour in tourPackages%}
+    {% set _ = total.append(total.pop() + tour['package_price']) %}
+    {% set _ = total_company.append(total_company.pop() + tour['package_price_company']) %}
+    {% for _tr in tour['tours']%}
+        {% if not tour_prices.get(_tr['tour_id']) %}
+            {% set _ = tour_prices.update({_tr['tour_id']:  0}) %}
+            {% set _ = tour_prices_company.update({_tr['tour_id']:  0}) %}
+        {% endif %}
+        {% set  _ = tour_prices.update({_tr['tour_id']:  tour_prices[_tr['tour_id']] + _tr['tour_price']}) %}
+        {# {% set  _ = tour_prices_company.update({_tr['tour_id']:  tour_prices_company[_tr['tour_id']] + _tr['tour_price_company']}) %} #}
+    {% endfor %}
+{% endfor %}
+{% set  totalPrice   = total[0] %}
+{% set  totalPriceCompany   = total_company[0] %}
+ {% set tourPackage = tourPackages[0] %}
+    {% if not totalPrice or totalPrice <= 0 %}
+
+    {% else %}
+    <div class="card m-2 tour-card" style="width: 45%;">
+    <img class="card-img-top" src="{{tourPackage.get('tour_image')}}" alt="Card image cap">
+
+    <div class="card-body">
+        <h5 class="card-title">Tour Package</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item tour-pickup" tour-pickup="{{tourPackage['pickup']}}">Pickup: {{tourPackage['pickup']}}</li>
+        {% for tour in tourPackage['tours'] %}
+            <li class="list-group-item tour-item" tour-id="{{tour.get('tour_id')}}" tour-indv-price="{{tour_prices.get(tour.get('tour_id'))}}">{{tour['tour_name']}}</li>
+        {% endfor %}
+        <li class="list-group-item tour-price" tour-price-company="{{totalPriceCompany}}" tour-price="{{totalPrice}}">Total Price: {{totalPrice}}</li>
+        <li class="list-group-item">Total Pax: {{tourPackage['paxes']['adults'] | int + tourPackage['paxes']['children'] | int}} <small>(Adults: {{tourPackage['paxes']['adults']}}, Children: {{tourPackage['paxes']['children']}})</small></li>
+    </ul>
+    </div>
+  {%endif%}
+{% endif %}
+{%endmacro%}
+
+{% macro render_transfer_search_header(search) %}
+<div class="col-12">
+        <div class="card p-3 mt-3 card-primary-color" >
+        <div class="d-flex justify-content-between">
+            <div class="transfer-search-label">{{search}}</div>
+            <div class="transfer-search-buttons">
+                {# <button class="btn btn-sm" search-results="{{search}}"
+                 onclick="editTransferSearchResults(this)">Edit <i class="fa fa-pencil"></i></button> #}
+            </div>
+        </div>
+
+        </div>
+</div>
+{% endmacro %}
+
+{% macro render_tour_search_header(search) %}
+<div class="col-12">
+        <div class="card p-3 mt-3 card-primary-color" >
+        <div class="d-flex justify-content-between">
+            <div class="transfer-search-label">{{search}}</div>
+            <div class="transfer-search-buttons">
+                {# <button class="btn btn-sm" search-results="{{search}}"
+                 onclick="editTransferSearchResults(this)">Edit <i class="fa fa-pencil"></i></button> #}
+            </div>
+        </div>
+
+        </div>
+</div>
+{% endmacro %}

@@ -1,0 +1,507 @@
+{% extends "templates/website_base.html" %}
+
+{% block page_content %}
+{% if invoice_details.docstatus == 0%}
+{% set editable = true %}
+{% else %}
+{% set editable = false %}
+{% endif%}
+<div class="row" style="margin-top: 75px;">
+    <div class="col-lg-9">
+        {# <div class="tm-search-form tm-section-pad-2 card p-3">
+            <div class="row mb-3">
+                <div class="col">Contact Info</div>
+            </div>
+            <div class="form-row tm-search-form-row">
+                <div class="form-group tm-form-element tm-form-element-2">
+                    <input class="form-control" placeholder="Customer Name" name="customer-name"
+                        value="{{invoice_details.get('customer_name') or ''}}" />
+                    <i class="fa fa-2x fa-user tm-form-element-icon"></i>
+                </div>
+                <div class="form-group tm-form-element tm-form-element-2">
+                    <input class="form-control" placeholder="Email" name="email"
+                        value="{{invoice_details.get('customer_email') or ''}}" />
+                    <i class="fa fa-2x fa-envelope tm-form-element-icon"></i>
+                </div>
+
+                <div class="form-group tm-form-element tm-form-element-2">
+                    <input class="form-control" placeholder="Phone Number" name="phone-number"
+                        value="{{invoice_details.get('customer_mobile_no') or ''}}" />
+                    <i class="fa fa-2x fa-phone tm-form-element-icon"></i>
+                </div>
+            </div>
+        </div> #}
+        {% for hotel_rsv in invoice_details.get('rooms') %}
+        {% set hotelSearch = invoice_details['rooms'][hotel_rsv] %}
+        {% for hotelName in hotelSearch %}
+        {% set hotel = hotelSearch[hotelName] %}
+        <div class="reservation_details hotel-reservation_details mt-4 card card-details"
+            total-nights="{{get_hotel_total_nights(hotel['booking_details']['check_in'], hotel['booking_details']['check_out'])}}">
+            <div class="card-header card-primary-color">
+                <div class="row">
+                    <div class="col-sm-9"><strong>{{hotel['details'].get('hotel_name')}}</strong></div>
+                    <div class="col-sm-3"><label>Different Names</label> <input type="checkbox"
+                            onchange="different_names_clicked(this)" /></div>
+                </div>
+            </div>
+            {% set adultCnt = [0] %}
+            {% set childCnt = [0] %}
+            {% for rsrv_room in hotel['rooms']%}
+            <div class="p-3 tm-search-form tm-section-pad-2 mt-3 hotel_room_container"
+                row-id="{{rsrv_room.get('row_id')}}">
+                <div class="room-name mb-3">
+                    {{rsrv_room.get('room_name')}}
+                </div>
+                {% for adult in rsrv_room.get('adult_paxes') %}
+                {% if adultCnt.append(adultCnt.pop() + 1) %}{% endif %}
+                <div class="form-row tm-search-form-row pax-container adult-pax" adult-pax="{{adultCnt[0]}}"
+                    row-id="{{adult.row_id}}">
+                    <div class="form-group tm-form-element tm-form-element-2">
+                        <select class="form-control  tm-select " name="pax-salut" {% if not editable %} disabled {%
+                            endif %} onchange="adultSalutChanged(this)">
+                            <option value="">Salutation</option>
+                            <option value="Mr" {%if adult.guest_salutation=='Mr' %} selected{%endif %}>Mr</option>
+                            <option value="Ms" {%if adult.guest_salutation=='Ms' %} selected{%endif %}>Ms</option>
+                        </select>
+                        <i class="fa fa-2x fa-check tm-form-element-icon"></i>
+                    </div>
+
+                    <div class="form-group tm-form-element tm-form-element-50">
+                        <input class="form-control" placeholder="Guest Name" {% if not editable %} disabled {% endif %}
+                            name="pax-name" onchange="adultPaxChanged(this)" value="{{adult.guest_name or ''}}" />
+                        <i class="fa fa-2x fa-user tm-form-element-icon"></i>
+                    </div>
+                    <div class="form-group tm-form-element tm-form-element-2 phone-container d-none">
+                        <input class="form-control" placeholder="Phone Number" {% if not editable %} disabled {% endif
+                            %} name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
+                        <i class="fa fa-2x fa-phone tm-form-element-icon"></i>
+                    </div>
+                </div>
+                {% endfor %}
+                {% for child in rsrv_room.get('child_paxes') %}
+                {% if childCnt.append(childCnt.pop() + 1) %}{% endif %}
+                <div class="form-row tm-search-form-row pax-container child-pax" child-pax="{{childCnt[0]}}"
+                    row-id="{{child.row_id}}">
+                    <div class="form-group tm-form-element tm-form-element-2">
+                        <label for="">Child Age {{child.guest_age}}</label>
+                    </div>
+
+                    <div class="form-group tm-form-element tm-form-element-50">
+                        <input class="form-control" placeholder="Child Name" name="pax-name" {% if not editable %}
+                            disabled {% endif %} onchange="childPaxChanged(this)" value="{{child.guest_name or ''}}" />
+                        <i class="fa fa-x fa-user tm-form-element-icon"></i>
+                    </div>
+                </div>
+                {% endfor %}
+                {% set room_beds = get_room_beds(rsrv_room.get('room_acmnd_type_code')) %}
+                {% if invoice_details.docstatus == 0 %}
+                {% if room_beds | length > 0 %}
+                <div class="list-group room-bed-list">
+                    {% for bed_type in room_beds %}
+                    {{room_bed_item(hotel_rsv, rsrv_room.get('room_name'), bed_type['type_code'], bed_type['bed_type'],
+                    0)}}
+                    {% endfor %}
+                </div>
+                {% endif%}
+                {% endif %}
+                {% if invoice_details.docstatus == 1 %}
+                {% else %}
+                {% set boards = get_room_boards(hotelName) %}
+                {% endif %}
+                {% if boards | length > 0%}
+                {% if boards | length > 1%}
+                <div class="">
+                    Select Room Board:
+                    <div class="list-group room-board-list">
+                        {% for board in boards %}
+                        {{room_board_item(hotel_rsv, rsrv_room.get('room_name'),board.get('boarding_type'),
+                        board.get('extra_price'), invoice_details.docstatus)}}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="list-group room-board-list">
+                    {{room_board_item(hotel_rsv, rsrv_room.get('room_name'),boards[0].get('boarding_type'),
+                    boards[0].get('extra_price'), 1)}}
+                </div>
+                {% endif%}
+                {% endif %}
+                {% if invoice_details.docstatus == 1 %}
+                {% set extras = rsrv_room['extras'] %}
+                {% else %}
+                {% set extras = get_room_extras(hotelName) %}
+                {% endif %}
+                {% if extras | length > 0%}
+                <div class="">
+                    Extras:
+                    <div class="list-group room-extra-list">
+                        {% for extra in extras %}
+                        {{room_extra_item(rsrv_room.get('room_name'),extra.get('service'), extra.get('extra_price'),
+                        invoice_details.docstatus)}}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {%endfor%}
+        </div>
+        {% endfor%}
+        {% endfor %}
+        {% for transfer_search in invoice_details.get('transfers')%}
+        {% for transfer_name in invoice_details['transfers'][transfer_search] %}
+        {% set transfer = invoice_details['transfers'][transfer_search][transfer_name] %}
+        {{render_transfer(transfer, editable)}}
+        {% endfor %}
+        {% endfor %}
+        {% for tour_rsv in invoice_details.get('tours') %}
+        {% set tourSearch = invoice_details['tours'][tour_rsv] %}
+
+        <div class="reservation_details mt-4 card tour-search-container card-details" search-name="{{tour_rsv}}">
+            {{render_tour_details(tourSearch)}}
+            <div class="card-body">
+                <div class="row">
+                    {% for tour in tourSearch['tours'] %}
+                    {{render_tour_card(tour)}}
+                    {% endfor %}
+                </div>
+
+                {{render_tour_pax(tourSearch['adult_paxes'], tourSearch['child_paxes'], editable)}}
+            </div>
+        </div>
+        {% endfor %}
+        {% if invoice_details.docstatus == 0%}
+        <div class="mt-4 ">
+            <button onclick="confirmReservationButtonClicked(this)" style="font-size: .8em;"
+                class="btn btn-primary tm-btn-search p-2">Continue</button>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-lg-3">
+        {% if invoice_details.status == 'Cancelled'%}
+        <div class="badge badge-danger">Cancelled</div>
+        {% else%}
+        {% if invoice_details.docstatus == 1 and invoice_details.status=='Submitted'%}
+        <a target="_blank" class="btn btn-primary w-100"
+            href="/api/method/tourism_portal.api.pdf.print_voucher?voucher_no={{invoice_details.voucher_no}}">Print
+            Voucher</a>
+        <a target="_blank" class="btn btn-primary w-100 mt-2"
+            href="/api/method/tourism_portal.api.pdf.print_invoice?voucher_no={{invoice_details.voucher_no}}">Print
+            Invoice</a>
+        <a class="btn btn-info mt-2 w-100" href="/reserve/edit?invoice={{invoice_details.invoice_id}}">Edit Invoice</a>
+        <a class="btn btn-info mt-2 w-100" href="/invoice-edit-request/new?sales_invoice={{invoice_details.invoice_id}}">Edit Request</a>
+        <button class="btn btn-secondary mt-2 w-100" invoice-id="{{invoice_details.invoice_id}}"
+            onclick="cancelReservation(this)">Cancel Reservation</button>
+        {% else %}
+        {{session_expires_card(invoice_details.session_expires) }}
+        {% endif %}
+        {% endif %}
+        {% for hotel_search in invoice_details.get('rooms')%}
+        {%for hotel_rsv in invoice_details['rooms'][hotel_search] %}
+        {{ hotel_details_card(invoice_details['rooms'][hotel_search][hotel_rsv]['details'],
+        invoice_details['rooms'][hotel_search][hotel_rsv]['booking_details'],
+        invoice_details['rooms'][hotel_search][hotel_rsv]['rooms']) }}
+        {% endfor %}
+        {% endfor %}
+        {{total_card(invoice_details.hotel_fees,invoice_details.transfer_fees,invoice_details.tour_fees,invoice_details.grand_total)}}
+    </div>
+</div>
+{% endblock %}
+
+{% macro hotel_details_card(hotel_details, booking_details, rooms) %}
+<div class="card mt-3" style="width: 18rem;">
+    <img src="{{hotel_details.get('hotel_image')}}" class="card-img-top" alt="...">
+    <div class="card-body">
+        <h5 class="card-title">{{hotel_details.get('hotel_name')}}</h5>
+        <p class="card-text">
+        <div>Check-in: {{booking_details.get('check_in')}}</div>
+        <div>Check-out: {{booking_details.get('check_out')}}</div>
+        </p>
+    </div>
+    <ul class="list-group list-group-flush">
+        {%for room in rooms%}
+        <li class="list-group-item">{{room.get('room_name')}}: {{room.room_type}} {{room.accommodation_type}}</li>
+        {% endfor %}
+    </ul>
+    <div class="card-body">
+        Cancellation Policy: {{hotel_details.get('hotel_cancellation_policy')}}
+        <br> {{hotel_details.get('policy_description') or ''}}
+    </div>
+</div>
+{% endmacro %}
+
+{% macro total_card(hotel_fees,transfer_fees, tour_fees, total_fees) %}
+<div class="card text-dark bg-light mb-3 mt-3" style="max-width: 18rem; width: 100%;">
+    <div class="card-header">Fees</div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between">
+                <div><strong>Hotel fees</strong></div>
+                <div><strong>USD <span id="hotel_fees"
+                            total="{{hotel_fees}}">{{frappe.utils.fmt_money(hotel_fees)}}</span></strong></div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between">
+                <div><strong>Transfer fees</strong></div>
+                <div><strong>USD <span id="transfer_fees"
+                            total="{{transfer_fees}}">{{frappe.utils.fmt_money(transfer_fees)}}</span></strong></div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between">
+                <div><strong>Tour fees</strong></div>
+                <div><strong>USD <span id="tour_fees"
+                            total="{{tour_fees}}">{{frappe.utils.fmt_money(tour_fees)}}</span></strong></div>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between">
+                <div><strong>Total fees</strong></div>
+                <div><strong>USD <span id="total_fees"
+                            total="{{total_fees}}">{{frappe.utils.fmt_money(total_fees)}}</span></strong></div>
+            </div>
+        </li>
+    </ul>
+</div>
+{% endmacro %}
+
+{% macro session_expires_card(datetime) %}
+<div class="card text-white bg-primary mt-3">
+    <div class="card-body">
+        <strong>Session Expires in <span id="session-timer" datetime="{{datetime}}">00:00</span> <i
+                class="fa fa-clock-o" aria-hidden="true"></i></strong>
+    </div>
+
+</div>
+{% endmacro %}
+
+{%macro room_extra_item(room_name, extra_name, extra_price, disable)%}
+<label class="list-group-item">
+    <input class="form-check-input me-1 extra-price-input" {% if disable==1 %} checked disabled {% endif %}
+        onchange="roomExtraChanged(this)" type="checkbox" room-name="{{room_name}}" extra-price="{{extra_price}}"
+        value="{{extra_name}}">
+    {{extra_name}} +{{extra_price}}$
+</label>
+{% endmacro %}
+
+{%macro room_board_item(search, room_name, board_name, extra_price, selected)%}
+<label class="list-group-item">
+    <input class="form-check-input me-1 board-input" {% if selected==1 %} checked disabled {% endif %}
+        onchange="roomBoardChanged(this)" type="radio" name="{{search}}-{{room_name}}-board" room-name="{{room_name}}"
+        extra-price="{{extra_price}}" value="{{board_name}}">
+    {{board_name}} +{{extra_price}}$
+</label>
+{% endmacro %}
+
+{%macro room_bed_item(search, room_name, type_code,bed_type, selected)%}
+<label class="list-group-item">
+    <input class="form-check-input me-1 bed-input" {% if selected==1 %} checked disabled {% endif %} type="radio"
+        name="{{search}}-{{room_name}}-bed" room-name="{{room_name}}" value="{{type_code}}">
+    {{bed_type}}
+</label>
+{% endmacro %}
+{% macro render_transfer(transfer_search, editable) %}
+<div class="mt-3 card transfer-search-container card-details" search-name="{{transfer_search['transfer_search']}}"
+    transfer-name="{{transfer_search['transfer_name']}}">
+    {{render_transfer_details(transfer_search)}}
+    <div class="card-body">
+    {{render_transfer_pax(transfer_search['adult_paxes'], transfer_search['child_paxes'], editable)}}
+    {{render_transfer_flight_no(transfer_search['flight_no'], editable)}}
+    </div>
+</div>
+{% endmacro %}
+{% macro render_transfer_flight_no(flight_no, editable) %}
+<div class="tm-search-form row p-2">
+    <div class="form-row tm-search-form-row ">
+        <div class="form-group tm-form-element tm-form-element-2">
+            <label for="">Flight No:</label>
+        </div>
+
+        <div class="form-group tm-form-element tm-form-element-50">
+            <input class="form-control" placeholder="Flight No" name="flight-no" {% if not editable %} disabled {% endif
+                %} value="{{flight_no or ''}}" />
+            <i class="fa fa-2x fa-plane tm-form-element-icon"></i>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+{% macro render_transfer_details(transfer_search) %}
+<div class="card-header card-primary-color">
+    <div class="row">
+        <div class="col-sm-9 pb-2 "><strong>{{transfer_search['transfer_search']}}</strong></div>
+        <div class="col-sm-3">
+            <label>Different Names</label> <input type="checkbox" onchange="different_names_clicked(this)" />
+        </div>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4 pb-2 search-param">
+        <div class="search-label">Pick Up</div>
+        <div class="search-value">{{transfer_search['pickup_name']}}</div>
+    </div>
+    <div class="col-lg-4 pb-2 search-param">
+        <div class="search-label">Drop Off</div>
+        <div class="search-value">
+            {{transfer_search['dropoff_name']}}
+        </div>
+    </div>
+    <div class="col-lg-4 pb-2 search-param">
+        <div class="search-label">Transfer Date</div>
+        <div class="search-value">
+            {{transfer_search['transfer_date']}}
+        </div>
+    </div>
+    <div class="col-lg-4 pb-2 search-param">
+        <div class="search-label">Adults</div>
+        <div class="search-value">
+            {{transfer_search['pax_info']['adults']}}
+        </div>
+    </div>
+    <div class="col-lg-4 pb-2 search-param">
+        <div class="search-label">Children</div>
+        <div class="search-value">
+            {{transfer_search['pax_info']['children']}}</div>
+    </div>
+
+</div>
+{% endmacro %}
+
+{% macro render_transfer_pax(adult_paxes, child_paxes, editable) %}
+<div class="tm-search-form row p-2">
+    <div class="col-lg-4"><strong>Guests</strong></div>
+    {% for adult in adult_paxes %}
+    <div class="form-row tm-search-form-row pax-container adult-pax" adult-pax="{{loop.index}}"
+        row-id="{{adult.row_id}}">
+        <div class="form-group tm-form-element tm-form-element-2">
+            <select class="form-control  tm-select " {% if not editable %} disabled {% endif %} name="pax-salut"
+                onchange="adultSalutChanged(this)">
+                <option value="">Salutation</option>
+                <option value="Mr" {%if adult.guest_salutation=='Mr' %} selected{%endif %}>Mr</option>
+                <option value="Ms" {%if adult.guest_salutation=='Ms' %} selected{%endif %}>Ms</option>
+            </select>
+            <i class="fa fa-2x fa-check tm-form-element-icon"></i>
+        </div>
+
+        <div class="form-group tm-form-element tm-form-element-50">
+            <input class="form-control" placeholder="Guest Name" {% if not editable %} disabled {% endif %}
+                name="pax-name" onchange="adultPaxChanged(this)" value="{{adult.guest_name or ''}}" />
+            <i class="fa fa-2x fa-user tm-form-element-icon"></i>
+        </div>
+        <div class="form-group tm-form-element tm-form-element-2 phone-container d-none">
+            <input class="form-control" placeholder="Phone Number" {% if not editable %} disabled {% endif %}
+                name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
+            <i class="fa fa-2x fa-phone tm-form-element-icon"></i>
+        </div>
+    </div>
+    {% endfor %}
+    {% for child in child_paxes %}
+    <div class="form-row tm-search-form-row pax-container child-pax" child-pax="{{loop.index}}"
+        row-id="{{child.row_id}}">
+        <div class="form-group tm-form-element tm-form-element-2">
+            <label for="">Child Age {{child.guest_age}}</label>
+        </div>
+
+        <div class="form-group tm-form-element tm-form-element-50">
+            <input class="form-control" placeholder="Child Name" {% if not editable %} disabled {% endif %}
+                name="pax-name" onchange="childPaxChanged(this)" value="{{child.guest_name or ''}}" />
+            <i class="fa fa-x fa-user tm-form-element-icon"></i>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endmacro %}
+
+{% macro render_tour_details(tourSearch) %}
+<div class="card-header card-primary-color"><strong>{{tourSearch['search_name']}}</strong></div>
+<div class="p-2">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-sm-9 pb-2 "></div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 search-param">
+                    <div class="search-label">Tour Date</div>
+                    <div class="search-value">
+                        {{tourSearch['check_in']}} - {{tourSearch['check_out']}}</div>
+                </div>
+                <div class="col-lg-6 search-param">
+                    <div class="search-label">Pick Up</div>
+                    <div class="search-value">
+                        {{tourSearch['pickup_name']}}</div>
+                </div>
+                <div class="col-lg-6 search-param">
+                    <div class="search-label">Adults</div>
+                    <div class="search-value">
+                        {{tourSearch['adults']}}</div>
+                </div>
+                <div class="col-lg-6 search-param">
+                    <div class="search-label">Children</div>
+                    <div class="search-value">
+                        {{tourSearch['children']}}</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endmacro %}
+
+{% macro render_tour_card(tour) %}
+<div class="card text-dark bg-light m-2" style="min-width: 200px; width: 28%;">
+    <div class="card-header"><strong>{{tour['tour_name']}}</strong></div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between">
+                <div><strong>Tour Date</strong></div>
+                <div><strong>{{tour['tour_date'] or ''}}</strong></div>
+            </div>
+        </li>
+    </ul>
+</div>
+{% endmacro %}
+
+{% macro render_tour_pax(adult_paxes, child_paxes, editable)%}
+<div class="tm-search-form row p-2">
+    <div class="col-lg-4"><strong>Guests</strong></div>
+    {% for adult in adult_paxes %}
+    <div class="form-row tm-search-form-row pax-container adult-pax" adult-pax="{{loop.index}}"
+        row-id="{{adult.row_id}}">
+        <div class="form-group tm-form-element tm-form-element-2">
+            <select class="form-control  tm-select " {% if not editable %} disabled {% endif %} name="pax-salut"
+                onchange="adultSalutChanged(this)">
+                <option value="">Salutation</option>
+                <option value="Mr" {%if adult.guest_salutation=='Mr' %} selected{%endif %}>Mr</option>
+                <option value="Ms" {%if adult.guest_salutation=='Ms' %} selected{%endif %}>Ms</option>
+            </select>
+            <i class="fa fa-2x fa-check tm-form-element-icon"></i>
+        </div>
+        <div class="form-group tm-form-element tm-form-element-50">
+            <input class="form-control" placeholder="Guest Name" {% if not editable %} disabled {% endif %}
+                onchange="adultPaxChanged(this)" name="pax-name" value="{{adult.guest_name or ''}}" />
+            <i class="fa fa-2x fa-user tm-form-element-icon"></i>
+        </div>
+        <div class="form-group tm-form-element tm-form-element-2 phone-container d-none">
+            <input class="form-control" placeholder="Phone Number" {% if not editable %} disabled {% endif %}
+                name="phone-number" value="{{adult.get('mobile_no') or ''}}" />
+            <i class="fa fa-2x fa-phone tm-form-element-icon"></i>
+        </div>
+    </div>
+    {% endfor %}
+    {% for child in child_paxes %}
+    <div class="form-row tm-search-form-row pax-container child-pax" child-pax="{{loop.index}}"
+        row-id="{{child.row_id}}">
+        <div class="form-group tm-form-element tm-form-element-2">
+            <label for="">Child Age {{child.guest_age}}</label>
+        </div>
+
+        <div class="form-group tm-form-element tm-form-element-50">
+            <input class="form-control" placeholder="Child Name" {% if not editable %} disabled {% endif %}
+                onchange="childPaxChanged(this)" name="pax-name" value="{{child.guest_name or ''}}" />
+            <i class="fa fa-x fa-user tm-form-element-icon"></i>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endmacro %}
