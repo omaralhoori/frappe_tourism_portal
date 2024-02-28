@@ -463,6 +463,7 @@ def ask_for_availability():
 	ask_doc.insert(ignore_permissions=True)
 	ask_doc.update_buying_price(args.get('contracts'), args.get('prices'))
 	ask_doc.save(ignore_permissions=True)
+	frappe.db.commit()
 	return {
 		"success_key": 1,
 		"msg": _("The request has been submitted successfully")
