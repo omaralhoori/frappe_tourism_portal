@@ -26,7 +26,7 @@ from tourism_portal.utils import calculate_extra_price, get_company_class, get_l
 """
 
 @frappe.whitelist(allow_guest=True)
-def get_search_results(search_id):
+def get_search_details(search_id):
 	search_doc = frappe.get_doc("Search Result",
 					  {"name": search_id, "user": frappe.session.user},
 					    )
