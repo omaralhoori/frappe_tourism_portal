@@ -1190,6 +1190,8 @@ function confirmButtonClicked(e){
     var data = encodeParamsJson(selected_rooms, selected_transfers, selected_tours)
     var url = "tourism_portal.api.reserve.create_reservation"
     toggleLoadingIndicator(true);
+    console.log(data)
+    return
     frappe.call({
         "method": url,
         args: data,
