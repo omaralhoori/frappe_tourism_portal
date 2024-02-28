@@ -109,7 +109,6 @@ def get_regular_flights(location, route):
 
 @frappe.whitelist()
 def create_search(hotelParams, transferParams, tourParams):
-	print(transferParams)
 	search_doc = frappe.get_doc({
 		"doctype": "Search Result",
 		"hotel_params": hotelParams,
@@ -118,6 +117,7 @@ def create_search(hotelParams, transferParams, tourParams):
 		"user": frappe.session.user
 	})
 	search_doc.insert(ignore_permissions=True)
+	frappe.db.commit()
 	return {
 		"is_success": True,
 		"search_name": search_doc.name
