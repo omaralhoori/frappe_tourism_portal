@@ -37,8 +37,8 @@
 @font-face
 {
 	font-family: 'Beyond';
-	src: url('../fonts/beyond_the_mountains.otf')  format('truetype'),
-		 url('../fonts/beyond_the_mountains.ttf')  format('opentype');
+	src: url('/assets/tourism_portal/theme2/fonts/beyond_the_mountains.otf')  format('truetype'),
+		 url('/assets/tourism_portal/theme2/fonts/beyond_the_mountains.ttf')  format('opentype');
 }
 
 /*********************************

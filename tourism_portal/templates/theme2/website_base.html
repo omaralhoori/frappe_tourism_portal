@@ -37,9 +37,7 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <style>
-        {
-            % include 'templates/includes/theme2/base_style.css' %
-        }
+        {% include 'templates/includes/theme2/base_style.css' %}
     </style>
     {%- block style %}
     {% if colocated_css -%}
@@ -67,6 +65,7 @@
 <body frappe-session-status="{{ 'logged-in' if frappe.session.user != 'Guest' else 'logged-out'}}"
     data-path="{{ path | e }}" {%- if template and template.endswith('.md') %} frappe-content-type="markdown" {%- endif
     %}>
+    <div class="loader d-none" id="loader"></div>
     <div class="super_container">
         <!-- Header -->
 
@@ -128,9 +127,10 @@
     <script src="/assets/tourism_portal/theme2/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
     <script src="/assets/tourism_portal/theme2/plugins/easing/easing.js"></script>
     <script src="/assets/tourism_portal/theme2/js/custom.js"></script>
-
+    <script src="/assets/tourism_portal/theme2/js/ZlataLoader.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+    <script src="/assets/tourism_portal/theme2/js/offers_custom.js"></script>
 
     {#
     <script src="/assets/tourism_portal/theme2/js/main.js"></script> #}

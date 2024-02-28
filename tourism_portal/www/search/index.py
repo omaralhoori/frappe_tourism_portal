@@ -1,7 +1,7 @@
 import frappe
 from frappe import _
 from tourism_portal.api.company import get_company_details
-from tourism_portal.api.search import get_available_hotel_rooms
+from tourism_portal.api.search import get_available_hotel_rooms, get_hotel_total_days, search_for_tours, search_for_transfers
 from tourism_portal.tourism_portal.doctype.tour_price.tour_price import apply_tour_discount, get_available_tours, get_available_tours_and_prices
 from tourism_portal.tourism_portal.doctype.transfer_price.transfer_price import get_available_transfers
 from tourism_portal.utils import calculate_extra_price, get_portal_setting
@@ -45,36 +45,10 @@ def get_context(context):
 	context.max_children_per_tour = get_portal_setting("max_children_per_tour")
 	context.max_child_age = get_portal_setting("max_child_age")
 	return context
-def get_hotel_total_days(hotelParams):
-	total_days = 0
-	if not hotelParams: return None
-	for search in hotelParams:
-		hotel = hotelParams[search]
-		date_format = "%Y-%m-%d"
-		delta = datetime.strptime(hotel.get('checkout'), date_format) - datetime.strptime(hotel.get('checkin'), date_format)
-		total_days += delta.days
-	return total_days
-def search_for_transfers(transferParams):
-	transfers = {}
-	for transferSearch in transferParams:
-		transfers[transferSearch] = {}
-		for transfer in transferParams[transferSearch]:
-			params = transferParams[transferSearch][transfer]
-			available_transfers = get_available_transfers(params)
-			transfers[transferSearch][transfer] = available_transfers
-	return transfers
 
-def search_for_tours(tourParams, total_days= None):
-	tours = {}
-	for tourSearch in tourParams:
-		tours[tourSearch] = {}
-		params = tourParams[tourSearch]
-		
-		available_tours = get_available_tours_and_prices(params)
-		tours[tourSearch]= available_tours#[params['tours'][tour]] = available_tours
-		# if params['tour-type'] != 'vip':
-		# 	tours[tourSearch] = apply_tour_discount(tours[tourSearch],total_days)
-	return tours
+
+
+
 """
 	search_params: [
 		{

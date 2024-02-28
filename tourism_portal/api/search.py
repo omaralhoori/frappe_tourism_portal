@@ -25,6 +25,67 @@ from tourism_portal.utils import calculate_extra_price, get_company_class, get_l
 	]
 """
 
+@frappe.whitelist(allow_guest=True)
+def get_search_results(search_id):
+	search_doc = frappe.get_doc("Search Result",
+					  {"name": search_id, "user": frappe.session.user},
+					    )
+	hotelParams = json.loads(search_doc.hotel_params)#params.get('hotelParams')
+	transferParams = json.loads(search_doc.transfer_params)#params.get('transferParams')
+	tourParams = json.loads(search_doc.tour_params)#params.get('toursparams')
+	transfers = search_for_transfers(transferParams)
+	total_days = get_hotel_total_days(hotelParams)
+	tours = search_for_tours(tourParams, total_days)
+	# context.rooms = get_available_hotel_rooms(hotelParams)
+	# context.rooms = json.dumps(context.rooms, default=str)
+	rooms = get_available_hotel_rooms(hotelParams)
+	# search_doc.room_results = context.rooms
+	# search_doc.save(ignore_permissions=True)
+	hotel_search_params = json.dumps(hotelParams, default=str)
+	transfer_search_params = json.dumps(transferParams, default=str)
+	tour_search_params = json.dumps(tourParams, default=str)
+	frappe.db.set_value("Search Result", search_id, "room_results", json.dumps(rooms, default=str))
+	frappe.db.commit()
+
+	return {
+		"transfers": transfers,
+		"tours": tours,
+		"rooms": rooms,
+		"hotel_search_params": hotel_search_params,
+		"transfer_search_params": transfer_search_params,
+		"tour_search_params": tour_search_params,
+	}
+
+def search_for_tours(tourParams, total_days= None):
+	tours = {}
+	for tourSearch in tourParams:
+		tours[tourSearch] = {}
+		params = tourParams[tourSearch]
+		
+		available_tours = get_available_tours_and_prices(params)
+		tours[tourSearch]= available_tours#[params['tours'][tour]] = available_tours
+		# if params['tour-type'] != 'vip':
+		# 	tours[tourSearch] = apply_tour_discount(tours[tourSearch],total_days)
+	return tours
+def get_hotel_total_days(hotelParams):
+	total_days = 0
+	if not hotelParams: return None
+	for search in hotelParams:
+		hotel = hotelParams[search]
+		date_format = "%Y-%m-%d"
+		delta = datetime.strptime(hotel.get('checkout'), date_format) - datetime.strptime(hotel.get('checkin'), date_format)
+		total_days += delta.days
+	return total_days
+
+def search_for_transfers(transferParams):
+	transfers = {}
+	for transferSearch in transferParams:
+		transfers[transferSearch] = {}
+		for transfer in transferParams[transferSearch]:
+			params = transferParams[transferSearch][transfer]
+			available_transfers = get_available_transfers(params)
+			transfers[transferSearch][transfer] = available_transfers
+	return transfers
 
 @frappe.whitelist()
 def get_available_hotels():

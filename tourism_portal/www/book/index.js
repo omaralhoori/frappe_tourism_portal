@@ -478,39 +478,45 @@ if (parent.find('.transfer_type ').val()  == "group") {
   $(document).on("change", ".tour_check_out , .tour_check_in , .tour_type_select, .tour_location_select", function () {
 
 var parent = $(this).parent().closest(".row");
-
 if (parent.find('.tour_check_out').val() && parent.find('.tour_check_in').val() &&
 parent.find('.tour_type_select').val() && parent.find('.tour_location_select').val()) {
-  var i = parent.find('.custom-check').data("row");
   
-  parent.find('.custom-check').html(`
-  <div class="custom-check-success">
-                            <input type="checkbox" class="checkbox" name="checkbox" id="checkbox${i}-1" />
-                            <label for="checkbox${i}-1">First Tour</label>
-                            <div class="funky-info" data-toggle="modal" data-target="#infoModal" data-tour="">
-                              <i class="fa fa-info-circle fa-x1" aria-hidden="true"></i>
-                            </div>
-                          </div>
+  var i = parent.find('.custom-check').data("row");
+  frappe.call({
+    method: "tourism_portal.api.home.get_available_tours",
+    args: {
+        "tourData": tourData
+    },
+    callback: function (r) {
+        var tourSelect = e.closest('form').querySelector('.tours-html-container');
+        var totalDays = getTotalDays(tourData.checkin, tourData.checkout);
+        tourSelect.innerHTML = '';
+        tourSelect.setAttribute('total-days', totalDays);
+        if (!r.message || Object.keys(r.message).length === 0) {
+            tourSelect.innerHTML = '<li class="list-group-item">No Tours Found</li>'
+        }
+        if (r.message) {
+          var html = '';
+        for (var tourId in r.message) {
+          var tour = r.message[tourId];
+            var tourHtml = ` <div class="custom-check-success">
+            <input type="checkbox" class="checkbox" value="${tour.tour_id}" name="checkbox" id="checkbox${i}-${tourId}" />
+            <label for="checkbox${i}-1">${tour.tour_name}</label>
+            <div class="funky-info" data-toggle="modal" data-target="#infoModal" data-tour="">
+              <i class="fa fa-info-circle fa-x1" aria-hidden="true"></i>
+            </div>
+          </div>`;
+          html += tourHtml;
+        }
+        parent.find('.custom-check').html(html);
 
-                          <div class="custom-check-success">
-                            <input type="checkbox" name="checkbox"  class="checkbox"id="checkbox${i}-2" />
-                            <label for="checkbox${i}-2">Seond Tour</label>
-                            <div class="funky-info" data-toggle="modal" data-target="#infoModal" data-tour="">
-                              <i class="fa fa-info-circle fa-x1" aria-hidden="true"></i>
-                            </div>
-                          </div>
+    }else{
+      parent.find('.custom-check').html(``);
+    }
+  }
 
-                          <div class="custom-check-success">
-                            <input type="checkbox" name="checkbox"  class="checkbox" id="checkbox${i}-3" />
-                            <label for="checkbox${i}-3">Third Tour
-
-                            </label>
-                            <div class="funky-info" data-toggle="modal" data-target="#infoModal" data-tour="">
-                              <i class="fa fa-info-circle fa-x1" aria-hidden="true"></i>
-                            </div>
-
-                          </div>
-`);
+})
+  
 }else{
   parent.find('.custom-check').html(``);
 }
@@ -1318,7 +1324,10 @@ console.log(differenceInDays)
                             <select class="form-group tm-form-element tm-form-element-2 custom-input tour_type_select"
                               name="tour[${tours}][type]">
                               <option value="" selected disabled>Select type</option>
+                              <option value="package">Package</option>
                               <option value="vip">VIP</option>
+                              <option value="group-premium">Group Premium</option>
+                              <option value="group-economic">Group Economic</option>
                             </select>
                           </div>
                         </div>
@@ -1419,7 +1428,10 @@ console.log(differenceInDays)
                             <select class="form-group tm-form-element tm-form-element-2 custom-input tour_type_select"
                               name="tour[${toursBackage}][type]">
                               <option value="" selected disabled>Select type</option>
+                              <option value="package">Package</option>
                               <option value="vip">VIP</option>
+                              <option value="group-premium">Group Premium</option>
+                              <option value="group-economic">Group Economic</option>
                             </select>
                           </div>
                         </div>
@@ -1875,3 +1887,49 @@ console.log(differenceInDays)
 
 
 });
+
+
+function get_select_location_params(select){
+  var location = $(select).val();
+  var locationType = $(select).find('option:selected').attr('data-locationtype');
+  var locationName = $(select).find('option:selected').attr('data-locationname');
+  var locationId = $(select).find('option:selected').attr('data-locationid');
+  return {
+    "location": location,
+    "locationType": locationType,
+    "locationName": locationName,
+    "locationId": locationId
+  };
+}
+
+function getTourData(form, validate) {
+  var params = {};
+  var locationInput = form.querySelector('input[name="location"]');
+  params['location-name'] = locationInput.value
+  params['location'] = locationInput.getAttribute('location-id')
+  params['location-type'] = locationInput.getAttribute('location-type')//form.querySelector('select[name="location"]').options[form.querySelector('select[name="location"]').selectedIndex].getAttribute('doc-type');
+  params['checkin'] = form.querySelector('input[name="check-in"]').value
+  params['checkout'] = form.querySelector('input[name="check-out"]').value
+  if (isDateBefore( params['checkout'], params['checkin']) ){
+      frappe.throw("Please check selected dates for " +  params['location-name'] )
+  }
+  params['paxes'] = {}
+  params['paxes']['adults'] = form.querySelector('select[name="adult"]').value
+  params['paxes']['children'] = form.querySelector('select[name="children"]').value
+  params['paxes']['child-ages'] = []
+  var ages = form.querySelectorAll('select[name="child-age"]');
+  ages.forEach(age => {
+      params['paxes']['child-ages'].push(age.value)
+  })
+  params['tour-type'] = form.querySelector('select[name="tour-type"]').value
+  params['tours'] = []
+  form.querySelectorAll('input[name="tours"]:checked').forEach(tour => {
+      params['tours'].push(tour.value)
+  })
+  if (validate){
+      validateCardTourSearchData(params)
+  }
+
+  // params['tour-name'] = form.querySelector('select[name="tour-name"]').value
+  return params;
+}
