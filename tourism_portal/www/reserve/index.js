@@ -170,6 +170,15 @@ function confirmReservationButtonClicked(e){
   var transferInfo = getTransferInfo()
   var searchParams = new URLSearchParams(window.location.search)
   var invoice = searchParams.get("invoice")
+  console.log({
+    sales_invoice: invoice,
+    rooms: roomsInfo,
+    tours: toursInfo,
+    transfers: transferInfo,
+    // customer_name: customerName,
+    // customer_email: customerEmail,
+    // customer_mobile_no: customerMobile
+  })
   frappe.call({
     method: "tourism_portal.api.reserve.complete_reservation",
     args: {

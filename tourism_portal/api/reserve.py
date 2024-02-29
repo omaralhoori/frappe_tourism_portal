@@ -372,9 +372,19 @@ def get_bookings_detials(voucher_no=''):
 @frappe.whitelist()
 def complete_reservation():
     invoice = frappe.get_doc("Sales Invoice", {"name": frappe.form_dict.sales_invoice, "customer": frappe.session.user})
-    rooms = json.loads(frappe.form_dict.rooms)
-    tours = json.loads(frappe.form_dict.tours)
-    transfers = json.loads(frappe.form_dict.transfers)
+    print(frappe.form_dict.rooms)
+    if type(frappe.form_dict.rooms) != dict:
+        rooms = json.loads(frappe.form_dict.rooms)
+    else:
+        rooms = frappe.form_dict.rooms
+    if type(frappe.form_dict.tours) != dict:
+        tours = json.loads(frappe.form_dict.tours)
+    else:
+        tours = frappe.form_dict.tours
+    if type(frappe.form_dict.transfers) != dict:
+        transfers = json.loads(frappe.form_dict.transfers)
+    else:
+        transfers = frappe.form_dict.transfers
     invoice.room_extras = []
     for roomRowId in rooms:
         extras = rooms[roomRowId].pop('extras')
@@ -431,6 +441,7 @@ def complete_reservation():
     invoice.customer_mobile_no = frappe.form_dict.customer_mobile_no
     invoice.save(ignore_permissions=True)
     invoice.submit()
+    frappe.db.commit()
     return {"success_key": 1, "message": ""}
 
 
@@ -444,6 +455,7 @@ def cancel_reservation(invoice_id):
         invoice = frappe.get_doc("Sales Invoice", {"name": invoice_id, "company": company_details.get('company')})
     invoice.cancel_invoice()
     invoice.save(ignore_permissions=True)
+    frappe.db.commit()
     return {"success_key": 1}
 
 
@@ -454,6 +466,7 @@ def add_nights_to_room(sales_invoice, row_id, check_in=None, check_out=None):
     company = frappe.db.get_value("User", frappe.session.user, "company")
     invoice = frappe.get_doc("Sales Invoice", {"name": sales_invoice, "company": company})
     invoice.add_nights(row_id, check_in, check_out)
+    frappe.db.commit()
 
 @frappe.whitelist()
 def delete_reservation():
@@ -465,12 +478,12 @@ def delete_reservation():
         invoice = frappe.get_doc("Sales Invoice", {"name": sales_invoice, "company": company_details.get('company')})
     if invoice.docstatus == 0:
         invoice.delete()
+    frappe.db.commit()
 
 @frappe.whitelist()
 def add_transfers_to_completed_invoice():
     invoice_id = frappe.form_dict.invoice_id
     selected_transfers = frappe.form_dict.selected_transfers
-    print(selected_transfers)
     if type(selected_transfers) == str:
         selected_transfers = json.loads(selected_transfers)
     company_details = get_company_details()
@@ -482,6 +495,7 @@ def add_transfers_to_completed_invoice():
     except:
         return {"success_key": 0, "message": "Invoice not found"}
     res = invoice.add_transfers(selected_transfers)
+    frappe.db.commit()  
     if res:
         return {"success_key": 1, "message": ""}
     else:
@@ -503,6 +517,7 @@ def add_tours_to_completed_invoice():
     except:
         return {"success_key": 0, "message": "Invoice not found"}
     res = invoice.add_tours(selected_tours)
+    frappe.db.commit()
     if res:
         return {"success_key": 1, "message": ""}
     else:
@@ -530,4 +545,5 @@ def update_reservation():
     invoice.update_transfers(transfers_info)
     invoice.update_tours(tours_info)
     invoice.save(ignore_permissions=True)
+    frappe.db.commit()
     return {"success_key": 1, "message": ""}

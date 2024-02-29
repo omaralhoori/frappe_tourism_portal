@@ -22,6 +22,7 @@
   "session_expires",
   "invoice_check_out",
   "status",
+  "main_system_transferred",
   "contact_info_section",
   "customer_name",
   "column_break_qukqj",
@@ -319,12 +320,19 @@
    "fieldname": "invoice_check_out",
    "fieldtype": "Date",
    "label": "Invoice Check Out"
+  },
+  {
+   "default": "0",
+   "fieldname": "main_system_transferred",
+   "fieldtype": "Check",
+   "label": "Main System Transferred",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-02-12 13:04:45.880946",
+ "modified": "2024-02-29 17:30:22.426471",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice",
