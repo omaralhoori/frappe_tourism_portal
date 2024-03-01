@@ -13,10 +13,14 @@ class ExtendRoomResults(Document):
 		if len(self.contracts) == 0:
 			frappe.throw("Something went wrong")
 		for room in invoice.rooms:
-			if room.id == self.row_id:
+			if room.name == self.row_id:
 				extend_room = room
 				break
 		if not extend_room:
 			frappe.throw("Room not found")
 		extend_room.check_out = self.check_out
+		invoice.save(ignore_permissions=True)
+		return {
+			"success_key": 1
+		}
 		

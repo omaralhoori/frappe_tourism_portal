@@ -84,6 +84,7 @@ def get_invoice_data(sales_invoice):
         "transfer_fees": invoice.transfer_fees,
         "tour_fees": invoice.tour_fees,
         "grand_total": invoice.grand_total,
+        "invoice_check_out": invoice.invoice_check_out,
         "rooms": {},
         "tours": {},
         "transfers": {},

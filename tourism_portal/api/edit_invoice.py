@@ -223,12 +223,16 @@ def extend_accommodation(invoice, hotel_search, nights):
             "message": "No availability found",
             "data": None
         }
+    frappe.db.commit()
     return {
         "data": results
     }
 
+@frappe.whitelist()
 def confirm_extend_accommodation(extend_id):
     try:
-        frappe.get_doc("Extend Room Results", {"name": extend_id, "user": frappe.session.user}).confirm_extend_accommodation()
+        res = frappe.get_doc("Extend Room Results", {"name": extend_id, "user": frappe.session.user}).confirm_extend_accommodation()
+        frappe.db.commit()
+        return res
     except Exception as e:
         frappe.throw(str(e))

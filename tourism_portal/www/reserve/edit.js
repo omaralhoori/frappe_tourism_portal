@@ -92,7 +92,6 @@ function saveEdit(e){
     var invoiceId = new URLSearchParams(window.location.search).get('invoice');
     var transfersInfo = getTransferInfo();
     var toursInfo = getToursInfo();
-
     frappe.call({
         "method": "tourism_portal.api.reserve.update_reservation",
         "args": {
@@ -347,7 +346,6 @@ function newTransferSearchClicked(e){
             transfer_params: newParams,
         },
         callback: res => {
-            console.log(res)
             if (res.message){
                 var  html = format_transfer_search_results(res.message)
                 var modalContent = e.closest('.modal-content')
@@ -379,7 +377,6 @@ function newTourSearchClicked(e){
             tour_params: newParams,
         },
         callback: res => {
-            console.log(res)
             if (res.message){
                 var  html = format_tour_search_results(res.message)
                 var modalContent = e.closest('.modal-content')
@@ -498,7 +495,6 @@ function confirmAddTransfer(e){
             selected_transfers: selectedTransfers,
         },
         callback: res => {
-            console.log(res)
             toggleLoadingIndicator(false);
             if (res.message && res.message.success_key){
                 window.location.reload();
@@ -516,7 +512,6 @@ function confirmAddTour(e){
     var selectedTours = getSelectedTours(e);
     // toggleLoadingIndicator(true);
     var invoiceId= new URLSearchParams(window.location.search).get('invoice');
-    console.log(selectedTours)
     frappe.call({
         method: "tourism_portal.api.reserve.add_tours_to_completed_invoice",
         args: {
