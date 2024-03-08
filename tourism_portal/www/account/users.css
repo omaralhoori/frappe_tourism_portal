@@ -5,3 +5,6 @@ body{
   background-attachment: fixed;
   background-repeat: no-repeat;
 }
+.tm-top-bar{
+  background: rgb(135, 135, 135) !important;
+}

@@ -11,7 +11,7 @@
                     data-target="#mainNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div id="mainNav" class="collapse navbar-collapse tm-bg-white">
+                <div id="mainNav" class="collapse navbar-collapse ">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="/home">Home</a>
@@ -67,6 +67,33 @@
     </div>
 </div>
 <script>
+
+
+
+    // Get the topbar element
+const topbar = document.getElementById('tm-top-bar');
+
+// Track the last scroll position
+let lastScrollPosition = 0;
+
+// Listen for the scroll event
+window.addEventListener('scroll', () => {
+    // Get the current scroll position
+    const currentScrollPosition = window.scrollY;
+
+    // Check the scroll direction
+    if (currentScrollPosition > lastScrollPosition) {
+        // Scrolling down
+        topbar.style.backgroundColor = 'rgb(131 131 153)'; // Change background color when scrolling down
+    } else {
+        // Scrolling up
+        topbar.style.backgroundColor = '#ffffff50'; // Change background color when scrolling up
+    }
+
+    // Update the last scroll position
+    lastScrollPosition = currentScrollPosition;
+});
+
 
 function renderNotificationItem(notification) {
     var notificationItem = document.createElement("a");

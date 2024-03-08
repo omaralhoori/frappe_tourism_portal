@@ -1,5 +1,5 @@
 body{
-    background-image: url('/assets/tourism_portal/images/background/13.jpg');
+    background-image: url('/assets/tourism_portal/images/background/13.png');
     background-color: #f1f6fa;
     background-size: cover;
     background-position: center;
@@ -40,9 +40,22 @@ body{
     color: rgb(112, 111, 111);
 }
 .room-total-price{
-    font-size: 1.4em;
-    color: rgb(192, 24, 24);
-    font-weight: bold;
+    background: #f39717;
+    color: white;
+    padding: 1.2rem 0.5rem;
+    display: block;
+    margin: 0.1rem;
+    margin-block-end: 0.66rem;
+    font-weight: 800;
+}
+.room-select-input{
+    border-radius: 11px;
+    border: 1px solid #be761261;
+}
+
+.room-select-input{
+        border-radius: 11px;
+    border: 1px solid #be761261;
 }
 
 .room-detail-container{
