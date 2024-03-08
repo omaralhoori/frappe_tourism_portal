@@ -483,7 +483,7 @@ function formatRoomPrices(price, showDates){
     <span class="room-total-nights">
         ${totalNights} Nights
     </span>
-    <span class="room-total-price" price-id="${price['item_price_name']}" 
+    <span class="room-total-price rounded-circle" price-id="${price['item_price_name']}" 
     inquiry-id="${price['inquiry_price_name']}" from-date="${price['from_date']}" 
     to-date="${price['to_date']}" total-price="${nightsPrice}" 
     total-price-company="${totalPriceCompany}" 

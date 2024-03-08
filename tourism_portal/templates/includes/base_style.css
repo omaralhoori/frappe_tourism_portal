@@ -49,8 +49,9 @@ i.tm-color-primary, i.tm-form-element-icon{
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
-    font-size: 1.1em;
-    font-weight: bold;
+    font-size: 0.95em;
+    font-weight: 600;
+    text-transform: capitalize;
 }
 .tm-btn-search:hover, .btn-primary:hover{
     background-color: #352D83;
@@ -106,8 +107,9 @@ body{
     color: #fff;
 }
  .nav-link {
-    font-weight: bold;
-    font-size: 1.1em;
+    font-weight: 500;
+    font-size: 0.98em;
+    text-transform: capitalize;
  }
  .checkbox-show{
     width: 18px;
@@ -260,4 +262,9 @@ background-image: url('/assets/tourism_portal/images/star-rating/5-stars.png');
 
 #notificationsDropDown{
     position: relative;
+}
+
+.dropdown-menu{
+    text-transform: capitalize;
+    font-size: 0.8rem;
 }

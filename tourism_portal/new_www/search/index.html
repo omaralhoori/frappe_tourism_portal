@@ -26,7 +26,7 @@
     <div class="col-md-3">
         <div class="d-flex justify-content-center align-items-center flex-column h-100" onclick="roomSelected(this)">
             {% if room.get('price')%}
-            <div class="room-total"><span class="room-total-nights">{{room.get('price')[1]}} Nights</span><span class="room-total-price">{{room.get('price')[0]}} USD</span></div>
+            <div class="room-total"><span class="room-total-nights">{{room.get('price')[1]}} Nights</span><span class="room-total-price rounded-circle">{{room.get('price')[0]}} USD</span></div>
             <div class="room-price mt-1">(Per Room 500USD)</div>
             {% else %}
             
@@ -221,7 +221,7 @@
 
                 </div>
                 <div class="room-price-container">
-                <div class="room-total"><span class="room-total-nights">{Nights} Nights</span><span class="room-total-price">{Room Price}</span></div>
+                <div class="room-total"><span class="room-total-nights">{Nights} Nights</span><span class="room-total-price rounded-circle">{Room Price}</span></div>
                 <!-- <div class="room-price mt-1">(Per Room 500USD)</div> -->
                 </div>
                <!--  -->
