@@ -167,7 +167,10 @@ def get_room_contracts(room, hotel_params, roomPax, company_class):
 			selling_price_found = False
 	room['contracts'] = all_room_contracts
 	for contract in room['contracts']:
-		contract['remain_qty'] = get_contract_availabilities(contract.get('contract_id'), contract.get('from_date'), contract.get('to_date'))
+		if contract.get('in_release'):
+			contract['remain_qty'] = 0
+		else:
+			contract['remain_qty'] = get_contract_availabilities(contract.get('contract_id'), contract.get('from_date'), contract.get('to_date'))
 	remains = [contract.get('remain_qty', 0) for contract in room['contracts']]
 	if len(remains)  == 0:
 		room['remain_qty'] = 0
@@ -228,11 +231,11 @@ def get_all_room_contracts(room, hotel_params):
 		contract_type, qty, release_days,
 		check_in_from_date as from_date, check_in_to_date as to_date,
 		accommodation_type_rule as hotel_accommodation_type_rule, 
-		cancellation_policy as hotel_cancellation_policy
+		cancellation_policy as hotel_cancellation_policy,
+		not (cntrct.release_days =0 or DATEDIFF(%(checkin)s, now()) > cntrct.release_days ) as in_release
 			FROM `tabHotel Room Contract` as cntrct
 		WHERE hotel=%(hotel)s AND room_type=%(room_type)s
 						   	AND ( now() BETWEEN cntrct.selling_from_date and cntrct.selling_to_date)
-		AND (cntrct.release_days =0 or DATEDIFF(%(checkin)s, now()) > cntrct.release_days )
 		AND ((%(checkin)s >= cntrct.check_in_from_date and %(checkin)s <= cntrct.check_in_to_date)
 			OR ( %(checkout)s >= cntrct.check_in_from_date and  %(checkout)s <= cntrct.check_in_to_date))
 		AND (cntrct.agency IS NULL OR cntrct.agency ='' OR cntrct.agency=%(agency)s)

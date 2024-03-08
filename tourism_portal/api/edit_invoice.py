@@ -89,7 +89,7 @@ def create_room_extend_availability_results(invoice,hotel_search, check_in, chec
             total_nights = 0
             for contract in results[row.name].get('contracts'):
                 for price in contract.get('prices'):
-                    nights = frappe.utils.date_diff(price.get('to_date'), price.get('from_date'))
+                    nights = frappe.utils.date_diff(price.get('to_date'), price.get('from_date')) + 1
                     buying= frappe.db.get_value("Hotel Room Price", price.get("item_price_name"), ["buying_currency", "buying_price"], as_dict=True)
                     if not buying:
                         frappe.throw("Something went wrong, please contact system manager")
@@ -102,8 +102,10 @@ def create_room_extend_availability_results(invoice,hotel_search, check_in, chec
                         "check_in": contract.get('from_date'),
                         "check_out": contract.get('to_date'),
                         "nights": nights,
-                        "selling_price": price.get('child_company_price'), 
+                        "selling_price": price.get('child_company_price'),
+                        "total_selling_price": price.get('child_company_price') * nights,
                         "selling_price_company": price.get('selling_price_with_childs'),
+                        "total_selling_price_company": price.get('selling_price_with_childs') * nights,
                         "cancellation_policy": cancellation,
                         "buying_currency": buying.get('buying_currency'),
                         "buying_price": buying.get('buying_price'),
@@ -221,10 +223,12 @@ def extend_accommodation(invoice, hotel_search, nights):
     if not results:
         return {
             "message": "No availability found",
+            "success_key": 1,
             "data": None
         }
     frappe.db.commit()
     return {
+        "success_key": 1,
         "data": results
     }
 
