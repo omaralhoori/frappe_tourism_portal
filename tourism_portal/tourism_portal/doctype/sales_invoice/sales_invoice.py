@@ -301,8 +301,8 @@ class SalesInvoice(Document):
 		paxes = self.get_room_pax_info(room.hotel_search, room.room_name)
 		child_price = 0
 		for child in paxes['childs']:
-			if child >= board_details.min_child_age:
-				child_price += board_details.child_price
+			if child >= int(board_details.min_child_age or 0):
+				child_price += int(board_details.child_price or 0)
 		total_board_price = board_price * paxes['adults'] + child_price
 		return total_board_price
 
