@@ -19,10 +19,12 @@
                 data-animation-out="animate-out fadeOut">
                 <h1>{{slider_item.first_title}}</h1>
                 <h1>{{slider_item.second_title}}</h1>
+                {% if slider_item.button_text %}
                 <div class="button home_slider_button">
                   <div class="button_bcg"></div>
-                  <a href="/book">Book now<span></span><span></span><span></span></a>
+                  <a href="{{slider_item.button_link}}">{{slider_item.button_text}}<span></span><span></span><span></span></a>
                 </div>
+                {% endif %}
               </div>
             </div>
           </div>

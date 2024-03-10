@@ -8,7 +8,9 @@
  "field_order": [
   "first_title",
   "second_title",
-  "image"
+  "image",
+  "button_text",
+  "button_link"
  ],
  "fields": [
   {
@@ -30,12 +32,22 @@
    "fieldtype": "Attach Image",
    "label": "Image",
    "reqd": 1
+  },
+  {
+   "fieldname": "button_text",
+   "fieldtype": "Data",
+   "label": "Button Text"
+  },
+  {
+   "fieldname": "button_link",
+   "fieldtype": "Data",
+   "label": "Button Link"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-02-26 16:55:56.660694",
+ "modified": "2024-03-10 13:45:09.986557",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Website Carousel Item",
