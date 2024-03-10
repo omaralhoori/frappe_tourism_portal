@@ -34,7 +34,31 @@ function extendHotelClicked(e){
     var $modal = $('#extendHotelModal');
     $modal.modal('show');
 }
-
+function confirmExtendAccommodation(e){
+    var extendIds = [];
+    var extendResults = document.querySelectorAll('.extend-result-item');
+    for (var extendResult of extendResults){
+        extendIds.push(extendResult.getAttribute('extend-id'));
+    }
+    if (extendIds.length == 0 || extendIds.length > 1){
+        frappe.throw("Please select one extend to confirm")
+    }
+    toggleLoadingIndicator(true);
+    frappe.call({
+        "method": "tourism_portal.api.edit_invoice.confirm_extend_accommodation",
+        "args": {
+            "extend_id": extendIds[0],
+        },
+        "callback": function (r) {
+            toggleLoadingIndicator(false);
+            if (r.message){
+                window.location.reload();
+            }else{
+                frappe.throw("Something went wrong")
+            }
+        }
+    })
+}
 function extendAccommodationModalSubmitted(e){
     var data = {
         "invoice": $('#extend-invoice').val(),
@@ -62,10 +86,29 @@ function handle_extend_accommodation_response(data){
     var $modal = $('#extendHotelResultsModal');
     if (!data.data){
         $modal.find('.modal-body').html(data.message);
+        $modal.find('.modal-footer').addClass('d-none');
     }else{
-        
+        $modal.find('.modal-body').html('');
+        for (var extendResultIndex of Object.keys(data.data)){
+            var extendResult = data.data[extendResultIndex];
+            var html = format_extend_accommodation_result(extendResult);
+            $modal.find('.modal-body').append(html);
+        }
+        $modal.find('.modal-footer').removeClass('d-none');
+
     }
     $modal.modal('show');
+}
+
+function format_extend_accommodation_result(data){
+    var html = '';
+    var $template = $('#extend-accommodation-result-template');
+    var resultHtml = $template.html();
+    resultHtml = resultHtml.replaceAll('{Extend Id}', data.extend_id);
+    resultHtml = resultHtml.replaceAll('{Total Nights}', data.total_nights);
+    resultHtml = resultHtml.replaceAll('{Total Price}', data.total_price);
+    return resultHtml;
+
 }
 
 function hideExtendHotelButtonForExpiredCheckout(){

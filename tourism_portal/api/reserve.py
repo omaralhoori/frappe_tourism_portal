@@ -387,6 +387,7 @@ def complete_reservation():
     else:
         transfers = frappe.form_dict.transfers
     invoice.room_extras = []
+    
     for roomRowId in rooms:
         extras = rooms[roomRowId].pop('extras')
         roomDetails = rooms[roomRowId].pop('details')
@@ -395,7 +396,7 @@ def complete_reservation():
             if room.name == roomRowId:
                 if roomDetails.get('board'):
                     room.board = roomDetails.get('board')
-                    room.board_extra_price = float(roomDetails.get('board_price'))
+                    room.board_extra_price = invoice.get_board_price(room.board, room, board_price=float(roomDetails.get('board_price')))#float(roomDetails.get('board_price'))
                 if roomDetails.get('bed_type'):
                     room.bed_type = roomDetails.get('bed_type')
         for paxRowId in rooms[roomRowId]:

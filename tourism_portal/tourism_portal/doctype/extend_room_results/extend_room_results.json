@@ -14,7 +14,9 @@
   "row_id",
   "check_in",
   "check_out",
-  "contracts"
+  "contracts",
+  "used",
+  "session_expires"
  ],
  "fields": [
   {
@@ -69,11 +71,22 @@
    "label": "Status",
    "options": "Pending\nConfirmed",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "used",
+   "fieldtype": "Check",
+   "label": "Used"
+  },
+  {
+   "fieldname": "session_expires",
+   "fieldtype": "Datetime",
+   "label": "Session Expires"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-23 12:39:08.418878",
+ "modified": "2024-03-09 14:48:30.781290",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Extend Room Results",

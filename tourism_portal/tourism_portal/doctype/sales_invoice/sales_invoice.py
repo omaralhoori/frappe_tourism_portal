@@ -46,15 +46,11 @@ class SalesInvoice(Document):
 		self.notifiy_transfer_changes()
 		
 	def notifiy_transfer_changes(self):
-		print("1111111")
 		old_doc = self.get_doc_before_save()
 		for transfer in self.transfers:
 			for old_t in old_doc.transfers:
-				print(old_t.pick_up)
 				if transfer.name == old_t.name:
-					print("sffsfss")
 					if old_t.flight_no != transfer.flight_no:
-						print("ofkodkfdok")
 						notifiy_flight_changed(self, transfer)
 					break
 
@@ -286,15 +282,42 @@ class SalesInvoice(Document):
 						break
 	def reserve_rooms(self):
 		for room in self.room_price:
-			if room.contract_id:
-				if not reserve_room(room.contract_id, room.check_in, room.check_out):
-					frappe.throw('Room is not avilable')
+			self.reserve_room_contract(room)
+	def reserve_room_contract(self, room):
+		if room.contract_id:
+			if not reserve_room(room.contract_id, room.check_in, room.check_out):
+				frappe.throw('Room is not avilable')
 	def free_rooms(self):
 		for room in self.room_price:
 			if room.contract_id:
 				if not free_room(room.contract_id, room.check_in, room.check_out):
 					frappe.throw('Room is not avilable')
+	def get_board_price(self, board, room, board_price=None):
+		board_details = frappe.db.get_value("Hotel Boarding Table", {"parent": room.hotel, "boarding_type": board}, ["extra_price_type", "extra_price", "child_price", "min_child_age"], as_dict=True)
+		if not board_details:
+			frappe.throw("Board Type not found")
+		if board_price and board_details.extra_price != board_price:
+			frappe.throw("Board Price is not correct")
+		paxes = self.get_room_pax_info(room.hotel_search, room.room_name)
+		child_price = 0
+		for child in paxes['childs']:
+			if child >= board_details.min_child_age:
+				child_price += board_details.child_price
+		total_board_price = board_price * paxes['adults'] + child_price
+		return total_board_price
 
+	def get_room_pax_info(self, hotel_search, room_name):
+		room_pax = {
+			"adults": 0,
+			"childs": []
+		}
+		for pax in self.room_pax_info:
+			if pax.hotel_search == hotel_search and pax.room_name == room_name:
+				if pax.guest_type == "Adult":
+					room_pax['adults'] += 1
+				elif pax.guest_type == "Child":
+					room_pax['childs'].append(pax.guest_age)
+		return room_pax
 	def calculate_total_hotel_fees(self):
 		total = 0
 		total_company = 0
@@ -539,12 +562,12 @@ class SalesInvoice(Document):
 				create_payment(self.company, commission_refund,'Reserve', remarks="Reserve for "+self.child_company)
 				add_child_company_refund( company=self.child_company, parent_company=self.company, refund=commission_refund,parent_refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype, remarks="Hotel Refund for voucher "+self.voucher_no)
 	
-	def create_additional_payment(self, amount, company_amount):
+	def create_additional_payment(self, amount, company_amount, remarks=""):
 		if self.child_company:
-			create_child_company_payment(self.child_company, self.company, amount, company_amount,'Payment',against_doctype= 'Sales Invoice', against_docname=self.name)
+			create_child_company_payment(self.child_company, self.company, amount, company_amount,'Payment',against_doctype= 'Sales Invoice', against_docname=self.name, remarks=remarks)
 			create_payment(self.company, company_amount,'Pay',against_doctype= 'Sales Invoice', against_docname=self.name, remarks="Payment for "+self.child_company)
 		else:
-			create_payment(self.company, amount,'Pay',against_doctype= 'Sales Invoice', against_docname=self.name)
+			create_payment(self.company, amount,'Pay',against_doctype= 'Sales Invoice', against_docname=self.name, remarks=remarks)
 	def on_submit(self):
 		if self.child_company:
 			create_child_company_payment(self.child_company, self.company, self.grand_total, self.grand_total_company,'Payment',against_doctype= 'Sales Invoice', against_docname=self.name)
