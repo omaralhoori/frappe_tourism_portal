@@ -175,6 +175,7 @@ def get_room_contracts(room, hotel_params, roomPax, company_class):
 	if len(remains)  == 0:
 		room['remain_qty'] = 0
 	else:
+		print(remains)
 		room['remain_qty'] = min(remains)
 	if len(room['contracts']) > 0:
 		if not room['remain_qty'] or not selling_price_found:
@@ -604,7 +605,7 @@ def get_contract_availabilities(contract, checkin, checkout):
 	""", {"contract_no": contract, 
        "checkin": checkin, "checkout": checkout}, as_dict=True)
 	if len(room_qty) > 0:
-		return room_qty[0]['qty']
+		return room_qty[0]['qty'] or 0
 	return 0
 
 def get_hotel_availabilities(hotel, checkin, checkout):
