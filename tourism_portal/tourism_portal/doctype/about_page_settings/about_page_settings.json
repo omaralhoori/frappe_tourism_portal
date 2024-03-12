@@ -1,0 +1,138 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-12 16:40:34.594817",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "intro_section_section",
+  "intro_background_image",
+  "about_us_title",
+  "about_us_description",
+  "about_us_image",
+  "section_break_rnaee",
+  "clients",
+  "column_break_whbkt",
+  "hotels",
+  "column_break_ucbsi",
+  "employees",
+  "column_break_sscoh",
+  "destinations",
+  "section_break_xqdwc",
+  "vision",
+  "why_us_section_section",
+  "why_us"
+ ],
+ "fields": [
+  {
+   "fieldname": "intro_section_section",
+   "fieldtype": "Section Break",
+   "label": "Intro Section"
+  },
+  {
+   "fieldname": "intro_background_image",
+   "fieldtype": "Attach Image",
+   "label": "Intro Background Image"
+  },
+  {
+   "fieldname": "about_us_image",
+   "fieldtype": "Attach Image",
+   "label": "About Us Image"
+  },
+  {
+   "fieldname": "about_us_title",
+   "fieldtype": "Data",
+   "label": "About Us Title"
+  },
+  {
+   "fieldname": "about_us_description",
+   "fieldtype": "Text",
+   "label": "About Us"
+  },
+  {
+   "fieldname": "section_break_rnaee",
+   "fieldtype": "Section Break",
+   "label": "Stats"
+  },
+  {
+   "fieldname": "clients",
+   "fieldtype": "Int",
+   "label": "Clients"
+  },
+  {
+   "fieldname": "column_break_whbkt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hotels",
+   "fieldtype": "Int",
+   "label": "Hotels"
+  },
+  {
+   "fieldname": "column_break_ucbsi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employees",
+   "fieldtype": "Int",
+   "label": "Employees"
+  },
+  {
+   "fieldname": "column_break_sscoh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "destinations",
+   "fieldtype": "Int",
+   "label": "Destinations"
+  },
+  {
+   "fieldname": "section_break_xqdwc",
+   "fieldtype": "Section Break",
+   "label": "Our Vision"
+  },
+  {
+   "fieldname": "vision",
+   "fieldtype": "Text",
+   "label": "Vision"
+  },
+  {
+   "fieldname": "why_us_section_section",
+   "fieldtype": "Section Break",
+   "label": "Why Us Section"
+  },
+  {
+   "fieldname": "why_us",
+   "fieldtype": "Table",
+   "label": "Why Us",
+   "options": "Why Us Item"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "make_attachments_public": 1,
+ "modified": "2024-03-12 18:04:08.074133",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "About Page Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

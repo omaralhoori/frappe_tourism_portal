@@ -1,0 +1,137 @@
+{% extends "templates/theme2/website_base.html" %}
+
+{% block page_content %}
+	<!-- Home -->
+
+	<div class="home">
+		<div class="home_background parallax-window" data-parallax="scroll" style="background-image: url({{settings.intro_background_image}});" data-image-src="{{settings.intro_background_image}}"></div>
+		<div class="home_content">
+			<div class="home_title">about us</div>
+		</div>
+	</div>
+
+<!-- Intro -->
+
+	<div class="intro">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-7">
+					<div class=""><img src="{{settings.about_us_image}}" alt=""></div>
+				</div>
+				<div class="col-lg-5">
+					<div class="intro_content">
+						<div class="intro_title">{{settings.about_us_title}} </div>
+						<p class="intro_text">
+                            {{settings.about_us_description}}
+						</p>
+						{# <div class="button intro_button"><div class="button_bcg"></div><a href="#">explore now<span></span><span></span><span></span></a></div> #}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Stats -->
+
+	<div class="stats">
+		<div class="container">
+			<div class="row">
+				<div class="col text-center">
+					<div class="section_title">Our Vision</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-10 offset-lg-1 text-center">
+					<p class="stats_text">{{settings.vision}}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="stats">
+		<div class="container">
+			<div class="row">
+				<div class="col text-center">
+					<div class="section_title">Why {{settings.about_us_title}}?</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-10 offset-lg-1 ">
+					{% for item in settings.why_us %}
+                    <div class="list-item">
+                        <div class="list-item-count">{{loop.index}}</div>
+                        <div class="list-item-content">{{item.text}}</div>
+                    </div>
+                    {% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{# <!-- Add -->
+
+	<div class="add">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="add_container">
+						<div class="add_background" style="background-image:url(images/add.jpg)"></div>
+						<div class="add_content">
+							<h1 class="add_title">Turkey</h1>
+							<div class="add_subtitle">From <span>$999</span></div>
+							<div class="button add_button"><div class="button_bcg"></div><a href="#">explore now<span></span><span></span><span></span></a></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> #}
+
+	<!-- Milestones -->
+
+	<div class="milestones">
+		<div class="container">
+			<div class="row">
+				
+				<!-- Milestone -->
+				<div class="col-lg-3 milestone_col">
+					<div class="milestone text-center">
+						<div class="milestone_icon"><img src="/assets/tourism_portal/theme2/images/customer.png" alt=""></div>
+						<div class="milestone_counter" data-end-value="{{settings.clients}}">0</div>
+						<div class="milestone_text">Clients</div>
+					</div>
+				</div>
+
+				<!-- Milestone -->
+				<div class="col-lg-3 milestone_col">
+					<div class="milestone text-center">
+						<div class="milestone_icon"><img src="/assets/tourism_portal/theme2/images/hotel.png" alt=""></div>
+						<div class="milestone_counter" data-end-value="{{settings.hotels}}">0</div>
+						<div class="milestone_text">Hotels</div>
+					</div>
+				</div>
+
+				<!-- Milestone -->
+				<div class="col-lg-3 milestone_col">
+					<div class="milestone text-center">
+						<div class="milestone_icon"><img src="/assets/tourism_portal/theme2/images/accountant.png" alt=""></div>
+						<div class="milestone_counter" data-end-value="{{settings.employees}}">0</div>
+						<div class="milestone_text">Employees</div>
+					</div>
+				</div>
+
+				<!-- Milestone -->
+				<div class="col-lg-3 milestone_col">
+					<div class="milestone text-center">
+						<div class="milestone_icon"><img src="/assets/tourism_portal/theme2/images/milestone_1.png" alt=""></div>
+						<div class="milestone_counter" data-end-value="{{settings.destinations}}">0</div>
+						<div class="milestone_text">Destinations</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+{% endblock %}

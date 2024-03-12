@@ -39,17 +39,11 @@
     <style>
         {% include 'templates/includes/theme2/base_style.css' %}
     </style>
-    {%- block style %}
-    {% if colocated_css -%}
-    <style>
-        {
-                {
-                colocated_css
-            }
-        }
-    </style>
-    {%- endif %}
-    {%- endblock -%}
+        {%- block style %}
+		{% if colocated_css -%}
+			<style>{{ colocated_css }}</style>
+		{%- endif %}
+	{%- endblock -%}
     <script>
         window.frappe = {};
         frappe.ready_events = [];
@@ -126,6 +120,9 @@
     <script src="/assets/tourism_portal/theme2/styles/bootstrap4/bootstrap.min.js"></script>
     <script src="/assets/tourism_portal/theme2/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
     <script src="/assets/tourism_portal/theme2/plugins/easing/easing.js"></script>
+    <script src="/assets/tourism_portal/theme2/plugins/scrollmagic/ScrollMagic.min.js"></script>
+    <script src="/assets/tourism_portal/theme2/plugins/greensock/TweenMax.min.js"></script>
+    <script src="/assets/tourism_portal/theme2/plugins/parallax-js-master/parallax.min.js"></script>
     <script src="/assets/tourism_portal/theme2/js/custom.js"></script>
     <script src="/assets/tourism_portal/theme2/js/ZlataLoader.js"></script>
 
