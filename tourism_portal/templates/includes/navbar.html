@@ -20,7 +20,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/invoices">My Bookings</a>
                         </li>
-                        
+                        {% if has_user_tariff() %}
+                        <li class="nav-item">
+                                <a class="nav-link" href="/tariffs">Tariffs</a>
+                        </li>
+                        {% endif %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                              My Account
@@ -40,9 +44,7 @@
                             <a class="dropdown-item" href="/account/agencies">Subagencies</a>
                             <a class="dropdown-item" href="/account/agency_account">Subagency Account</a>
                             {% endif %}
-                            {% if has_user_tariff() %}
-                                <a class="dropdown-item" href="/tariffs">Tariffs</a>
-                            {% endif %}
+
                             <a class="dropdown-item" href="/account/settings">Settings</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/?cmd=web_logout">Log Out</a>

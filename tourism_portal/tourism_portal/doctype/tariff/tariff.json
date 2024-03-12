@@ -13,6 +13,7 @@
   "published_from_date",
   "tariff_from_date",
   "column_break_4ugw6",
+  "company_country",
   "company_class",
   "published_to_date",
   "tariff_to_date",
@@ -78,11 +79,18 @@
    "fieldname": "tariff_file",
    "fieldtype": "Attach",
    "label": "Tariff File"
+  },
+  {
+   "fieldname": "company_country",
+   "fieldtype": "Link",
+   "label": "Company Country",
+   "options": "Country",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-24 17:10:44.183264",
+ "modified": "2024-03-12 15:24:42.175256",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tariff",
