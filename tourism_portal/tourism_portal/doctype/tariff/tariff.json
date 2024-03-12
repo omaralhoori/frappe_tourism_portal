@@ -10,11 +10,14 @@
  "field_order": [
   "section_break_65grq",
   "city",
+  "column_break_quvdh",
+  "company_country",
+  "column_break_cyiq2",
+  "company_class",
+  "section_break_cc62d",
   "published_from_date",
   "tariff_from_date",
   "column_break_4ugw6",
-  "company_country",
-  "company_class",
   "published_to_date",
   "tariff_to_date",
   "section_break_y45ba",
@@ -25,7 +28,7 @@
    "fieldname": "city",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "City",
+   "label": "Tariff City",
    "options": "City",
    "reqd": 1
   },
@@ -86,11 +89,23 @@
    "label": "Company Country",
    "options": "Country",
    "reqd": 1
+  },
+  {
+   "fieldname": "column_break_quvdh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_cyiq2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_cc62d",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-12 15:24:42.175256",
+ "modified": "2024-03-12 15:30:35.356790",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tariff",
