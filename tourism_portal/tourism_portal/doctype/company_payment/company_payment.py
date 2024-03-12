@@ -28,7 +28,7 @@ class CompanyPayment(Document):
 
 def create_payment(company, amount, payment_type,currency=None, against_doctype=None, against_docname=None, remarks=''):
 	balance = get_company_balance(company)
-	if (payment_type == 'Payment' or payment_type == 'Reserve') and balance < amount:
+	if (payment_type == 'Payment' or payment_type == 'Pay' or payment_type == 'Reserve') and balance < amount:
 		frappe.throw("Insufficient Balance")
 	if not currency:
 		currency = frappe.db.get_single_value("Tourism Portal Settings", "selling_currency")
@@ -48,7 +48,7 @@ def create_payment(company, amount, payment_type,currency=None, against_doctype=
 	payment.submit()
 	return payment.name
 def create_child_company_payment(company, parent_company, amount, parent_amount, payment_type,currency=None, against_doctype=None, against_docname=None, remarks=''):
-	if payment_type == 'Payment':
+	if payment_type == 'Payment' or payment_type == 'Pay':
 		balance = get_child_company_balance(company)
 		if balance < amount:
 			frappe.throw("Insufficient Balance")
