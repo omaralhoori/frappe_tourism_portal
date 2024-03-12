@@ -10,7 +10,8 @@
  "engine": "InnoDB",
  "field_order": [
   "room_type_code",
-  "room_type"
+  "room_type",
+  "system_code"
  ],
  "fields": [
   {
@@ -27,11 +28,17 @@
    "label": "Room Type Code",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "system_code",
+   "fieldtype": "Data",
+   "label": "System Code",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-19 11:26:30.995029",
+ "modified": "2024-03-12 01:13:23.508581",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Room Type",

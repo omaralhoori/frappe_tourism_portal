@@ -11,6 +11,7 @@
  "field_order": [
   "accommodation_type_code",
   "accommodation_type_name",
+  "system_code",
   "bed_types"
  ],
  "fields": [
@@ -33,11 +34,17 @@
    "fieldtype": "Table",
    "label": "Bed Types",
    "options": "Room Accommodation Bed Type item"
+  },
+  {
+   "fieldname": "system_code",
+   "fieldtype": "Data",
+   "label": "System Code",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-04 03:51:41.956553",
+ "modified": "2024-03-12 01:13:15.606191",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Room Accommodation Type",
