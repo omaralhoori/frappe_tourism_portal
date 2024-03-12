@@ -518,7 +518,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Settings",
-   "link_count": 4,
+   "link_count": 5,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -561,9 +561,19 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "About Us Page Settings",
+   "link_count": 0,
+   "link_to": "About Page Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2024-03-08 22:18:09.110258",
+ "modified": "2024-03-12 18:25:59.963138",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal",
