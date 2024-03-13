@@ -8,7 +8,7 @@ function submit_contact_form(e){
     }
     toggleLoader(true)
     frappe.call({
-        "method": "tourism_portal.www.home.index.submit_contact_form",
+        "method": "tourism_portal.www.contact.index.submit_contact_form",
         "args": {
             "contact_name": contact_name,
             "contact_email": contact_email,

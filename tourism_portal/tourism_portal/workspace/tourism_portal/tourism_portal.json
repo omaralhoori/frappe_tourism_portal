@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"cU5nyM-87u\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Tourism Portal</span>\",\"col\":12}},{\"id\":\"dfTal9rL8y\",\"type\":\"card\",\"data\":{\"card_name\":\"Hotels\",\"col\":4}},{\"id\":\"NTRd1C7AyM\",\"type\":\"card\",\"data\":{\"card_name\":\"Hotel Definitions\",\"col\":4}},{\"id\":\"-Ep-WXD95D\",\"type\":\"card\",\"data\":{\"card_name\":\"Portal Definitions\",\"col\":4}},{\"id\":\"RsCZTj1rQu\",\"type\":\"card\",\"data\":{\"card_name\":\"Location\",\"col\":4}},{\"id\":\"hHhmuUts6M\",\"type\":\"card\",\"data\":{\"card_name\":\"Companies\",\"col\":4}},{\"id\":\"a0SU-EWFQb\",\"type\":\"card\",\"data\":{\"card_name\":\"Sales\",\"col\":4}},{\"id\":\"jCnPMJtwzX\",\"type\":\"card\",\"data\":{\"card_name\":\"Transfers\",\"col\":4}},{\"id\":\"QAnzuzlyPA\",\"type\":\"card\",\"data\":{\"card_name\":\"Tours\",\"col\":4}},{\"id\":\"uQnMW1Q8R0\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"W8n_oUKnQN\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"cU5nyM-87u\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Tourism Portal</span>\",\"col\":12}},{\"id\":\"dfTal9rL8y\",\"type\":\"card\",\"data\":{\"card_name\":\"Hotels\",\"col\":4}},{\"id\":\"NTRd1C7AyM\",\"type\":\"card\",\"data\":{\"card_name\":\"Hotel Definitions\",\"col\":4}},{\"id\":\"-Ep-WXD95D\",\"type\":\"card\",\"data\":{\"card_name\":\"Portal Definitions\",\"col\":4}},{\"id\":\"RsCZTj1rQu\",\"type\":\"card\",\"data\":{\"card_name\":\"Location\",\"col\":4}},{\"id\":\"hHhmuUts6M\",\"type\":\"card\",\"data\":{\"card_name\":\"Companies\",\"col\":4}},{\"id\":\"a0SU-EWFQb\",\"type\":\"card\",\"data\":{\"card_name\":\"Sales\",\"col\":4}},{\"id\":\"jCnPMJtwzX\",\"type\":\"card\",\"data\":{\"card_name\":\"Transfers\",\"col\":4}},{\"id\":\"QAnzuzlyPA\",\"type\":\"card\",\"data\":{\"card_name\":\"Tours\",\"col\":4}},{\"id\":\"uQnMW1Q8R0\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"8R54MKss5D\",\"type\":\"card\",\"data\":{\"card_name\":\"Website\",\"col\":4}},{\"id\":\"W8n_oUKnQN\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2023-10-08 15:51:11.800152",
  "custom_blocks": [],
  "docstatus": 0,
@@ -571,9 +571,27 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Website",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Contact Messages",
+   "link_count": 0,
+   "link_to": "Website Contact Messages",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2024-03-12 18:25:59.963138",
+ "modified": "2024-03-13 17:22:32.389034",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal",
