@@ -44,8 +44,16 @@ def get_data(filters={}):
 		condations += " AND tbl1.date>=%(from_date)s"
 	if filters.get('to_date'):
 		condations += " AND tbl1.date<=%(to_date)s"
+	
 	data = frappe.db.sql("""
-		SELECT tbl2.hotel, tbl2.room_type, tbl1.contract_no, GROUP_CONCAT(tbl1.date) as dates, GROUP_CONCAT(tbl1.available_qty) as qtys FROM `tabRoom Availability` as tbl1
+		SELECT 
+			tbl2.hotel, tbl2.room_type, tbl1.contract_no, 
+			GROUP_CONCAT(tbl1.date) as dates,
+			GROUP_CONCAT(
+					  IF (
+					  (tbl2.release_days =0 or DATEDIFF(tbl1.date, now()) > tbl2.release_days )
+					   ,tbl1.available_qty, 0)) as qtys 
+		FROM `tabRoom Availability` as tbl1
 		INNER JOIN `tabHotel Room Contract` as tbl2 on tbl1.contract_no=tbl2.name
 		WHERE {condations}
 		GROUP BY tbl1.contract_no
