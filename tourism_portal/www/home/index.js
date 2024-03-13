@@ -23,10 +23,14 @@ function formatToDate(e) {
     var toDate = new Date(toDateInput.value);
     if (!toDate || toDateInput.value == "" || toDate <= selectedDate){
         toDateInput.value = e.el.value;
-        var dates = new Date(e.el.value).getDate() + toDateClass["day_margin"]
-    var toDateObject = new Date(new Date().setDate(dates));
-
-    datepickers[toDateId].setDate(toDateObject);
+        var toDateObj = new Date(e.el.value);
+        var newDate = toDateObj.getDate() + toDateClass["day_margin"]
+        toDateObj.setDate(newDate)
+        // var dates = new Date(e.el.value)
+    // console.log("dates",dates)
+    // var toDateObject = new Date(new Date().setDate(dates));
+    // console.log(toDateObject)
+    datepickers[toDateId].setDate(toDateObj);
     }
         //$(`#${toDateId}`).datepicker("option", "minDate", selectedDate);    
         //toDateInput.minDate = selectedDate;
