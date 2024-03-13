@@ -9,7 +9,63 @@
 			<div class="home_title">contact</div>
 		</div>
 	</div>
+	<!-- About -->
+	<div class="about">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-5">
+					<div class="about_content">
+						<div class="logo_container " >
+							<div class="logo" style="width: 250px;"><a href="#"><img src="{{settings.website_logo}}" style="width: 250px;" alt="">{{settings.company_description}}</a></div>
+						</div>
+						<p class="about_text">
+                        
+                        </p>
+						
+					</div>
 
+		
+				</div>
+
+				<div class="col-lg-2">
+					
+					<!-- About - Content -->
+                    
+					
+				</div>
+
+				<div class="col-lg-5">
+					
+					<!-- About Info -->
+
+					<div class="about_info">
+						<ul class="contact_info_list">
+							<li class="contact_info_item d-flex flex-row">
+								<div><div class="contact_info_icon"><img src="/assets/tourism_portal/theme2/images/placeholder.svg" alt=""></div></div>
+								<div class="contact_info_text">{{settings.address}}</div>
+							</li>
+							<li class="contact_info_item d-flex flex-row">
+								<div><div class="contact_info_icon"><img src="/assets/tourism_portal/theme2/images/phone-call.svg" alt=""></div></div>
+								<div class="contact_info_text">{{settings.phone_number}}</div>
+							</li>
+							<li class="contact_info_item d-flex flex-row">
+								<div><div class="contact_info_icon"><img src="/assets/tourism_portal/theme2/images/message.svg" alt=""></div></div>
+								<div class="contact_info_text"><a href="mailto:{{settings.email}}?Subject=Hello" target="_top">{{settings.email}}</a></div>
+							</li>
+						</ul>
+                        <ul class="about_social_list">
+							<li class="about_social_item"><a href="{{settings.instagram}}"><i class="fa fa-instagram"></i></a></li>
+							<li class="about_social_item"><a href="{{settings.facebook}}"><i class="fa fa-facebook-f"></i></a></li>
+							<li class="about_social_item"><a href="{{settings.twitter}}"><i class="fa fa-twitter"></i></a></li>
+							<li class="about_social_item"><a href="{{settings.linkedin}}"><i class="fa fa-linkedin"></i></a></li>
+						</ul>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
 	<!-- Contact -->
 
 	<div class="contact_form_section">
@@ -40,65 +96,5 @@
 		</div>
 	</div>
 
-	<!-- About -->
-	<div class="about">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-5">
-					
-					<!-- About - Image -->
 
-					<div class="about_image">
-						<img src="{{settings.connect_background}}" alt="">
-					</div>
-
-				</div>
-
-				<div class="col-lg-4">
-					
-					<!-- About - Content -->
-
-					<div class="about_content">
-						<div class="logo_container about_logo">
-							<div class="logo"><a href="#"><img src="{{settings.website_logo}}" alt="">{{settings.company_description}}</a></div>
-						</div>
-						<p class="about_text">
-                        
-                        </p>
-						<ul class="about_social_list">
-							<li class="about_social_item"><a href="{{settings.instagram}}"><i class="fa fa-instagram"></i></a></li>
-							<li class="about_social_item"><a href="{{settings.facebook}}"><i class="fa fa-facebook-f"></i></a></li>
-							<li class="about_social_item"><a href="{{settings.twitter}}"><i class="fa fa-twitter"></i></a></li>
-							<li class="about_social_item"><a href="{{settings.linkedin}}"><i class="fa fa-linkedin"></i></a></li>
-						</ul>
-					</div>
-
-				</div>
-
-				<div class="col-lg-3">
-					
-					<!-- About Info -->
-
-					<div class="about_info">
-						<ul class="contact_info_list">
-							<li class="contact_info_item d-flex flex-row">
-								<div><div class="contact_info_icon"><img src="/assets/tourism_portal/theme2/images/placeholder.svg" alt=""></div></div>
-								<div class="contact_info_text">{{settings.address}}</div>
-							</li>
-							<li class="contact_info_item d-flex flex-row">
-								<div><div class="contact_info_icon"><img src="/assets/tourism_portal/theme2/images/phone-call.svg" alt=""></div></div>
-								<div class="contact_info_text">{{settings.phone_number}}</div>
-							</li>
-							<li class="contact_info_item d-flex flex-row">
-								<div><div class="contact_info_icon"><img src="/assets/tourism_portal/theme2/images/message.svg" alt=""></div></div>
-								<div class="contact_info_text"><a href="mailto:{{settings.email}}?Subject=Hello" target="_top">{{settings.email}}</a></div>
-							</li>
-						</ul>
-					</div>
-
-				</div>
-
-			</div>
-		</div>
-	</div>
 {% endblock %}
