@@ -4,7 +4,7 @@
             <div class="menu_close"></div>
         </div>
         <div class="logo menu_logo">
-            <a href="/"><img src="{{get_website_setting('website_logo')}}" width="90" alt /></a>
+            <a href="/"><img src="{{get_website_setting('website_logo')}}" style="width: 90px !important;" width="90" alt /></a>
         </div>
         <ul>
             <li class="menu_item"><a href="{% if frappe.session.user == 'Guest'%}/{% else %}/home{% endif %}">home</a></li>
