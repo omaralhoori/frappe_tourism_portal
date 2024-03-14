@@ -592,7 +592,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Hotel Room Buying Report",
    "link_count": 0,
    "link_to": "Hotel Room Buying Report",
@@ -602,7 +602,7 @@
   },
   {
    "hidden": 0,
-   "is_query_report": 0,
+   "is_query_report": 1,
    "label": "Hotel Room Selling Report",
    "link_count": 0,
    "link_to": "Hotel Room Selling Report",
@@ -611,7 +611,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-03-14 05:24:59.613173",
+ "modified": "2024-03-14 05:33:57.678797",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal",
