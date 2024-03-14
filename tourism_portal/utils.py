@@ -307,3 +307,16 @@ def is_time_passed(date, hours):
 
 def get_website_setting(field_name):
     return frappe.db.get_single_value("Tourism Website Settings", field_name)
+
+def send_system_email(email, subject, message, doctype=None, docname=None):
+    frappe.enqueue('tourism_portal.utils.send_email', email=email, subject=subject, message=message, doctype=doctype, docname=docname)
+
+def send_email(email, subject, message, doctype=None, docname=None):
+    frappe.sendmail(
+		recipients=[email],
+		doctype=doctype,
+		name=docname,
+		message= message,
+		subject=subject,
+		now=1,
+		)

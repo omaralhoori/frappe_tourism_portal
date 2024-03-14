@@ -7,8 +7,14 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "operation_section",
   "on_flight_update_email",
-  "operation_email"
+  "operation_email",
+  "reservation_section",
+  "send_inquiry_request",
+  "send_invoice_creation",
+  "send_on_invoice_update",
+  "reservation_email"
  ],
  "fields": [
   {
@@ -23,12 +29,47 @@
    "label": "Operation Email",
    "mandatory_depends_on": "eval:doc.on_flight_update_email",
    "options": "Email"
+  },
+  {
+   "fieldname": "operation_section",
+   "fieldtype": "Section Break",
+   "label": "Operation"
+  },
+  {
+   "fieldname": "reservation_section",
+   "fieldtype": "Section Break",
+   "label": "Reservation"
+  },
+  {
+   "default": "0",
+   "fieldname": "send_inquiry_request",
+   "fieldtype": "Check",
+   "label": "Send Inquiry Request"
+  },
+  {
+   "default": "0",
+   "fieldname": "send_invoice_creation",
+   "fieldtype": "Check",
+   "label": "Send Invoice Creation"
+  },
+  {
+   "fieldname": "reservation_email",
+   "fieldtype": "Data",
+   "label": "Reservation Email",
+   "options": "Email"
+  },
+  {
+   "default": "0",
+   "fieldname": "send_on_invoice_update",
+   "fieldtype": "Check",
+   "label": "Send On Invoice Update"
   }
  ],
+ "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-02-12 12:59:10.943532",
+ "modified": "2024-03-14 15:06:57.146928",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Portal Notification Settings",
