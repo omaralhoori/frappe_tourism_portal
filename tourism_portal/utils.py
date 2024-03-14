@@ -270,6 +270,17 @@ def publish_agency_notification(title, message, doctype, docname):
     users = frappe.db.get_values("User", {"company":["!=", ""], "enabled": 1}, "email", pluck=True)
     enqueue_create_notification(users, notification_doc)
 
+def publish_user_notification(title, message, user, doctype, docname):
+    notification_doc = {
+		"type": "Alert",
+		"document_type": doctype,
+		"subject": title,
+        "email_content": message,
+		"document_name": docname,
+		"from_user": frappe.session.user,
+	}
+    enqueue_create_notification([user], notification_doc)
+
 def get_location_full_name(location, location_type):
     if location_type == 'hotel':
         return frappe.db.get_value("Hotel", location, "hotel_name", cache=True)

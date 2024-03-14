@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
-from tourism_portal.utils import parse_date
+from tourism_portal.utils import parse_date, publish_user_notification
 
 class HotelInquiryRequest(Document):
 	def before_insert(self):
@@ -15,6 +15,24 @@ class HotelInquiryRequest(Document):
 	def before_submit(self):
 		self.validate_required_fields()
 		self.valid_datetime = frappe.utils.now_datetime()+frappe.utils.datetime.timedelta(seconds=self.valid_until)
+	def on_submit(self):
+		self.notify_client_result()
+	def notify_client_result(self):
+		hotel = frappe.db.get_value("Hotel", self.hotel, 'hotel_name', cache=True)
+		room_type = frappe.db.get_value("Hotel Room", self.room, 'room_type', cache=True)
+		room_type = frappe.db.get_value("Room Type", room_type, 'room_type', cache=True)
+		room = frappe.db.get_value("Hotel Room", self.room, 'room_accommodation_type', cache=True)
+		room = frappe.db.get_value("Room Accommodation Type", room, 'accommodation_type_name', cache=True)
+		subject = "Inquiry Request for Hotel: {0}".format(hotel)
+		message = "Your Inquiry Request for: ({0}, {1}, {2}, {3}-{4}) is {5}".format(hotel, room_type, room, self.from_date, self.to_date,self.status)
+		publish_user_notification(
+			subject,
+			message,
+			self.customer,
+			self.doctype,
+			self.name
+		)
+		
 	def validate_required_fields(self):
 		if not self.status:
 			frappe.throw("Please enter Status field")
