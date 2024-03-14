@@ -121,24 +121,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Reports",
-   "link_count": 1,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Hotel Room Availabilities",
-   "link_count": 0,
-   "link_to": "Hotel Room Availabilities",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Companies",
    "link_count": 5,
    "onboard": 0,
@@ -589,9 +571,47 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Hotel Room Availabilities",
+   "link_count": 0,
+   "link_to": "Hotel Room Availabilities",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hotel Room Buying Report",
+   "link_count": 0,
+   "link_to": "Hotel Room Buying Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Hotel Room Selling Report",
+   "link_count": 0,
+   "link_to": "Hotel Room Selling Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2024-03-13 17:22:32.389034",
+ "modified": "2024-03-14 05:24:59.613173",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal",
