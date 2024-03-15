@@ -19,7 +19,7 @@
  "list_columns": [],
  "login_required": 0,
  "max_attachment_size": 0,
- "modified": "2024-01-27 17:30:39.442086",
+ "modified": "2024-03-15 04:50:34.430953",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "agency-registration-form",
@@ -46,6 +46,7 @@
   {
    "allow_read_on_all_link_options": 0,
    "default": "0",
+   "description": "By checking this box and clicking the Continue button, I acknowledge that I have read and agree to the attached Venus Company policy and terms and conditions, which can be used in the judiciary in the event of non-compliance.",
    "fieldname": "i_agree_to_the_terms_and_conditions",
    "fieldtype": "Check",
    "hidden": 0,
