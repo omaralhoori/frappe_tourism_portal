@@ -48,4 +48,13 @@ def add_availability(rooms, qty):
 		room_doc.available_qty = room_doc.available_qty + int(qty)
 		room_doc.save(ignore_permissions=True)
 	return "Rooms Updated Successfully"
+@frappe.whitelist()
+def stop_sell(rooms):
+	if type(rooms) == str:
+		rooms = json.loads(rooms)
+	for room in rooms:
+		room_doc = frappe.get_doc("Room Availability", room)
+		room_doc.available_qty = 0
+		room_doc.save(ignore_permissions=True)
+	return "Rooms Updated Successfully"
 		

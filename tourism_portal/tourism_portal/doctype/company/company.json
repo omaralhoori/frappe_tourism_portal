@@ -148,19 +148,19 @@
    "depends_on": "eval:doc.is_child_company",
    "fieldname": "child_company_margins_section",
    "fieldtype": "Section Break",
-   "label": "Child Company Margins"
+   "label": "Child Company Markup"
   },
   {
    "default": "0",
    "fieldname": "transfer_margin",
    "fieldtype": "Float",
-   "label": "Transfer Margin"
+   "label": "Transfer Markup"
   },
   {
    "default": "0",
    "fieldname": "tour_margin",
    "fieldtype": "Float",
-   "label": "Tour Margin"
+   "label": "Tour Markup"
   },
   {
    "fieldname": "company_logo",
@@ -170,7 +170,7 @@
   {
    "fieldname": "hotel_margin",
    "fieldtype": "Float",
-   "label": "Hotel Margin"
+   "label": "Hotel Markup"
   },
   {
    "default": "0",
@@ -233,9 +233,8 @@
   },
   {
    "fieldname": "agency_city",
-   "fieldtype": "Link",
-   "label": "Agency City",
-   "options": "City"
+   "fieldtype": "Data",
+   "label": "Agency City"
   },
   {
    "fieldname": "agency_address",
@@ -296,7 +295,7 @@
   }
  ],
  "make_attachments_public": 1,
- "modified": "2024-03-12 01:13:45.989200",
+ "modified": "2024-03-16 12:18:44.168106",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Company",

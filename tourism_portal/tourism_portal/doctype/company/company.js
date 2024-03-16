@@ -7,6 +7,9 @@ frappe.ui.form.on('Company', {
 			frm.add_custom_button(__('Add User'), function(){
 				frm.events.add_user(frm);
 			});
+			frm.add_custom_button(__('Add Credit'), function(){
+				frm.events.add_credit(frm);
+			});
 
 			frm.events.get_company_balance(frm)
 
@@ -70,6 +73,36 @@ frappe.ui.form.on('Company', {
 						"first_name": values.first_name,
 						"last_name": values.last_name,
 						"password": values.password,
+					},
+					callback: (message) => {
+						frm.reload_doc();
+					}
+				})
+				d.hide();
+			}
+		});
+		
+		d.show();
+	},
+	add_credit: function(frm){
+		let d = new frappe.ui.Dialog({
+			title: __('Enter Credit'),
+			fields: [
+				{
+					label: 'Credit',
+					fieldname: 'credit',
+					fieldtype: 'Float',
+					reqd: 1
+				},
+			],
+			size: 'small', // small, large, extra-large 
+			primary_action_label: __('Save'),
+			primary_action(values) {
+				frm.call({
+					"method": "add_credit",
+					doc:frm.doc,
+					args: {
+						"credit": values.credit,
 					},
 					callback: (message) => {
 						frm.reload_doc();

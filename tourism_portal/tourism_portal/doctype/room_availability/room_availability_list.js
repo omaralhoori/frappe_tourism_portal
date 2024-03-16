@@ -40,5 +40,29 @@ frappe.listview_settings['Room Availability'] = {
 			
 			d.show();
 		});
+		listview.page.add_inner_button(__("Stop Sell"), function () {
+			var selected = listview.get_checked_items().map(item => `${item.name}`)
+			if (selected.length < 1) {
+				frappe.throw("Please select at least one row")
+			}
+			frappe.confirm('Are you sure you want to proceed?',
+			() => {
+				frappe.call({
+					"method": "tourism_portal.tourism_portal.doctype.room_availability.room_availability.stop_sell",
+					"args": {
+						"rooms": selected
+					},
+					"callback": function (response) {
+						if (response.message) {
+							frappe.msgprint(response.message)
+							listview.refresh()
+						}
+					}
+				})
+			}, () => {
+				// action to perform if No is selected
+			})
+			
+		});
 	}
 }

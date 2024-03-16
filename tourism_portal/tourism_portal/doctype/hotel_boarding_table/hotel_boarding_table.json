@@ -17,7 +17,7 @@
    "fieldname": "boarding_type",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Boarding Type",
+   "label": "Board Type",
    "options": "Hotel Boarding Type",
    "reqd": 1
   },
@@ -33,24 +33,26 @@
    "fieldname": "extra_price",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Extra Price"
+   "label": "Extra Price(Per Adult Per Night)"
   },
   {
    "fieldname": "child_price",
    "fieldtype": "Float",
+   "in_list_view": 1,
    "label": "Child Price"
   },
   {
    "description": "Child under this age will be free",
    "fieldname": "min_child_age",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "Min Child Age"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-10 13:24:46.299895",
+ "modified": "2024-03-15 17:52:14.978863",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Boarding Table",

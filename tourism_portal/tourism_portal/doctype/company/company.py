@@ -27,6 +27,22 @@ class Company(Document):
 		user.append_roles(('Customer'))
 		user.save(ignore_permissions=True)
 		update_password(user=user.name, pwd=password)
+
+	@frappe.whitelist()
+	def add_credit(self, credit):
+		if self.is_child_company:
+			frappe.throw("You cannot add credit from this page.")
+		payment = frappe.new_doc("Company Payment")
+		payment.amount = credit
+		payment.debit = credit
+		payment.credit = 0
+		payment.currency = 'USD'
+		payment.company = self.name
+		payment.payment_type = "Deposit"
+		payment.post_date = frappe.utils.nowdate()
+		payment.save()
+		payment.submit()
+		return payment.name
 	def get_agency_naming_series(self):
 		format_ser =  "AGN.#######"
 		prg_serial = make_autoname(format_ser, "Sales Invoice")
