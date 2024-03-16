@@ -16,6 +16,7 @@
   "customer",
   "invoice_no",
   "voucher_no",
+  "currency",
   "column_break_v9ehp",
   "post_date",
   "post_time",
@@ -110,6 +111,7 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Grand Total",
+   "options": "currency",
    "precision": "2",
    "read_only": 1
   },
@@ -168,6 +170,7 @@
    "fieldname": "hotel_fees",
    "fieldtype": "Currency",
    "label": "Hotel Fees",
+   "options": "currency",
    "precision": "2",
    "read_only": 1
   },
@@ -210,6 +213,7 @@
    "fieldname": "transfer_fees",
    "fieldtype": "Currency",
    "label": "Transfer Fees",
+   "options": "currency",
    "read_only": 1
   },
   {
@@ -243,6 +247,7 @@
    "fieldname": "tour_fees",
    "fieldtype": "Currency",
    "label": "Tour Fees",
+   "options": "currency",
    "read_only": 1
   },
   {
@@ -286,12 +291,14 @@
    "fieldname": "transfer_fees_company",
    "fieldtype": "Currency",
    "label": "Transfer Fees Company",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "tour_fees_company",
    "fieldtype": "Currency",
    "label": "Tour Fees Company",
+   "options": "currency",
    "read_only": 1
   },
   {
@@ -302,12 +309,14 @@
    "fieldname": "hotel_fees_company",
    "fieldtype": "Currency",
    "label": "Hotel Fees Company",
+   "options": "currency",
    "read_only": 1
   },
   {
    "fieldname": "grand_total_company",
    "fieldtype": "Currency",
    "label": "Grand Total Company",
+   "options": "currency",
    "read_only": 1
   },
   {
@@ -328,12 +337,19 @@
    "fieldtype": "Check",
    "label": "Main System Transferred",
    "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-08 14:01:17.675367",
+ "modified": "2024-03-17 01:00:20.561492",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice",

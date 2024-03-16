@@ -13,6 +13,7 @@ portal_keydict = {
 	"hotel_accommodation_type_rule": "default_hotel_accommodation_type_rule",
 	"hotel_child_rate_policy": "default_hotel_child_rate_policy",
 	"hotel_profit_margin": "default_hotel_profit_margin",
+	"currency": "selling_currency",
 }
 
 
