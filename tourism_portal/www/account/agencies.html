@@ -7,7 +7,7 @@
 
 </div>
 <div>
-    <table class="table table-striped">
+    <table class="table table-striped table-light">
     <thead class="thead-dark">
         <tr>
             <td>CODE</td>
@@ -27,13 +27,13 @@
             <td>{{agency.agency_balance}}</td>
             <td>{{agency.user}}</td>
             <td>
-                <button agency-id="{{agency.name}}" class="btn btn-small btn-info" onclick="addMoneyModalOpen(this)">ADD MONEY</button>
+                <button agency-id="{{agency.name}}" class="btn btn-small btn-info" onclick="addMoneyModalOpen(this)">ADD Credit</button>
                 <button agency-id="{{agency.name}}" 
                 hotel-profit="{{agency.hotel_margin}}"
                  transfer-profit="{{agency.transfer_margin}}" 
                  tour-profit="{{agency.tour_margin}}"
                  onclick="profitModalOpen(this)"
-                 class="btn btn-small btn-warning">PROFIT MARGIN</button>
+                 class="btn btn-small btn-warning">Markup</button>
                  {% if agency.disabled %}
                 <button agency-id="{{agency.name}}" class="btn btn-small btn-success" onclick="enableAgencyClicked(this)">ENABLE</button>
                  {% else %}
@@ -93,7 +93,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header card-primary-color">
-        <h5 class="modal-title" id="money-modal-title">ADD MONEY</h5>
+        <h5 class="modal-title" id="money-modal-title">ADD Credit</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -118,7 +118,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header card-primary-color">
-        <h5 class="modal-title" id="profit-modal-title">PROFIT MARGIN</h5>
+        <h5 class="modal-title" id="profit-modal-title">Markup</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -127,15 +127,15 @@
         <form>
         <input type="hidden" id="agency-profit-id" />
           <div class="form-group">
-            <label for="agency-hotel-profit" class="col-form-label">Hotel Profit Margin</label>
+            <label for="agency-hotel-profit" class="col-form-label">Hotel Markup</label>
             <input type="number"  min="0" class="form-control" id="agency-hotel-profit">
           </div>
           <div class="form-group">
-            <label for="agency-transfer-profit" class="col-form-label">Transfer Profit Margin</label>
+            <label for="agency-transfer-profit" class="col-form-label">Transfer Markup</label>
             <input type="number"  min="0" class="form-control" id="agency-transfer-profit">
           </div>
           <div class="form-group">
-            <label for="agency-tour-profit" class="col-form-label">Tour Profit Margin</label>
+            <label for="agency-tour-profit" class="col-form-label">Tour Markup</label>
             <input type="number"  min="0" class="form-control" id="agency-tour-profit">
           </div>
         </form>

@@ -7,7 +7,7 @@ from frappe.model.document import Document
 from frappe import _
 from frappe.model.naming import make_autoname
 from frappe.tests.utils import FrappeTestCase
-from tourism_portal.tourism_portal.doctype.company_payment.company_payment import add_child_company_refund, add_company_refund, create_child_company_payment, create_payment
+from tourism_portal.tourism_portal.doctype.company_payment.company_payment import add_child_company_refund, add_company_refund, create_child_company_payment, create_payment, get_child_company_balance, get_company_balance
 from tourism_portal.tourism_portal.doctype.room_availability.room_availability import free_room, reserve_room
 from tourism_portal.tourism_portal.doctype.sales_invoice.reserve import add_tours_to_invoice, add_transfers_to_invoice
 from tourism_portal.tourism_portal.doctype.tour_price.tour_price import get_tour_price_with_child_prices
@@ -500,9 +500,15 @@ class SalesInvoice(Document):
 		print("Cancel Invoice")
 		if self.status == "Cancelled":
 			frappe.throw(_("Invoice is already cancelled"))
-		self.cancel_hotels()
-		self.cancel_transfers()
-		self.cancel_tours()
+		try:
+			self.cancel_hotels()
+			self.cancel_transfers()
+			self.cancel_tours()
+		except:
+			if self.child_company:
+				get_child_company_balance(self.child_company, update_cache=True)
+			get_company_balance(self.company, update_cache=True)
+			frappe.throw("Error in cancelling invoice")
 		self.db_set("status", "Cancelled")
 	def cancel_transfers(self):
 		cancellation_policy = frappe.db.get_single_value("Tourism Portal Settings", "transfer_cancellation_policy")
@@ -537,7 +543,7 @@ class SalesInvoice(Document):
 		total_refund = 0
 		for tour_type in self.tour_types:
 			if tour_type.search_name == tour.search_name:
-				total_refund += get_cancellation_refund(cancellation_policy, tour_type.tour_price_company, tour_type.tour_date, tour_type.tour_date, day_margin=1, day_start_hour=0)
+				total_refund += get_cancellation_refund(cancellation_policy, tour_type.tour_price_company, tour_type.tour_date or tour.from_date, tour_type.tour_date or tour.from_date, day_margin=1, day_start_hour=0)
 		return total_refund
 		# if tour.tour_date:
 		# 	refund = refund_tour(cancellation_policy, tour.tour_price, tour.tour_date)

@@ -27,7 +27,7 @@ class CompanyPayment(Document):
 
 
 def create_payment(company, amount, payment_type,currency=None, against_doctype=None, against_docname=None, remarks=''):
-	balance = get_company_balance(company)
+	balance = get_company_balance(company, update_cache=True)
 	if (payment_type == 'Payment' or payment_type == 'Pay' or payment_type == 'Reserve') and balance < amount:
 		frappe.throw("Insufficient Balance")
 	if not currency:
@@ -49,7 +49,7 @@ def create_payment(company, amount, payment_type,currency=None, against_doctype=
 	return payment.name
 def create_child_company_payment(company, parent_company, amount, parent_amount, payment_type,currency=None, against_doctype=None, against_docname=None, remarks=''):
 	if payment_type == 'Payment' or payment_type == 'Pay':
-		balance = get_child_company_balance(company)
+		balance = get_child_company_balance(company, update_cache=True)
 		if balance < amount:
 			frappe.throw("Insufficient Balance")
 	payment= frappe.get_doc({
@@ -74,21 +74,21 @@ def create_child_company_payment(company, parent_company, amount, parent_amount,
 def add_child_company_deposit(deposit, company, parent_company):
 	create_payment(parent_company, deposit, payment_type='Reserve', remarks='Deposit for '+company)
 	create_child_company_payment(company, parent_company, deposit,0, payment_type='Deposit')
-def get_company_balance(company=None):
+def get_company_balance(company=None, update_cache=False):
 	if not company:
 		company = frappe.db.get_value("User", frappe.session.user, "company")
 	cached_balance = frappe.cache().hget("company_balance", company)
-	if cached_balance:
+	if cached_balance and not update_cache:
 		return cached_balance
 	balance = get_company_balance_all(company)
 	frappe.cache().hset("company_balance" , company, balance)
 	return balance
 	
-def get_child_company_balance(company=None):
+def get_child_company_balance(company=None, update_cache=False):
 	if not company:
 		company = frappe.db.get_value("User", frappe.session.user, "company")
 	cached_balance = frappe.cache().hget("company_balance", company)
-	if cached_balance:
+	if cached_balance and not update_cache:
 		return cached_balance
 	balance = get_child_company_balance_all(company)
 	frappe.cache().hset("company_balance" , company, balance)

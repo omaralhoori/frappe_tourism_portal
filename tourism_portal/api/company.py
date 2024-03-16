@@ -14,6 +14,7 @@ def get_customer_balance():
         balance = get_child_company_balance(company=company_details.get('child_company'))
     else:
         balance = get_company_balance()
+    print(balance, "balance")
     return balance
 
 @frappe.whitelist()

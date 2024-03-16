@@ -50,6 +50,7 @@ class Company(Document):
 	def before_insert(self):
 		if not self.company_code:
 			self.company_code = self.get_agency_naming_series()
+			self.system_code = self.company_code
 def get_account_settings(company=None):
 	if not company:
 		company = frappe.db.get_value("User", frappe.session.user, "company")
