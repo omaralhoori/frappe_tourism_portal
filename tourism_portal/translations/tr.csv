@@ -1,0 +1,41 @@
+Hotel Inquiry Request,Otel Sorgulama Talebi
+Hotel Inquiry Requests,Otel Sorgulama Talebleri
+Customer,Müşteri
+Available,Mevcut
+Not Available,Mevcut Değil
+Hotel,Otel
+Adults,Yetişkin
+Children,Çocuk
+Nationality,Uyruk
+Requested Qty,Talep Edilen Miktar
+Inquiry Results,Sorgulama Sonuçları
+Selling Price Based On,Taban Fiyat
+Quantity,Miktar
+Valid Until,Geçerlilik Süresi
+Valid Datetime,Geçerli Tarihi
+Profit Margin,Kar Marjı
+Used,Kullanıldı
+Not Used,Kullanılmadı
+Hotel Inquiry Buying Price,Otel Sorgulama Alış Fiyatı
+Buying Price,Alış Fiyatı
+Buying Currency,Alış Para Birimi
+Selling Price,Satış Fiyatı
+Add Empty Prices,Boş Fiyatlar Ekle
+Hotel Room Buying Report,Otel Oda Alış Raporu
+Contract No,Sözleşme No
+Price,Fiyat
+Validity Date,Geçerlilik Tarihi
+Hotel Room Availabilities,Otel Odası Müsaitliği
+Hotel Room Selling Report,Otel Oda Satış Raporu
+Contract Type,Sözleşme Tipi
+Guarantee,Garanti
+No Contract,Sözleşme Yok
+Selling From Date,Tarihten Satış
+Selling To Date,Tarihe Kadar Satış
+Check In From Date,Tarihten Giriş
+Check In To Date,Tarihe Kadar Giriş
+Custom Extra Services,Özel Ekstra Hizmetler
+Rules and Policies,Kurallar ve Politikalar
+Cancellation Policy,İptal Politikası
+Hotel Accommodation Type Rule,Otel Konaklama Tipi Kuralı
+Hotel Profit Margin,Otel Kar Marjı

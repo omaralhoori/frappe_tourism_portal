@@ -47,7 +47,7 @@ def get_columns(dates, filters={}):
         },
 		{
             'fieldname': 'validated_date',
-            'label': _('Validated Date'),
+            'label': _('Validity Date'),
             'fieldtype': 'Data',
 			'width': '200px'
         },

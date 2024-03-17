@@ -9,7 +9,7 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2024-03-14 04:27:46.402585",
+ "modified": "2024-03-17 15:14:37.692539",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Room Buying Report",
@@ -21,6 +21,9 @@
  "roles": [
   {
    "role": "System Manager"
+  },
+  {
+   "role": "Hotel Inquiry User"
   }
  ]
 }
