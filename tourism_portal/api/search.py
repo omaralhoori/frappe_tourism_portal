@@ -205,6 +205,7 @@ def get_room_inquiry(room, hotel_params, roomPax, company_class):
 			price = {
 				"buying_currency": inquiry_price.buying_currency,
 				"buying_price": inquiry_price.buying_price,
+				"selling_price": inquiry_price.selling_price,
 				"from_date": inquiry_price.from_date,
 				"to_date": inquiry_price.to_date,
 				"inquiry_price_name": inquiry_price.name, 

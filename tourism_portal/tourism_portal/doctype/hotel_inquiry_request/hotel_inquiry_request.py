@@ -8,6 +8,9 @@ from tourism_portal.utils import parse_date, publish_user_notification, send_sys
 class HotelInquiryRequest(Document):
 	def before_insert(self):
 		self.qty = self.requested_qty
+		
+	@frappe.whitelist()
+	def add_empty_prices(self):
 		if len(self.hotel_inquiry_buying_price) == 0:
 			hotel_inquiry_row = self.append("hotel_inquiry_buying_price")
 			hotel_inquiry_row.from_date = self.from_date
@@ -19,7 +22,14 @@ class HotelInquiryRequest(Document):
 		self.valid_datetime = frappe.utils.now_datetime()+frappe.utils.datetime.timedelta(seconds=self.valid_until)
 	def on_submit(self):
 		self.notify_client_result()
-
+	def on_update(self):
+		old_doc = self.get_doc_before_save()
+		for price in self.hotel_inquiry_buying_price:
+			for old_price in old_doc.hotel_inquiry_buying_price:
+				if price.name == old_price.name:
+					if price.buying_currency != old_price.buying_currency or price.buying_price != old_price.buying_price:
+						price.selling_price = None
+				
 	def notify_user_request(self):
 		if not frappe.db.get_single_value("Portal Notification Settings", "send_inquiry_request"):
 			return
@@ -78,11 +88,13 @@ class HotelInquiryRequest(Document):
 		for price in prices:
 			room_contract = frappe.db.get_value("Hotel Room Price", price.get("priceId"), "room_contract", cache=True)
 			contract_type = frappe.db.get_value("Hotel Room Contract", room_contract, "contract_type", cache=True)
-			if  contract_type == "No Contract":
-				price_row = self.append("hotel_inquiry_buying_price")
-				price_doc = frappe.get_cached_doc("Hotel Room Price", price.get("priceId"))
-				price_row.buying_currency = price_doc.buying_currency
-				price_row.buying_price = price_doc.buying_price
-				price_row.from_date = parse_date(price.get('fromDate'))
-				price_row.to_date = parse_date(price.get('toDate'))
+			# if  contract_type == "No Contract":
+			price_row = self.append("hotel_inquiry_buying_price")
+			price_doc = frappe.get_cached_doc("Hotel Room Price", price.get("priceId"))
+			price_row.buying_currency = price_doc.buying_currency
+			price_row.buying_price = price_doc.buying_price
+			if price_doc.selling_price:
+				price_row.selling_price = price_doc.selling_price
+			price_row.from_date = parse_date(price.get('fromDate'))
+			price_row.to_date = parse_date(price.get('toDate'))
 		

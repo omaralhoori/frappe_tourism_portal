@@ -202,7 +202,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-02-12 13:05:05.959739",
+ "modified": "2024-03-17 14:30:50.722507",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Inquiry Request",
@@ -219,6 +219,12 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "write": 1
+  },
+  {
+   "permlevel": 1,
+   "read": 1,
+   "role": "System Manager",
    "write": 1
   }
  ],
