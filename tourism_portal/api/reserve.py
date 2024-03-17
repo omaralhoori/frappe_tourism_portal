@@ -497,6 +497,7 @@ def add_transfers_to_completed_invoice():
     except:
         return {"success_key": 0, "message": "Invoice not found"}
     res = invoice.add_transfers(selected_transfers)
+    invoice.notifiy_invoice_edit("Invoice " + invoice_id + " has been updated","Transfers have been added to the invoice")
     frappe.db.commit()  
     if res:
         return {"success_key": 1, "message": ""}
@@ -519,6 +520,7 @@ def add_tours_to_completed_invoice():
     except:
         return {"success_key": 0, "message": "Invoice not found"}
     res = invoice.add_tours(selected_tours)
+    invoice.notifiy_invoice_edit("Invoice " + invoice_id + " has been updated","Tours have been added to the invoice")
     frappe.db.commit()
     if res:
         return {"success_key": 1, "message": ""}

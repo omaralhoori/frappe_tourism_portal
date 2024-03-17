@@ -61,6 +61,7 @@ class ExtendRoomResults(Document):
 			self.db_set("status", "Confirmed")
 		invoice.save(ignore_permissions=True)
 		invoice.create_additional_payment(total_price, total_price_company, remarks="Extend Accommodation from " + str(self.check_in) + " to " + str(self.check_out) + " for " + self.hotel_search)
+		invoice.notifiy_invoice_edit("Invoice " + self.invoice + " has been updated","Extend Accommodation from " + str(self.check_in) + " to " + str(self.check_out) + " for " + self.hotel_search)
 		frappe.db.commit()
 		return {
 			"success_key": 1

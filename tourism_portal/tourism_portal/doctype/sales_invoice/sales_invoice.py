@@ -12,7 +12,7 @@ from tourism_portal.tourism_portal.doctype.room_availability.room_availability i
 from tourism_portal.tourism_portal.doctype.sales_invoice.reserve import add_tours_to_invoice, add_transfers_to_invoice
 from tourism_portal.tourism_portal.doctype.tour_price.tour_price import get_tour_price_with_child_prices
 from tourism_portal.tourism_portal.doctype.tour_schedule_order.tour_schedule_order import schedule_tours_dates
-from tourism_portal.utils import get_cancellation_refund, get_hotel_total_nights, get_location_city, is_time_passed, parse_date, parse_invoice_checkout_date, parse_transfer_date
+from tourism_portal.utils import get_cancellation_refund, get_hotel_total_nights, get_location_city, is_time_passed, parse_date, parse_invoice_checkout_date, parse_transfer_date, send_system_email
 class SalesInvoice(Document):
 	def after_insert(self):
 		session_expires_in = frappe.db.get_single_value("Tourism Portal Settings", "session_expires_in")
@@ -584,7 +584,24 @@ class SalesInvoice(Document):
 		self.add_invoice_no()
 		self.db_set("status", "Submitted")
 		self.notifiy_agency_invoice()
-		self.notifiy_agency_voucher()	
+		self.notifiy_agency_voucher()
+		self.notifiy_new_reservation()
+	def notifiy_new_reservation(self):
+		if not frappe.db.get_single_value("Portal Notification Settings", "send_invoice_creation"):
+			return
+		reservation_email = frappe.db.get_single_value("Portal Notification Settings", "reservation_email")
+		if not reservation_email:
+			return
+		subject = "New Reservation: " + self.voucher_no
+		msg = "New Reservation has been created for " + self.voucher_no + " from " + frappe.db.get_value("Company", self.company, "company_name", cache=True)
+		send_system_email(reservation_email, subject, msg)
+	def notifiy_invoice_edit(self, subject, edit_msg):
+		if not frappe.db.get_single_value("Portal Notification Settings", "send_on_invoice_update"):
+			return
+		reservation_email = frappe.db.get_single_value("Portal Notification Settings", "reservation_email")
+		if not reservation_email:
+			return
+		send_system_email(reservation_email, subject, edit_msg)
 	def get_invoice_print_details(self):
 		if self.child_company:
 			operator = frappe.db.get_value("Company", self.child_company, "company_name", cache=True)
