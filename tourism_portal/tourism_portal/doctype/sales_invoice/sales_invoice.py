@@ -504,6 +504,7 @@ class SalesInvoice(Document):
 			self.cancel_hotels()
 			self.cancel_transfers()
 			self.cancel_tours()
+			self.notifiy_invoice_edit("Invoice " + self.name + " has been cancelled","Invoice " + self.name + " has been cancelled")
 		except:
 			if self.child_company:
 				get_child_company_balance(self.child_company, update_cache=True)
