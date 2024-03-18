@@ -79,7 +79,7 @@
   },
   {
    "fieldname": "description",
-   "fieldtype": "Small Text",
+   "fieldtype": "Text Editor",
    "label": "Description"
   },
   {
@@ -136,7 +136,7 @@
  "image_field": "package_image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-30 15:59:32.680224",
+ "modified": "2024-03-18 14:04:18.311388",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour Package",
