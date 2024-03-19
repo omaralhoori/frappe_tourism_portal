@@ -1163,7 +1163,7 @@ function getSelectedTours(){
             for (var tourItem of tourResult.querySelectorAll('.tour-item')){
                 tours.push(tourItem.getAttribute('tour-id'))
                 toursPrice[tourItem.getAttribute('tour-id')] = tourItem.getAttribute('tour-indv-price')
-                toursPriceCompany[tourItem.getAttribute('tour-id')] = tourItem.getAttribute('tour-indv-price')
+                toursPriceCompany[tourItem.getAttribute('tour-id')] = tourItem.getAttribute('tour-indv-price-company')
             }
             selectedTours[tourSearchName].push({
                 "tours": tours,

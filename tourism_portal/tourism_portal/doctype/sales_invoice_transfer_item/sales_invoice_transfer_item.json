@@ -24,7 +24,11 @@
   "drop_off",
   "drop_off_type",
   "drop_off_postal_code",
-  "flight_no"
+  "flight_no",
+  "section_break_utmmb",
+  "is_canceled",
+  "refund",
+  "refund_company"
  ],
  "fields": [
   {
@@ -143,12 +147,38 @@
    "fieldtype": "Currency",
    "label": "Transfer Price Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "section_break_utmmb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "refund",
+   "fieldtype": "Currency",
+   "label": "Refund"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "refund_company",
+   "fieldtype": "Currency",
+   "label": "Refund Company"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "is_canceled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is Canceled"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-02-05 11:49:57.600158",
+ "modified": "2024-03-19 14:03:06.569310",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice Transfer Item",

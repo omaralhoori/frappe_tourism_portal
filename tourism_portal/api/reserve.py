@@ -158,6 +158,8 @@ def get_invoice_data(sales_invoice):
         hotel_room['extras'] = extras
         rooms[room.get('hotel_search')][room.get('hotel')]['rooms'].append(hotel_room)
     for tour in invoice.tours:
+        if tour.is_canceled:
+            continue
         if not tours.get(tour.get('search_name')):
             tours[tour.get('search_name')] = {}
         tours[tour.get('search_name')]['search_name'] = tour.get('search_name')
@@ -206,6 +208,8 @@ def get_invoice_data(sales_invoice):
         tours[tour.get('search_name')]['adult_paxes'] = adult_paxes
         tours[tour.get('search_name')]['child_paxes'] = child_paxes
     for transfer in invoice.transfers:
+        if transfer.is_canceled:
+            continue
         transfer_search = transfer.get('transfer_search')
         transfer_name = transfer.get('transfer_name')
         if not transfers.get(transfer_search):
@@ -548,6 +552,30 @@ def update_reservation():
         return {"success_key": 0, "message": "Invoice not found"}
     invoice.update_transfers(transfers_info)
     invoice.update_tours(tours_info)
+    invoice.save(ignore_permissions=True)
+    frappe.db.commit()
+    return {"success_key": 1, "message": ""}
+
+@frappe.whitelist()
+def cancel_transfer(invoice_id, transfer_search, transfer_name):
+    company_details = get_company_details()
+    if company_details.get('is_child_company'):
+        invoice = frappe.get_doc("Sales Invoice", {"name": invoice_id, "company": company_details.get('company'), "child_company": company_details.get('child_company')})
+    else:
+        invoice = frappe.get_doc("Sales Invoice", {"name": invoice_id, "company": company_details.get('company')})
+    invoice.cancel_transfer(transfer_search, transfer_name)
+    invoice.save(ignore_permissions=True)
+    frappe.db.commit()
+    return {"success_key": 1, "message": ""}
+
+@frappe.whitelist()
+def cancel_tour(invoice_id, tour_search):
+    company_details = get_company_details()
+    if company_details.get('is_child_company'):
+        invoice = frappe.get_doc("Sales Invoice", {"name": invoice_id, "company": company_details.get('company'), "child_company": company_details.get('child_company')})
+    else:
+        invoice = frappe.get_doc("Sales Invoice", {"name": invoice_id, "company": company_details.get('company')})
+    invoice.cancel_tour(tour_search)
     invoice.save(ignore_permissions=True)
     frappe.db.commit()
     return {"success_key": 1, "message": ""}

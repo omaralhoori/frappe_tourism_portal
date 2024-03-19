@@ -346,6 +346,8 @@ class SalesInvoice(Document):
 			# 	if room_extra.room_row_id == room.name:
 			# 		total  += room_extra.extra_price
 					# ToDo make for percentage too
+			if transfer.is_canceled:
+				continue
 			total += transfer.transfer_price
 			total_company += transfer.transfer_price_company
 		self.transfer_fees = total
@@ -360,6 +362,8 @@ class SalesInvoice(Document):
 			# 	if room_extra.room_row_id == room.name:
 			# 		total  += room_extra.extra_price
 					# ToDo make for percentage too
+			if tour.is_canceled:
+				continue
 			total += tour.tour_price
 			total_company += tour.tour_price_company
 		self.tour_fees = total
@@ -516,6 +520,8 @@ class SalesInvoice(Document):
 		total_refunds = 0
 		for transfer in self.transfers:
 			# transfer.is_canceled = 1
+			if transfer.is_canceled:
+				continue
 			total_refunds += get_cancellation_refund(cancellation_policy, transfer.transfer_price_company, transfer.transfer_date, transfer.transfer_date, day_margin=1, day_start_hour=0)
 		if total_refunds > 0:
 			add_company_refund( company=self.company, refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype, remarks="Transfer Refund for voucher "+self.voucher_no)
@@ -528,6 +534,8 @@ class SalesInvoice(Document):
 		cancellation_policy = frappe.db.get_single_value("Tourism Portal Settings", "tour_cancellation_policy")
 		total_refunds = 0
 		for tour in self.tours:
+			if tour.is_canceled:
+				continue
 			if tour.tour_type == "package":
 				total_refunds += get_cancellation_refund(cancellation_policy, tour.tour_price_company, tour.from_date, tour.to_date, day_margin=1, day_start_hour=0)
 			else:
@@ -540,6 +548,30 @@ class SalesInvoice(Document):
 				commission_refund = get_commission_refund(self.tour_fees_company, self.tour_fees, total_refunds)
 				create_payment(self.company, commission_refund,'Reserve', remarks="Reserve for "+self.child_company)
 				add_child_company_refund( company=self.child_company, parent_company=self.company, refund=commission_refund, parent_refund=total_refunds,voucher_no=self.name, voucher_type=self.doctype, remarks="Tour Refund for voucher "+self.voucher_no)
+	def cancel_tour(self, tour_search):
+		cancellation_policy = frappe.db.get_single_value("Tourism Portal Settings", "tour_cancellation_policy")
+		total_refunds = 0
+		canceled_tour = None
+		for tour in self.tours:
+			if tour.search_name == tour_search:
+				if tour.is_canceled:
+					break
+				if tour.tour_type == "package":
+					total_refunds += get_cancellation_refund(cancellation_policy, tour.tour_price_company, tour.from_date, tour.to_date, day_margin=1, day_start_hour=0)
+				else:
+					total_refunds += self.get_single_tour_refund(tour, cancellation_policy)
+				canceled_tour = tour
+				canceled_tour.is_canceled = 1
+			#tour.save(ignore_permissions=True)
+		if total_refunds > 0:
+			add_company_refund( company=self.company, refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype, remarks="Tour Refund for voucher "+self.voucher_no)
+			canceled_tour.refund = total_refunds
+			canceled_tour.company_refund = total_refunds
+			if self.child_company:
+				commission_refund = get_commission_refund(self.tour_fees_company, self.tour_fees, total_refunds)
+				create_payment(self.company, commission_refund,'Reserve', remarks="Reserve for "+self.child_company)
+				add_child_company_refund( company=self.child_company, parent_company=self.company, refund=commission_refund, parent_refund=total_refunds,voucher_no=self.name, voucher_type=self.doctype, remarks="Tour Refund for voucher "+self.voucher_no)
+				canceled_tour.refund = commission_refund
 	def get_single_tour_refund(self,tour, cancellation_policy):
 		total_refund = 0
 		for tour_type in self.tour_types:
@@ -712,6 +744,8 @@ class SalesInvoice(Document):
 		transfer_groups = {}
 
 		for transfer in self.transfers:
+			if transfer.is_canceled:
+				continue
 			transfer_key =  transfer.transfer_search + transfer.transfer_name
 			if not transfer_groups.get(transfer_key):
 				transfer_groups[transfer_key] = {
@@ -734,11 +768,34 @@ class SalesInvoice(Document):
 						transfer_groups[transfer_key]['childs'].append(transfer_pax.guest_name + ", Age: " + str(transfer_pax.guest_age))
 
 		return transfer_groups
-	
+	def cancel_transfer(self, transfer_search, transfer_name):
+		cancellation_policy = frappe.db.get_single_value("Tourism Portal Settings", "transfer_cancellation_policy")
+		total_refunds = 0
+		cancelled_transfer = None
+		for transfer in self.transfers:
+			# transfer.is_canceled = 1
+			if transfer.transfer_search == transfer_search and transfer.transfer_name == transfer_name:
+				if transfer.is_canceled:
+					break
+				total_refunds += get_cancellation_refund(cancellation_policy, transfer.transfer_price_company, transfer.transfer_date, transfer.transfer_date, day_margin=1, day_start_hour=0)
+				cancelled_transfer = transfer
+				cancelled_transfer.is_canceled = 1
+				break
+		if total_refunds > 0:
+			add_company_refund( company=self.company, refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype, remarks="Transfer Refund for voucher "+self.voucher_no)
+			cancelled_transfer.refund_company = total_refunds
+			cancelled_transfer.refund = total_refunds
+			if self.child_company:
+				commission_refund = get_commission_refund(self.transfer_fees_company, self.transfer_fees, total_refunds)
+				create_payment(self.company, commission_refund,'Reserve', remarks="Reserve for "+self.child_company)
+				add_child_company_refund( company=self.child_company, parent_company=self.company,refund=commission_refund,parent_refund=total_refunds, voucher_no=self.name, voucher_type=self.doctype, remarks="Transfer Refund for voucher "+self.voucher_no)
+				cancelled_transfer.refund = commission_refund
 	def get_transfer_groups(self):
 		transfer_groups = {}
 
 		for transfer in self.transfers:
+			if transfer.is_canceled:
+				continue
 			transfer_key =  transfer.transfer_search + transfer.transfer_name
 			if not transfer_groups.get(transfer_key):
 				transfer_groups[transfer_key] = {
@@ -764,6 +821,8 @@ class SalesInvoice(Document):
 	def get_invoice_tour_groups(self):
 		tour_groups = {}
 		for tour in self.tours:
+			if tour.is_canceled:
+				continue
 			tour_key = tour.search_name
 			if not tour_groups.get(tour_key):
 				tour_groups[tour_key] = {
@@ -795,6 +854,8 @@ class SalesInvoice(Document):
 	def get_tour_groups(self):
 		tour_groups = {}
 		for tour in self.tours:
+			if tour.is_canceled:
+				continue
 			tour_key = tour.search_name
 			if not tour_groups.get(tour_key):
 				tour_groups[tour_key] = {

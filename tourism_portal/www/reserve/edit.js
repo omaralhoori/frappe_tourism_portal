@@ -20,6 +20,7 @@ $(document).ready(function () {
     formatSelect2()
     formatDataPicker()
     hideExtendHotelButtonForExpiredCheckout();
+    hidCancelButtonForExpiredCheckout();
     toggleLoadingIndicator(false);
 });
 
@@ -116,6 +117,16 @@ function hideExtendHotelButtonForExpiredCheckout(){
     var buttons = document.querySelectorAll('.extend-btn');
     for (var button of buttons){
         var checkout = button.getAttribute('checkout');
+        if (!checkExpiredDate(checkout)){
+            button.classList.remove('d-none');
+        }
+    }
+}
+function hidCancelButtonForExpiredCheckout(){
+    //extend-btn
+    var buttons = document.querySelectorAll('.cancel-btn');
+    for (var button of buttons){
+        var checkout = button.getAttribute('check-in');
         if (!checkExpiredDate(checkout)){
             button.classList.remove('d-none');
         }
@@ -1090,4 +1101,60 @@ function checkAvailableIndividualDates(e) {
             tour.disabled = false;
         }
     }
+}
+
+function cancelTransferClicked(e){
+    var transferName = e.getAttribute('transfer-name');
+    var transferSearch = e.getAttribute('transfer-search');
+    frappe.confirm("Are you sure you want to cancel this transfer?", ()=> confirmCancelTransfer(e))
+}
+
+function confirmCancelTransfer(e){
+    var transferName = e.getAttribute('transfer-name');
+    var transferSearch = e.getAttribute('transfer-search');
+    var invoiceId= new URLSearchParams(window.location.search).get('invoice');
+    frappe.call({
+        method: "tourism_portal.api.reserve.cancel_transfer",
+        args: {
+            invoice_id: invoiceId,
+            transfer_name: transferName,
+            transfer_search: transferSearch,
+        },
+        callback: res => {
+            if (res.message && res.message.success_key){
+                window.location.reload();
+            }else if (res.message && !res.message.success_key){
+                frappe.throw(res.message.message)
+            }else{
+                frappe.throw("Something went wrong")
+            }
+            
+        }
+    })
+}
+
+function cancelTourClicked(e){
+    frappe.confirm("Are you sure you want to cancel this tour?", ()=> confirmCancelTour(e))
+}
+
+function confirmCancelTour(e){
+    var tourSearch = e.getAttribute('tour-search');
+    var invoiceId= new URLSearchParams(window.location.search).get('invoice');
+    frappe.call({
+        method: "tourism_portal.api.reserve.cancel_tour",
+        args: {
+            invoice_id: invoiceId,
+            tour_search: tourSearch,
+        },
+        callback: res => {
+            if (res.message && res.message.success_key){
+                window.location.reload();
+            }else if (res.message && !res.message.success_key){
+                frappe.throw(res.message.message)
+            }else{
+                frappe.throw("Something went wrong")
+            }
+            
+        }
+    })
 }

@@ -114,6 +114,9 @@ def get_available_tours_and_prices(params):
 		for tour in tour_packages:
 			tour['package_price_company'] = tour['package_price']
 			tour['package_price'] = get_subagency_extra_price(tour['package_price'], tour_margin)
+			for tour_indv in tour.get('tours', []):
+				tour_indv['tour_price_company'] = tour_indv['tour_price']
+				tour_indv['tour_price'] = get_subagency_extra_price(tour_indv['tour_price'], tour_margin)
 		return tour_packages
 def get_available_tours(params):
 	"""
