@@ -7,6 +7,10 @@ from tourism_portal.utils import get_portal_setting
 no_cache=1
 def get_context(context):
 	context.no_cache=1
+	if frappe.session.user != 'Guest':
+		frappe.local.flags.redirect_location = '/home'
+		raise frappe.Redirect
+	
 	context.title = "Home"
 	context.settings = frappe.get_single("Tourism Website Settings")
 

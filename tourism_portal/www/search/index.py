@@ -466,7 +466,7 @@ def ask_for_availability():
 	frappe.db.commit()
 	return {
 		"success_key": 1,
-		"msg": _("The request has been submitted successfully")
+		"msg": _("Your request has been received successfully. Kindly reload this page after a few minutes to receive the rate and availability")
 	}
 
 def verify_ask_for_availability_args(args):

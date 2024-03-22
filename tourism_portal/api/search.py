@@ -701,7 +701,7 @@ def ask_for_availability(room_id, room_qty):
 	}).insert(ignore_permissions=True)
 	return {
 		"success_key": 1,
-		"message": _("The request has been submitted successfully")
+		"message": _("Your request has been received successfully. Kindly reload this page after a few minutes to receive the rate and availability")
 	}
 
 """

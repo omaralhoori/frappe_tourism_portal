@@ -8,7 +8,42 @@ $(document).ready(function () {
     formatDataPicker(document, (e) => { formatToDate(e)})
     addDefaultAdults(document.querySelector('.hotel-search-card'), true);
     hideOneCardDeleteBtn();
+    // checkSearchedParams()
 });
+
+function checkSearchedParams(){
+    var urlParams = new URLSearchParams(window.location.search);
+    var search = urlParams.get('search');
+    if (search){
+        toggleLoadingIndicator(true);
+        frappe.call({
+            "method": "tourism_portal.api.home.get_search_params",
+            "args": {
+                "search": search
+            },
+            callback: function (r) {
+                var searchParams = r.message;
+                toggleLoadingIndicator(false);
+                if (searchParams){
+                    loadSearch(searchParams)
+                }else{
+                    frappe.throw("No search found with this name")
+                }
+            }
+        })
+    }
+}
+function loadSearch(searchParams){
+    console.log(searchParams)
+    for (var hotelSearch in searchParams.hotel_params){
+        loadHotelSearch(hotelSearch, searchParams.hotel_params[hotelSearch])
+    }
+}
+
+function loadHotelSearch(hotelSearch, hotelParams){
+    
+}
+
 function formatToDate(e) {
     var toDateClass = checkToDateClass(e.el.getAttribute('name'))
     if (toDateClass){

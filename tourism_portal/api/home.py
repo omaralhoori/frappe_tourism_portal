@@ -161,3 +161,12 @@ def get_packge_tour_info(tours, tour_type):
 	# 	"tour_info": tour_info,
 	# #	"attachments": attachments
 	# }
+
+@frappe.whitelist()
+def get_search_params(search):
+	search_doc = frappe.get_doc("Search Result", {"name": search, "user": frappe.session.user})
+	return {
+		"hotel_params": json.loads(search_doc.hotel_params),
+		"transfer_params": json.loads(search_doc.transfer_params),
+		"tour_params": json.loads(search_doc.tour_params)
+	}
