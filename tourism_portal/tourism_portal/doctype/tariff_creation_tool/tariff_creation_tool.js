@@ -22,8 +22,40 @@ frappe.ui.form.on('Tariff Creation Tool', {
 				var url =  frm.doc.tariff_file;
 				window.open(url, '_blank');
 			});
+			frm.add_custom_button(__('Publish Tariff'), function() {
+				frappe.confirm('Are you sure you want to proceed?',
+				() => {
+					frm.events.publish_tariff(frm);
+				}, () => {
+					// action to perform if No is selected
+				})
+			});
 		
 		}
+	},
+	publish_tariff: function(frm){
+		frappe.call({
+			"method": "tourism_portal.tourism_portal.doctype.tariff_creation_tool.tariff_creation_tool.publish_tariff",
+			args: {
+				"template": frm.doc.tariff_template,
+				'tariff_file': frm.doc.tariff_file,
+				'tariff_path': frm.doc.tariff_path,
+				'title': frm.doc.title,
+				'from_date': frm.doc.check_in_from_date,
+				'to_date': frm.doc.check_in_to_date,
+				'publish_from_date':  frm.doc.publish_from_date,
+				'publish_to_date': frm.doc.publish_to_date,
+				'company_class': frm.doc.company_class,
+			},
+			callback: (res)=> {
+				console.log(res.message)
+				if (res.message) {
+					frappe.msgprint("Tariff Published Successfully");
+				}else{
+					frappe.msgprint("Error in publishing tariff");
+				}
+			}
+		})
 	},
 	fetch_data: function(frm) {
 		frappe.call({
@@ -90,6 +122,7 @@ frappe.ui.form.on('Tariff Creation Tool', {
 	},
 	create_tariff: function(frm){
 		frm.doc.tariff_file = "";
+		frm.doc.file_path = "";
 		frm.refresh_field("tariff_file");
 		frappe.show_progress('Loading..', 50, 100, 'Please wait');
 		frm.refresh()
@@ -107,7 +140,8 @@ frappe.ui.form.on('Tariff Creation Tool', {
 				if (res.message) {
 					frappe.show_progress('Loading..', 100, 100, 'Please wait');
 					frappe.hide_progress();
-					frm.doc.tariff_file = res.message;
+					frm.doc.tariff_file = res.message.file;
+					frm.doc.tariff_path = res.message.file_path
 					frm.refresh_field("tariff_file");
 					frm.refresh()
 					frappe.msgprint("Tariff Created Successfully");

@@ -24,7 +24,8 @@
   "to_night",
   "section_break_xx8ly",
   "hotels",
-  "tariff_file"
+  "tariff_file",
+  "tariff_path"
  ],
  "fields": [
   {
@@ -59,7 +60,7 @@
   },
   {
    "fieldname": "publish_from_date",
-   "fieldtype": "Data",
+   "fieldtype": "Date",
    "label": "Publish From Date",
    "reqd": 1
   },
@@ -127,13 +128,19 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Tariff File"
+  },
+  {
+   "fieldname": "tariff_path",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Tariff Path"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-04-02 07:35:43.507662",
+ "modified": "2024-04-05 15:21:22.912688",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tariff Creation Tool",

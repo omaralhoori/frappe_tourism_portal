@@ -111,7 +111,10 @@ def create_tariff(template, hotels, from_date, to_date, updated_date, title="Tar
 	site = frappe.get_site_path()
 	tariff_path = site+'/public/files/example.pdf'
 	pdf.write_pdf(tariff_path, stylesheets=[css], font_config=font_config)
-	return '/files/example.pdf'
+	return {
+		'file': '/files/example.pdf',
+		'file_path': tariff_path
+	}
 
 import unittest
 from frappe.tests.test_commands import BaseTestCommands
@@ -119,3 +122,24 @@ class TestCreateTariff(BaseTestCommands, unittest.TestCase):
 	def test_execute(self):
 		result = create_tariff("Test Template", '{"hotel1": {"STD-2024-01-01-2024-12-31": {"price_id": "00001", "hotel": "hotel1", "hotel_name": "Hotel 1", "hotel_stars": 5, "room_accommodation_type": "SGL", "extra_type": "Percentage", "extra_profit": 10, "room_type": "STD", "selling_price": 100, "check_in_from_date": "2024-01-01", "check_in_to_date": "2024-12-31", "special_period": "01.01 - 31.12", "location": "Dubai"}, "STD-2024-01-01-2024-12-31": {"price_id": "00002", "hotel": "hotel1", "hotel_name": "Hotel 1", "hotel_stars": 5, "room_accommodation_type": "DBL", "extra_type": "Percentage", "extra_profit": 10, "room_type": "STD", "selling_price": 200, "check_in_from_date": "2024-01-01", "check_in_to_date": "2024-12-31", "special_period": "01.01 - 31.12", "location": "Dubai"}}}')
 		self.assertTrue(result)
+
+import shutil
+
+@frappe.whitelist()
+def publish_tariff(template, tariff_file,tariff_path, title, from_date,  to_date,  publish_from_date,  publish_to_date , company_class):
+	if frappe.db.exists("Tariff", title):
+		frappe.throw("Tariff already exists with same title")
+	tariff = frappe.new_doc("Tariff")
+	template = frappe.get_doc("Tariff Template", template)
+	tariff.city = template.city
+	tariff.company_country = template.market
+	tariff.company_class = company_class
+	tariff.published_from_date = publish_from_date
+	tariff.published_to_date = publish_to_date
+	tariff.tariff_from_date = from_date
+	tariff.tariff_to_date = to_date
+	tariff.name = title
+	shutil.copy( tariff_path, frappe.get_site_path() + "/public/files/" + title + ".pdf")
+	tariff.tariff_file = "/files/" + title + ".pdf"
+	tariff.save()
+	return True

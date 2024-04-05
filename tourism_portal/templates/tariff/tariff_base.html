@@ -99,7 +99,9 @@
           </table>
       </div>
     {% endif %}
-   
+     <footer>
+        <img src="{{format_url(footer)}}" alt="">
+    </footer>
   </article>
   {% endfor %}
   {% else %}
@@ -190,7 +192,9 @@
           </table>
       </div>
     {% endif %}
-   
+   <footer>
+        <img src="{{format_url(footer)}}" alt="">
+    </footer>
   </article>
   {% endif %}
    {% if template.show_tours and template.separate_tours_page %}
@@ -263,18 +267,18 @@
     {% endif %}
 
     {% if terms %}
-    <article>
-      <div class="orange-color w-100 t-center f-xl f-bold p-3">
+    <article class="terms" style="height: {{template.terms_page_height}};">
+      <div class="orange-color w-100 t-center f-xl f-bold p-2">
         Terms & Conditions
       </div>
-      <table class=" w-100 h-100 b-none">
-          <td rowspan="{{terms|length}}" style="height:  100%;" class="w-40 blue-color align-center t-center f-bold f-xl">
+      <table class=" w-100 h-100 b-none" style="">
+          <td rowspan="{{terms|length}}" class="w-40 h-100 blue-color align-center t-center f-bold f-xl">
              Policy
           </td>
           <td class="w-60 p-1 gray-color align-center ">
             <ul>
               {% for term in terms %}
-                <li>{{term.policy_details}}</li>
+                <li class="term-item">{{term.policy_details}}</li>
               {% endfor %}
             </ul>
           </td>

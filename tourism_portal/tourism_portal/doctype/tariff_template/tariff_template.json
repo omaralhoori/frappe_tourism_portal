@@ -71,7 +71,9 @@
   "transfer_name_font_size",
   "column_break_k8ya5",
   "transfer_price_padding",
-  "transfer_price_font_size"
+  "transfer_price_font_size",
+  "section_break_mgfbg",
+  "terms_page_height"
  ],
  "fields": [
   {
@@ -407,11 +409,20 @@
    "fieldname": "transfer_price_font_size",
    "fieldtype": "Data",
    "label": "Transfer Price Font Size"
+  },
+  {
+   "fieldname": "section_break_mgfbg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "terms_page_height",
+   "fieldtype": "Data",
+   "label": "Terms Page Height"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-02 12:04:07.166702",
+ "modified": "2024-04-05 15:03:37.612929",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tariff Template",

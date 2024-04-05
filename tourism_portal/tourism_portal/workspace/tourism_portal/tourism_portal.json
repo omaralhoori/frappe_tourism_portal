@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"cU5nyM-87u\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Tourism Portal</span>\",\"col\":12}},{\"id\":\"dfTal9rL8y\",\"type\":\"card\",\"data\":{\"card_name\":\"Hotels\",\"col\":4}},{\"id\":\"NTRd1C7AyM\",\"type\":\"card\",\"data\":{\"card_name\":\"Hotel Definitions\",\"col\":4}},{\"id\":\"-Ep-WXD95D\",\"type\":\"card\",\"data\":{\"card_name\":\"Portal Definitions\",\"col\":4}},{\"id\":\"RsCZTj1rQu\",\"type\":\"card\",\"data\":{\"card_name\":\"Location\",\"col\":4}},{\"id\":\"hHhmuUts6M\",\"type\":\"card\",\"data\":{\"card_name\":\"Companies\",\"col\":4}},{\"id\":\"a0SU-EWFQb\",\"type\":\"card\",\"data\":{\"card_name\":\"Sales\",\"col\":4}},{\"id\":\"jCnPMJtwzX\",\"type\":\"card\",\"data\":{\"card_name\":\"Transfers\",\"col\":4}},{\"id\":\"QAnzuzlyPA\",\"type\":\"card\",\"data\":{\"card_name\":\"Tours\",\"col\":4}},{\"id\":\"uQnMW1Q8R0\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"8R54MKss5D\",\"type\":\"card\",\"data\":{\"card_name\":\"Website\",\"col\":4}},{\"id\":\"W8n_oUKnQN\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"cU5nyM-87u\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Tourism Portal</span>\",\"col\":12}},{\"id\":\"dfTal9rL8y\",\"type\":\"card\",\"data\":{\"card_name\":\"Hotels\",\"col\":4}},{\"id\":\"NTRd1C7AyM\",\"type\":\"card\",\"data\":{\"card_name\":\"Hotel Definitions\",\"col\":4}},{\"id\":\"-Ep-WXD95D\",\"type\":\"card\",\"data\":{\"card_name\":\"Portal Definitions\",\"col\":4}},{\"id\":\"RsCZTj1rQu\",\"type\":\"card\",\"data\":{\"card_name\":\"Location\",\"col\":4}},{\"id\":\"hHhmuUts6M\",\"type\":\"card\",\"data\":{\"card_name\":\"Companies\",\"col\":4}},{\"id\":\"a0SU-EWFQb\",\"type\":\"card\",\"data\":{\"card_name\":\"Sales\",\"col\":4}},{\"id\":\"jCnPMJtwzX\",\"type\":\"card\",\"data\":{\"card_name\":\"Transfers\",\"col\":4}},{\"id\":\"QAnzuzlyPA\",\"type\":\"card\",\"data\":{\"card_name\":\"Tours\",\"col\":4}},{\"id\":\"uQnMW1Q8R0\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"8R54MKss5D\",\"type\":\"card\",\"data\":{\"card_name\":\"Website\",\"col\":4}},{\"id\":\"O0xMMsrK87\",\"type\":\"card\",\"data\":{\"card_name\":\"Tariff\",\"col\":4}},{\"id\":\"W8n_oUKnQN\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2023-10-08 15:51:11.800152",
  "custom_blocks": [],
  "docstatus": 0,
@@ -393,64 +393,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Settings",
-   "link_count": 5,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Tourism Portal Settings",
-   "link_count": 0,
-   "link_to": "Tourism Portal Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Invoice Print Settings",
-   "link_count": 0,
-   "link_to": "Invoice Print Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Portal Notification Settings",
-   "link_count": 0,
-   "link_to": "Portal Notification Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Welcome Page Settings",
-   "link_count": 0,
-   "link_to": "Tourism Website Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "About Us Page Settings",
-   "link_count": 0,
-   "link_to": "About Page Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Website",
    "link_count": 1,
    "onboard": 0,
@@ -609,9 +551,115 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Settings",
+   "link_count": 6,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tourism Portal Settings",
+   "link_count": 0,
+   "link_to": "Tourism Portal Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Invoice Print Settings",
+   "link_count": 0,
+   "link_to": "Invoice Print Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Portal Notification Settings",
+   "link_count": 0,
+   "link_to": "Portal Notification Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Welcome Page Settings",
+   "link_count": 0,
+   "link_to": "Tourism Website Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "About Us Page Settings",
+   "link_count": 0,
+   "link_to": "About Page Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Transfer Settings",
+   "link_count": 0,
+   "link_to": "Transfer Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tariff",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tariffs",
+   "link_count": 0,
+   "link_to": "Tariff",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tariff Creation Tool",
+   "link_count": 0,
+   "link_to": "Tariff Creation Tool",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tariff Template",
+   "link_count": 0,
+   "link_to": "Tariff Template",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2024-03-17 15:21:56.968005",
+ "modified": "2024-04-05 14:41:20.194520",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tourism Portal",
