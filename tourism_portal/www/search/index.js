@@ -8,6 +8,21 @@ var reservation_details = {
 }
 var availabeRooms = {}
 
+function getHotelResultsWithAlternatives(searchResults){
+    var results = {}
+    var alternatives = {}
+    for (var searchName in searchResults){
+        var searchResult = searchResults[searchName];
+        var {alternative_hotels, ...hotels} = searchResult;
+        results[searchName] = hotels;
+        alternatives[searchName] = alternative_hotels;
+    }
+    return {
+        "results": results,
+        "alternatives": alternatives
+    }
+}
+
 $(document).ready(async function(){
     toggleLoadingIndicator(true);
     // check if there is common rooms
@@ -19,8 +34,12 @@ $(document).ready(async function(){
     if (res.message){
         searchResults = JSON.parse(res.message);
     }
-    var results = checkCommonRooms(searchResults);
+    var allResults = getHotelResultsWithAlternatives(searchResults)
+
+    var results = checkCommonRooms(allResults.results);
     formatResults(results);
+    renderAlternativeHotels(allResults.alternatives);
+   
     // updateAvailableRooms();
     // checkRightSelected()
     // lastCheckForButton();
@@ -44,6 +63,21 @@ $(document).ready(async function(){
     formatDataPicker()
     toggleLoadingIndicator(false);
 })
+
+function renderAlternativeHotels(alternatives){
+    var alternative_results = checkCommonRooms(alternatives);
+    for (var searchName in alternative_results){
+        if (Object.keys(alternative_results[searchName]).length == 0){
+            continue;
+        }
+        var searchAlternatives = alternative_results[searchName];
+        var alternativeSearch = {}
+        alternativeSearch[searchName] = searchAlternatives;
+        var alternative_hotels = formatResults(alternativeSearch, true);
+        document.querySelector(`div[hotel-result="${searchName}"] .hotel-list-results`).innerHTML += `<div class='alternaitve-title'>Expand your options! Explore our suggestions for suitable hotel alternatives</div>` +alternative_hotels;
+    }
+    
+}
 
 function formatSelect2() {
     $('.select2-select').each(function (i, select) {

@@ -105,7 +105,7 @@ def search_for_available_hotel(hotel, start=0, limit=10):
 	if hotel["location-type"] == "area" or hotel["location-type"] == "town" or hotel['location-type'] == "city":
 		return search_for_available_hotel_by_area(hotel, start, limit)
 	elif hotel["location-type"] == "hotel":
-		return search_for_available_hotel_by_hotel(hotel)
+		return search_for_available_hotel_by_hotel(hotel, alternative=True)
 	else:
 		return {}
 @frappe.whitelist()
@@ -124,11 +124,32 @@ def search_for_available_hotel_by_area(hotel_params, start=0, limit=10):
 			results.update(hotel_data)
 	return results
 
-def search_for_available_hotel_by_hotel(hotel_params):
+def get_alternative_hotels(hotel):
+	alternative_hotels = frappe.db.sql("""
+		SELECT name, hotel_name
+			FROM `tabHotel` WHERE area=%(area)s AND name != %(hotel)s AND disabled=0 AND hotel_priority > {hotel_priority} AND star_rating=%(star_rating)s
+		ORDER BY hotel_priority desc
+		LIMIT 5;""".format(hotel_priority=hotel.hotel_priority), {"area": hotel.area, "hotel": hotel.name, "star_rating": hotel.star_rating}, as_dict=True)
+	return alternative_hotels
+
+def search_for_available_hotel_by_hotel(hotel_params, alternative=False):
 	hotel = frappe.get_cached_doc("Hotel", hotel_params.get("location"))
+	alternatives = {}
+	if alternative:
+		alternative_hotels = get_alternative_hotels(hotel)
+		for alternative_hotel in alternative_hotels:
+			new_hotel_params = hotel_params.copy()
+			new_hotel_params['location'] = alternative_hotel.get('name')
+			alternative_data = search_for_available_hotel_by_hotel(new_hotel_params)
+			if alternative_data:
+				alternatives.update(alternative_data)
 	company_class = get_company_class(hotel_params)
 	if hotel.disabled:
-		return {}
+		if not alternatives:
+			return {}
+		return {
+			"alternative_hotels": alternatives
+		}
 	hotel_rooms = get_hotel_rooms(hotel.name)
 	available_rooms = {}
 	for roomPax in hotel_params.get('paxInfo'):
@@ -137,17 +158,29 @@ def search_for_available_hotel_by_hotel(hotel_params):
 		available_rooms[roomPax.get('roomName')]['rooms'] = []
 		paxRooms = filter_hotel_rooms_by_pax(hotel_rooms, roomPax, hotel.hotel_accommodation_type_rule)
 		if len(paxRooms) == 0:
-			return {}
+			if not alternatives:
+				return {}
+			return {
+				"alternative_hotels": alternatives
+			}
 		available_rooms[roomPax.get('roomName')]['rooms'] = paxRooms
 		for room in available_rooms[roomPax.get('roomName')]['rooms']:
 			room['room_type_name'] = frappe.db.get_value("Room Type", room.get('room_type'), "room_type")
 			room['room_accommodation_type_name'] = frappe.db.get_value("Room Accommodation Type", room['room_accommodation_type'], "accommodation_type_name", cache=True)
 			get_room_contracts(room, hotel_params, roomPax, company_class)
+	if not alternatives:
+		return {
+			hotel.name:{
+				  "details":get_hotel_data(hotel),
+				  "rooms": available_rooms
+			}
+		}
 	return {
 		hotel.name:{
 			  "details":get_hotel_data(hotel),
 			  "rooms": available_rooms
-		}
+		},
+		"alternative_hotels": alternatives
 	}
 
 def get_room_contracts(room, hotel_params, roomPax, company_class):
@@ -201,7 +234,6 @@ def get_room_inquiry(room, hotel_params, roomPax, company_class):
 		inquiry = frappe.get_doc("Hotel Inquiry Request", inquiries[0].get('name'))
 		prices = []
 		if inquiry.status == 'Not Available':
-			print("Inquiry Not Available")
 			return {
 				"valid_datetime": inquiry.valid_datetime,
 				"qty": 0,
@@ -223,7 +255,6 @@ def get_room_inquiry(room, hotel_params, roomPax, company_class):
 			if price:
 				prices.append(price)
 		if all_dates_selected := is_prices_cover_all_dates(prices, hotel_params.get('checkin'), hotel_params.get('checkout')):
-			print("all_dates_selected", all_dates_selected)
 			return {
 				"valid_datetime": inquiry.valid_datetime,
 				"qty": inquiry.qty,
@@ -232,7 +263,6 @@ def get_room_inquiry(room, hotel_params, roomPax, company_class):
 				"status": inquiry.status,
 
 			}
-	print("No Inquiry Found")
 	return None
 
 
