@@ -67,7 +67,7 @@ def get_room_boards(hotel):
 
 def get_room_beds(room_type):
     return frappe.db.sql("""
-    SELECT tbl2.type_code, tbl2.bed_type
+    SELECT tbl2.type_code, tbl2.bed_type, tbl1.note
         FROM `tabRoom Accommodation Bed Type item` as tbl1
         INNER JOIN `tabRoom Bed Type` as tbl2 on tbl1.bed_type=tbl2.name
         WHERE tbl1.parent=%(room_type)s
@@ -320,3 +320,20 @@ def send_email(email, subject, message, doctype=None, docname=None):
 		subject=subject,
 		now=1,
 		)
+
+def get_hotel_stars(hotel_stars):
+    stars = {
+        "One Star": "1",
+        "Two-Star": "2",
+        "Three-Star": "3",
+        "Four-Star": "4",
+        "Five-Star": "5",
+    }
+    return stars.get(hotel_stars)
+
+def format_url(url):
+    if url.startswith("http"):
+        return url
+    if url.startswith("/files"):
+        return frappe.utils.get_url(url)
+    return f"https://{url}"

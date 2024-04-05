@@ -8,7 +8,7 @@ $(document).ready(function () {
     formatDataPicker(document, (e) => { formatToDate(e)})
     addDefaultAdults(document.querySelector('.hotel-search-card'), true);
     hideOneCardDeleteBtn();
-    // checkSearchedParams()
+    checkSearchedParams()
 });
 
 function checkSearchedParams(){
@@ -35,12 +35,77 @@ function checkSearchedParams(){
 }
 function loadSearch(searchParams){
     console.log(searchParams)
+    $('.search-card-container').remove()
     for (var hotelSearch in searchParams.hotel_params){
         loadHotelSearch(hotelSearch, searchParams.hotel_params[hotelSearch])
+    }
+    for (var transferSearch in searchParams.transfer_params){
+        loadTransferSearch(transferSearch, searchParams.transfer_params[transferSearch])
     }
 }
 
 function loadHotelSearch(hotelSearch, hotelParams){
+    var container = $('.search-cards');
+
+
+    var html = '';
+    var resultItem = $('#hotel-search-template').html()
+    html += resultItem//document.querySelector('.hotel_search_template').innerHTML;
+    // Add a new element next to the selected last element
+
+    container.append(html);
+    var cardName = `${hotelSearch}`
+    container.find('.hotel-search-card:last').find('input[name="hotel-card"]').val(cardName);
+    var allHotelSearchCards = document.querySelectorAll('.hotel-search-card')
+    formatDataPicker(allHotelSearchCards[allHotelSearchCards.length - 1], (e) => { formatToDate(e) })
+    formatSelect2()
+    autocompleteLocations(allHotelSearchCards[allHotelSearchCards.length - 1].querySelector('.hotel-location'), 'tourism_portal.api.query.get_locations');
+    container.find('.hotel-search-card:last').find('input[name="nationality"]').val(hotelParams['nationality']);
+    
+    container.find('.hotel-search-card:last').find('input[name="location"]').val(hotelParams['location-name']);
+    container.find('.hotel-search-card:last').find('input[name="location"]').attr('location-id', hotelParams['location']);
+    container.find('.hotel-search-card:last').find('input[name="location"]').attr('location-type', hotelParams['location-type']);
+    container.find('.hotel-search-card:last').find('input[name="location"]').attr('location-name', hotelParams['location-name']);
+   
+    
+    container.find('.hotel-search-card:last').find('input[name="check-in"]').val(hotelParams['checkin']);
+    container.find('.hotel-search-card:last').find('input[name="check-out"]').val(hotelParams['checkout']);
+    container.find('.hotel-search-card:last').find('select[name="room"]').val(hotelParams['room']);
+    // container.find('.hotel-search-card:last').find('select[name="room"]').trigger('change');
+    var paxContainer = container.find('.hotel-search-card:last').find('.pax-container');
+    var html = '';
+    for (var pax of hotelParams['paxInfo']){    
+        $('.pax-template-container .room-label').text(pax.roomName)
+        html = document.querySelector('.pax-template-container').innerHTML;
+        paxContainer.append(html);
+        paxContainer.find('select[name="adult"]').last().val(pax.adults);
+        paxContainer.find('select[name="children"]').last().val(pax.children);
+        var childrenContainer = paxContainer.find('.children-container:last');
+        var chtml = '';
+        for (var i in pax.childrenInfo){
+            //if (!e.value) e.value = 0;
+            var childAge = pax.childrenInfo[i];
+            $('.children-template-container .child-label').text(`Child ${i + 1}`)
+            chtml = document.querySelector('.children-template-container').innerHTML;
+
+            childrenContainer.append(chtml);
+            childrenContainer.find('select[name="child-age"]').last().val(childAge);
+
+        }
+
+    }
+
+
+    hideOneCardDeleteBtn();
+}
+
+function loadTransferSearch(transferSearch, transferParams){
+    var transferContainer = $('.transfer-search-container:last');
+    var html = '';
+    var transferTemplate = document.querySelector('#transfer-search-template');
+    html += transferTemplate.innerHTML;
+    transferContainer.append(html);
+    var transferRows = transferContainer.find('.transfer-search-row');
     
 }
 
@@ -73,7 +138,7 @@ function formatToDate(e) {
     }
 }
 function hideOneCardDeleteBtn() {
-    showHideGroupTransfer();
+    // showHideGroupTransfer();
     hideSearchBtn();
     var deleteBtns = document.querySelectorAll('.remove-card-btn');
     if (deleteBtns.length == 1) {

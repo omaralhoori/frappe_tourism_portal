@@ -9,7 +9,7 @@ from tourism_portal.utils import get_location_postal_code, get_postal_code_trans
 class TransferPrice(Document):
 	pass
 
-def get_available_transfers(params):
+def get_available_transfers(params, has_hotel=False):
 	"""
 	Get available transfers based on the given parameters.
 
@@ -55,7 +55,7 @@ def get_available_transfers(params):
 			if check_available_vip_transfer(available_transfer, params['paxes']):
 				trasfers.append(available_transfer)
 	elif params['transfer-type'] == "group":
-		transfer_price = get_group_transfer_price(params['paxes'], available_transfers)
+		transfer_price = get_group_transfer_price(params['paxes'], available_transfers, has_hotel=has_hotel)
 		if not transfer_price:
 			return []
 		transfer_type = "group_transfer"
@@ -82,7 +82,7 @@ def get_transfer_details(transfer):
 	return frappe.db.get_value("Transfer Type", transfer['transfer_type'],
 	['transfer_type', 'transfer_image', 'transfer_description'], as_dict=True)
 
-def get_group_transfer_price(paxes, available_transfers):
+def get_group_transfer_price(paxes, available_transfers, has_hotel=False):
 	"""
 	Get the group transfer price based on the given passenger details and available transfers.
 
@@ -98,7 +98,10 @@ def get_group_transfer_price(paxes, available_transfers):
 	child_policy = available_transfers[0]['transfer_child_policy']
 	if not child_policy:
 		return 0
-	adult_price = available_transfers[0]['group_adult_price']
+	extra_transfer_price = 0
+	if not has_hotel:
+		extra_transfer_price = frappe.db.get_single_value("Transfer Settings", "only_transfer_extra_price")
+	adult_price = available_transfers[0]['group_adult_price'] + extra_transfer_price
 	policies = frappe.db.get_all("Transfer Child Price", {"parent": child_policy},
 	 ["child_order", "from_age", "to_age", "adult_price_percentage"], order_by="idx, child_order")
 	transfer_price = 0

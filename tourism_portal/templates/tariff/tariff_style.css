@@ -1,0 +1,257 @@
+
+  @font-face {
+    font-family: "soon";
+    src: url("fonts/ComingSoon-Regular.ttf") format('truetype');
+  }
+  
+  @page {
+    margin: 0;
+    size: A4;
+    margin-top: {{template.header_height}};
+    margin-bottom: {{template.footer_height}};
+    @bottom-center {
+        content: element(footer);
+    }
+    @top-center {
+      content: element(header);
+  }
+  }
+  article{
+    break-after: always;
+  }
+  body {
+    font-family: "soon";
+    margin: 0;
+  }
+  
+  hr {
+    border-top: 3px dashed gray;
+    border-bottom: none;
+    margin: 5mm 0;
+  }
+  
+  p {
+    font-family: serif;
+    line-height: 18pt;
+    margin-top: 5mm;
+  }
+  
+  
+  label {
+    display: block;
+    margin-bottom: 2mm;
+  }
+  
+  input, textarea {
+    display: block;
+  }
+  
+  input::before, textarea::before, textarea::after {
+    content: leader(dotted);
+    display: block;
+  }
+  header {
+    position: running(header);
+  }
+  header img{
+    width: {{template.header_footer_width}};
+    height: {{template.header_height}};
+  }
+  footer img {
+    width: {{template.header_footer_width}};
+    height: {{template.footer_height}};
+  }
+  footer {
+    position: running(footer);
+  }
+  footer p {
+    text-align: center;
+  } 
+ /* Palete */
+  .blue-color{
+    background-color: #2a318e;
+    color: white;
+  }
+  .orange-color{
+    background-color: #ff9000;
+    color: rgb(0, 0, 0);
+  }
+  .gray-color{
+    background-color: #deeaf6;
+    color: rgb(0, 0, 0);
+  }
+  .special_period{
+    display: inline-block;
+  }
+
+  .d-flex{
+    display: flex;
+  } 
+  .d-inline{
+    display: inline-block;
+  } 
+  .justify-space-between{
+    justify-content: space-between;
+  }
+  .p-1{
+    padding: 0.25cm;
+  }
+  .p-2{
+    padding: 0.5cm;
+  }
+  .p-3{
+    padding: 0.75cm;
+  }
+  .p-4{
+    padding: 1cm;
+  }
+  .px-1{
+    padding-left: 0.25cm;
+    padding-right: 0.25cm;
+  }
+  .py-1{
+    padding-top: 0.25cm;
+    padding-bottom: 0.25cm;
+  }
+  .py-2{
+    padding-top: 0.5cm;
+    padding-bottom: 0.5cm;
+  }
+  .py-3{
+    padding-top: 0.75cm;
+    padding-bottom: 0.75cm;
+  }
+  .f-bold{
+    font-weight: bold;
+  }
+  .f-sm{
+    font-size: 6pt;
+  }
+  .f-m{
+    font-size: 8pt;
+  }
+  .f-lg{
+    font-size: 10pt;
+  }
+  .f-xl{
+    font-size: 12pt;
+  }
+  .w-5{
+    width: 5%;
+  }
+  .w-750{
+    width: 7.5%;
+  }
+  .w-10{
+    width: 10%;
+  }
+  .w-15{
+    width: 15%;
+  }
+  .w-175{
+    width: 17.5%;
+  }
+  .w-20{
+    width: 20%;
+  }
+  .w-25{
+    width: 25%;
+  }
+  .w-30{
+    width: 30%;
+  }
+  .w-40{
+    width:40%;
+  }
+  .w-45{
+    width:45%;
+  }
+  .w-50{
+    width: 50%;
+  }
+  .w-55{
+    width: 55%;
+  }
+  .w-60{
+    width: 70%;
+  }
+  .w-70{
+    width: 70%;
+  }
+  .w-100{
+    width: 100%;
+  }
+  .h-100{
+    height: 100%;
+  }
+  .b-none{
+    border: none;
+    border-collapse: collapse;
+  }
+  .hotels-table{
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .tours-joined-table{
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .tours-joined-table td{
+    border: 1px solid white;
+    padding: 0 0.15cm;
+  }
+  .tours-joined-table th{
+    border: 1px solid white;
+    padding: 0.25cm 0.15cm;
+  }
+   .hotels-table td{
+    border: 1px solid white;
+    padding: 0 0.15cm;
+  }
+  .hotels-table th{
+    border: 1px solid white;
+    padding: 0.25cm 0.15cm;
+  }
+  .t-center{
+    text-align: center;
+  }
+ 
+  .justify-center{
+    justify-content: center;
+  } 
+  .align-center{
+    align-items: center;
+  }
+  .f-left{
+    float: left;
+  }
+  .f-right{
+    float: right;
+  }
+  .hotel-table-row td{
+    padding-top: {{template.hotel_table_row_padding}};
+    padding-bottom: {{template.hotel_table_row_padding}};
+  }
+  .hotel-name{
+    font-size: {{template.hotel_names_font_size}} !important;
+  }
+  .hotel-details{
+    font-size: {{template.hotel_details_font_size}} !important;
+  }
+  .tour-price{
+    font-size: {{template.tour_price_font_size}} !important;
+    padding-top: {{template.tour_price_padding}};
+    padding-bottom: {{template.tour_price_padding}};
+  }
+  .tour-description{
+    font-size: {{template.tour_description_font_size}} !important;
+  }
+  .tour-name{
+    font-size: {{template.tour_name_font_size}} !important;
+  }
+  .transfer-price{
+    font-size: {{template.transfer_price_font_size}};
+  }
+  .transfer-name{
+    font-size: {{template.transfer_name_font_size}};
+  }

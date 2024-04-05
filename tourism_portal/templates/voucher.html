@@ -214,7 +214,7 @@
                 </tr>
         </table>
         {% if room.bed_type %}
-        Bed Type: {{room.bed_type}}
+        Bed Type: {{room.bed_type}} {% if room.bed_note %} ({{room.bed_note}}) {% endif %}
         {% endif %}
         {% if room.extras | length > 0 %}
         Extra Services: 

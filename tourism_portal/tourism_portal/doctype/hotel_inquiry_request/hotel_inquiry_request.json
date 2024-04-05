@@ -33,7 +33,9 @@
   "valid_datetime",
   "used",
   "section_break_aiy84",
-  "hotel_inquiry_buying_price"
+  "hotel_inquiry_buying_price",
+  "notes_section",
+  "alternative"
  ],
  "fields": [
   {
@@ -197,12 +199,22 @@
    "fieldtype": "Check",
    "label": "Used",
    "read_only": 1
+  },
+  {
+   "fieldname": "notes_section",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "alternative",
+   "fieldtype": "Data",
+   "label": "Alternative"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-17 14:30:50.722507",
+ "modified": "2024-04-04 11:14:54.381334",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Inquiry Request",

@@ -1,0 +1,92 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-25 02:08:23.210970",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "hotel",
+  "hotel_name",
+  "location",
+  "hotel_stars",
+  "special_period",
+  "single_price",
+  "double_price",
+  "triple_price"
+ ],
+ "fields": [
+  {
+   "columns": 1,
+   "fieldname": "hotel",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Hotel",
+   "options": "Hotel",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hotel_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hotel Name",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "location",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Location",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "hotel_stars",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hotel Stars",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "special_period",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Special Period"
+  },
+  {
+   "columns": 1,
+   "fieldname": "single_price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Single Price"
+  },
+  {
+   "columns": 1,
+   "fieldname": "double_price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Double Price"
+  },
+  {
+   "columns": 1,
+   "fieldname": "triple_price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Triple Price"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-03-25 03:31:20.606844",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Tariff Hotel",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

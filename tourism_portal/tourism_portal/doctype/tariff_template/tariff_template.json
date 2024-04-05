@@ -1,0 +1,437 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "prompt",
+ "creation": "2024-03-25 01:31:54.908856",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "column_break_pdc6z",
+  "tariff_type",
+  "section_break_yojv4",
+  "market",
+  "column_break_bseyw",
+  "city",
+  "section_break_k52b6",
+  "package_from_night",
+  "column_break_qh6ca",
+  "package_to_night",
+  "section_break_petmr",
+  "package_includes_transfer",
+  "column_break_nqc7t",
+  "transfer_price",
+  "transfer_title",
+  "section_break_b04xf",
+  "hotels",
+  "section_break_eihsc",
+  "free_tour",
+  "tours_section",
+  "show_tours",
+  "show_tour_vip_rate",
+  "column_break_phngb",
+  "separate_tours_page",
+  "show_tour_sic_rate",
+  "section_break_qg1rg",
+  "tours",
+  "transfers_section",
+  "show_transfers",
+  "transfers",
+  "section_break_acylm",
+  "header",
+  "column_break_vrrlh",
+  "footer",
+  "column_break_66mxz",
+  "terms_and_conditions",
+  "dimensions_and_measurements_section",
+  "header_footer_width",
+  "column_break_2cdp4",
+  "header_height",
+  "column_break_hnubz",
+  "footer_height",
+  "section_break_amr2p",
+  "hotel_table_row_padding",
+  "column_break_zcssp",
+  "hotel_names_font_size",
+  "column_break_u86fl",
+  "hotel_details_font_size",
+  "section_break_771zk",
+  "tour_name_padding",
+  "tour_name_font_size",
+  "column_break_3kfz4",
+  "tour_description_padding",
+  "tour_description_font_size",
+  "column_break_lt6c8",
+  "tour_price_padding",
+  "tour_price_font_size",
+  "section_break_uvikw",
+  "transfer_name_padding",
+  "transfer_name_font_size",
+  "column_break_k8ya5",
+  "transfer_price_padding",
+  "transfer_price_font_size"
+ ],
+ "fields": [
+  {
+   "description": "ex. PKG V.###",
+   "fieldname": "naming_series",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Naming Series",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_pdc6z",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tariff_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Tariff Type",
+   "options": "\nPer Room\nPer Person",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_yojv4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "market",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Market",
+   "options": "Country",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_bseyw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "City",
+   "options": "City",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.tariff_type=='Per Person'",
+   "fieldname": "section_break_k52b6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "package_from_night",
+   "fieldtype": "Int",
+   "label": "Package From Night"
+  },
+  {
+   "fieldname": "column_break_qh6ca",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "package_to_night",
+   "fieldtype": "Int",
+   "label": "Package To Night"
+  },
+  {
+   "fieldname": "section_break_petmr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "package_includes_transfer",
+   "fieldtype": "Check",
+   "label": "Package Includes Transfer"
+  },
+  {
+   "fieldname": "column_break_nqc7t",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "transfer_price",
+   "fieldtype": "Currency",
+   "label": "Transfer Price",
+   "mandatory_depends_on": "eval:doc.package_includes_transfer"
+  },
+  {
+   "fieldname": "transfer_title",
+   "fieldtype": "Data",
+   "label": "Transfer Title",
+   "mandatory_depends_on": "eval:doc.package_includes_transfer"
+  },
+  {
+   "fieldname": "section_break_b04xf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "hotels",
+   "fieldtype": "Table",
+   "label": "Hotels",
+   "options": "Tariff Template Hotel",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_eihsc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_acylm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "header",
+   "fieldtype": "Link",
+   "label": "Header",
+   "options": "Tariff Template Asset",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_vrrlh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "footer",
+   "fieldtype": "Link",
+   "label": "Footer",
+   "options": "Tariff Template Asset",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_66mxz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "terms_and_conditions",
+   "fieldtype": "Link",
+   "label": "Terms And Conditions",
+   "options": "Tariff Template Policy",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tours_section",
+   "fieldtype": "Section Break",
+   "label": "Tours"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_tours",
+   "fieldtype": "Check",
+   "label": "Show Tours"
+  },
+  {
+   "fieldname": "tours",
+   "fieldtype": "Table",
+   "label": "Tours",
+   "options": "Tariff Template Tour"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_tour_vip_rate",
+   "fieldtype": "Check",
+   "label": "Show Tour VIP Rate"
+  },
+  {
+   "fieldname": "column_break_phngb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_tour_sic_rate",
+   "fieldtype": "Check",
+   "label": "Show Tour SIC Rate"
+  },
+  {
+   "fieldname": "section_break_qg1rg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "separate_tours_page",
+   "fieldtype": "Check",
+   "label": "Separate Tours Page"
+  },
+  {
+   "description": "For margin, padding, height, width prefer to use cm, mm\nFor font size prefer to use pt",
+   "fieldname": "dimensions_and_measurements_section",
+   "fieldtype": "Section Break",
+   "label": "Dimensions and Measurements"
+  },
+  {
+   "fieldname": "header_footer_width",
+   "fieldtype": "Data",
+   "label": "Header Footer Width",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_2cdp4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "header_height",
+   "fieldtype": "Data",
+   "label": "Header Height",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_hnubz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "footer_height",
+   "fieldtype": "Data",
+   "label": "Footer Height",
+   "reqd": 1
+  },
+  {
+   "fieldname": "free_tour",
+   "fieldtype": "Data",
+   "label": "Free Tour"
+  },
+  {
+   "fieldname": "section_break_amr2p",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "hotel_table_row_padding",
+   "fieldtype": "Data",
+   "label": "Hotel Table Row Padding",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_zcssp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hotel_names_font_size",
+   "fieldtype": "Data",
+   "label": "Hotel Names Font Size",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_u86fl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hotel_details_font_size",
+   "fieldtype": "Data",
+   "label": "Hotel Details Font Size",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_771zk",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "tour_name_padding",
+   "fieldtype": "Data",
+   "label": "Tour Name Padding"
+  },
+  {
+   "fieldname": "tour_name_font_size",
+   "fieldtype": "Data",
+   "label": "Tour Name Font Size"
+  },
+  {
+   "fieldname": "column_break_3kfz4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tour_description_padding",
+   "fieldtype": "Data",
+   "label": "Tour Description Padding"
+  },
+  {
+   "fieldname": "tour_description_font_size",
+   "fieldtype": "Data",
+   "label": "Tour Description Font Size"
+  },
+  {
+   "fieldname": "column_break_lt6c8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tour_price_padding",
+   "fieldtype": "Data",
+   "label": "Tour Price Padding"
+  },
+  {
+   "fieldname": "tour_price_font_size",
+   "fieldtype": "Data",
+   "label": "Tour Price Font Size"
+  },
+  {
+   "fieldname": "transfers_section",
+   "fieldtype": "Section Break",
+   "label": "Transfers"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_transfers",
+   "fieldtype": "Check",
+   "label": "Show Transfers"
+  },
+  {
+   "fieldname": "transfers",
+   "fieldtype": "Table",
+   "label": "Transfers",
+   "options": "Tariff Template Transfer"
+  },
+  {
+   "fieldname": "section_break_uvikw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "transfer_name_padding",
+   "fieldtype": "Data",
+   "label": "Transfer Name Padding"
+  },
+  {
+   "fieldname": "transfer_name_font_size",
+   "fieldtype": "Data",
+   "label": "Transfer Name Font Size"
+  },
+  {
+   "fieldname": "column_break_k8ya5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "transfer_price_padding",
+   "fieldtype": "Data",
+   "label": "Transfer Price Padding"
+  },
+  {
+   "fieldname": "transfer_price_font_size",
+   "fieldtype": "Data",
+   "label": "Transfer Price Font Size"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-04-02 12:04:07.166702",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Tariff Template",
+ "naming_rule": "Set by user",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

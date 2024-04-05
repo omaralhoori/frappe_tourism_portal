@@ -37,7 +37,7 @@ class HotelInquiryRequest(Document):
 		if not email:
 			return
 		hotel, room_type, room = self.get_inquiry_details()
-		subject = "New Inquiry Request from {0}".format(self.company)
+		subject = "New Inquiry Request from {0}".format(frappe.db.get_value("Company", self.company, "company_name", cache=True))
 		message = "New Inquiry Request for: ({0}, {1}, {2}, {3}-{4})".format(hotel, room_type, room, self.from_date, self.to_date)
 		send_system_email(email, subject, message, self.doctype, self.name)
 		

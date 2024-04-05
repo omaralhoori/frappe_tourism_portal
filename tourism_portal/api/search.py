@@ -33,7 +33,7 @@ def get_search_details(search_id):
 	hotelParams = json.loads(search_doc.hotel_params)#params.get('hotelParams')
 	transferParams = json.loads(search_doc.transfer_params)#params.get('transferParams')
 	tourParams = json.loads(search_doc.tour_params)#params.get('toursparams')
-	transfers = search_for_transfers(transferParams)
+	transfers = search_for_transfers(transferParams, bool(hotelParams))
 	total_days = get_hotel_total_days(hotelParams)
 	tours = search_for_tours(tourParams, total_days)
 	# context.rooms = get_available_hotel_rooms(hotelParams)
@@ -77,13 +77,13 @@ def get_hotel_total_days(hotelParams):
 		total_days += delta.days
 	return total_days
 
-def search_for_transfers(transferParams):
+def search_for_transfers(transferParams, has_hotel=False):
 	transfers = {}
 	for transferSearch in transferParams:
 		transfers[transferSearch] = {}
 		for transfer in transferParams[transferSearch]:
 			params = transferParams[transferSearch][transfer]
-			available_transfers = get_available_transfers(params)
+			available_transfers = get_available_transfers(params, has_hotel)
 			transfers[transferSearch][transfer] = available_transfers
 	return transfers
 
@@ -183,7 +183,7 @@ def get_room_contracts(room, hotel_params, roomPax, company_class):
 def get_room_inquiry(room, hotel_params, roomPax, company_class):
 	company_details = get_company_details()
 	inquiries = frappe.db.sql("""
-		select name from `tabHotel Inquiry Request`
+		select name, alternative, status from `tabHotel Inquiry Request`
 		WHERE 
 			company=%(company)s 
 			AND customer=%(customer)s 
@@ -191,7 +191,6 @@ def get_room_inquiry(room, hotel_params, roomPax, company_class):
 			AND used=0 
 			AND valid_datetime > %(now_datetime)s 
 			AND docstatus=1
-			AND status='Available'
 	""", {
 		"company": company_details.get('company'),
 		  "customer": frappe.session.user, 
@@ -201,6 +200,16 @@ def get_room_inquiry(room, hotel_params, roomPax, company_class):
 	if len(inquiries) > 0:
 		inquiry = frappe.get_doc("Hotel Inquiry Request", inquiries[0].get('name'))
 		prices = []
+		if inquiry.status == 'Not Available':
+			print("Inquiry Not Available")
+			return {
+				"valid_datetime": inquiry.valid_datetime,
+				"qty": 0,
+				"name": inquiry.name,
+				"prices": prices,
+				"status": inquiry.status,
+				"alternative": inquiry.alternative
+			}
 		for inquiry_price in inquiry.hotel_inquiry_buying_price:
 			price = {
 				"buying_currency": inquiry_price.buying_currency,
@@ -214,12 +223,16 @@ def get_room_inquiry(room, hotel_params, roomPax, company_class):
 			if price:
 				prices.append(price)
 		if all_dates_selected := is_prices_cover_all_dates(prices, hotel_params.get('checkin'), hotel_params.get('checkout')):
+			print("all_dates_selected", all_dates_selected)
 			return {
 				"valid_datetime": inquiry.valid_datetime,
 				"qty": inquiry.qty,
 				"name": inquiry.name,
-				"prices": prices 
+				"prices": prices,
+				"status": inquiry.status,
+
 			}
+	print("No Inquiry Found")
 	return None
 
 

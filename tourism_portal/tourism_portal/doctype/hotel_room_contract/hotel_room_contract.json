@@ -9,6 +9,7 @@
  "engine": "InnoDB",
  "field_order": [
   "hotel",
+  "city",
   "room_type",
   "contract_no",
   "agency",
@@ -197,12 +198,20 @@
    "fieldtype": "Link",
    "label": "Agency",
    "options": "Company"
+  },
+  {
+   "fetch_from": "hotel.city",
+   "fieldname": "city",
+   "fieldtype": "Link",
+   "label": "City",
+   "options": "City",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-02-12 13:05:22.747357",
+ "modified": "2024-04-05 07:24:29.146547",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Room Contract",

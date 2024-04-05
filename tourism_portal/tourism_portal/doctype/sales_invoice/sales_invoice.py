@@ -722,6 +722,7 @@ class SalesInvoice(Document):
 					"board": frappe.db.get_value("Hotel Boarding Type", room.board, "boarding_type_name", cache=True),
 					"hotel": frappe.db.get_value("Hotel", room.hotel, "hotel_name", cache=True),
 					"bed_type": frappe.db.get_value("Room Bed Type", room.bed_type, "bed_type", cache=True),
+					"bed_note": frappe.db.get_value("Room Accommodation Bed Type item", {"parent": acmd_type, "bed_type": room.bed_type}, "note", cache=True),
 					"address": frappe.db.get_value("Hotel", room.hotel, "address", cache=True),
 					"check_in": room.check_in,
 					"check_out": room.check_out,

@@ -78,6 +78,8 @@ jinja = {
         "tourism_portal.utils.user_has_desk_access",
         "tourism_portal.utils.create_uuid",
         "tourism_portal.utils.get_website_setting",
+        "tourism_portal.utils.get_hotel_stars",
+        "tourism_portal.utils.format_url",
     ]
 }
 

@@ -499,21 +499,40 @@ function formatRoomResult(roomResult){
     var askForAvailability = false;
     var askForPrice = false;
     var pricesHtml = '';
+    var notAvailable = false;
+    var alternative = false;
     if (roomResult.result.remain_qty < 1){
         showAskButton = true;
         askForAvailability = true;
     }
-    if (roomResult.result.room_inquiry && roomResult.result.room_inquiry.prices.length > 0){
-        var showDates = false;
-        if (roomResult.result.room_inquiry.prices.length >1 ){
-            showDates = true;
+    if (roomResult.result.room_inquiry){
+        if (roomResult.result.room_inquiry.prices.length > 0){
+            var showDates = false;
+            if (roomResult.result.room_inquiry.prices.length >1 ){
+                showDates = true;
+            }
+    
+            for(var price of roomResult.result.room_inquiry.prices){
+                pricesHtml += formatRoomPrices(price, showDates);
+            
+            }
+            resultItem = $(resultItem).find('.room-price-container').html(pricesHtml).end().prop('outerHTML'); 
+        }else{
+            console.log("No Prices")
+            resultItem = $(resultItem)
+                .find('.room-price-container')
+                .remove()
+                .end()
+                .prop('outerHTML');
+            notAvailable = true;
+            alternative = roomResult.result.room_inquiry.alternative;
+            resultItem = $(resultItem)
+                .find('.room-selector')
+                .remove()
+                .end()
+                .prop('outerHTML');
         }
-
-        for(var price of roomResult.result.room_inquiry.prices){
-            pricesHtml += formatRoomPrices(price, showDates);
-        
-        }
-        resultItem = $(resultItem).find('.room-price-container').html(pricesHtml).end().prop('outerHTML'); 
+       
     }else{
         if (roomResult.details.prices.length == 0){
             resultItem = $(resultItem)
@@ -578,6 +597,7 @@ function formatRoomResult(roomResult){
     .prop('outerHTML');
     }
     // if (!askForAvailability && !askForPrice){
+    if (! notAvailable){
         var selectRoom = formatRoomSelect(roomResult, askForPrice);
         resultItem = $(resultItem)
         .find('.ask-button-container')
@@ -585,6 +605,25 @@ function formatRoomResult(roomResult){
         .remove()
         .end()
         .prop('outerHTML');
+    }
+    if (notAvailable){
+        resultItem = $(resultItem)
+        .find('.ask-button-container')
+        .after(`<div class="not-available alert alert-danger text-center my-1 w-100 mr-3">Room Not Available</div>`)
+        .remove()
+        .end()
+        .prop('outerHTML');
+        if (alternative){
+            resultItem = $(resultItem)
+            .find('.not-available')
+            .after(`<div class="alert alert-info text-center my-1 w-100 mr-3">${alternative}</div>`)
+            .after(`<strong class="my-1 w-100 mr-3">Alternative:</strong>`)
+            .end()
+            .prop('outerHTML');
+        }
+    }
+   
+       
     // }
     var modified = resultItem
                 .replace('{Room Type}', roomResult['result']['room_type_name'])
@@ -659,7 +698,7 @@ function formatRoomSelect(roomResult, ask_for_price){
         if (roomInquiry){
             roomInquiryName = `roomInquiry="${roomResult.result['room_inquiry']['name']}"`;
         }
-        selectRoom = `<div><label>Rooms: </label> <select 
+        selectRoom = `<div class="room-selector"><label>Rooms: </label> <select 
         onchange="roomSelectChanged(this)" ${roomInquiryName}  class="room-select-input"
         hotel=${roomResult['result']['hotel']} rooms="${rooms}">
         <option ask-qty="0">0</option>
@@ -673,7 +712,7 @@ function formatRoomSelect(roomResult, ask_for_price){
     //     .prop('outerHTML');
     return selectRoom;
 }
-function askForRoomsQty(e, selectedQty, hidePrice){
+function askForRoomsQty(e, selectedQty, hidePrice, askForPrice){
     var roomQtyContainer = $(e).closest('.room-price-qty-details');
     if (roomQtyContainer.find('.ask-button-container').length > 0){
         return;
@@ -681,14 +720,18 @@ function askForRoomsQty(e, selectedQty, hidePrice){
     if (hidePrice){
         roomQtyContainer.find('.room-total').hide();
     }
-    var asmBtn = roomQtyContainer.append(getAskButton());
+    var asmBtn = roomQtyContainer.append(getAskButton(askForPrice));
     // var selectedQty = $(e).val();
 }
 
-function getAskButton(){
+function getAskButton(askForPrice){
+    var askForPriceLabel = '';
+    if (askForPrice){
+        askForPriceLabel = ` and price`
+    }
     return `<div class="container ask-button-container" >
                     <button onclick="askButtonClicked(this)" 
-                    style="font-size: .8em;" class="btn btn-primary tm-btn-search p-2">Ask for availability</button>
+                    style="font-size: .8em;" class="btn btn-primary tm-btn-search p-2">Ask for availability ${askForPriceLabel}</button>
             </div>
                     `;
 }
@@ -714,7 +757,7 @@ function roomSelectChanged(e){
         var askForPrice = selectedOption.getAttribute("ask-for-price");
         var hidePrice = hidePriceOnAskForQty(selectedOption.getAttribute("contract-type"));
         if (askQty == "1" || askForPrice == "1"){
-            askForRoomsQty(e, selectedOption.value, hidePrice);
+            askForRoomsQty(e, selectedOption.value, hidePrice, askForPrice == "1");
             return;
         }else{
             hideAskButton(e);

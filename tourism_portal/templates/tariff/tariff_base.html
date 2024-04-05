@@ -1,0 +1,289 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>{{title}}</title>
+  <meta name="description" content="Letter demo sample">
+</head>
+
+<body>
+<header>
+      <img src="{{format_url(header)}}" alt="">
+    </header>
+ {% if template.tariff_type == 'Per Person' %}
+ {% for night in range(template.package_from_night, template.package_to_night + 1)%}
+  <article>
+    
+    <div class="blue-color d-flex justify-space-between px-1 py-1 f-bold f-lg">
+          <div>
+              Updated Date {{updated_date}}
+          </div>
+          <div>
+              {{night}} Night {% if template.package_includes_transfer %}+ {{template.transfer_title}} {% endif %}{%if template.free_tour%}+ {{template.free_tour}}{%endif%}
+          </div>
+          <div>
+              {{from_date}} TIL {{to_date}}
+          </div>
+    </div>
+    <table class="hotels-table">
+          <tr class="t-center orange-color">
+            <th class="f-lg w-55" colspan="2">HOTELS</th>
+            <th class="f-m w-10">LOCATION</th>
+            <th class="f-lg w-10"><small class="f-m">p.p</small>DBL</th>
+            <th class="f-lg w-10">SGL</th>
+            <th class="f-lg w-15">DBL <small class="f-m">+ Extra Bed</small></th>
+          </tr>
+          {% for hotel in hotels %}
+          <tr class="f-m f-bold hotel-table-row">
+            <td class="w-50 blue-color hotel-name" >
+            <div class="d-flex justify-space-between">
+              <span>{{hotel.hotel_name}}</span> {% if hotel.special_period %}<span class="special_period">({{hotel.special_period}})</span> {% endif %}
+            </div>
+            </td>
+            <td class="w-5 t-center blue-color hotel-details">
+              {{get_hotel_stars(hotel.hotel_stars)}}*
+            </td>
+            <td class="w-10 t-center gray-color hotel-details">
+              {{hotel.location}}
+            </td>
+            <td class="w-10 t-center gray-color hotel-details">
+              {% set transfer_price = template.transfer_price if template.package_includes_transfer else 0 %}
+              ${{frappe.utils.fmt_money(night * hotel.double_price + transfer_price, 0)}}
+            </td>
+            <td class="w-10 t-center gray-color hotel-details">
+              ${{frappe.utils.fmt_money(night * hotel.single_price + transfer_price, 0)}}
+            </td>
+            <td class="w-15 t-center gray-color hotel-details">
+              ${{frappe.utils.fmt_money(night * hotel.triple_price + transfer_price, 0)}}
+            </td>
+          </tr>
+          {% endfor %}
+    </table>
+    {% if template.show_tours and not template.separate_tours_page %}
+      <div class="w-100">
+        {% set double_price = template.show_tour_sic_rate and template.show_tour_vip_rate %}
+
+          <table class="w-100 tours-joined-table">
+            <tr class="t-center blue-color">
+              <th class="w-50" rowspan="{{template.tours|length + 1}}">Tours</th>
+              <th class="w-25">Tours</th>
+              <th {% if double_price %} class="w-10" {% else %} class="w-175" {% endif %}>Will To See</th>
+              {% if double_price %}
+              <th class="w-750">Rate (SIC)</th>
+              <th class="w-750">Rate (VIP)</th>
+              {% else %}
+              <th class="w-750">Rate</th>
+              {% endif %}
+            </tr>
+            {% for tour in template.tours %}
+              <tr class="gray-color">
+               <td class="f-m tour-name f-bold t-center justify-center align-center" style="padding: {{template.tour_name_padding}};">
+                  <div class="d-flex align-center justify-space-between">
+                    <span >{{tour.tour_name}}</span> 
+                    <span>{{tour.tour_time}}</span>
+                  </div>
+                </td>
+                <td class="f-sm tour-description t-center" style="padding: {{template.tour_description_padding}};">{{tour.will_to_see}}</td>
+                {% if double_price %}
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_sic, 0)}}$</td>
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_vip, 0)}}$</td>
+                {% elif  template.show_tour_sic_rate %}
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_sic, 0)}}$</td>
+                {% elif  template.show_tour_vip_rate %}
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_vip, 0)}}$</td>
+                {% else %}
+                <td></td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+          </table>
+      </div>
+    {% endif %}
+   
+  </article>
+  {% endfor %}
+  {% else %}
+  <article>
+    
+    <div class="blue-color d-flex justify-space-between px-1 py-1 f-bold f-lg">
+          <div>
+              Updated Date {{updated_date}}
+          </div>
+          <div>
+              Per Night Per Room {% if template.package_includes_transfer %}+ {{template.transfer_title}} {% endif %}{%if template.free_tour%}+ {{template.free_tour}}{%endif%}
+          </div>
+          <div>
+              {{from_date}} TIL {{to_date}}
+          </div>
+    </div>
+    <table class="hotels-table">
+          <tr class="t-center orange-color">
+            <th class="f-lg w-55" colspan="2">HOTELS</th>
+            <th class="f-m w-10">LOCATION</th>
+            <th class="f-lg w-10">DBL</th>
+            <th class="f-lg w-10">SGL</th>
+            <th class="f-lg w-15">DBL <small class="f-m">+ Extra Bed</small></th>
+          </tr>
+          {% for hotel in hotels %}
+          <tr class="f-m f-bold hotel-table-row">
+            <td class="w-50 blue-color hotel-name" >
+            <div class="d-flex justify-space-between">
+              <span>{{hotel.hotel_name}}</span> {% if hotel.special_period %}<span class="special_period">({{hotel.special_period}})</span> {% endif %}
+            </div>
+            </td>
+            <td class="w-5 t-center blue-color hotel-details">
+              {{get_hotel_stars(hotel.hotel_stars)}}*
+            </td>
+            <td class="w-10 t-center gray-color hotel-details">
+              {{hotel.location}}
+            </td>
+            <td class="w-10 t-center gray-color hotel-details">
+              {% set transfer_price = template.transfer_price if template.package_includes_transfer else 0 %}
+              ${{frappe.utils.fmt_money(hotel.double_price + transfer_price, 0)}}
+            </td>
+            <td class="w-10 t-center gray-color hotel-details">
+              ${{frappe.utils.fmt_money( hotel.single_price + transfer_price, 0)}}
+            </td>
+            <td class="w-15 t-center gray-color hotel-details">
+              ${{frappe.utils.fmt_money(hotel.triple_price + transfer_price, 0)}}
+            </td>
+          </tr>
+          {% endfor %}
+    </table>
+    {% if template.show_tours and not template.separate_tours_page %}
+      <div class="w-100">
+        {% set double_price = template.show_tour_sic_rate and template.show_tour_vip_rate %}
+
+          <table class="w-100 tours-joined-table">
+            <tr class="t-center blue-color">
+              <th class="w-50" rowspan="{{template.tours|length + 1}}">Tours</th>
+              <th class="w-25">Tours</th>
+              <th {% if double_price %} class="w-10" {% else %} class="w-175" {% endif %}>Will To See</th>
+              {% if double_price %}
+              <th class="w-750">Rate (SIC)</th>
+              <th class="w-750">Rate (VIP)</th>
+              {% else %}
+              <th class="w-750">Rate</th>
+              {% endif %}
+            </tr>
+            {% for tour in template.tours %}
+              <tr class="gray-color">
+               <td class="f-m tour-name f-bold t-center justify-center align-center" style="padding: {{template.tour_name_padding}};">
+                  <div class="d-flex align-center justify-space-between">
+                    <span >{{tour.tour_name}}</span> 
+                    <span>{{tour.tour_time}}</span>
+                  </div>
+                </td>
+                <td class="f-sm tour-description t-center" style="padding: {{template.tour_description_padding}};">{{tour.will_to_see}}</td>
+                {% if double_price %}
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_sic, 0)}}$</td>
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_vip, 0)}}$</td>
+                {% elif  template.show_tour_sic_rate %}
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_sic, 0)}}$</td>
+                {% elif  template.show_tour_vip_rate %}
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_vip, 0)}}$</td>
+                {% else %}
+                <td></td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+          </table>
+      </div>
+    {% endif %}
+   
+  </article>
+  {% endif %}
+   {% if template.show_tours and template.separate_tours_page %}
+      <article>
+      <div class="w-100">
+        {% set double_price = template.show_tour_sic_rate and template.show_tour_vip_rate %}
+        <div class="orange-color w-100 t-center f-xl f-bold p-1">
+        Daily Tours
+        </div>
+          <table class="w-100 tours-joined-table">
+            <tr class="t-center blue-color">
+              <th class="w-30 ">Tours</th>
+              <th {% if double_price %} class="w-40 tour-description" {% else %} class="w-40 tour-description" {% endif %}>Will To See</th>
+              {% if double_price %}
+              <th class="w-15 ">Rate (SIC)</th>
+              <th class="w-15 ">Rate (VIP)</th>
+              {% else %}
+              <th class="w-30">Rate</th>
+              {% endif %}
+            </tr>
+            {% for tour in template.tours %}
+              <tr class="gray-color">
+                <td class="f-m tour-name f-bold t-center justify-center align-center" style="padding: {{template.tour_name_padding}};">
+                  <div class="d-flex align-center justify-space-between">
+                    <span >{{tour.tour_name}}</span> 
+                    <span>{{tour.tour_time}}</span>
+                  </div>
+                </td>
+                <td class="f-sm tour-description t-center" style="padding: {{template.tour_description_padding}};">{{tour.will_to_see}}</td>
+                {% if double_price %}
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_sic, 0)}}$</td>
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_vip, 0)}}$</td>
+                {% elif  template.show_tour_sic_rate %}
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_sic, 0)}}$</td>
+                {% elif  template.show_tour_vip_rate %}
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_vip, 0)}}$</td>
+                {% else %}
+                <td></td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+          </table>
+      </div>
+      {% if template.show_transfers%}
+      <div class="w-100">
+        <div class="orange-color w-100 t-center f-xl f-bold p-1">
+        Transfers
+        </div>
+          <table class="w-100 tours-joined-table">
+            <tr class="t-center blue-color">
+              <th class="w-70 ">Transfer Type</th>
+              <th class="w-30">Rate</th>
+            </tr>
+            {% for transfer in template.transfers %}
+              <tr class="gray-color">
+                <td class="f-m transfer-name f-bold t-center justify-center align-center " style="padding: {{template.transfer_name_padding}};">
+                  <div class="align-center justify-space-between">
+                    <span >{{transfer.transfer_name}}</span> 
+                  </div>
+                </td>
+                <td class="f-m transfer-price f-bold t-center justify-center align-center"  style="padding: {{template.transfer_price_padding}};">
+                  {{frappe.utils.fmt_money(transfer.rate, 0)}}$
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+      </div>
+      {% endif %}
+      </article>
+    {% endif %}
+
+    {% if terms %}
+    <article>
+      <div class="orange-color w-100 t-center f-xl f-bold p-3">
+        Terms & Conditions
+      </div>
+      <table class=" w-100 h-100 b-none">
+          <td rowspan="{{terms|length}}" style="height:  100%;" class="w-40 blue-color align-center t-center f-bold f-xl">
+             Policy
+          </td>
+          <td class="w-60 p-1 gray-color align-center ">
+            <ul>
+              {% for term in terms %}
+                <li>{{term.policy_details}}</li>
+              {% endfor %}
+            </ul>
+          </td>
+      </table>
+    </article>
+    {%  endif %}
+     <footer>
+        <img src="{{format_url(footer)}}" alt="">
+    </footer>
+</body>
+
+</html>

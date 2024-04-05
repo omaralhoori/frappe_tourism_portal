@@ -99,7 +99,7 @@
                 <div class="list-group room-bed-list">
                     {% for bed_type in room_beds %}
                     {{room_bed_item(hotel_rsv, rsrv_room.get('room_name'), bed_type['type_code'], bed_type['bed_type'],
-                    0)}}
+                    0, bed_type.get('note'))}}
                     {% endfor %}
                 </div>
                 {% endif%}
@@ -293,11 +293,11 @@
 </label>
 {% endmacro %}
 
-{%macro room_bed_item(search, room_name, type_code,bed_type, selected)%}
+{%macro room_bed_item(search, room_name, type_code,bed_type, selected, note)%}
 <label class="list-group-item">
     <input class="form-check-input me-1 bed-input" {% if selected==1 %} checked disabled {% endif %} type="radio"
         name="{{search}}-{{room_name}}-bed" room-name="{{room_name}}" value="{{type_code}}">
-    {{bed_type}}
+    {{bed_type}} {% if note %}({{note}}){% endif %}
 </label>
 {% endmacro %}
 {% macro render_transfer(transfer_search, editable) %}

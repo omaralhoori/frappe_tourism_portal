@@ -1,0 +1,156 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-25 02:05:44.834493",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "tariff_template",
+  "column_break_6bqrv",
+  "company_class",
+  "section_break_crst7",
+  "check_in_from_date",
+  "publish_from_date",
+  "column_break_gcrpe",
+  "check_in_to_date",
+  "publish_to_date",
+  "section_break_fkux6",
+  "title",
+  "from_night",
+  "column_break_f07gi",
+  "updated_date",
+  "to_night",
+  "section_break_xx8ly",
+  "hotels",
+  "tariff_file"
+ ],
+ "fields": [
+  {
+   "fieldname": "tariff_template",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Tariff Template",
+   "options": "Tariff Template",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_6bqrv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company_class",
+   "fieldtype": "Link",
+   "label": "Company Class",
+   "options": "Company Class",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_crst7",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "check_in_from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Check In From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "publish_from_date",
+   "fieldtype": "Data",
+   "label": "Publish From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_gcrpe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "publish_to_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Publish To Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_xx8ly",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "hotels",
+   "fieldtype": "Table",
+   "label": "Hotels",
+   "options": "Tariff Hotel"
+  },
+  {
+   "fieldname": "section_break_fkux6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "updated_date",
+   "fieldtype": "Data",
+   "label": "Updated Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "check_in_to_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Check In To Date",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "tariff_template.package_from_night",
+   "fieldname": "from_night",
+   "fieldtype": "Int",
+   "label": "From Night"
+  },
+  {
+   "fieldname": "column_break_f07gi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "tariff_template.package_to_night",
+   "fieldname": "to_night",
+   "fieldtype": "Int",
+   "label": "To Night"
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title"
+  },
+  {
+   "fieldname": "tariff_file",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Tariff File"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-04-02 07:35:43.507662",
+ "modified_by": "Administrator",
+ "module": "Tourism Portal",
+ "name": "Tariff Creation Tool",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

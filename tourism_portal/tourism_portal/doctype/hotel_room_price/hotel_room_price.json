@@ -45,13 +45,15 @@
    "fieldname": "selling_currency",
    "fieldtype": "Link",
    "label": "Selling Currency",
-   "options": "Currency"
+   "options": "Currency",
+   "permlevel": 2
   },
   {
    "fieldname": "selling_price",
    "fieldtype": "Currency",
    "label": "Selling Price",
-   "options": "selling_currency"
+   "options": "selling_currency",
+   "permlevel": 2
   },
   {
    "fieldname": "column_break_csdnd",
@@ -76,6 +78,7 @@
    "fieldtype": "Link",
    "label": "Buying Currency",
    "options": "Currency",
+   "permlevel": 1,
    "reqd": 1
   },
   {
@@ -87,6 +90,7 @@
    "fieldtype": "Currency",
    "label": "Buying Price",
    "options": "buying_currency",
+   "permlevel": 1,
    "reqd": 1
   },
   {
@@ -98,7 +102,8 @@
    "fieldname": "company_classes",
    "fieldtype": "Table",
    "label": "Company Classes",
-   "options": "Hotel Room Price Company"
+   "options": "Hotel Room Price Company",
+   "permlevel": 2
   },
   {
    "fieldname": "selling_type",
@@ -169,7 +174,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-12 13:05:37.620270",
+ "modified": "2024-04-04 10:58:36.650895",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Room Price",
@@ -180,6 +185,18 @@
    "delete": 1,
    "email": 1,
    "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
    "print": 1,
    "read": 1,
    "report": 1,

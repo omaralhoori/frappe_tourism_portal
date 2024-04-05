@@ -19,7 +19,7 @@ def get_context(context):
 	hotelParams = json.loads(search_doc.hotel_params)#params.get('hotelParams')
 	transferParams = json.loads(search_doc.transfer_params)#params.get('transferParams')
 	tourParams = json.loads(search_doc.tour_params)#params.get('toursparams')
-	transfers = search_for_transfers(transferParams)
+	transfers = search_for_transfers(transferParams, bool(hotelParams))
 	total_days = get_hotel_total_days(hotelParams)
 	context.tours = search_for_tours(tourParams, total_days)
 	# context.rooms = get_available_hotel_rooms(hotelParams)
