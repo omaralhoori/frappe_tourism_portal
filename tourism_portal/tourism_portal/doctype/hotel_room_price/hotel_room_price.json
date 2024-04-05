@@ -11,6 +11,7 @@
   "room_contract",
   "column_break_csdnd",
   "hotel",
+  "city",
   "room_accommodation_type",
   "section_break_sgxpg",
   "nationality",
@@ -170,11 +171,19 @@
    "fieldname": "check_in_to_date",
    "fieldtype": "Date",
    "label": "Check In To Date"
+  },
+  {
+   "fetch_from": "hotel.city",
+   "fieldname": "city",
+   "fieldtype": "Link",
+   "label": "City",
+   "options": "City",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-04 10:58:36.650895",
+ "modified": "2024-04-05 07:36:17.611671",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Room Price",
