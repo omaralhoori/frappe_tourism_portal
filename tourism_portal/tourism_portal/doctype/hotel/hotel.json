@@ -14,6 +14,7 @@
   "hotel_code",
   "system_code",
   "hotel_name",
+  "priority",
   "hotel_priority",
   "column_break_froge",
   "star_rating",
@@ -209,13 +210,20 @@
    "default": "0",
    "fieldname": "hotel_priority",
    "fieldtype": "Int",
-   "label": "Hotel Priority"
+   "label": "Hotel Priority",
+   "read_only": 1
   },
   {
    "fieldname": "system_code",
    "fieldtype": "Data",
    "label": "System Code",
    "reqd": 1
+  },
+  {
+   "fieldname": "priority",
+   "fieldtype": "Select",
+   "label": "Priority",
+   "options": "High Priority\nMedium Priority\nLow Priority"
   }
  ],
  "image_field": "hotel_image",
@@ -235,7 +243,7 @@
   }
  ],
  "make_attachments_public": 1,
- "modified": "2024-03-12 01:13:31.263796",
+ "modified": "2024-04-05 16:18:35.201898",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel",
