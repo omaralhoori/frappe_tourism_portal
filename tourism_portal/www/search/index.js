@@ -1759,3 +1759,8 @@ function getLoadingSpinner(){
     <span class="visually-hidden">Loading...</span>
   </div>`;
 }
+
+function backBtnClicked(){
+    var serach = new URLSearchParams(window.location.search).get('search')
+    window.location.href = `/home?search=${serach}`
+}

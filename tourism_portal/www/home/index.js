@@ -42,12 +42,14 @@ function loadSearch(searchParams){
     for (var transferSearch in searchParams.transfer_params){
         loadTransferSearch(transferSearch, searchParams.transfer_params[transferSearch])
     }
+    for (var tourSearch in searchParams.tour_params){
+        loadTourSearch(tourSearch, searchParams.tour_params[tourSearch])
+    }
+    hideOneCardDeleteBtn();
 }
 
 function loadHotelSearch(hotelSearch, hotelParams){
     var container = $('.search-cards');
-
-
     var html = '';
     var resultItem = $('#hotel-search-template').html()
     html += resultItem//document.querySelector('.hotel_search_template').innerHTML;
@@ -94,9 +96,39 @@ function loadHotelSearch(hotelSearch, hotelParams){
         }
 
     }
+    
+}
 
+function loadTourSearch(tourSearch, tourParams){
+    var tourContainer = $('.tour-search-container:last');
+    var html = '';
+    var tourTemplate = document.querySelector('#tour-search-template');
+    html += tourTemplate.innerHTML;
+    tourContainer.append(html);
+    var tourCard = $('.tour-search-card:last')
+    tourCard.find('input[name="tour-card"]').val(tourSearch);
+    tourCard.find('input[name="location"]').val(tourParams['location-name']);
+    tourCard.find('input[name="location"]').attr('location-id', tourParams['location']);
+    tourCard.find('input[name="location"]').attr('location-type', tourParams['location-type']);
+    tourCard.find('input[name="location"]').attr('location-name', tourParams['location-name']);
+    tourCard.find('input[name="check-in"]').val(tourParams['checkin']);
+    tourCard.find('input[name="check-out"]').val(tourParams['checkout']);
+    tourCard.find('select[name="tour-type"]').val(tourParams['tour-type']);
+    tourCard.find('select[name="adult"]').val(tourParams['paxes']['adults']);
+    tourCard.find('select[name="children"]').val(tourParams['paxes']['children']);
+    var ages = tourCard.find('select[name="child-age"]');
+    for (var i = 0; i < ages.length; i++) {
+        ages[i].value = tourParams['paxes']['child-ages'][i];
+    }
+    formatDataPicker(tourCard[0], (instance, date)=>{
+        formatToDate(instance)
+    })
+    autocompleteLocations(tourCard.find('input[name="location"]')[0], 'tourism_portal.api.query.get_tour_locations', (element)=> {
+        tourTypeChanged(element)
+    });
+    tourTypeChanged(tourCard.find('input[name="location"]')[0], tourParams['tours'])
 
-    hideOneCardDeleteBtn();
+    
 }
 
 function loadTransferSearch(transferSearch, transferParams){
@@ -105,8 +137,60 @@ function loadTransferSearch(transferSearch, transferParams){
     var transferTemplate = document.querySelector('#transfer-search-template');
     html += transferTemplate.innerHTML;
     transferContainer.append(html);
-    var transferRows = transferContainer.find('.transfer-search-row');
-    
+    $('.transfer-search-card:last').find('input[name="transfer-card"]').val(transferSearch);
+    var departureRow = $('.transfer-search-card:last').find('.transfer-search-row.departure-transfer');
+    var returnRow = $('.transfer-search-card:last').find('.transfer-search-row.return-transfer');
+    if (Object.keys(transferParams).length == 1){
+        $('.transfer-search-card:last').find('button[data-way="one-way"]').click();
+    }
+    for (var i in transferParams) {
+        if (i == 0){
+            updatedTransferRow(departureRow, transferParams[i])
+    }
+    if (i == 1){
+        updatedTransferRow(returnRow, transferParams[i])
+    }
+}
+}
+
+function updatedTransferRow(transferRow, transferParams){
+    var picupInput = transferRow.find('input[name="pickup"]');
+    var dropoffInput = transferRow.find('input[name="dropoff"]');
+    picupInput.val(transferParams['from-location-name']);
+    picupInput.attr('location-id', transferParams['from-location']);
+    picupInput.attr('location-type', transferParams['from-location-type']);
+    picupInput.attr('location-name', transferParams['from-location-name']);
+    dropoffInput.val(transferParams['to-location-name']);
+    dropoffInput.attr('location-id', transferParams['to-location']);
+    dropoffInput.attr('location-type', transferParams['to-location-type']);
+    dropoffInput.attr('location-name', transferParams['to-location-name']);
+    transferRow.find('input[name="check-in"]').val(transferParams['transfer-date']);
+    transferRow.find('select[name="transfer-type"]').val(transferParams['transfer-type']);
+    transferRow.find('input[name="flight-no"]').val(transferParams['flight-no']);
+    transferRow.find('select[name="adult"]').val(transferParams['paxes']['adults']);
+    transferRow.find('select[name="children"]').val(transferParams['paxes']['children']);
+    var ages = transferRow.find('select[name="child-age"]');
+    for (var j = 0; j < ages.length; j++) {
+        ages[j].value = transferParams['paxes']['child-ages'][j];
+    }
+    formatDataPicker(transferRow[0], (instance, date)=>{
+        formatToDate(instance)
+    })
+    autocompleteLocations(transferRow.find('input[name="dropoff"]')[0], 'tourism_portal.api.query.get_transfer_locations', (element) => {
+        checkRegularFlights(element, 'departure')
+    });
+    autocompleteLocations(transferRow.find('input[name="pickup"]')[0], 'tourism_portal.api.query.get_transfer_locations', (element) => {
+        checkRegularFlights(element, 'arrival')
+    });
+    checkRegularFlights(transferRow.find('input[name="dropoff"]')[0].parentNode, 'departure', transferParams['selected-flight'])
+    checkRegularFlights(transferRow.find('input[name="pickup"]')[0].parentNode, 'arrival', transferParams['selected-flight'])
+    transferTypeChanged(transferRow.find('select[name="transfer-type"]')[0])
+    // if (transferParams['transfer-type'] == 'group' && transferParams['selected-flight']){
+    //     var selectedFlight = transferRow.find('.allowed-flights-list input[type="radio"]');
+    //     console.log("Selected Flight")
+    //     console.log(selectedFlight.val())
+    //     selectedFlight.prop('checked', true);
+    // }
 }
 
 function formatToDate(e) {
@@ -509,7 +593,7 @@ function addHotelClicked(e) {
 function pickupTransferChanged(e) {
     //checkRegularFlights(e, 'departure')
 }
-function checkRegularFlights(e, type) {
+function checkRegularFlights(e, type, selectedFlight) {
     var locationType = e.querySelector('input').getAttribute('location-type')//options[e.selectedIndex].getAttribute('doc-type');
     var location = e.querySelector('input').getAttribute('location-id')
     var transferRow = e.closest('.transfer-search-row')
@@ -529,7 +613,8 @@ function checkRegularFlights(e, type) {
                 var html = '';
                 for (var flight of r.message) {
                     //html += `<li value="${flight.name}">${flight.name}</li>`;
-                    html += `<input type="radio" name="${selectName}" value="${flight.name}" id="${selectName}-${flight.name}"> <label for="${selectName}-${flight.name}">${flight.name}</label><br>`
+    
+                    html += `<input type="radio" name="${selectName}" value="${flight.name}" id="${selectName}-${flight.name}" ${selectedFlight == flight.name ? 'checked' : ''}> <label for="${selectName}-${flight.name}">${flight.name}</label><br>`
                 }
                 allowedFlights.innerHTML = html;
             }
@@ -759,7 +844,7 @@ function validateHotelSearchData(params) {
     return true;
 }
 
-function tourTypeChanged(e) {
+function tourTypeChanged(e, defaultSelectedTours) {
     var tourData = getTourData(e.closest('form'));
     if (!validateTourSearchData(tourData)) {
         return;
@@ -773,13 +858,18 @@ function tourTypeChanged(e) {
         },
         callback: function (r) {
             var tourSelect = e.closest('form').querySelector('.tours-html-container');
+            var tourTypeSelect = e.closest('form').querySelector('.select[name="tour-type"]');
             var totalDays = getTotalDays(tourData.checkin, tourData.checkout);
             tourSelect.innerHTML = '';
             tourSelect.setAttribute('total-days', totalDays);
             if (!r.message || Object.keys(r.message).length === 0) {
                 tourSelect.innerHTML = '<li class="list-group-item">No Tours Found</li>'
             }
+            if (!defaultSelectedTours){
+                defaultSelectedTours=[];
+            }
             for (var tourId in r.message) {
+
                 var tour = r.message[tourId];
                 var listElement = document.createElement("li");
                 listElement.classList.add('list-group-item');
@@ -820,6 +910,10 @@ function tourTypeChanged(e) {
                 elementContainer.appendChild(listElement);
                 elementContainer.appendChild(tourInfoElement);
                 tourSelect.appendChild(elementContainer);
+                if (selectedTours && defaultSelectedTours.includes(tour.tour_id)) {
+                    checkboxElement.click();
+                    // onTourSelectChange(checkboxElement);
+                }
             }
 
 
