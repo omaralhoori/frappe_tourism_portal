@@ -258,7 +258,7 @@ def get_company_class(search_params):
     return company_class
 
 
-def publish_agency_notification(title, message, doctype, docname):
+def publish_agency_notification(title, message, doctype, docname, users=None):
     notification_doc = {
 		"type": "Alert",
 		"document_type": doctype,
@@ -267,7 +267,8 @@ def publish_agency_notification(title, message, doctype, docname):
 		"document_name": docname,
 		"from_user": frappe.session.user,
 	}
-    users = frappe.db.get_values("User", {"company":["!=", ""], "enabled": 1}, "email", pluck=True)
+    if not users:
+        users = frappe.db.get_values("User", {"company":["!=", ""], "enabled": 1}, "email", pluck=True)
     enqueue_create_notification(users, notification_doc)
 
 def publish_user_notification(title, message, user, doctype, docname):

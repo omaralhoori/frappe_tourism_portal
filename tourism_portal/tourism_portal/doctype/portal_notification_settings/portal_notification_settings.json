@@ -14,7 +14,9 @@
   "send_inquiry_request",
   "send_invoice_creation",
   "send_on_invoice_update",
-  "reservation_email"
+  "reservation_email",
+  "agency_notifications_section",
+  "send_tariff_change_notification"
  ],
  "fields": [
   {
@@ -63,13 +65,24 @@
    "fieldname": "send_on_invoice_update",
    "fieldtype": "Check",
    "label": "Send On Invoice Update"
+  },
+  {
+   "fieldname": "agency_notifications_section",
+   "fieldtype": "Section Break",
+   "label": "Agency Notifications"
+  },
+  {
+   "default": "0",
+   "fieldname": "send_tariff_change_notification",
+   "fieldtype": "Check",
+   "label": "Send Tariff Change Notification"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-03-14 15:06:57.146928",
+ "modified": "2024-04-07 07:41:52.926681",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Portal Notification Settings",

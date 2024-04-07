@@ -15,13 +15,16 @@ class HotelRoomPrice(Document):
 		old_doc = self.get_doc_before_save()
 		if not old_doc:
 			return
+		increased = False
 		if old_doc.buying_price == self.buying_price and old_doc.selling_price == self.selling_price:
 			return
+		if old_doc.buying_price < self.buying_price or old_doc.selling_price < self.selling_price:
+			increased = True
 		hotel_name = frappe.db.get_value("Hotel", self.hotel, "hotel_name", cache=True)
 		room_type = frappe.db.get_value("Hotel Room Contract", self.room_contract, "room_type", cache=True)
 		room_type_name = frappe.db.get_value("Room Type", room_type, "room_type", cache=True)
 		room_acmnd = frappe.db.get_value("Room Accommodation Type", self.room_accommodation_type, "accommodation_type_name", cache=True)
-
+		change = 'increased' if increased else 'decreased'
 		publish_agency_notification(
 			"Price Changed for " + hotel_name, 
-			f"Price for {room_type_name} {room_acmnd} in {hotel_name} has been changed betweem {self.check_in_from_date} and {self.check_in_to_date}", "Hotel Room Price", self.name, )
+			f"Price for {room_type_name} {room_acmnd} in {hotel_name} has been {change} betweem {self.check_in_from_date} and {self.check_in_to_date}", "Hotel Room Price", self.name, )
