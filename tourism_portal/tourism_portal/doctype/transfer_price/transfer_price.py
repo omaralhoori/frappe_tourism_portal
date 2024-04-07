@@ -53,6 +53,9 @@ def get_available_transfers(params, has_hotel=False):
 	if params['transfer-type'] == "vip":
 		for available_transfer in available_transfers:
 			if check_available_vip_transfer(available_transfer, params['paxes']):
+				if not has_hotel:
+					extra_transfer_price = frappe.db.get_single_value("Transfer Settings", "only_transfer_vip_extra_price")
+					available_transfer['transfer_price'] = available_transfer['transfer_price'] + extra_transfer_price
 				trasfers.append(available_transfer)
 	elif params['transfer-type'] == "group":
 		transfer_price = get_group_transfer_price(params['paxes'], available_transfers, has_hotel=has_hotel)

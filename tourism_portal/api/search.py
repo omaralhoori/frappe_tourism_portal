@@ -35,7 +35,7 @@ def get_search_details(search_id):
 	tourParams = json.loads(search_doc.tour_params)#params.get('toursparams')
 	transfers = search_for_transfers(transferParams, bool(hotelParams))
 	total_days = get_hotel_total_days(hotelParams)
-	tours = search_for_tours(tourParams, total_days)
+	tours = search_for_tours(tourParams, total_days, bool(hotelParams))
 	# context.rooms = get_available_hotel_rooms(hotelParams)
 	# context.rooms = json.dumps(context.rooms, default=str)
 	rooms = get_available_hotel_rooms(hotelParams)
@@ -56,13 +56,13 @@ def get_search_details(search_id):
 		"tour_search_params": tour_search_params,
 	}
 
-def search_for_tours(tourParams, total_days= None):
+def search_for_tours(tourParams, total_days= None, has_hotel=False):
 	tours = {}
 	for tourSearch in tourParams:
 		tours[tourSearch] = {}
 		params = tourParams[tourSearch]
 		
-		available_tours = get_available_tours_and_prices(params)
+		available_tours = get_available_tours_and_prices(params, has_hotel=has_hotel)
 		tours[tourSearch]= available_tours#[params['tours'][tour]] = available_tours
 		# if params['tour-type'] != 'vip':
 		# 	tours[tourSearch] = apply_tour_discount(tours[tourSearch],total_days)

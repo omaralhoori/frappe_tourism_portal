@@ -10,7 +10,7 @@ class TourPrice(Document):
 	pass
 
 
-def get_available_tours_and_prices(params):
+def get_available_tours_and_prices(params, has_hotel=False):
 	available_tours = []
 	tour_packages = []
 	paxes = params['paxes']
@@ -19,7 +19,7 @@ def get_available_tours_and_prices(params):
 		params['tour-date'] = params['checkin']
 		# VIP Tours Return Price For Each Tour
 		if params['tour-type'] == 'vip':
-			tour_details = get_available_tours(params)
+			tour_details = get_available_tours(params, has_hotel)
 			if tour_details:
 				available_tours.append({
 					"tour_id": tour,#params['tours'][tour],
@@ -33,7 +33,7 @@ def get_available_tours_and_prices(params):
 					"paxes": paxes,
 				})
 		else:
-			tour_details = get_available_tours(params)
+			tour_details = get_available_tours(params, has_hotel)
 			if tour_details:
 				available_tours.append({
 					"tour_id":tour,# params['tours'][tour],
@@ -118,7 +118,7 @@ def get_available_tours_and_prices(params):
 				tour_indv['tour_price_company'] = tour_indv['tour_price']
 				tour_indv['tour_price'] = get_subagency_extra_price(tour_indv['tour_price'], tour_margin)
 		return tour_packages
-def get_available_tours(params):
+def get_available_tours(params, has_hotel=False):
 	"""
 	Get available tours based on the given parameters.
 
@@ -192,9 +192,12 @@ def get_available_tours(params):
 	if params['tour-type'] == "vip":
 		for available_transfer in available_transfers:
 			if check_available_vip_transfer(available_transfer, params['paxes']):
+				if not has_hotel:
+					extra_transfer_price = frappe.db.get_single_value("Transfer Settings", "only_tour_vip_extra_price")
+					available_transfer['transfer_price'] = available_transfer['transfer_price'] + extra_transfer_price
 				trasfers.append(available_transfer)
 	elif params['tour-type'] == "group-premium" or params['tour-type'] == "group-economic" or params['tour-type'] == "package":
-		transfer_price = get_group_transfer_price(params['paxes'], available_transfers)
+		transfer_price = get_group_transfer_price(params['paxes'], available_transfers, params['tour-type'], has_hotel)
 		if not transfer_price:
 			return None
 		transfer_type = "group_transfer"
@@ -215,7 +218,7 @@ def get_transfer_details(transfer):
 	return frappe.db.get_value("Transfer Type", transfer['transfer_type'],
 	['transfer_type', 'transfer_image', 'transfer_description'], as_dict=True)
 
-def get_group_transfer_price(paxes, available_transfers):
+def get_group_transfer_price(paxes, available_transfers, tour_type, has_hotel=False):
 	"""
 	Get the group transfer price based on the given passenger details and available transfers.
 
@@ -234,6 +237,12 @@ def get_group_transfer_price(paxes, available_transfers):
 	adult_price = available_transfers[0]['group_adult_price']
 	if available_transfers[0].get('extra_profit'):
 		adult_price = calculate_extra_price(adult_price, 'Amount',available_transfers[0]['extra_profit'])
+	if not has_hotel:
+		if tour_type == 'package':
+			extra_transfer_price = frappe.db.get_single_value("Transfer Settings", "only_tour_package_extra_price")
+		else:
+			extra_transfer_price = frappe.db.get_single_value("Transfer Settings", "only_tour_individual_extra_price")
+		adult_price = adult_price + extra_transfer_price
 	policies = frappe.db.get_all("Transfer Child Price", {"parent": child_policy},
 	 ["child_order", "from_age", "to_age", "adult_price_percentage"], order_by="idx, child_order")
 	transfer_price = 0

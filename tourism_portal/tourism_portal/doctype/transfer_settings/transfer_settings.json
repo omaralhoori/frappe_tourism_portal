@@ -7,7 +7,11 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "only_transfer_extra_price"
+  "only_transfer_extra_price",
+  "only_transfer_vip_extra_price",
+  "only_tour_package_extra_price",
+  "only_tour_vip_extra_price",
+  "only_tour_individual_extra_price"
  ],
  "fields": [
   {
@@ -16,13 +20,37 @@
    "in_list_view": 1,
    "label": "Only Transfer Extra Price",
    "reqd": 1
+  },
+  {
+   "fieldname": "only_transfer_vip_extra_price",
+   "fieldtype": "Currency",
+   "label": "Only Transfer VIP Extra Price",
+   "reqd": 1
+  },
+  {
+   "fieldname": "only_tour_package_extra_price",
+   "fieldtype": "Currency",
+   "label": "Only Tour Package Extra Price",
+   "reqd": 1
+  },
+  {
+   "fieldname": "only_tour_vip_extra_price",
+   "fieldtype": "Currency",
+   "label": "Only Tour VIP Extra Price",
+   "reqd": 1
+  },
+  {
+   "fieldname": "only_tour_individual_extra_price",
+   "fieldtype": "Currency",
+   "label": "Only Tour Individual Extra Price",
+   "reqd": 1
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-04-04 10:51:38.109697",
+ "modified": "2024-04-07 06:53:27.750908",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Transfer Settings",
