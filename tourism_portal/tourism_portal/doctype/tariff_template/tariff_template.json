@@ -26,6 +26,9 @@
   "transfer_title",
   "section_break_b04xf",
   "hotels",
+  "show_notes",
+  "notes_style",
+  "hotels_notes",
   "section_break_eihsc",
   "free_tour",
   "tours_section",
@@ -44,6 +47,7 @@
   "column_break_vrrlh",
   "footer",
   "column_break_66mxz",
+  "show_terms",
   "terms_and_conditions",
   "dimensions_and_measurements_section",
   "header_footer_width",
@@ -418,11 +422,33 @@
    "fieldname": "terms_page_height",
    "fieldtype": "Data",
    "label": "Terms Page Height"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_notes",
+   "fieldtype": "Check",
+   "label": "Show Notes"
+  },
+  {
+   "fieldname": "hotels_notes",
+   "fieldtype": "Text Editor",
+   "label": "Hotels Notes"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_terms",
+   "fieldtype": "Check",
+   "label": "Show Terms"
+  },
+  {
+   "fieldname": "notes_style",
+   "fieldtype": "Data",
+   "label": "Notes Style"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-05 15:03:37.612929",
+ "modified": "2024-04-20 10:09:21.748455",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tariff Template",

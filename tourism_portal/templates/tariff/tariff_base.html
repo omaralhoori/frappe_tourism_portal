@@ -71,6 +71,13 @@
           </tr>
           {% endfor %}
     </table>
+    {% if template.show_notes %}
+      <div class="w-100 blue-color" >
+       <div style="{{template.notes_style}}">
+         {{template.hotels_notes}}
+       </div>
+      </div>
+    {% endif %}
     {% if template.show_tours and not template.separate_tours_page %}
       <div class="w-100">
         {% set double_price = template.show_tour_sic_rate and template.show_tour_vip_rate %}
@@ -290,21 +297,25 @@
       </article>
     {% endif %}
 
-    {% if terms %}
+    {% if template.show_terms and terms %}
     <article class="terms" style="height: {{template.terms_page_height}};">
       <div class="orange-color w-100 t-center f-xl f-bold p-2">
         Terms & Conditions
       </div>
       <table class=" w-100 h-100 b-none" style="">
-          <td rowspan="{{terms|length}}" class="w-40 h-100 blue-color align-center t-center f-bold f-xl">
+          <td rowspan="{% if terms.use_editor%} 1 {%else%}{{terms.policy_items|length}}{%endif%}" class="w-40 h-100 blue-color align-center t-center f-bold f-xl">
              Policy
           </td>
           <td class="w-60 p-1 gray-color align-center ">
+            {% if terms.use_editor %}
+                {{terms.policy_details}}
+            {% else %}
             <ul>
-              {% for term in terms %}
+              {% for term in terms.policy_items %}
                 <li class="term-item">{{term.policy_details}}</li>
               {% endfor %}
             </ul>
+            {% endif %}
           </td>
       </table>
     </article>

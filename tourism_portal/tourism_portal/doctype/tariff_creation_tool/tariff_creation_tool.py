@@ -93,7 +93,8 @@ def create_tariff(template, hotels, from_date, to_date, updated_date, title="Tar
 	tariff_footer = frappe.db.get_value('Tariff Template Asset', tariff_template.footer, 'asset_file')
 	terms = None
 	if tariff_template.terms_and_conditions:
-		terms = frappe.db.get_all("Tariff Template Policy Item", filters={"parent": tariff_template.terms_and_conditions}, fields=["policy_details"])
+		terms = frappe.get_doc("Tariff Template Policy", tariff_template.terms_and_conditions)#frappe.db.get_all("Tariff Template Policy Item", filters={"parent": tariff_template.terms_and_conditions}, fields=["policy_details"])
+
 	html = frappe.render_template('tourism_portal/templates/tariff/tariff_base.html', {
 		"template": tariff_template,
 		'header': tariff_header,

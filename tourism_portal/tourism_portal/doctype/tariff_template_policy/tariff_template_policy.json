@@ -9,6 +9,8 @@
  "engine": "InnoDB",
  "field_order": [
   "policy_title",
+  "use_editor",
+  "policy_details",
   "policy_items"
  ],
  "fields": [
@@ -24,13 +26,23 @@
    "fieldname": "policy_items",
    "fieldtype": "Table",
    "label": "Policy Items",
-   "options": "Tariff Template Policy Item",
-   "reqd": 1
+   "options": "Tariff Template Policy Item"
+  },
+  {
+   "fieldname": "policy_details",
+   "fieldtype": "Text Editor",
+   "label": "Policy Details"
+  },
+  {
+   "default": "0",
+   "fieldname": "use_editor",
+   "fieldtype": "Check",
+   "label": "Use Editor"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-25 01:47:29.887931",
+ "modified": "2024-04-20 09:58:07.156282",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tariff Template Policy",
