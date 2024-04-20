@@ -24,6 +24,7 @@
   "invoice_check_out",
   "status",
   "main_system_transferred",
+  "main_system_error",
   "contact_info_section",
   "customer_name",
   "column_break_qukqj",
@@ -344,12 +345,18 @@
    "fieldtype": "Link",
    "label": "Currency",
    "options": "Currency"
+  },
+  {
+   "default": "0",
+   "fieldname": "main_system_error",
+   "fieldtype": "Check",
+   "label": "Main System Error"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-17 01:00:20.561492",
+ "modified": "2024-04-15 07:31:28.212247",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Sales Invoice",

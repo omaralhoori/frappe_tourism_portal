@@ -9,7 +9,8 @@
  "engine": "InnoDB",
  "field_order": [
   "type_code",
-  "bed_type"
+  "bed_type",
+  "system_code"
  ],
  "fields": [
   {
@@ -26,11 +27,17 @@
    "in_list_view": 1,
    "label": "Bed Type",
    "reqd": 1
+  },
+  {
+   "fieldname": "system_code",
+   "fieldtype": "Data",
+   "label": "System Code",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-04 03:45:41.148410",
+ "modified": "2024-04-07 10:38:34.001739",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Room Bed Type",

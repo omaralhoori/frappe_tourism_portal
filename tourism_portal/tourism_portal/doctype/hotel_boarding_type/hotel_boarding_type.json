@@ -10,7 +10,8 @@
  "engine": "InnoDB",
  "field_order": [
   "boarding_type_code",
-  "boarding_type_name"
+  "boarding_type_name",
+  "system_code"
  ],
  "fields": [
   {
@@ -27,11 +28,17 @@
    "in_list_view": 1,
    "label": "Boarding Type Name",
    "reqd": 1
+  },
+  {
+   "fieldname": "system_code",
+   "fieldtype": "Data",
+   "label": "System Code",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-19 11:26:29.969376",
+ "modified": "2024-04-07 10:38:13.096500",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Hotel Boarding Type",
