@@ -48,13 +48,25 @@
             </td>
             <td class="w-10 t-center gray-color hotel-details">
               {% set transfer_price = template.transfer_price if template.package_includes_transfer else 0 %}
+              {% if hotel.double_price  %}
               ${{frappe.utils.fmt_money(night * hotel.double_price + transfer_price, 0)}}
+              {% else %}
+              N/A
+              {% endif %}
             </td>
             <td class="w-10 t-center gray-color hotel-details">
+            {% if hotel.single_price %}
               ${{frappe.utils.fmt_money(night * hotel.single_price + transfer_price, 0)}}
+            {% else %}
+              N/A
+            {% endif %}
             </td>
             <td class="w-15 t-center gray-color hotel-details">
+            {% if hotel.triple_price %}
               ${{frappe.utils.fmt_money(night * hotel.triple_price + transfer_price, 0)}}
+            {% else %}
+              N/A
+            {% endif %}
             </td>
           </tr>
           {% endfor %}
@@ -141,13 +153,25 @@
             </td>
             <td class="w-10 t-center gray-color hotel-details">
               {% set transfer_price = template.transfer_price if template.package_includes_transfer else 0 %}
+              {% if hotel.double_price %}
               ${{frappe.utils.fmt_money(hotel.double_price + transfer_price, 0)}}
+              {% else%}
+              N/A
+              {% endif %}
             </td>
             <td class="w-10 t-center gray-color hotel-details">
+            {% if hotel.single_price  %}
               ${{frappe.utils.fmt_money( hotel.single_price + transfer_price, 0)}}
+              {% else %}
+            N/A
+              {% endif %}
             </td>
             <td class="w-15 t-center gray-color hotel-details">
+            {% if hotel.triple_price %}
               ${{frappe.utils.fmt_money(hotel.triple_price + transfer_price, 0)}}
+            {% else %}
+            N/A
+            {% endif  %}
             </td>
           </tr>
           {% endfor %}
