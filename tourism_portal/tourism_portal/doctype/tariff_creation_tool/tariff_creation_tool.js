@@ -104,15 +104,50 @@ frappe.ui.form.on('Tariff Creation Tool', {
 		for (var hotelId in data.hotels){
 			for (var hotelPeriod in data.hotels[hotelId]){
 				var hotel = data.hotels[hotelId][hotelPeriod];
-				let row = frappe.model.add_child(frm.doc, "Tariff Creation Tool Hotels", "hotels");
-				row.hotel = hotel['SGL']['hotel'];
-				row.hotel_name = hotel['SGL']['hotel_name'];
-				row.special_period = hotel['SGL']['special_period'];
-				row.location = hotel['SGL']['location'];
-				row.hotel_stars = hotel['SGL']['hotel_stars'];
-				row.single_price = hotel['SGL']['selling_price'];
-				row.double_price = hotel['DBL']['selling_price'];
-				row.triple_price = hotel['TRPL']['selling_price'];
+				if (hotel){
+					let row = frappe.model.add_child(frm.doc, "Tariff Creation Tool Hotels", "hotels");
+					var hotelPro = null
+					if (hotel['SGL']){
+						hotelPro = hotel['SGL']
+					}else if (hotel['DBL']){
+						hotelPro = hotel['DBL']
+					}else if (hotel['TRPL']){
+						hotelPro = hotel['TRPL']
+					}
+					if(! hotelPro){
+						console.log("Cannot find room acmnd")
+						console.log(hotelId)
+						console.log(hotelPeriod)
+						continue
+					} 
+					row.hotel = hotelPro['hotel'];
+					row.hotel_name = hotelPro['hotel_name'];
+					row.special_period = hotelPro['special_period'];
+					row.location = hotelPro['location'];
+					row.hotel_stars = hotelPro['hotel_stars'];
+					if (hotel['SGL'] && hotel['SGL']['selling_price']){
+						row.single_price = hotel['SGL']['selling_price'];
+					}else{
+						row.single_price = 0;
+					}
+					if (hotel['DBL']&& hotel['DBL']['selling_price']){
+						row.double_price = hotel['DBL']['selling_price'];
+					}else{
+						row.double_price = 0;
+					}
+					
+					if(hotel['TRPL'] && hotel['TRPL']['selling_price']){
+						row.triple_price = hotel['TRPL']['selling_price'];
+					}else{
+						row.triple_price = 0;
+					}
+				}else{
+					console.log('Cannot find hotel')
+					console.log(hotelId)
+					console.log(hotelPeriod)
+				}
+				
+				
 				
 			}
 		}
