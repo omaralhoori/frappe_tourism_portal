@@ -183,6 +183,13 @@
           </tr>
           {% endfor %}
     </table>
+    {% if template.show_notes %}
+      <div class="w-100 blue-color" >
+       <div style="{{template.notes_style}}">
+         {{template.hotels_notes}}
+       </div>
+      </div>
+    {% endif %}
     {% if template.show_tours and not template.separate_tours_page %}
       <div class="w-100">
         {% set double_price = template.show_tour_sic_rate and template.show_tour_vip_rate %}
