@@ -313,11 +313,15 @@
           <td rowspan="{% if terms.use_editor%} 1 {%else%}{{terms.policy_items|length}}{%endif%}" class="w-40 h-100 blue-color align-center t-center f-bold f-xl">
              Policy
           </td>
-          <td class="w-60 p-1 gray-color align-center ">
+          <td class="w-60 p-1 gray-color align-center " >
+           
             {% if terms.use_editor %}
+             <div style="{{terms.policy_style}}">
                 {{terms.policy_details}}
+            </div>
             {% else %}
-            <ul>
+            
+            <ul style="{{terms.policy_style}}">
               {% for term in terms.policy_items %}
                 <li class="term-item">{{term.policy_details}}</li>
               {% endfor %}

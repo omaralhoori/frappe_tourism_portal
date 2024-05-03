@@ -20,7 +20,9 @@
   "section_break_lqz2z",
   "group_adult_price",
   "column_break_qmgfj",
-  "transfer_child_policy"
+  "transfer_child_policy",
+  "section_break_httvn",
+  "company_classes"
  ],
  "fields": [
   {
@@ -93,11 +95,21 @@
   {
    "fieldname": "column_break_qmgfj",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_httvn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "company_classes",
+   "fieldtype": "Table",
+   "label": "Company Classes",
+   "options": "Company Class Extra Profit"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-12 13:06:21.457380",
+ "modified": "2024-05-01 12:39:43.360902",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Transfer Price",

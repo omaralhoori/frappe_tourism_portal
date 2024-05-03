@@ -10,6 +10,7 @@
  "field_order": [
   "policy_title",
   "use_editor",
+  "policy_style",
   "policy_details",
   "policy_items"
  ],
@@ -38,11 +39,16 @@
    "fieldname": "use_editor",
    "fieldtype": "Check",
    "label": "Use Editor"
+  },
+  {
+   "fieldname": "policy_style",
+   "fieldtype": "Data",
+   "label": "Policy Style"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-20 09:58:07.156282",
+ "modified": "2024-05-01 13:25:18.158355",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tariff Template Policy",

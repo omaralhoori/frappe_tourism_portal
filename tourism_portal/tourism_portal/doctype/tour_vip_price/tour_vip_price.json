@@ -16,7 +16,9 @@
   "column_break_exyxm",
   "to_date",
   "section_break_z7riq",
-  "vip_transfer_price"
+  "vip_transfer_price",
+  "section_break_oojrh",
+  "company_classes"
  ],
  "fields": [
   {
@@ -69,11 +71,21 @@
    "fieldtype": "Date",
    "label": "To Date",
    "reqd": 1
+  },
+  {
+   "fieldname": "section_break_oojrh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "company_classes",
+   "fieldtype": "Table",
+   "label": "Company Classes",
+   "options": "Company Class Extra Profit"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-12 13:06:32.280520",
+ "modified": "2024-05-01 12:40:42.172081",
  "modified_by": "Administrator",
  "module": "Tourism Portal",
  "name": "Tour VIP Price",
