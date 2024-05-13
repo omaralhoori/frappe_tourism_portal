@@ -104,12 +104,12 @@
                 </td>
                 <td class="f-sm tour-description t-center" style="padding: {{template.tour_description_padding}};">{{tour.will_to_see}}</td>
                 {% if double_price %}
-                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_sic, 0)}}$</td>
-                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_vip, 0)}}$</td>
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{tour.rate_sic}}</td>
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{tour.rate_vip}}</td>
                 {% elif  template.show_tour_sic_rate %}
-                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_sic, 0)}}$</td>
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{tour.rate_sic}}</td>
                 {% elif  template.show_tour_vip_rate %}
-                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_vip, 0)}}$</td>
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{tour.rate_vip}}</td>
                 {% else %}
                 <td></td>
                 {% endif %}
@@ -216,12 +216,12 @@
                 </td>
                 <td class="f-sm tour-description t-center" style="padding: {{template.tour_description_padding}};">{{tour.will_to_see}}</td>
                 {% if double_price %}
-                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_sic, 0)}}$</td>
-                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_vip, 0)}}$</td>
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{tour.rate_sic}}</td>
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{tour.rate_vip}}</td>
                 {% elif  template.show_tour_sic_rate %}
-                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_sic, 0)}}$</td>
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{tour.rate_sic}}</td>
                 {% elif  template.show_tour_vip_rate %}
-                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_vip, 0)}}$</td>
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{tour.rate_vip}}</td>
                 {% else %}
                 <td></td>
                 {% endif %}
@@ -263,12 +263,12 @@
                 </td>
                 <td class="f-sm tour-description t-center" style="padding: {{template.tour_description_padding}};">{{tour.will_to_see}}</td>
                 {% if double_price %}
-                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_sic, 0)}}$</td>
-                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_vip, 0)}}$</td>
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{tour.rate_sic}}</td>
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{tour.rate_vip}}</td>
                 {% elif  template.show_tour_sic_rate %}
-                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_sic, 0)}}$</td>
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{tour.rate_sic}}</td>
                 {% elif  template.show_tour_vip_rate %}
-                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{frappe.utils.fmt_money(tour.rate_vip, 0)}}$</td>
+                <td class="f-m tour-price f-bold t-center justify-center align-center" style="padding: {{template.tour_price_padding}};">{{tour.rate_vip}}</td>
                 {% else %}
                 <td></td>
                 {% endif %}
@@ -294,7 +294,7 @@
                   </div>
                 </td>
                 <td class="f-m transfer-price f-bold t-center justify-center align-center"  style="padding: {{template.transfer_price_padding}};">
-                  {{frappe.utils.fmt_money(transfer.rate, 0)}}$
+                  {{transfer.rate}}
                 </td>
               </tr>
             {% endfor %}
