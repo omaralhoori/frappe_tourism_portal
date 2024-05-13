@@ -41,14 +41,14 @@ function confirmExtendAccommodation(e){
     for (var extendResult of extendResults){
         extendIds.push(extendResult.getAttribute('extend-id'));
     }
-    if (extendIds.length == 0 || extendIds.length > 1){
+    if (extendIds.length == 0 ){ //|| extendIds.length > 1
         frappe.throw("Please select one extend to confirm")
     }
     toggleLoadingIndicator(true);
     frappe.call({
         "method": "tourism_portal.api.edit_invoice.confirm_extend_accommodation",
         "args": {
-            "extend_id": extendIds[0],
+            "extend_id": extendIds, // [0],
         },
         "callback": function (r) {
             toggleLoadingIndicator(false);

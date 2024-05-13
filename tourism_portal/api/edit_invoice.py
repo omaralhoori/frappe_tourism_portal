@@ -232,11 +232,17 @@ def extend_accommodation(invoice, hotel_search, nights):
         "data": results
     }
 
+import json
 @frappe.whitelist()
 def confirm_extend_accommodation(extend_id):
+    if type(extend_id) != list:
+        extend_id = json.loads(extend_id)
     try:
-        res = frappe.get_doc("Extend Room Results", {"name": extend_id, "user": frappe.session.user}).confirm_extend_accommodation()
-        frappe.db.commit()
-        return res
+        for extend in extend_id:
+            res = frappe.get_doc("Extend Room Results", {"name": extend, "user": frappe.session.user}).confirm_extend_accommodation()
+        #frappe.db.commit()
+        #return res
     except Exception as e:
         frappe.throw(str(e))
+    frappe.db.commit()
+    return True
