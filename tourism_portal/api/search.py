@@ -473,6 +473,7 @@ def get_contract_prices(contract, room_acmnd_type, nationality):
 			   )
 		AND (prc.selling_from_date <= %(selling_date)s AND prc.selling_to_date >= %(selling_date)s)
 		AND ((prc.check_in_from_date <= %(checkin)s AND prc.check_in_to_date >= %(checkin)s)
+		OR (prc.check_in_from_date >= %(checkin)s AND prc.check_in_to_date <= %(checkout)s)
 		OR (prc.check_in_from_date <= %(checkout)s AND prc.check_in_to_date >= %(checkout)s))
 """, {
 	"contract_id": contract.get('contract_id'),
