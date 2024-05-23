@@ -437,10 +437,12 @@ def ask_for_availability():
 	now_datetime = frappe.utils.now()
 	inquiries = frappe.db.sql("""
 		select name from `tabHotel Inquiry Request`
-		WHERE customer=%(customer)s AND room=%(room)s AND 
-		(docstatus=0 OR valid_datetime > %(now_datetime)s)
+		WHERE customer=%(customer)s AND room=%(room)s 
+		AND from_date=%(from_date)s AND to_date=%(to_date)s 
+		AND (docstatus=0 OR valid_datetime > %(now_datetime)s)
 		AND used=0
-	""", {"customer": frappe.session.user, "room": args.get('room_id'), "now_datetime": now_datetime})
+	""", {"customer": frappe.session.user, "room": args.get('room_id'), "now_datetime": now_datetime, 
+       "from_date": args.get('from_date'), "to_date": args.get('to_date')})
 	if len(inquiries) > 0:
 		return {
 			"success_key": 0,

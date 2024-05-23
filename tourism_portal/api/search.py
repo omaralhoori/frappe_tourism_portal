@@ -221,6 +221,8 @@ def get_room_inquiry(room, hotel_params, roomPax, company_class):
 			company=%(company)s 
 			AND customer=%(customer)s 
 			AND room=%(room)s 
+			AND from_date=%(from_date)s
+			AND to_date=%(to_date)s
 			AND used=0 
 			AND valid_datetime > %(now_datetime)s 
 			AND docstatus=1
@@ -228,7 +230,9 @@ def get_room_inquiry(room, hotel_params, roomPax, company_class):
 		"company": company_details.get('company'),
 		  "customer": frappe.session.user, 
 		  "room": room.get('room_id'), 
-		  "now_datetime": frappe.utils.now_datetime()
+		  "now_datetime": frappe.utils.now_datetime(),
+		  "from_date": hotel_params.get('checkin'), 
+		  "to_date": hotel_params.get('checkout')
 		  }, as_dict=True)
 	if len(inquiries) > 0:
 		inquiry = frappe.get_doc("Hotel Inquiry Request", inquiries[0].get('name'))
